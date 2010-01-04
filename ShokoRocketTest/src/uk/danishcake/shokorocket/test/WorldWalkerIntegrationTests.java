@@ -235,7 +235,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 		assertEquals(Direction.South, walker.getDirection());
 	}
 	
-	void testTrappedWalker()
+	public void testTrappedWalker()
 	{
 		/* Tests that a walker that is totally surrounded will stop */
 		World world = new World();
@@ -251,5 +251,27 @@ public class WorldWalkerIntegrationTests extends TestCase {
 		walker.Advance(500);
 	}
 	
-	
+	public void testAddMiceToWorld()
+	{
+		World world = new World();
+		assertEquals(0, world.getLiveMice().size());
+		
+		Walker walker = new Walker();
+		world.addMouse(walker);
+		assertEquals(world, walker.getWorld());
+		assertEquals(1, world.getLiveMice().size());
+		assertTrue(world.getLiveMice().contains(walker));	
+	}
+
+	public void testAddCatsToWorld()
+	{
+		World world = new World();
+		assertEquals(0, world.getLiveCats().size());
+		
+		Walker walker = new Walker();
+		world.addCat(walker);
+		assertEquals(world, walker.getWorld());
+		assertEquals(1, world.getLiveCats().size());
+		assertTrue(world.getLiveCats().contains(walker));	
+	}
 }

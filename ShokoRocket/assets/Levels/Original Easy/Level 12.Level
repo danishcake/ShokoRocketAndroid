@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+    <Name>Compression</Name>
+    <Author>Edward Woolhouse</Author>
+    <Size x="12" y="9" />
+    <V x="0" y="0" />
+    <V x="0" y="1" />
+    <V x="0" y="2" />
+    <V x="0" y="3" />
+    <V x="0" y="4" />
+    <V x="0" y="5" />
+    <V x="0" y="6" />
+    <V x="0" y="7" />
+    <V x="0" y="8" />
+    <V x="1" y="2" />
+    <V x="2" y="1" />
+    <V x="2" y="3" />
+    <V x="3" y="1" />
+    <V x="3" y="3" />
+    <V x="3" y="8" />
+    <V x="4" y="2" />
+    <V x="4" y="7" />
+    <V x="5" y="2" />
+    <V x="5" y="7" />
+    <V x="6" y="2" />
+    <V x="6" y="7" />
+    <V x="7" y="2" />
+    <V x="7" y="7" />
+    <V x="8" y="2" />
+    <V x="8" y="6" />
+    <V x="8" y="7" />
+    <V x="10" y="5" />
+    <V x="10" y="7" />
+    <V x="11" y="5" />
+    <V x="11" y="7" />
+    <H x="0" y="0" />
+    <H x="1" y="0" />
+    <H x="1" y="2" />
+    <H x="1" y="3" />
+    <H x="2" y="0" />
+    <H x="2" y="1" />
+    <H x="2" y="4" />
+    <H x="3" y="0" />
+    <H x="3" y="3" />
+    <H x="4" y="0" />
+    <H x="4" y="2" />
+    <H x="4" y="8" />
+    <H x="5" y="0" />
+    <H x="5" y="2" />
+    <H x="5" y="8" />
+    <H x="6" y="0" />
+    <H x="6" y="2" />
+    <H x="6" y="8" />
+    <H x="7" y="0" />
+    <H x="7" y="2" />
+    <H x="7" y="8" />
+    <H x="8" y="0" />
+    <H x="8" y="7" />
+    <H x="9" y="0" />
+    <H x="9" y="6" />
+    <H x="9" y="7" />
+    <H x="10" y="0" />
+    <H x="10" y="5" />
+    <H x="10" y="8" />
+    <H x="11" y="0" />
+    <H x="11" y="4" />
+    <H x="11" y="6" />
+    <H x="11" y="7" />
+    <Arrow x="2" y="2" d="East" />
+    <Arrow x="10" y="6" d="West" />
+    <Rocket x="11" y="7" />
+    <Mouse x="10" y="5" d="South" />
+    <Mouse x="10" y="7" d="North" />
+    <Mouse x="11" y="6" d="West" />
+    <Mouse x="9" y="6" d="East" />
+    <Mouse x="3" y="2" d="West" />
+    <Mouse x="2" y="1" d="South" />
+    <Mouse x="2" y="3" d="North" />
+    <Mouse x="1" y="2" d="East" />
+    <Cat x="4" y="2" d="South" />
+    <Cat x="6" y="2" d="South" />
+    <Cat x="7" y="2" d="South" />
+    <Cat x="4" y="7" d="North" />
+    <Cat x="6" y="7" d="North" />
+    <Cat x="7" y="7" d="North" />
+    <Cat x="5" y="6" d="North" />
+    <Cat x="5" y="2" d="South" />
+</Level>

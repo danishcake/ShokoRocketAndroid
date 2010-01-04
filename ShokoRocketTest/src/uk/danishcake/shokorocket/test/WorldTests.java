@@ -92,7 +92,7 @@ public class WorldTests extends AndroidTestCase {
 		}
 	}
 	
-	public void testWorldAssetsLoadable()
+	public void testWorldAssetsListed()
 	{
 		try
 		{
@@ -113,7 +113,7 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Level 01.Level");			
+			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 01.Level");			
 			World world = new World(world_stream);
 			
 			assertEquals("Edward Woolhouse", world.getAuthor());
@@ -129,7 +129,7 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Level 01.Level");			
+			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 01.Level");			
 			World world = new World(world_stream);
 
 			assertEquals(12, world.getWidth());
@@ -145,7 +145,7 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Level 01.Level");			
+			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 01.Level");			
 			World world = new World(world_stream);
 
 			assertTrue(world.getWest(2, 0));
@@ -160,10 +160,27 @@ public class WorldTests extends AndroidTestCase {
 	
 	public void testWorldLoadsCatsAndMice()
 	{
-		
+		try
+		{
+			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 23.Level");			
+			World world = new World(world_stream);
+			assertEquals(10, world.getLiveMice().size());
+			assertEquals(7, world.getLiveCats().size());
+			
+			
+		}
+		catch(IOException io_ex)
+		{
+			assertTrue("Error opening stream - " + io_ex.getMessage(), false);
+		}	
 	}
 	
 	public void testWorldLoadsHolesAndRockets()
+	{
+		
+	}
+	
+	public void testWorldLoadsSolution()
 	{
 		
 	}

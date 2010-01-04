@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+    <Name>Think Fast</Name>
+    <Author>Edward Woolhouse</Author>
+    <Size x="3" y="4" />
+    <V x="0" y="0" />
+    <V x="0" y="1" />
+    <V x="0" y="2" />
+    <V x="1" y="3" />
+    <H x="0" y="3" />
+    <H x="2" y="3" />
+    <Arrow x="0" y="0" d="West" />
+    <Arrow x="1" y="2" d="North" />
+    <Rocket x="1" y="3" />
+    <Arrow x="2" y="0" d="West" />
+    <Mouse x="0" y="0" d="South" />
+    <Mouse x="2" y="0" d="South" />
+    <Cat x="0" y="2" d="North" />
+    <Cat x="2" y="2" d="North" />
+    <Cat x="1" y="1" d="South" />
+</Level>
