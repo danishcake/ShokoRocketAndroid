@@ -5,23 +5,12 @@ import uk.danishcake.shokorocket.Walker;
 import uk.danishcake.shokorocket.Direction;
 import uk.danishcake.shokorocket.Vector2i;
 import uk.danishcake.shokorocket.World;
+import uk.danishcake.shokorocket.Walker.WalkerState;
 
 public class WalkerTests extends TestCase {
 
 	public void testWalkerPosition()
 	{
-		/*
-		//Check default position
-		Walker walker = new Walker();
-		assertEquals(walker.getPosition().GetX_i(), 0);
-		assertEquals(walker.getPosition().GetY_i(), 0);
-		
-		//Check setter works
-		walker.setPosition(new Vector2FP(5.0f, 5.0f));
-		assertEquals(walker.getPosition().GetX_i(), 5);
-		assertEquals(walker.getPosition().GetY_i(), 5);
-		*/
-		
 		Walker walker = new Walker();
 		assertEquals(walker.getPosition().x, 0);
 		assertEquals(walker.getPosition().y, 0);
@@ -30,7 +19,6 @@ public class WalkerTests extends TestCase {
 		walker.setPosition(new Vector2i(5,3));
 		assertEquals(walker.getPosition().x, 5);
 		assertEquals(walker.getPosition().y, 3);		
-		
 	}
 
 	public void testWalkerDirection()
@@ -97,5 +85,34 @@ public class WalkerTests extends TestCase {
 		
 		assertEquals(3, walker.getPosition().x);
 		assertEquals(7, walker.getPosition().y);
+	}
+	
+	public void testWalkerReset()
+	{
+		World world = new World();
+		Walker walker = new Walker();
+		walker.setPosition(new Vector2i(0,5));
+		walker.setDirection(Direction.South);
+		world.addMouse(walker);
+	
+		world.Tick(4000);
+		assertEquals(1, walker.getPosition().x);
+		assertEquals(8, walker.getPosition().y);
+		assertEquals(Direction.East, walker.getDirection());
+		
+		walker.Reset();
+		assertEquals(0, walker.getPosition().x);
+		assertEquals(5, walker.getPosition().y);
+		assertEquals(Direction.South, walker.getDirection());
+		
+		world.setHole(2, 8, true);
+		world.Tick(5000);
+		
+		assertEquals(WalkerState.Dead, walker.getWalkerState());
+		
+		walker.Reset();
+		assertEquals(WalkerState.Alive, walker.getWalkerState());
+		
+		
 	}
 }

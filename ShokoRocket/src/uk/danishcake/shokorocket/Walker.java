@@ -11,17 +11,25 @@ public class Walker {
 	{
 		Unknown, Cat, Mouse
 	}
+	public enum WalkerState
+	{
+		Alive, Dead, Rescued
+	}
 	
 	private int mX = 0;
 	private int mY = 0;
+	private int mStartingX = 0;
+	private int mStartingY = 0;
 	private int mFractional = 0; //Resets at FractionReset - 1000ms at speed MouseSpeed 
 	public static final int FractionReset = 3000000;
 	public static final int MouseSpeed = 3000;
 	public static final int CatSpeed = 2000;
 	private int mSpeed = MouseSpeed;
 	private Direction mDirection = Direction.North;
+	private Direction mStartingDirection = Direction.North;
 	private World mWorld = null;
 	private WalkerType mWalkerType = WalkerType.Unknown;
+	private WalkerState mWalkerState = WalkerState.Alive;
 	
 	/* Gets the position of the walker
 	 * @return The position of the walker
@@ -33,8 +41,10 @@ public class Walker {
 	 * @param position The position
 	 */
 	public void setPosition(Vector2i position) {
-		this.mX = position.x;
-		this.mY = position.y;
+		mX = position.x;
+		mY = position.y;
+		mStartingX = mX;
+		mStartingY = mY;
 	}
 	
 	/* Gets the direction faced by the walker
@@ -47,7 +57,8 @@ public class Walker {
 	 * @param direction direction to be faced by the walker
 	 */
 	public void setDirection(Direction direction) {
-		this.mDirection = direction;
+		mDirection = direction;
+		mStartingDirection = mDirection;
 	}
 	
 	/* Gets the fraction between 0 and FractionReset of the walkers progress to the next square
@@ -74,6 +85,13 @@ public class Walker {
 	 */
 	public void setWalkerType(WalkerType walker_type) {
 		mWalkerType = walker_type;
+	}
+	
+	/* getWalkerState
+	 * Gets the state of the walker - whether alive, dead or rescued
+	 */
+	public WalkerState getWalkerState() {
+		return mWalkerState;
 	}
 	
 	/* Sets the world in which the walker will turn and interact
@@ -120,6 +138,17 @@ public class Walker {
 		}
 	}
 	
+	/* Reset
+	 * Restores starting position and revives the dead or rescued
+	 */
+	public void Reset()	{
+		mFractional = 0;
+		mX = mStartingX;
+		mY = mStartingY;
+		mDirection = mStartingDirection;
+		mWalkerState = WalkerState.Alive;
+	}
+	
 	/* wrapAround
 	 * If the walker has walked off the edge of a world then reposition at the other side.
 	 */
@@ -143,13 +172,27 @@ public class Walker {
 	private void reachNewGridSquare() {
 		if(mWorld != null)
 		{
-			//First interact with arrow
-			Direction arrow_direction = mWorld.getSpecialSquare(mX, mY).ToDirection(); 
+			//First interact with special squares (arrow, holes & rockets)
+			SquareType square = mWorld.getSpecialSquare(mX, mY);
+			//Holes
+			if(square == SquareType.Hole)
+			{
+				mWalkerState = WalkerState.Dead;
+			}
+			if(square == SquareType.Rocket)
+			{
+				if(mWalkerType == WalkerType.Mouse)
+					mWalkerState = WalkerState.Rescued;
+				if(mWalkerType == WalkerType.Cat)
+					mWalkerState = WalkerState.Dead;
+			}
+			//Arrows
+			Direction arrow_direction = square.ToDirection(); 
 			if(arrow_direction != Direction.Invalid)
 			{
 				if(arrow_direction == Turns.TurnAround(mDirection) && mWalkerType == WalkerType.Cat)
 				{
-					SquareType reduced = mWorld.getSpecialSquare(mX, mY).Diminish();
+					SquareType reduced = square.Diminish();
 					mWorld.setSpecialSquare(mX, mY, reduced);
 				}
 				setDirection(arrow_direction);

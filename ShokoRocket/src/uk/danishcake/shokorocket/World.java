@@ -3,6 +3,7 @@ package uk.danishcake.shokorocket;
 import uk.danishcake.shokorocket.Direction;
 import uk.danishcake.shokorocket.SquareType;
 import uk.danishcake.shokorocket.Walker;
+import uk.danishcake.shokorocket.Walker.WalkerState;
 import uk.danishcake.shokorocket.Walker.WalkerType;
 
 import java.io.InputStream;
@@ -32,7 +33,10 @@ public class World {
 	private int[] mWalls = new int[12*9];
 	
 	private ArrayList<Walker> mLiveMice = new ArrayList<Walker>();
+	private ArrayList<Walker> mDeadMice = new ArrayList<Walker>();
+	private ArrayList<Walker> mRescuedMice = new ArrayList<Walker>();
 	private ArrayList<Walker> mLiveCats = new ArrayList<Walker>();
+	private ArrayList<Walker> mDeadCats = new ArrayList<Walker>();
 	
 	private SquareType[] mSpecialSquares = new SquareType[12*9];
 	
@@ -70,11 +74,32 @@ public class World {
 		return mLiveMice;
 	}
 	
+	/* getDeadMice
+	 * @return the cats which are dead
+	 */
+	public ArrayList<Walker> getDeadMice() {
+		return mDeadMice;
+	}
+	
+	/* getRescuedMice
+	 * @return the mice which have reached the rocket
+	 */
+	public ArrayList<Walker> getRescuedMice() {
+		return mRescuedMice;
+	}
+	
 	/* getLiveCats
 	 * @return the cats which are still alive
 	 */
 	public ArrayList<Walker> getLiveCats() {
 		return mLiveCats;
+	}
+	
+	/* getDeadCats
+	 * @return the cats which are Dead
+	 */
+	public ArrayList<Walker> getDeadCats() {
+		return mDeadCats;
 	}
 	
 	/* addMouse
@@ -664,12 +689,30 @@ public class World {
 	 * @param timespan the number of milliseconds to advance for
 	 */
 	public void Tick(int timespan) {
+		//Whether or not justDeadX is a good pattern to use I don't know, but it works in C++
+		//and works here, so will use
+		ArrayList<Walker> justDeadMice = new ArrayList<Walker>();
+		ArrayList<Walker> justRescuedMice = new ArrayList<Walker>();
+		ArrayList<Walker> justDeadCats = new ArrayList<Walker>();
+		
 		for (Walker mouse : mLiveMice) {
 			mouse.Advance(timespan);
+			if(mouse.getWalkerState() == WalkerState.Dead)
+				justDeadMice.add(mouse);
+			if(mouse.getWalkerState() == WalkerState.Rescued)
+				justRescuedMice.add(mouse);
 		}
 		for (Walker cat : mLiveCats) {
 			cat.Advance(timespan);
+			if(cat.getWalkerState() == WalkerState.Dead)
+				justDeadCats.add(cat);
 		}
-	
+		mLiveMice.removeAll(justDeadMice);
+		mDeadMice.addAll(justDeadMice);
+		mLiveMice.removeAll(justRescuedMice);
+		mRescuedMice.addAll(justRescuedMice);
+		mLiveCats.removeAll(justDeadCats);
+		mDeadCats.addAll(justDeadCats);
+		
 	}
 }
