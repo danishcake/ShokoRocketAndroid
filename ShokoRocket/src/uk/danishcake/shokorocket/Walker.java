@@ -15,8 +15,10 @@ public class Walker {
 	private int mX = 0;
 	private int mY = 0;
 	private int mFractional = 0; //Resets at 1,000,000 - 1000ms at speed 1000 
-	private final int FractionReset = 1000000;
-	private int mSpeed = 1000;
+	private static final int FractionReset = 3000000;
+	public static final int MouseSpeed = 3000;
+	public static final int CatSpeed = 2000;
+	private int mSpeed = MouseSpeed;
 	private Direction mDirection = Direction.North;
 	private World mWorld = null;
 	private WalkerType mWalkerType = WalkerType.Unknown;
@@ -54,13 +56,13 @@ public class Walker {
 	public int getFraction() {
 		return mFractional;
 	}
-	/* Sets the speed of the walker. Defaults to 1,000
+	/* Sets the speed of the walker. Defaults to 3,000
 	 * @param speed the number of units to move in units per millisecond. Fraction will be incremented by timespan(ms) * speed
 	 */	
 	public void setSpeed(int speed) {
 		mSpeed = speed;
 	}
-	/* Gets the speed in units per millisecond. Once unit is 1/1,000,000th of a grid square
+	/* Gets the speed in units per millisecond. Once unit is 1/3,000,000th of a grid square
 	 * @return the speed of the walker
 	 */	
 	public int getSpeed() {
@@ -127,6 +129,11 @@ public class Walker {
 			Direction arrow_direction = mWorld.getSpecialSquare(mX, mY).ToDirection(); 
 			if(arrow_direction != Direction.Invalid)
 			{
+				if(arrow_direction == Turns.TurnAround(mDirection) && mWalkerType == WalkerType.Cat)
+				{
+					SquareType reduced = mWorld.getSpecialSquare(mX, mY).Diminish();
+					mWorld.setSpecialSquare(mX, mY, reduced);
+				}
 				setDirection(arrow_direction);
 			}
 			//Now interact with walls

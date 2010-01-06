@@ -4,6 +4,7 @@ import java.security.InvalidParameterException;
 
 import junit.framework.TestCase;
 import uk.danishcake.shokorocket.Direction;
+import uk.danishcake.shokorocket.SquareType;
 import uk.danishcake.shokorocket.World;
 import uk.danishcake.shokorocket.Walker;
 import uk.danishcake.shokorocket.Vector2i;
@@ -335,11 +336,88 @@ public class WorldWalkerIntegrationTests extends TestCase {
 	
 	public void testCatsAffectedByArrows()
 	{
+		World world = new World();
+		Walker walker = new Walker();
+		walker.setPosition(new Vector2i(0, 2));
+		walker.setDirection(Direction.East);
+		world.addCat(walker);
+		walker.setSpeed(3000); //Force speed to mouse speed to make unit test simpler
 		
+		world.setArrow(2, 2, Direction.South);
+		world.setArrow(2, 6, Direction.East);
+		world.setArrow(6, 6, Direction.North);
+		world.setArrow(6, 2, Direction.West);
+		
+		world.Tick(3000);
+		assertEquals(2, walker.getPosition().x);
+		assertEquals(3, walker.getPosition().y);
+		assertEquals(Direction.South, walker.getDirection());
+		
+		world.Tick(4000);
+		assertEquals(3, walker.getPosition().x);
+		assertEquals(6, walker.getPosition().y);
+		assertEquals(Direction.East, walker.getDirection());
+		
+		world.Tick(4000);
+		assertEquals(6, walker.getPosition().x);
+		assertEquals(5, walker.getPosition().y);
+		assertEquals(Direction.North, walker.getDirection());
+		
+		world.Tick(4000);
+		assertEquals(5, walker.getPosition().x);
+		assertEquals(2, walker.getPosition().y);
+		assertEquals(Direction.West, walker.getDirection());		
 	}
 	
 	public void testCatsDiminishArrows()
 	{
+		World world = new World();
+		Walker walker = new Walker();
+		walker.setPosition(new Vector2i(0, 2));
+		walker.setDirection(Direction.East);
+		world.addCat(walker);
+		walker.setSpeed(3000); //Force to mouse speed to simplify
+		
+		world.setArrow(2, 2, Direction.South);
+		world.setArrow(2, 3, Direction.East);
+		world.setArrow(6, 3, Direction.West);
+		
+		world.Tick(3000);
+		
+		assertEquals(2, walker.getPosition().x);
+		assertEquals(3, walker.getPosition().y);
+		assertEquals(Direction.East, walker.getDirection());
+		assertEquals(SquareType.EastArrow, world.getSpecialSquare(2, 3));
+		assertEquals(SquareType.WestArrow, world.getSpecialSquare(6, 3));
+		
+		world.Tick(4000);
+		assertEquals(6, walker.getPosition().x);
+		assertEquals(3, walker.getPosition().y);
+		assertEquals(Direction.West, walker.getDirection());
+		assertEquals(SquareType.EastArrow, world.getSpecialSquare(2, 3));
+		assertEquals(SquareType.WestHalfArrow, world.getSpecialSquare(6, 3));
+		
+		world.Tick(4000);
+		assertEquals(2, walker.getPosition().x);
+		assertEquals(3, walker.getPosition().y);
+		assertEquals(Direction.East, walker.getDirection());
+		assertEquals(SquareType.EastHalfArrow, world.getSpecialSquare(2, 3));
+		assertEquals(SquareType.WestHalfArrow, world.getSpecialSquare(6, 3));
+		
+		world.Tick(4000);
+		assertEquals(6, walker.getPosition().x);
+		assertEquals(3, walker.getPosition().y);
+		assertEquals(Direction.West, walker.getDirection());
+		assertEquals(SquareType.EastHalfArrow, world.getSpecialSquare(2, 3));
+		assertEquals(SquareType.Empty, world.getSpecialSquare(6, 3));
+		
+		world.Tick(4000);
+		assertEquals(2, walker.getPosition().x);
+		assertEquals(3, walker.getPosition().y);
+		assertEquals(Direction.East, walker.getDirection());
+		assertEquals(SquareType.Empty, world.getSpecialSquare(2, 3));
+		assertEquals(SquareType.Empty, world.getSpecialSquare(6, 3));
+		
 		
 	}
 	

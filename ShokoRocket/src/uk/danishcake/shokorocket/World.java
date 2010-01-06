@@ -83,7 +83,7 @@ public class World {
 	public void addMouse(Walker walker) {
 		mLiveMice.add(walker);
 		walker.setWorld(this);
-		walker.setSpeed(1000);
+		walker.setSpeed(Walker.MouseSpeed);
 		walker.setWalkerType(WalkerType.Mouse);
 	}
 	
@@ -93,7 +93,7 @@ public class World {
 	public void addCat(Walker walker) {
 		mLiveCats.add(walker);
 		walker.setWorld(this);
-		walker.setSpeed(666);
+		walker.setSpeed(Walker.CatSpeed);
 		walker.setWalkerType(WalkerType.Cat);
 	}
 	

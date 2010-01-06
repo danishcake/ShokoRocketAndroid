@@ -48,15 +48,15 @@ public class WalkerTests extends TestCase {
 		//Check the fractional component is correct
 		Walker walker = new Walker();
 		walker.setPosition(new Vector2i(1,1));
-		walker.setSpeed(500);
+		walker.setSpeed(1500);
 		walker.Advance(1000);
-		assertEquals(500 * 1000, walker.getFraction());
+		assertEquals(1500 * 1000, walker.getFraction());
 		
 		walker.Advance(1000);
 		assertEquals(0, walker.getFraction());
 		
 		walker.Advance(3000);
-		assertEquals(500 * 1000, walker.getFraction());
+		assertEquals(1500 * 1000, walker.getFraction());
 		
 		//Check the coordinate changes sensibly
 		walker.setPosition(new Vector2i(1,1));
