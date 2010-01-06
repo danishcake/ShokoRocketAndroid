@@ -1,6 +1,7 @@
 package uk.danishcake.shokorocket;
 
 import uk.danishcake.shokorocket.Direction;
+import uk.danishcake.shokorocket.SquareType;
 import uk.danishcake.shokorocket.Walker;
 
 import java.io.InputStream;
@@ -9,7 +10,6 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
@@ -18,11 +18,6 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.NamedNodeMap;
 import org.xml.sax.SAXException;
-
-import android.app.Application;
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
 
 
 public class World {
@@ -37,6 +32,8 @@ public class World {
 	
 	private ArrayList<Walker> mLiveMice = new ArrayList<Walker>();
 	private ArrayList<Walker> mLiveCats = new ArrayList<Walker>();
+	
+	private SquareType[] mSpecialSquares = new SquareType[12*9];
 	
 	/* getWidth
 	 * @return width of the level - defaults to 12
@@ -94,7 +91,144 @@ public class World {
 		mLiveCats.add(walker);
 		walker.setWorld(this);
 	}
+	
+	/* getHole
+	 * @return if there is a hole at x/y
+	 */
+	public Boolean getHole(int x, int y) {
+		return mSpecialSquares[wallIndex(x, y)] == SquareType.Hole;
+	}
+	
+	/* setHole
+	 * Sets the hole at x/y to hole. Will not clear a rocket
+	 */
+	public void setHole(int x, int y, Boolean hole) {
+		if(hole)
+			mSpecialSquares[wallIndex(x, y)] = SquareType.Hole;
+		else if(mSpecialSquares[wallIndex(x, y)] == SquareType.Hole)
+				mSpecialSquares[wallIndex(x, y)] = SquareType.Empty;
+	}
+	
+	/* toggleHole
+	 * Toggles the hole at x/y. If a rocket is present it changes it to a hole 
+	 */
+	public void toggleHole(int x, int y)
+	{
+		if(mSpecialSquares[wallIndex(x, y)] == SquareType.Hole)
+			mSpecialSquares[wallIndex(x, y)] = SquareType.Empty;
+		else
+			mSpecialSquares[wallIndex(x, y)] = SquareType.Hole;
+	}
 
+	/* getRocket
+	 * @return true if there is a rocket at x/y
+	 */
+	public Boolean getRocket(int x, int y) {
+		return mSpecialSquares[wallIndex(x, y)] == SquareType.Rocket;
+	}
+	
+	/* setRocket
+	 * Sets the rocket at x/y to rocket. Will not clear a hole
+	 */
+	public void setRocket(int x, int y, Boolean rocket) {
+		if(rocket)
+			mSpecialSquares[wallIndex(x, y)] = SquareType.Rocket;
+		else if(mSpecialSquares[wallIndex(x, y)] == SquareType.Rocket)
+				mSpecialSquares[wallIndex(x, y)] = SquareType.Empty;
+	}
+	
+	/* toggleRocket
+	 * Toggles the rocket at x/y. If a hole is present it changes it to a rocket 
+	 */
+	public void toggleRocket(int x, int y) {
+		if(mSpecialSquares[wallIndex(x, y)] == SquareType.Rocket)
+			mSpecialSquares[wallIndex(x, y)] = SquareType.Empty;
+		else
+			mSpecialSquares[wallIndex(x, y)] = SquareType.Rocket;
+	}
+	
+	/* setArrow
+	 * Sets the grid square to a certain direction. Clears if invalid passed in
+	 */
+	public void setArrow(int x, int y, Direction direction) {
+		switch(direction)
+		{
+		case North:
+			mSpecialSquares[wallIndex(x, y)] = SquareType.NorthArrow;
+			break;
+		case West:
+			mSpecialSquares[wallIndex(x, y)] = SquareType.WestArrow;
+			break;
+		case South:
+			mSpecialSquares[wallIndex(x, y)] = SquareType.SouthArrow;
+			break;
+		case East:
+			mSpecialSquares[wallIndex(x, y)] = SquareType.EastArrow;
+			break;
+		case Invalid:
+			switch(mSpecialSquares[wallIndex(x, y)])
+			{
+			case NorthArrow:
+			case WestArrow:
+			case SouthArrow:
+			case EastArrow:
+				mSpecialSquares[wallIndex(x, y)] = SquareType.Empty;
+				break;
+			}
+			break;
+		}		
+	}
+	
+	/* toggleArrow
+	 * Toggles the arrow in a particular direction
+	 */
+	public void toggleArrow(int x, int y, Direction direction) {
+		switch(mSpecialSquares[wallIndex(x, y)])
+		{
+		case NorthArrow:
+			if(direction == Direction.North)
+				setArrow(x, y, Direction.Invalid);
+			else
+				setArrow(x, y, direction);
+			break;
+		case WestArrow:
+			if(direction == Direction.West)
+				setArrow(x, y, Direction.Invalid);
+			else
+				setArrow(x, y, direction);
+			break;
+		case SouthArrow:
+			if(direction == Direction.South)
+				setArrow(x, y, Direction.Invalid);
+			else
+				setArrow(x, y, direction);
+			break;
+		case EastArrow:
+			if(direction == Direction.East)
+				setArrow(x, y, Direction.Invalid);
+			else
+				setArrow(x, y, direction);
+			break;
+		default:
+			setArrow(x, y, direction);
+			break;		
+		}
+	}
+	
+	/* getSpecialSquare
+	 * Gets the square type at x/y
+	 * @return the square type at x/y
+	 */
+	public SquareType getSpecialSquare(int x, int y) {
+		return mSpecialSquares[wallIndex(x, y)];
+	}
+	
+	/* setSpecialSquare
+	 * Directly sets the square type at x/y
+	 */
+	public void setSpecialSquare(int x, int y, SquareType square_type) {
+		mSpecialSquares[wallIndex(x,y)] = square_type;
+	}
 	
 	/* World()
 	 * Creates a empty world 12x9 with walls around the edge
@@ -102,6 +236,7 @@ public class World {
 	public World() 
 	{
 		defaultWalls();
+		defaultSpecialSquares();
 	}
 	
 	/* World(input)
@@ -124,6 +259,7 @@ public class World {
 			
 			
 			loadProperties(root);
+			defaultSpecialSquares();
 			loadWalls(root);
 			loadEntities(root);
 			loadSolution(root);
@@ -253,7 +389,8 @@ public class World {
 			
 			Node pos_x = mouse_position_attr.getNamedItem("x");
 			Node pos_y = mouse_position_attr.getNamedItem("y");
-			if(pos_x == null || pos_y == null)
+			Node dir = mouse_position_attr.getNamedItem("d");
+			if(pos_x == null || pos_y == null || dir == null)
 			{
 				throw new InvalidParameterException("Both x and y must be specified in mouse");			
 			} else
@@ -263,10 +400,15 @@ public class World {
 					int x = Integer.parseInt(pos_x.getNodeValue());
 					int y = Integer.parseInt(pos_y.getNodeValue());
 					Walker walker = new Walker();
+					walker.setPosition(new Vector2i(x,y));
+					walker.setDirection(Direction.valueOf(dir.getNodeValue()));
 					addMouse(walker);
 				} catch(NumberFormatException nfe)
 				{
-					throw new InvalidParameterException("Unable to parse x or y in mouse");
+					throw new InvalidParameterException("Both x, y and d must be specified in mouse");
+				} catch(IllegalArgumentException iae)
+				{
+					throw new InvalidParameterException("Unable to parse direction to enum in mouse");
 				}
 			}
 		}		
@@ -279,9 +421,10 @@ public class World {
 			
 			Node pos_x = cat_position_attr.getNamedItem("x");
 			Node pos_y = cat_position_attr.getNamedItem("y");
-			if(pos_x == null || pos_y == null)
+			Node dir = cat_position_attr.getNamedItem("d");
+			if(pos_x == null || pos_y == null || dir == null)
 			{
-				throw new InvalidParameterException("Both x and y must be specified in cat");			
+				throw new InvalidParameterException("Both x, y and d must be specified in cat");			
 			} else
 			{
 				try
@@ -289,18 +432,100 @@ public class World {
 					int x = Integer.parseInt(pos_x.getNodeValue());
 					int y = Integer.parseInt(pos_y.getNodeValue());
 					Walker walker = new Walker();
+					walker.setPosition(new Vector2i(x,y));
+					walker.setDirection(Direction.valueOf(dir.getNodeValue()));
 					addCat(walker);
 				} catch(NumberFormatException nfe)
 				{
 					throw new InvalidParameterException("Unable to parse x or y in cat");
+				} catch(IllegalArgumentException iae)
+				{
+					throw new InvalidParameterException("Unable to parse direction to enum in cat");
 				}
 			}
-		}		
+		}
 		//Load rockets
+		NodeList rocket_list = root.getElementsByTagName("Rocket");
+		for(int i = 0; i < rocket_list.getLength(); i++)
+		{			
+			Node rocket_node = rocket_list.item(i);
+			NamedNodeMap rocket_position_attr = rocket_node.getAttributes();
+			
+			Node pos_x = rocket_position_attr.getNamedItem("x");
+			Node pos_y = rocket_position_attr.getNamedItem("y");
+			if(pos_x == null || pos_y == null)
+			{
+				throw new InvalidParameterException("Both x and y must be specified in rocket");			
+			} else
+			{
+				try
+				{
+					int x = Integer.parseInt(pos_x.getNodeValue());
+					int y = Integer.parseInt(pos_y.getNodeValue());
+					setRocket(x, y, true);
+				} catch(NumberFormatException nfe)
+				{
+					throw new InvalidParameterException("Unable to parse x or y in rocket");
+				}
+			}
+		}
 		//Load holes
+		NodeList hole_list = root.getElementsByTagName("Hole");
+		for(int i = 0; i < hole_list.getLength(); i++)
+		{			
+			Node hole_node = hole_list.item(i);
+			NamedNodeMap hole_position_attr = hole_node.getAttributes();
+			
+			Node pos_x = hole_position_attr.getNamedItem("x");
+			Node pos_y = hole_position_attr.getNamedItem("y");
+			if(pos_x == null || pos_y == null)
+			{
+				throw new InvalidParameterException("Both x and y must be specified in hole");			
+			} else
+			{
+				try
+				{
+					int x = Integer.parseInt(pos_x.getNodeValue());
+					int y = Integer.parseInt(pos_y.getNodeValue());
+					setHole(x, y, true);
+				} catch(NumberFormatException nfe)
+				{
+					throw new InvalidParameterException("Unable to parse x or y in hole");
+				}
+			}
+		}
 	}
 	
 	private void loadSolution(Element root) {
+		//Load arrows
+		NodeList arrow_list = root.getElementsByTagName("Arrow");
+		for(int i = 0; i < arrow_list.getLength(); i++)
+		{			
+			Node arrow_node = arrow_list.item(i);
+			NamedNodeMap arrow_position_attr = arrow_node.getAttributes();
+			
+			Node pos_x = arrow_position_attr.getNamedItem("x");
+			Node pos_y = arrow_position_attr.getNamedItem("y");
+			Node dir = arrow_position_attr.getNamedItem("d");
+			if(pos_x == null || pos_y == null || dir == null)
+			{
+				throw new InvalidParameterException("Both x, y and d must be specified in arrow");			
+			} else
+			{
+				try
+				{
+					int x = Integer.parseInt(pos_x.getNodeValue());
+					int y = Integer.parseInt(pos_y.getNodeValue());
+					setArrow(x, y, Direction.valueOf(dir.getNodeValue()));
+				} catch(NumberFormatException nfe)
+				{
+					throw new InvalidParameterException("Unable to parse x or y in arrow");
+				} catch(IllegalArgumentException iae)
+				{
+					throw new InvalidParameterException("Unable to parse direction to enum in arrow");
+				}
+			} 
+		}
 	}
 	
 	/* defaultWalls()
@@ -314,6 +539,19 @@ public class World {
 		for(int y = 0; y < mHeight; y++)
 		{
 			setWest(0, y, true);
+		}
+	}
+	
+	/* defaultSpecialSquares()
+	 * Sets the default special squares
+	 */
+	private void defaultSpecialSquares() {
+		for(int x = 0; x < mWidth; x++)
+		{
+			for(int y = 0; y < mHeight; y++)
+			{
+				mSpecialSquares[wallIndex(x, y)] = SquareType.Empty;
+			}
 		}
 	}
 	

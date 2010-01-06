@@ -10,6 +10,9 @@ import android.test.AndroidTestCase;
 import android.util.Log;
 
 import junit.framework.TestCase;
+import uk.danishcake.shokorocket.Direction;
+import uk.danishcake.shokorocket.SquareType;
+import uk.danishcake.shokorocket.Walker;
 import uk.danishcake.shokorocket.World;
 
 public class WorldTests extends AndroidTestCase {
@@ -166,7 +169,7 @@ public class WorldTests extends AndroidTestCase {
 			World world = new World(world_stream);
 			assertEquals(10, world.getLiveMice().size());
 			assertEquals(7, world.getLiveCats().size());
-			
+			//Test mouse position TODO
 			
 		}
 		catch(IOException io_ex)
@@ -175,13 +178,146 @@ public class WorldTests extends AndroidTestCase {
 		}	
 	}
 	
+	public void testWorldLoadsCatsAndMicePositionsAndDirections()
+	{
+		try
+		{
+			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 06.Level");			
+			World world = new World(world_stream);
+			assertEquals(1, world.getLiveMice().size());
+			Walker mouse = world.getLiveMice().get(0);
+			assertEquals(4, mouse.getPosition().x);
+			assertEquals(8, mouse.getPosition().y);
+			assertEquals(Direction.East, mouse.getDirection());
+			
+			Walker first_cat = world.getLiveCats().get(0);
+			assertEquals(11, first_cat.getPosition().x);
+			assertEquals(0, first_cat.getPosition().y);
+			assertEquals(Direction.West, first_cat.getDirection());
+		}
+		catch(IOException io_ex)
+		{
+			assertTrue("Error opening stream - " + io_ex.getMessage(), false);
+		}	
+	}	
+	public void testWorldManualHolesAndRockets()
+	{
+		//Holes
+		World world = new World();
+		
+		assertFalse(world.getHole(0,0));
+		
+		world.setHole(0, 0, true);
+		assertTrue(world.getHole(0,0));
+		
+		world.setHole(0, 0, false);
+		assertFalse(world.getHole(0,0));
+		
+		world.toggleHole(0, 0);
+		assertTrue(world.getHole(0,0));
+		
+		world.toggleHole(0, 0);
+		assertFalse(world.getHole(0,0));
+		
+		
+		
+		//Rockets
+		assertFalse(world.getHole(5, 5));
+		
+		world.setRocket(5, 5, true);
+		assertTrue(world.getRocket(5, 5));
+		
+		world.setRocket(5, 5, false);
+		assertFalse(world.getRocket(5, 5));
+		
+		world.toggleRocket(5, 5);
+		assertTrue(world.getRocket(5,5));
+		
+		world.toggleRocket(5, 5);
+		assertFalse(world.getRocket(5,5));
+		
+		//Clear
+		
+		world.setRocket(6,6, true);
+		assertTrue(world.getRocket(6, 6));
+		world.setSpecialSquare(6, 6, SquareType.Empty);
+		assertEquals(SquareType.Empty, world.getSpecialSquare(6, 6));
+	}
+	
+	public void testWorldHolesAndRocketsExlusivity()
+	{
+		//Holes
+		World world = new World();
+		
+		world.setHole(0, 0, true);
+		assertTrue(world.getHole(0,0));
+		
+		world.setRocket(0, 0, true);
+		assertFalse(world.getHole(0,0));
+		assertTrue(world.getRocket(0,0));
+	}
+	
 	public void testWorldLoadsHolesAndRockets()
 	{
+		try
+		{
+			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 23.Level");			
+			World world = new World(world_stream);
+			
+			assertFalse(world.getHole(0, 0));
+			assertTrue(world.getHole(4, 8));
+			assertFalse(world.getRocket(0, 0));
+			assertTrue(world.getRocket(5, 8));
+		}
+		catch(IOException io_ex)
+		{
+			assertTrue("Error opening stream - " + io_ex.getMessage(), false);
+		}		
+	}
+	
+	public void testWorldSolution()
+	{
+		World world = new World();
+		world.setArrow(1, 1, Direction.East);
+		world.setArrow(2, 2, Direction.West);
+		assertEquals(SquareType.EastArrow, world.getSpecialSquare(1, 1));
+		assertEquals(SquareType.WestArrow, world.getSpecialSquare(2, 2));
 		
+		world.toggleArrow(3, 3, Direction.East);
+		assertEquals(SquareType.EastArrow, world.getSpecialSquare(3, 3));
+		world.toggleArrow(3, 3, Direction.East);
+		assertEquals(SquareType.Empty, world.getSpecialSquare(3, 3));
+		
+		world.toggleArrow(3, 3, Direction.North);
+		assertEquals(SquareType.NorthArrow, world.getSpecialSquare(3, 3));
+		world.toggleArrow(3, 3, Direction.North);
+		assertEquals(SquareType.Empty, world.getSpecialSquare(3, 3));
+		
+		world.toggleArrow(3, 3, Direction.West);
+		assertEquals(SquareType.WestArrow, world.getSpecialSquare(3, 3));
+		world.toggleArrow(3, 3, Direction.West);
+		assertEquals(SquareType.Empty, world.getSpecialSquare(3, 3));
+		
+		world.toggleArrow(3, 3, Direction.South);
+		assertEquals(SquareType.SouthArrow, world.getSpecialSquare(3, 3));
+		world.toggleArrow(3, 3, Direction.South);
+		assertEquals(SquareType.Empty, world.getSpecialSquare(3, 3));
 	}
 	
 	public void testWorldLoadsSolution()
 	{
-		
+		try
+		{
+			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 23.Level");			
+			World world = new World(world_stream);
+			assertEquals(SquareType.EastArrow, world.getSpecialSquare(1, 1));
+			assertEquals(SquareType.SouthArrow, world.getSpecialSquare(5, 0));
+			assertEquals(SquareType.SouthArrow, world.getSpecialSquare(5, 2));
+			assertEquals(SquareType.WestArrow, world.getSpecialSquare(11, 2));
+		}
+		catch(IOException io_ex)
+		{
+			assertTrue("Error opening stream - " + io_ex.getMessage(), false);
+		}
 	}
 }
