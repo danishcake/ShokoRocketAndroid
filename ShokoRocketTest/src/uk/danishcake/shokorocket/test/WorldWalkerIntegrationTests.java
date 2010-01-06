@@ -505,6 +505,47 @@ public class WorldWalkerIntegrationTests extends TestCase {
 
 	public void testWorldReset()
 	{
-		assertTrue(false);
+		World world = new World();
+		Walker mouse_to_die = new Walker();
+		mouse_to_die.setPosition(new Vector2i(10,0));
+		mouse_to_die.setDirection(Direction.East);
+		
+		Walker mouse_to_rescue = new Walker();
+		mouse_to_rescue.setPosition(new Vector2i(10, 3));
+		mouse_to_rescue.setDirection(Direction.East);
+		
+		Walker cat_to_die = new Walker();
+		cat_to_die.setPosition(new Vector2i(10, 6));
+		cat_to_die.setDirection(Direction.East);
+		
+		world.addMouse(mouse_to_die);
+		world.addMouse(mouse_to_rescue);
+		world.addCat(cat_to_die);
+		
+		
+		world.setHole(11, 1, true);
+		world.setRocket(11, 4, true);
+		world.setHole(11, 7, true);
+		
+		world.Tick(3000);
+		
+		assertEquals(1, world.getRescuedMice().size());
+		assertEquals(1, world.getDeadMice().size());
+		assertEquals(1, world.getDeadCats().size());
+		
+		assertEquals(Direction.South, mouse_to_rescue.getDirection());
+		assertEquals(Direction.South, mouse_to_die.getDirection());
+		assertEquals(Direction.South, cat_to_die.getDirection());
+		
+		world.Reset();
+
+		assertEquals(0, world.getRescuedMice().size());
+		assertEquals(0, world.getDeadMice().size());
+		assertEquals(0, world.getDeadCats().size());
+		
+		assertEquals(Direction.East, mouse_to_rescue.getDirection());
+		assertEquals(Direction.East, mouse_to_die.getDirection());
+		assertEquals(Direction.East, cat_to_die.getDirection());
+		
 	}
 }

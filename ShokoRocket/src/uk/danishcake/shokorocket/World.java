@@ -713,6 +713,24 @@ public class World {
 		mRescuedMice.addAll(justRescuedMice);
 		mLiveCats.removeAll(justDeadCats);
 		mDeadCats.addAll(justDeadCats);
+	}
+	
+	/* Reset
+	 * Resets the world to it's starting state
+	 */
+	public void Reset() {
+		mLiveMice.addAll(mDeadMice);
+		mLiveMice.addAll(mRescuedMice);
+		mLiveCats.addAll(mDeadCats);
+		mDeadMice.clear();
+		mRescuedMice.clear();
+		mDeadCats.clear();
 		
+		for (Walker mouse : mLiveMice) {
+			mouse.Reset();
+		}
+		for (Walker cat : mLiveCats) {
+			cat.Reset();
+		}		
 	}
 }
