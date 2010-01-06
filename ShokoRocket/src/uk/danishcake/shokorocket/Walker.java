@@ -7,6 +7,11 @@ import uk.danishcake.shokorocket.Direction;
 import uk.danishcake.shokorocket.World;
 
 public class Walker {
+	public enum WalkerType
+	{
+		Unknown, Cat, Mouse
+	}
+	
 	private int mX = 0;
 	private int mY = 0;
 	private int mFractional = 0; //Resets at 1,000,000 - 1000ms at speed 1000 
@@ -14,6 +19,7 @@ public class Walker {
 	private int mSpeed = 1000;
 	private Direction mDirection = Direction.North;
 	private World mWorld = null;
+	private WalkerType mWalkerType = WalkerType.Unknown;
 	
 	/* Gets the position of the walker
 	 * @return The position of the walker
@@ -59,6 +65,13 @@ public class Walker {
 	 */	
 	public int getSpeed() {
 		return mSpeed;
+	}
+	
+	/* setWalkerType
+	 * Sets the type of walker, called by World from addCat and addMouse
+	 */
+	public void setWalkerType(WalkerType walker_type) {
+		mWalkerType = walker_type;
 	}
 	
 	/* Sets the world in which the walker will turn and interact
@@ -110,6 +123,13 @@ public class Walker {
 	private void reachNewGridSquare() {
 		if(mWorld != null)
 		{
+			//First interact with arrow
+			Direction arrow_direction = mWorld.getSpecialSquare(mX, mY).ToDirection(); 
+			if(arrow_direction != Direction.Invalid)
+			{
+				setDirection(arrow_direction);
+			}
+			//Now interact with walls
 			if(!mWorld.getDirection(mX, mY, mDirection))
 			{
 				//mDirection = mDirection; //Carry straight on!

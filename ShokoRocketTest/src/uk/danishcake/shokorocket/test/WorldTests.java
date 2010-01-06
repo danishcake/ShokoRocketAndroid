@@ -1,15 +1,11 @@
 package uk.danishcake.shokorocket.test;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidParameterException;
 
-import android.content.Context;
 import android.test.AndroidTestCase;
-import android.util.Log;
 
-import junit.framework.TestCase;
 import uk.danishcake.shokorocket.Direction;
 import uk.danishcake.shokorocket.SquareType;
 import uk.danishcake.shokorocket.Walker;

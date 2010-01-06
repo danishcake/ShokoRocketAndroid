@@ -249,6 +249,8 @@ public class WorldWalkerIntegrationTests extends TestCase {
 		
 		
 		walker.Advance(500);
+		
+		assertEquals(Direction.Invalid, walker.getDirection());
 	}
 	
 	public void testAddMiceToWorld()
@@ -273,5 +275,106 @@ public class WorldWalkerIntegrationTests extends TestCase {
 		assertEquals(world, walker.getWorld());
 		assertEquals(1, world.getLiveCats().size());
 		assertTrue(world.getLiveCats().contains(walker));	
+	}
+	
+	public void testRelativeSpeed()
+	{
+		//Cats move at 2/3rds speed of a mouse
+		World world = new World();
+		Walker mouse = new Walker();
+		Walker cat = new Walker();
+		
+		mouse.setPosition(new Vector2i(0, 0));
+		mouse.setDirection(Direction.East);
+		
+		cat.setPosition(new Vector2i(0, 1));
+		cat.setDirection(Direction.East);
+		
+		world.addCat(cat);
+		world.addMouse(mouse);
+		
+		world.Tick(3100);
+		
+		assertEquals(3, mouse.getPosition().x);
+		assertEquals(2, cat.getPosition().x);
+	}
+	
+	public void testMiceAffectedByArrows() 
+	{
+		World world = new World();
+		Walker walker = new Walker();
+		walker.setPosition(new Vector2i(0, 2));
+		walker.setDirection(Direction.East);
+		world.addMouse(walker);
+		
+		world.setArrow(2, 2, Direction.South);
+		world.setArrow(2, 6, Direction.East);
+		world.setArrow(6, 6, Direction.North);
+		world.setArrow(6, 2, Direction.West);
+		
+		world.Tick(3000);
+		assertEquals(2, walker.getPosition().x);
+		assertEquals(3, walker.getPosition().y);
+		assertEquals(Direction.South, walker.getDirection());
+		
+		world.Tick(4000);
+		assertEquals(3, walker.getPosition().x);
+		assertEquals(6, walker.getPosition().y);
+		assertEquals(Direction.East, walker.getDirection());
+		
+		world.Tick(4000);
+		assertEquals(6, walker.getPosition().x);
+		assertEquals(5, walker.getPosition().y);
+		assertEquals(Direction.North, walker.getDirection());
+		
+		world.Tick(4000);
+		assertEquals(5, walker.getPosition().x);
+		assertEquals(2, walker.getPosition().y);
+		assertEquals(Direction.West, walker.getDirection());
+	}
+	
+	public void testCatsAffectedByArrows()
+	{
+		
+	}
+	
+	public void testCatsDiminishArrows()
+	{
+		
+	}
+	
+	public void testCatsKillMice()
+	{
+		
+	}
+	
+	public void testHolesKillMice()
+	{
+		
+	}
+	
+	public void testHolesKillCats()
+	{
+		
+	}
+	
+	public void testRocketsRescueMice()
+	{
+		
+	}
+	
+	public void testCatsKillRockets()
+	{
+		
+	}
+	
+	public void testWrappingCollisions()
+	{
+		
+	}
+	
+	public void testLargeTimestepsSplit()
+	{
+		
 	}
 }

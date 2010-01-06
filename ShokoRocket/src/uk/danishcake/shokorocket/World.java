@@ -3,6 +3,7 @@ package uk.danishcake.shokorocket;
 import uk.danishcake.shokorocket.Direction;
 import uk.danishcake.shokorocket.SquareType;
 import uk.danishcake.shokorocket.Walker;
+import uk.danishcake.shokorocket.Walker.WalkerType;
 
 import java.io.InputStream;
 import java.io.IOException;
@@ -82,6 +83,8 @@ public class World {
 	public void addMouse(Walker walker) {
 		mLiveMice.add(walker);
 		walker.setWorld(this);
+		walker.setSpeed(1000);
+		walker.setWalkerType(WalkerType.Mouse);
 	}
 	
 	/* addCat
@@ -90,6 +93,8 @@ public class World {
 	public void addCat(Walker walker) {
 		mLiveCats.add(walker);
 		walker.setWorld(this);
+		walker.setSpeed(666);
+		walker.setWalkerType(WalkerType.Cat);
 	}
 	
 	/* getHole
@@ -652,5 +657,19 @@ public class World {
 			throw new InvalidParameterException("x/y outside valid world area");
 		int wi = wallIndex(x, (y + 1) % mHeight);
 		mWalls[wi] = (mWalls[wi] & ~eNorthWall) | (set ? eNorthWall : 0);		
+	}
+	
+	/* tick
+	 * Advances cats, mice & performs collisions
+	 * @param timespan the number of milliseconds to advance for
+	 */
+	public void Tick(int timespan) {
+		for (Walker mouse : mLiveMice) {
+			mouse.Advance(timespan);
+		}
+		for (Walker cat : mLiveCats) {
+			cat.Advance(timespan);
+		}
+	
 	}
 }
