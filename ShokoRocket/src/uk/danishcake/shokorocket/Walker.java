@@ -14,8 +14,8 @@ public class Walker {
 	
 	private int mX = 0;
 	private int mY = 0;
-	private int mFractional = 0; //Resets at 1,000,000 - 1000ms at speed 1000 
-	private static final int FractionReset = 3000000;
+	private int mFractional = 0; //Resets at FractionReset - 1000ms at speed MouseSpeed 
+	public static final int FractionReset = 3000000;
 	public static final int MouseSpeed = 3000;
 	public static final int CatSpeed = 2000;
 	private int mSpeed = MouseSpeed;
@@ -50,8 +50,8 @@ public class Walker {
 		this.mDirection = direction;
 	}
 	
-	/* Gets the fraction between 0 and 1,000,000 of the walkers progress to the next square
-	 * @return 0-1,000,000 integer representing progress to next square
+	/* Gets the fraction between 0 and FractionReset of the walkers progress to the next square
+	 * @return 0-FractionReset-1 integer representing progress to next square
 	 */
 	public int getFraction() {
 		return mFractional;
@@ -115,7 +115,25 @@ public class Walker {
 				mX--;
 				break;
 			}
+			wrapAround();
 			reachNewGridSquare();
+		}
+	}
+	
+	/* wrapAround
+	 * If the walker has walked off the edge of a world then reposition at the other side.
+	 */
+	private void wrapAround() {
+		if(mWorld != null)
+		{
+			if(mY == -1)
+				mY += mWorld.getHeight();
+			if(mX == -1)
+				mX += mWorld.getWidth();
+			if(mY == mWorld.getHeight())
+				mY = 0;
+			if(mX == mWorld.getWidth())
+				mX = 0;
 		}
 	}
 	
