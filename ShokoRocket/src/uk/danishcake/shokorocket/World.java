@@ -23,6 +23,10 @@ import org.xml.sax.SAXException;
 
 
 public class World {
+	public enum WorldState
+	{
+		OK, Failed, Success
+	}
 	private int mWidth = 12;
 	private int mHeight = 9;
 	private String mLevelName = "Default";
@@ -39,6 +43,7 @@ public class World {
 	private ArrayList<Walker> mDeadCats = new ArrayList<Walker>();
 	
 	private SquareType[] mSpecialSquares = new SquareType[12*9];
+	private WorldState mWorldState = WorldState.OK;
 	
 	/* getWidth
 	 * @return width of the level - defaults to 12
@@ -258,6 +263,20 @@ public class World {
 	 */
 	public void setSpecialSquare(int x, int y, SquareType square_type) {
 		mSpecialSquares[wallIndex(x,y)] = square_type;
+	}
+	
+	/* getWorldState
+	 * @return the worlds state
+	 */
+	public WorldState getWorldState() {
+		return mWorldState;
+	}
+	
+	/* setWorldState
+	 * Sets the world state
+	 */
+	public void setWorldState(WorldState world_state) {
+		mWorldState = world_state;
 	}
 	
 	/* World()
@@ -684,35 +703,146 @@ public class World {
 		mWalls[wi] = (mWalls[wi] & ~eNorthWall) | (set ? eNorthWall : 0);		
 	}
 	
+	/* checkCollision
+	 * Checks if the two walkers are close
+	 */
+	private Boolean checkCollision(Walker cat, Walker mouse) {
+		final int FractionScale = 1000;
+		final int CollisionRadius = 333*333;
+		Vector2i cat_pos = cat.getPosition();
+		Vector2i mouse_pos = mouse.getPosition();
+		cat_pos.x = cat_pos.x * FractionScale;
+		cat_pos.y = cat_pos.y * FractionScale;
+		mouse_pos.x = mouse_pos.x * FractionScale;
+		mouse_pos.y = mouse_pos.y * FractionScale;
+		
+		switch(cat.getDirection())
+		{
+		case East:
+			cat_pos.x += cat.getFraction() * FractionScale / Walker.FractionReset;
+			break;
+		case North:
+			cat_pos.y -= cat.getFraction() * FractionScale / Walker.FractionReset;
+			break;
+		case South:
+			cat_pos.y += cat.getFraction() * FractionScale / Walker.FractionReset;
+			break;
+		case West:
+			cat_pos.x -= cat.getFraction() * FractionScale / Walker.FractionReset;
+			break;	
+		}
+		
+		switch(mouse.getDirection())
+		{
+		case East:
+			mouse_pos.x += mouse.getFraction() * FractionScale / Walker.FractionReset;
+			break;
+		case North:
+			mouse_pos.y -= mouse.getFraction() * FractionScale / Walker.FractionReset;
+			break;
+		case South:
+			mouse_pos.y += mouse.getFraction() * FractionScale / Walker.FractionReset;
+			break;
+		case West:
+			mouse_pos.x -= mouse.getFraction() * FractionScale / Walker.FractionReset;
+			break;	
+		}
+		
+		int dx = mouse_pos.x - cat_pos.x;
+		int dy = mouse_pos.y - cat_pos.y;
+		dx *= dx;
+		dy *= dy;
+		//Collision has occurred if closer than 0.333
+		int range_sqr = dx + dy;
+
+		
+		
+		
+		
+		if(mouse_pos.x > mWidth * FractionScale / 2)
+			mouse_pos.x -= mWidth * FractionScale;
+		if(mouse_pos.y > mHeight * FractionScale / 2)
+			mouse_pos.y -= mHeight * FractionScale;
+		
+		if(cat_pos.x > mWidth * FractionScale / 2)
+			cat_pos.x -= mWidth * FractionScale;
+		if(cat_pos.y > mHeight * FractionScale / 2)
+			cat_pos.y -= mHeight * FractionScale;
+		
+		int dx2 = mouse_pos.x - cat_pos.x;
+		int dy2 = mouse_pos.y - cat_pos.y;
+		dx2 *= dx2;
+		dy2 *= dy2;
+		//Collision has occurred if closer than 0.333
+		int range_sqr2 = dx2 + dy2;
+
+
+		if(range_sqr <= CollisionRadius)
+			return true;
+		if(range_sqr2 <= CollisionRadius) 
+			return true;
+		return false;
+	}
+	
 	/* tick
 	 * Advances cats, mice & performs collisions
 	 * @param timespan the number of milliseconds to advance for
 	 */
 	public void Tick(int timespan) {
-		//Whether or not justDeadX is a good pattern to use I don't know, but it works in C++
-		//and works here, so will use
-		ArrayList<Walker> justDeadMice = new ArrayList<Walker>();
-		ArrayList<Walker> justRescuedMice = new ArrayList<Walker>();
-		ArrayList<Walker> justDeadCats = new ArrayList<Walker>();
-		
-		for (Walker mouse : mLiveMice) {
-			mouse.Advance(timespan);
-			if(mouse.getWalkerState() == WalkerState.Dead)
-				justDeadMice.add(mouse);
-			if(mouse.getWalkerState() == WalkerState.Rescued)
-				justRescuedMice.add(mouse);
+		final int max_timespan = 100; //No more than 100ms movement, longer periods should be broken up
+		while(timespan > 0)
+		{
+			int sub_timespan = timespan;
+			if(sub_timespan > max_timespan)
+				sub_timespan = max_timespan;
+			timespan -= sub_timespan;
+			if(mWorldState == WorldState.OK)
+			{
+				//Whether or not justDeadX is a good pattern to use I don't know, but it works in C++
+				//and works here, so will use
+				ArrayList<Walker> justDeadMice = new ArrayList<Walker>();
+				ArrayList<Walker> justRescuedMice = new ArrayList<Walker>();
+				ArrayList<Walker> justDeadCats = new ArrayList<Walker>();
+				
+				for (Walker mouse : mLiveMice) {
+					mouse.Advance(sub_timespan);
+					if(mouse.getWalkerState() == WalkerState.Dead)
+					{
+						justDeadMice.add(mouse);
+						mWorldState = WorldState.Failed;
+					}
+					if(mouse.getWalkerState() == WalkerState.Rescued)
+						justRescuedMice.add(mouse);
+				}
+				for (Walker cat : mLiveCats) {
+					cat.Advance(sub_timespan);
+					if(cat.getWalkerState() == WalkerState.Dead)
+						justDeadCats.add(cat);
+					if(cat.getWalkerState() == WalkerState.Rescued)
+					{
+						justDeadCats.add(cat);
+						mWorldState = WorldState.Failed;
+					}
+				}
+				
+				for(Walker cat : mLiveCats) {
+					for(Walker mouse : mLiveMice) {
+						//Calculate distance
+						if(checkCollision(cat, mouse))
+						{
+							justDeadMice.add(mouse);
+							mWorldState = WorldState.Failed;
+						}
+					}
+				}
+				mLiveMice.removeAll(justDeadMice);
+				mDeadMice.addAll(justDeadMice);
+				mLiveMice.removeAll(justRescuedMice);
+				mRescuedMice.addAll(justRescuedMice);
+				mLiveCats.removeAll(justDeadCats);
+				mDeadCats.addAll(justDeadCats);
+			}
 		}
-		for (Walker cat : mLiveCats) {
-			cat.Advance(timespan);
-			if(cat.getWalkerState() == WalkerState.Dead)
-				justDeadCats.add(cat);
-		}
-		mLiveMice.removeAll(justDeadMice);
-		mDeadMice.addAll(justDeadMice);
-		mLiveMice.removeAll(justRescuedMice);
-		mRescuedMice.addAll(justRescuedMice);
-		mLiveCats.removeAll(justDeadCats);
-		mDeadCats.addAll(justDeadCats);
 	}
 	
 	/* Reset
@@ -731,6 +861,8 @@ public class World {
 		}
 		for (Walker cat : mLiveCats) {
 			cat.Reset();
-		}		
+		}
+		
+		mWorldState = WorldState.OK;
 	}
 }

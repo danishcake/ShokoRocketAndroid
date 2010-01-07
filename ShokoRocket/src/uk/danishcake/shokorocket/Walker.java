@@ -30,6 +30,7 @@ public class Walker {
 	private World mWorld = null;
 	private WalkerType mWalkerType = WalkerType.Unknown;
 	private WalkerState mWalkerState = WalkerState.Alive;
+	private Boolean mFirstAdvance = true;
 	
 	/* Gets the position of the walker
 	 * @return The position of the walker
@@ -101,7 +102,6 @@ public class Walker {
 		if(world.getWidth() <= mX || world.getHeight() <= mY)
 			throw new InvalidParameterException("Unable to set world as walker outside range. Walker at (" + Integer.toString(mX) + "," + Integer.toString(mY) + "), world size is (" + Integer.toString(world.getWidth()) + "," + Integer.toString(world.getHeight()) + ")");
 		mWorld = world;
-		reachNewGridSquare();
 	}
 	/* Gets the world the walker is moving in
 	 * @return the world the walker is moving through
@@ -114,6 +114,11 @@ public class Walker {
 	 * @param timespan the timespan to advance for in milliseconds
 	 */
 	public void Advance(int timespan) {
+		if(mFirstAdvance)
+		{
+			reachNewGridSquare();
+			mFirstAdvance = false;
+		}
 		mFractional += mSpeed * timespan;
 		while(mFractional >= FractionReset)
 		{
@@ -147,6 +152,7 @@ public class Walker {
 		mY = mStartingY;
 		mDirection = mStartingDirection;
 		mWalkerState = WalkerState.Alive;
+		mFirstAdvance = true;
 	}
 	
 	/* wrapAround
@@ -181,10 +187,7 @@ public class Walker {
 			}
 			if(square == SquareType.Rocket)
 			{
-				if(mWalkerType == WalkerType.Mouse)
-					mWalkerState = WalkerState.Rescued;
-				if(mWalkerType == WalkerType.Cat)
-					mWalkerState = WalkerState.Dead;
+				mWalkerState = WalkerState.Rescued;
 			}
 			//Arrows
 			Direction arrow_direction = square.ToDirection(); 

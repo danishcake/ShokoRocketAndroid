@@ -8,6 +8,7 @@ import uk.danishcake.shokorocket.SquareType;
 import uk.danishcake.shokorocket.World;
 import uk.danishcake.shokorocket.Walker;
 import uk.danishcake.shokorocket.Vector2i;
+import uk.danishcake.shokorocket.World.WorldState;
 
 public class WorldWalkerIntegrationTests extends TestCase {
 	
@@ -420,10 +421,24 @@ public class WorldWalkerIntegrationTests extends TestCase {
 		
 		
 	}
-	
+
+	//This also tests that timesteps are broken up
 	public void testCatsKillMice()
 	{
+		World world = new World();
+		Walker mouse = new Walker();
+		Walker cat = new Walker();
 		
+		mouse.setPosition(new Vector2i(0, 0));
+		mouse.setDirection(Direction.East);
+		cat.setPosition(new Vector2i(10, 0));
+		cat.setDirection(Direction.West);
+		
+		world.addCat(cat);
+		world.addMouse(mouse);
+		
+		world.Tick(10000);
+		assertEquals(WorldState.Failed, world.getWorldState());
 	}
 	
 	public void testHolesKillMice()
@@ -485,33 +500,50 @@ public class WorldWalkerIntegrationTests extends TestCase {
 		
 		world.setRocket(4, 2, true);
 		
+		
+		assertEquals(World.WorldState.OK, world.getWorldState());
+		
 		world.Tick(3000);
 		
 		assertEquals(0, world.getLiveCats().size());
 		assertEquals(1, world.getDeadCats().size());
 		
 		//Now for world state
+		assertEquals(World.WorldState.Failed, world.getWorldState());
 	}
 	
 	public void testWrappingCollisions()
 	{
-		assertTrue(false);	
+		World world = new World();
+		Walker mouse = new Walker();
+		Walker cat = new Walker();
+		
+		world.setEast(11, 0, false);
+		
+		mouse.setPosition(new Vector2i(0,0));
+		mouse.setDirection(Direction.West);
+		
+		cat.setPosition(new Vector2i(11, 0));
+		cat.setDirection(Direction.East);
+		
+		world.addCat(cat);
+		world.addMouse(mouse);
+		
+		
+		world.Tick(1000);
+		
+		assertEquals(WorldState.Failed, world.getWorldState());
 	}
 	
-	public void testLargeTimestepsSplit()
-	{
-		assertTrue(false);
-	}
-
 	public void testWorldReset()
 	{
 		World world = new World();
 		Walker mouse_to_die = new Walker();
-		mouse_to_die.setPosition(new Vector2i(10,0));
+		mouse_to_die.setPosition(new Vector2i(8,0));
 		mouse_to_die.setDirection(Direction.East);
 		
 		Walker mouse_to_rescue = new Walker();
-		mouse_to_rescue.setPosition(new Vector2i(10, 3));
+		mouse_to_rescue.setPosition(new Vector2i(8, 3));
 		mouse_to_rescue.setDirection(Direction.East);
 		
 		Walker cat_to_die = new Walker();
@@ -527,7 +559,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 		world.setRocket(11, 4, true);
 		world.setHole(11, 7, true);
 		
-		world.Tick(3000);
+		world.Tick(6000);
 		
 		assertEquals(1, world.getRescuedMice().size());
 		assertEquals(1, world.getDeadMice().size());
@@ -537,6 +569,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 		assertEquals(Direction.South, mouse_to_die.getDirection());
 		assertEquals(Direction.South, cat_to_die.getDirection());
 		
+		assertEquals(WorldState.Failed, world.getWorldState());
 		world.Reset();
 
 		assertEquals(0, world.getRescuedMice().size());
@@ -546,6 +579,6 @@ public class WorldWalkerIntegrationTests extends TestCase {
 		assertEquals(Direction.East, mouse_to_rescue.getDirection());
 		assertEquals(Direction.East, mouse_to_die.getDirection());
 		assertEquals(Direction.East, cat_to_die.getDirection());
-		
+		assertEquals(WorldState.OK, world.getWorldState());
 	}
 }
