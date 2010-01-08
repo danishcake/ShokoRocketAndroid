@@ -1,7 +1,7 @@
 package uk.danishcake.shokorocket;
 
 public enum SquareType {
-	Empty, Rocket, Hole, NorthArrow, SouthArrow, EastArrow, WestArrow, NorthHalfArrow, SouthHalfArrow, WestHalfArrow, EastHalfArrow;
+	Empty, Rocket, Hole, NorthArrow, SouthArrow, EastArrow, WestArrow, NorthHalfArrow, SouthHalfArrow, WestHalfArrow, EastHalfArrow, NorthDestroyedArrow, SouthDestroyedArrow, WestDestroyedArrow, EastDestroyedArrow;
 	
 	public Direction ToDirection() {
 		switch(this)
@@ -23,6 +23,30 @@ public enum SquareType {
 		}
 	}
 	
+	public Direction GetDirectionality() {
+		switch(this)
+		{
+		case NorthArrow:
+		case NorthHalfArrow:
+		case NorthDestroyedArrow:
+			return Direction.North;
+		case SouthArrow:
+		case SouthHalfArrow:
+		case SouthDestroyedArrow:
+			return Direction.South;
+		case EastArrow:
+		case EastHalfArrow:
+		case EastDestroyedArrow:
+			return Direction.East;
+		case WestArrow:
+		case WestHalfArrow:
+		case WestDestroyedArrow:
+			return Direction.West;
+		default:
+			return Direction.Invalid;
+		}		
+	}
+	
 	public SquareType Diminish()
 	{
 		switch(this)
@@ -36,13 +60,38 @@ public enum SquareType {
 		case WestArrow:
 			return SquareType.WestHalfArrow;
 		case NorthHalfArrow:
-			return SquareType.Empty;
+			return SquareType.NorthDestroyedArrow;
 		case SouthHalfArrow:
-			return SquareType.Empty;
+			return SquareType.SouthDestroyedArrow;
 		case EastHalfArrow:
-			return SquareType.Empty;
+			return SquareType.EastDestroyedArrow;
 		case WestHalfArrow:
-			return SquareType.Empty;
+			return SquareType.WestDestroyedArrow;
+		default:
+			return this;
+		}		
+	}
+	
+	public SquareType Restore()
+	{
+		switch(this)
+		{
+		case NorthHalfArrow:
+			return SquareType.NorthArrow;
+		case SouthHalfArrow:
+			return SquareType.SouthArrow;
+		case EastHalfArrow:
+			return SquareType.EastArrow;
+		case WestHalfArrow:
+			return SquareType.WestArrow;
+		case NorthDestroyedArrow:
+			return SquareType.NorthArrow;
+		case SouthDestroyedArrow:
+			return SquareType.SouthArrow;
+		case EastDestroyedArrow:
+			return SquareType.EastArrow;
+		case WestDestroyedArrow:
+			return SquareType.WestArrow;
 		default:
 			return this;
 		}		

@@ -27,6 +27,12 @@ public class World {
 	{
 		OK, Failed, Success
 	}
+	public class ArrowRecord
+	{
+		public int x;
+		public int y;
+		public Direction direction;
+	}
 	private int mWidth = 12;
 	private int mHeight = 9;
 	private String mLevelName = "Default";
@@ -44,6 +50,10 @@ public class World {
 	
 	private SquareType[] mSpecialSquares = new SquareType[12*9];
 	private WorldState mWorldState = WorldState.OK;
+	
+	private ArrayList<ArrowRecord> mSolution = new ArrayList<ArrowRecord>();
+	private ArrayList<Direction> mArrowStock = new ArrayList<Direction>();
+	private boolean mUnlimitedArrows = false;
 	
 	/* getWidth
 	 * @return width of the level - defaults to 12
@@ -130,14 +140,14 @@ public class World {
 	/* getHole
 	 * @return if there is a hole at x/y
 	 */
-	public Boolean getHole(int x, int y) {
+	public boolean getHole(int x, int y) {
 		return mSpecialSquares[wallIndex(x, y)] == SquareType.Hole;
 	}
 	
 	/* setHole
 	 * Sets the hole at x/y to hole. Will not clear a rocket
 	 */
-	public void setHole(int x, int y, Boolean hole) {
+	public void setHole(int x, int y, boolean hole) {
 		if(hole)
 			mSpecialSquares[wallIndex(x, y)] = SquareType.Hole;
 		else if(mSpecialSquares[wallIndex(x, y)] == SquareType.Hole)
@@ -158,14 +168,14 @@ public class World {
 	/* getRocket
 	 * @return true if there is a rocket at x/y
 	 */
-	public Boolean getRocket(int x, int y) {
+	public boolean getRocket(int x, int y) {
 		return mSpecialSquares[wallIndex(x, y)] == SquareType.Rocket;
 	}
 	
 	/* setRocket
 	 * Sets the rocket at x/y to rocket. Will not clear a hole
 	 */
-	public void setRocket(int x, int y, Boolean rocket) {
+	public void setRocket(int x, int y, boolean rocket) {
 		if(rocket)
 			mSpecialSquares[wallIndex(x, y)] = SquareType.Rocket;
 		else if(mSpecialSquares[wallIndex(x, y)] == SquareType.Rocket)
@@ -182,34 +192,64 @@ public class World {
 			mSpecialSquares[wallIndex(x, y)] = SquareType.Rocket;
 	}
 	
+	private boolean stockHasArrow(Direction direction) {
+		for (Direction dir : mArrowStock) {
+			if(dir == direction)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private void removeArrowFromStock(Direction direction) {
+		for (Direction dir : mArrowStock) {
+			if(dir == direction)
+			{
+				mArrowStock.remove(dir);
+				break;
+			}
+		}
+	}
+	
 	/* setArrow
 	 * Sets the grid square to a certain direction. Clears if invalid passed in
 	 */
 	public void setArrow(int x, int y, Direction direction) {
+		SquareType square_type = mSpecialSquares[wallIndex(x, y)];
+		Direction square_dir = square_type.GetDirectionality();
+		//Can't set arrow in rocket or hole
+		if(square_type == SquareType.Hole || square_type == SquareType.Rocket)
+			return;
+		
 		switch(direction)
 		{
 		case North:
-			mSpecialSquares[wallIndex(x, y)] = SquareType.NorthArrow;
-			break;
-		case West:
-			mSpecialSquares[wallIndex(x, y)] = SquareType.WestArrow;
-			break;
 		case South:
-			mSpecialSquares[wallIndex(x, y)] = SquareType.SouthArrow;
-			break;
+		case West:
 		case East:
-			mSpecialSquares[wallIndex(x, y)] = SquareType.EastArrow;
+			if(mUnlimitedArrows)
+				mSpecialSquares[wallIndex(x, y)] = direction.ToArrow();
+			else if(stockHasArrow(direction))
+			{
+				if(square_dir == Direction.Invalid)
+				{
+					mSpecialSquares[wallIndex(x, y)] = direction.ToArrow();
+					removeArrowFromStock(direction);
+				} else
+				{
+					mArrowStock.add(square_dir);
+					mSpecialSquares[wallIndex(x, y)] = direction.ToArrow();
+					removeArrowFromStock(direction);	
+				}
+			}
 			break;
 		case Invalid:
-			switch(mSpecialSquares[wallIndex(x, y)])
+			if(!mUnlimitedArrows && square_dir != Direction.Invalid)
 			{
-			case NorthArrow:
-			case WestArrow:
-			case SouthArrow:
-			case EastArrow:
-				mSpecialSquares[wallIndex(x, y)] = SquareType.Empty;
-				break;
+				mArrowStock.add(square_dir);
 			}
+			mSpecialSquares[wallIndex(x,y)] = SquareType.Empty;
 			break;
 		}		
 	}
@@ -279,6 +319,28 @@ public class World {
 		mWorldState = world_state;
 	}
 	
+	/* getArrowStockUnlimited
+	 * @return the arrow stock unlimited state
+	 */
+	public boolean getArrowStockUnlimited() {
+		return mUnlimitedArrows;
+	}
+	
+	/* setArrowStockUnlimited
+	 * @param unlimited_arrows whether the arrow stocks are unlimited
+	 * Sets the arrow stock to unlimited or not.
+	 */
+	public void setArrowStockUnlimited(boolean unlimited_arrows) {
+		mUnlimitedArrows = unlimited_arrows;
+	}
+	
+	/* getArrowStock
+	 * @return the stock or remaining arrows
+	 */
+	public ArrayList<Direction> getArrowStock() {
+		return mArrowStock;
+	}
+	
 	/* World()
 	 * Creates a empty world 12x9 with walls around the edge
 	 */
@@ -286,6 +348,7 @@ public class World {
 	{
 		defaultWalls();
 		defaultSpecialSquares();
+		mUnlimitedArrows = true;
 	}
 	
 	/* World(input)
@@ -294,8 +357,7 @@ public class World {
 	 */
 	public World(InputStream input) throws IOException
 	{
-		//FileInputStream level_in =  (FileInputStream)input; 		
-		
+		mUnlimitedArrows = false;
 		try
 		{
 			javax.xml.parsers.DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -565,7 +627,13 @@ public class World {
 				{
 					int x = Integer.parseInt(pos_x.getNodeValue());
 					int y = Integer.parseInt(pos_y.getNodeValue());
-					setArrow(x, y, Direction.valueOf(dir.getNodeValue()));
+					//setArrow(x, y, Direction.valueOf(dir.getNodeValue()));
+					mArrowStock.add(Direction.valueOf(dir.getNodeValue()));
+					ArrowRecord ar = new ArrowRecord();
+					ar.x = x;
+					ar.y = y;
+					ar.direction = Direction.valueOf(dir.getNodeValue());
+					mSolution.add(ar);
 				} catch(NumberFormatException nfe)
 				{
 					throw new InvalidParameterException("Unable to parse x or y in arrow");
@@ -706,7 +774,7 @@ public class World {
 	/* checkCollision
 	 * Checks if the two walkers are close
 	 */
-	private Boolean checkCollision(Walker cat, Walker mouse) {
+	private boolean checkCollision(Walker cat, Walker mouse) {
 		final int FractionScale = 1000;
 		final int CollisionRadius = 333*333;
 		Vector2i cat_pos = cat.getPosition();
@@ -864,5 +932,51 @@ public class World {
 		}
 		
 		mWorldState = WorldState.OK;
+	}
+	
+	public void LoadSolution() {
+		ClearArrows();
+		for (ArrowRecord ar : mSolution) {
+			setArrow(ar.x, ar.y, ar.direction);
+		}
+	}
+	
+	/* ClearArrows
+	 * Clears the arrows
+	 */
+	public void ClearArrows() {
+		for(int x = 0; x < mWidth; x++)
+		{
+			for(int y = 0; y < mHeight; y++)
+			{
+				switch(mSpecialSquares[wallIndex(x, y)])
+				{
+				case EastArrow:
+				case EastDestroyedArrow:
+				case EastHalfArrow:
+					mSpecialSquares[wallIndex(x, y)] = SquareType.Empty;
+					if(!mUnlimitedArrows) mArrowStock.add(Direction.East);
+					break;
+				case NorthArrow:
+				case NorthDestroyedArrow:
+				case NorthHalfArrow:
+					mSpecialSquares[wallIndex(x, y)] = SquareType.Empty;
+					if(!mUnlimitedArrows) mArrowStock.add(Direction.North);
+					break;
+				case WestArrow:
+				case WestDestroyedArrow:
+				case WestHalfArrow:
+					mSpecialSquares[wallIndex(x, y)] = SquareType.Empty;
+					if(!mUnlimitedArrows) mArrowStock.add(Direction.West);
+					break;
+				case SouthArrow:
+				case SouthDestroyedArrow:
+				case SouthHalfArrow:
+					mSpecialSquares[wallIndex(x, y)] = SquareType.Empty;
+					if(!mUnlimitedArrows) mArrowStock.add(Direction.South);
+					break;
+				}
+			}
+		}
 	}
 }

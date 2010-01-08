@@ -17,6 +17,7 @@ public class WorldTests extends AndroidTestCase {
 		World world = new World();
 		assertEquals(12, world.getWidth());
 		assertEquals(9, world.getHeight());
+		assertEquals(true, world.getArrowStockUnlimited());
 	}
 	
 	public void testWorldWallBounds()
@@ -306,14 +307,76 @@ public class WorldTests extends AndroidTestCase {
 		{
 			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 23.Level");			
 			World world = new World(world_stream);
+			
+			assertEquals(SquareType.Empty, world.getSpecialSquare(1, 1));
+			assertEquals(SquareType.Empty, world.getSpecialSquare(5, 0));
+			assertEquals(SquareType.Empty, world.getSpecialSquare(5, 2));
+			assertEquals(SquareType.Empty, world.getSpecialSquare(11, 2));
+			
+			assertEquals(4, world.getArrowStock().size());
+			
+			world.LoadSolution();
+			assertEquals(false, world.getArrowStockUnlimited());
+			
 			assertEquals(SquareType.EastArrow, world.getSpecialSquare(1, 1));
 			assertEquals(SquareType.SouthArrow, world.getSpecialSquare(5, 0));
 			assertEquals(SquareType.SouthArrow, world.getSpecialSquare(5, 2));
 			assertEquals(SquareType.WestArrow, world.getSpecialSquare(11, 2));
+			
+			assertEquals(0, world.getArrowStock().size());
 		}
 		catch(IOException io_ex)
 		{
 			assertTrue("Error opening stream - " + io_ex.getMessage(), false);
 		}
 	}
-}
+	
+	public void testArrowStockLimitsArrows()
+	{
+		World world = new World();
+		world.setArrowStockUnlimited(true);
+
+		world.setArrow(0, 0, Direction.East);
+		world.setArrow(1, 1, Direction.East);
+		
+		assertEquals(Direction.East, world.getSpecialSquare(0, 0).ToDirection());
+		assertEquals(Direction.East, world.getSpecialSquare(1, 1).ToDirection());
+		
+		World world2 = new World();
+		world2.setArrowStockUnlimited(false);
+		
+		world2.setArrow(0, 0, Direction.East);
+		world2.setArrow(1, 1, Direction.East);
+		assertEquals(Direction.Invalid, world2.getSpecialSquare(0, 0).ToDirection());
+		assertEquals(Direction.Invalid, world2.getSpecialSquare(1, 1).ToDirection());
+	}
+	
+	public void testResetArrows()
+	{
+		try
+		{
+			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 23.Level");			
+			World world = new World(world_stream);
+			world.LoadSolution();
+			
+			assertEquals(SquareType.EastArrow, world.getSpecialSquare(1, 1));
+			assertEquals(SquareType.SouthArrow, world.getSpecialSquare(5, 0));
+			assertEquals(SquareType.SouthArrow, world.getSpecialSquare(5, 2));
+			assertEquals(SquareType.WestArrow, world.getSpecialSquare(11, 2));
+			assertEquals(0, world.getArrowStock().size());
+			
+			world.ClearArrows();
+			assertEquals(SquareType.Empty, world.getSpecialSquare(1, 1));
+			assertEquals(SquareType.Empty, world.getSpecialSquare(5, 0));
+			assertEquals(SquareType.Empty, world.getSpecialSquare(5, 2));
+			assertEquals(SquareType.Empty, world.getSpecialSquare(11, 2));
+			assertEquals(4, world.getArrowStock().size());			
+			
+		}
+		catch(IOException io_ex)
+		{
+			assertTrue("Error opening stream - " + io_ex.getMessage(), false);
+		}
+
+	}
+}	

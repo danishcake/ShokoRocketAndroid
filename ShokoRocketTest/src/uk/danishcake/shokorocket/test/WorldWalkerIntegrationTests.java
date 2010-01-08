@@ -410,14 +410,14 @@ public class WorldWalkerIntegrationTests extends TestCase {
 		assertEquals(3, walker.getPosition().y);
 		assertEquals(Direction.West, walker.getDirection());
 		assertEquals(SquareType.EastHalfArrow, world.getSpecialSquare(2, 3));
-		assertEquals(SquareType.Empty, world.getSpecialSquare(6, 3));
+		assertEquals(SquareType.WestDestroyedArrow, world.getSpecialSquare(6, 3));
 		
 		world.Tick(4000);
 		assertEquals(2, walker.getPosition().x);
 		assertEquals(3, walker.getPosition().y);
 		assertEquals(Direction.East, walker.getDirection());
-		assertEquals(SquareType.Empty, world.getSpecialSquare(2, 3));
-		assertEquals(SquareType.Empty, world.getSpecialSquare(6, 3));
+		assertEquals(SquareType.EastDestroyedArrow, world.getSpecialSquare(2, 3));
+		assertEquals(SquareType.WestDestroyedArrow, world.getSpecialSquare(6, 3));
 		
 		
 	}

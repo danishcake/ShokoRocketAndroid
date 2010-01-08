@@ -30,7 +30,7 @@ public class Walker {
 	private World mWorld = null;
 	private WalkerType mWalkerType = WalkerType.Unknown;
 	private WalkerState mWalkerState = WalkerState.Alive;
-	private Boolean mFirstAdvance = true;
+	private boolean mFirstAdvance = true;
 	
 	/* Gets the position of the walker
 	 * @return The position of the walker
