@@ -1,6 +1,6 @@
-package uk.danishcake.shokorocket;
+package uk.danishcake.shokorocket.Simulation;
 
-import uk.danishcake.shokorocket.Direction;
+
 
 /* 
  * Collection of methods for turning

@@ -1,4 +1,4 @@
-package uk.danishcake.shokorocket;
+package uk.danishcake.shokorocket.Simulation;
 
 public class Vector2i {
 	public int x;

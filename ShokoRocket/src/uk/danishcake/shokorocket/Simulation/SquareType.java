@@ -1,4 +1,6 @@
-package uk.danishcake.shokorocket;
+package uk.danishcake.shokorocket.Simulation;
+
+
 
 public enum SquareType {
 	Empty, Rocket, Hole, NorthArrow, SouthArrow, EastArrow, WestArrow, NorthHalfArrow, SouthHalfArrow, WestHalfArrow, EastHalfArrow, NorthDestroyedArrow, SouthDestroyedArrow, WestDestroyedArrow, EastDestroyedArrow;

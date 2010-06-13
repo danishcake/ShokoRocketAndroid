@@ -1,11 +1,11 @@
 package uk.danishcake.shokorocket.test;
 
 import junit.framework.TestCase;
-import uk.danishcake.shokorocket.Walker;
-import uk.danishcake.shokorocket.Direction;
-import uk.danishcake.shokorocket.Vector2i;
-import uk.danishcake.shokorocket.World;
-import uk.danishcake.shokorocket.Walker.WalkerState;
+import uk.danishcake.shokorocket.Simulation.Direction;
+import uk.danishcake.shokorocket.Simulation.Vector2i;
+import uk.danishcake.shokorocket.Simulation.Walker;
+import uk.danishcake.shokorocket.Simulation.World;
+import uk.danishcake.shokorocket.Simulation.Walker.WalkerState;
 
 public class WalkerTests extends TestCase {
 

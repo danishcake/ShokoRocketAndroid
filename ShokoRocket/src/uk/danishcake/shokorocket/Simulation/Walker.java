@@ -1,10 +1,7 @@
-package uk.danishcake.shokorocket;
+package uk.danishcake.shokorocket.Simulation;
 
 import java.security.InvalidParameterException;
 
-import uk.danishcake.shokorocket.Vector2i;
-import uk.danishcake.shokorocket.Direction;
-import uk.danishcake.shokorocket.World;
 
 public class Walker {
 	public enum WalkerType

@@ -1,4 +1,6 @@
-package uk.danishcake.shokorocket;
+package uk.danishcake.shokorocket.Simulation;
+
+
 
 public enum Direction {
 	Invalid,

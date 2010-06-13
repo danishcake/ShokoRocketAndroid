@@ -3,12 +3,12 @@ package uk.danishcake.shokorocket.test;
 import java.security.InvalidParameterException;
 
 import junit.framework.TestCase;
-import uk.danishcake.shokorocket.Direction;
-import uk.danishcake.shokorocket.SquareType;
-import uk.danishcake.shokorocket.World;
-import uk.danishcake.shokorocket.Walker;
-import uk.danishcake.shokorocket.Vector2i;
-import uk.danishcake.shokorocket.World.WorldState;
+import uk.danishcake.shokorocket.Simulation.Direction;
+import uk.danishcake.shokorocket.Simulation.SquareType;
+import uk.danishcake.shokorocket.Simulation.Vector2i;
+import uk.danishcake.shokorocket.Simulation.Walker;
+import uk.danishcake.shokorocket.Simulation.World;
+import uk.danishcake.shokorocket.Simulation.World.WorldState;
 
 public class WorldWalkerIntegrationTests extends TestCase {
 	
