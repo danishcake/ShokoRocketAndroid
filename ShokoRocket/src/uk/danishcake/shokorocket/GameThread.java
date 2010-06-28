@@ -1,6 +1,6 @@
 package uk.danishcake.shokorocket;
 
-import uk.danishcake.shokorocket.Moding.GameStateMachine;
+import uk.danishcake.shokorocket.moding.GameStateMachine;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;

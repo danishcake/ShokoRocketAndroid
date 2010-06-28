@@ -6,10 +6,10 @@ import java.security.InvalidParameterException;
 
 import android.test.AndroidTestCase;
 
-import uk.danishcake.shokorocket.Simulation.Direction;
-import uk.danishcake.shokorocket.Simulation.SquareType;
-import uk.danishcake.shokorocket.Simulation.Walker;
-import uk.danishcake.shokorocket.Simulation.World;
+import uk.danishcake.shokorocket.simulation.Direction;
+import uk.danishcake.shokorocket.simulation.SquareType;
+import uk.danishcake.shokorocket.simulation.Walker;
+import uk.danishcake.shokorocket.simulation.World;
 
 public class WorldTests extends AndroidTestCase {
 	public void testWorldDefaults()

@@ -1,4 +1,4 @@
-package uk.danishcake.shokorocket.Simulation;
+package uk.danishcake.shokorocket.simulation;
 
 import java.security.InvalidParameterException;
 

@@ -1,7 +1,7 @@
-package uk.danishcake.shokorocket.Simulation;
+package uk.danishcake.shokorocket.simulation;
 
-import uk.danishcake.shokorocket.Simulation.Walker.WalkerState;
-import uk.danishcake.shokorocket.Simulation.Walker.WalkerType;
+import uk.danishcake.shokorocket.simulation.Walker.WalkerState;
+import uk.danishcake.shokorocket.simulation.Walker.WalkerType;
 
 import java.io.InputStream;
 import java.io.IOException;

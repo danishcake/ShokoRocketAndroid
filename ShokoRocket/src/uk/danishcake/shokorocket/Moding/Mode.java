@@ -1,4 +1,4 @@
-package uk.danishcake.shokorocket.Moding;
+package uk.danishcake.shokorocket.moding;
 
 import android.graphics.Canvas;
 
@@ -57,5 +57,4 @@ public class Mode {
 	public void Redraw(Canvas canvas)
 	{
 	}
-
 }

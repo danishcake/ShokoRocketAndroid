@@ -1,4 +1,4 @@
-package uk.danishcake.shokorocket.Moding;
+package uk.danishcake.shokorocket.moding;
 
 import android.graphics.Canvas;
 
@@ -7,7 +7,7 @@ public class GameStateMachine {
 
 	public GameStateMachine()
 	{
-		//mMode = new ModeIntro();
+		mMode = new ModeIntro();
 		mMode.Setup();
 	}
 
@@ -25,6 +25,7 @@ public class GameStateMachine {
 	}
 	
 	public void Redraw(Canvas canvas) {
+		mMode.Redraw(canvas);
 	}
 
 }
