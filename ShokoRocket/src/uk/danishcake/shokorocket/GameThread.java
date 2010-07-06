@@ -21,6 +21,7 @@ public class GameThread extends Thread {
 		mHandler = handler;
 		mContext = context;
 		mGame = game;
+		mGame.setContext(context);
 	}
 	
 	public void StopRunning() {mRunning = false;}
@@ -31,7 +32,12 @@ public class GameThread extends Thread {
 		{
 			long update_start = System.nanoTime();
 			//Update game
-			mGame.Tick(20);
+			boolean exit = mGame.Tick(20);
+			
+			if(exit)
+			{ //TODO provide a proper exit
+				
+			}
 			
 			//Draw
 			Canvas canvas = null;

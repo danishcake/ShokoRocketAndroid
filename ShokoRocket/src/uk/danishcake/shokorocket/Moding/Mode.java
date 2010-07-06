@@ -1,5 +1,6 @@
 package uk.danishcake.shokorocket.moding;
 
+import android.content.Context;
 import android.graphics.Canvas;
 
 /**
@@ -14,12 +15,18 @@ public class Mode {
 	protected int mPendTimer = 0; 
 	protected int mAge = 0;
 	protected int mFade = 0;
+	protected int mFadeR = 255;
+	protected int mFadeB = 255;
+	protected int mFadeG = 255;
+	
+	protected int mScreenWidth = 240;
+	protected int mScreenHeight = 320;
 
 	/**
 	 * Called before the first Tick to allow creation of state, after the previous 
 	 * Mode has had Teardown called
 	 */
-	public void Setup()
+	public void Setup(Context context)
 	{
 	}
 
@@ -48,6 +55,9 @@ public class Mode {
 			mFade = 255 * mPendTimer / mPendTime;
 		if(mFade > 255) mFade = 255;
 		if(mFade < 0) mFade = 0;
+		
+		if(mPendTimer > mPendTime)
+			return ModeAction.ChangeMode;
 		return ModeAction.NoAction;
 	}
 
@@ -56,5 +66,28 @@ public class Mode {
 	 */
 	public void Redraw(Canvas canvas)
 	{
+		if(mFade > 0)
+			canvas.drawARGB(mFade, mFadeR, mFadeG, mFadeB);
+	}
+	
+	/**
+	 * Called when the screen is tapped
+	 * @param x the x position of the event
+	 * @param y the y position of the event
+	 */
+	public void handleTap(int x, int y)	{
+	
+	}
+	
+	/**
+	 * ScreenChanged
+	 * Called when the screen geometry changes, or just before Setup
+	 * @param width
+	 * @param height
+	 */
+	public void ScreenChanged(int width, int height)
+	{
+		mScreenWidth = width;
+		mScreenHeight = height;
 	}
 }

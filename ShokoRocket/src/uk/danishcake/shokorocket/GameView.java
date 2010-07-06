@@ -5,9 +5,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.View.OnTouchListener;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -19,16 +22,25 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	{
 		super(context);
 		mContext = context;
-		mGame = new GameStateMachine();
+		mGame = new GameStateMachine(mContext);
 		
 		SurfaceHolder holder = getHolder();
 		holder.addCallback(this);
+		
+		setOnTouchListener(mTouchListener);
 	}
-
+	
+	private OnTouchListener mTouchListener = new OnTouchListener() {
+		public boolean onTouch(View v, MotionEvent event)
+		{
+			mGame.HandleTouch(event);
+			return true;
+		}
+	};
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
-		//mGame.SizeChanged(width, height);
+		mGame.ScreenChanged(width, height);
 	}
 
 
