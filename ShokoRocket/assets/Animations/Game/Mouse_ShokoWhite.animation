@@ -1,0 +1,47 @@
+<AnimationSet>
+  <Animation Name="North">
+    <Frame Width="32" Height="32" Top="96" Left="0" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+    <Frame Width="32" Height="32" Top="96" Left="32" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+    <Frame Width="32" Height="32" Top="96" Left="64" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+    <Frame Width="32" Height="32" Top="96" Left="96" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+  </Animation>
+  <Animation Name="South">
+    <Frame Width="32" Height="32" Top="64" Left="0" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+    <Frame Width="32" Height="32" Top="64" Left="32" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+    <Frame Width="32" Height="32" Top="64" Left="64" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+    <Frame Width="32" Height="32" Top="64" Left="96" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+  </Animation>
+  <Animation Name="East">
+    <Frame Width="32" Height="32" Top="0" Left="0" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+    <Frame Width="32" Height="32" Top="0" Left="32" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+    <Frame Width="32" Height="32" Top="0" Left="64" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+    <Frame Width="32" Height="32" Top="0" Left="96" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+  </Animation>
+  <Animation Name="West">
+    <Frame Width="32" Height="32" Top="32" Left="0" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+    <Frame Width="32" Height="32" Top="32" Left="32" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+    <Frame Width="32" Height="32" Top="32" Left="64" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+    <Frame Width="32" Height="32" Top="32" Left="96" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+  </Animation>
+  <Animation Name="Stopped">
+    <Frame Width="32" Height="32" Top="0" Left="0" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
+  </Animation>
+  <Animation Name="Death">
+    <Frame Width="32" Height="32" Top="0" Left="0" File="Bitmaps/Game/Mouse_ShokoWhiteDeath.png" Time="0.3"/>
+    <Frame Width="32" Height="32" Top="0" Left="32" File="Bitmaps/Game/Mouse_ShokoWhiteDeath.png" Time="0.3"/>
+  </Animation>
+  <Animation Name="Rescue">
+    <Frame Width="32" Height="32" Top="0" Left="0" File="Bitmaps/Game/Mouse_ShokoWhiteRescue.png" Time="0.08333"/>
+    <Frame Width="32" Height="32" Top="0" Left="32" File="Bitmaps/Game/Mouse_ShokoWhiteRescue.png" Time="0.08333"/>
+    <Frame Width="32" Height="32" Top="0" Left="64" File="Bitmaps/Game/Mouse_ShokoWhiteRescue.png" Time="0.08333"/>
+    <Frame Width="32" Height="32" Top="0" Left="96" File="Bitmaps/Game/Mouse_ShokoWhiteRescue.png" Time="0.08333"/>
+    <Frame Width="32" Height="32" Top="0" Left="128" File="Bitmaps/Game/Mouse_ShokoWhiteRescue.png" Time="0.08333"/>
+    <Frame Width="32" Height="32" Top="0" Left="160" File="Bitmaps/Game/Mouse_ShokoWhiteRescue.png" Time="0.08333"/>
+    <Frame Width="32" Height="32" Top="0" Left="192" File="Bitmaps/Game/Mouse_ShokoWhiteRescue.png" Time="0.08333"/>
+    <Frame Width="32" Height="32" Top="0" Left="224" File="Bitmaps/Game/Mouse_ShokoWhiteRescue.png" Time="0.08333"/>
+    <Frame Width="32" Height="32" Top="0" Left="256" File="Bitmaps/Game/Mouse_ShokoWhiteRescue.png" Time="0.08333"/>
+    <Frame Width="32" Height="32" Top="0" Left="288" File="Bitmaps/Game/Mouse_ShokoWhiteRescue.png" Time="0.08333"/>
+    <Frame Width="32" Height="32" Top="0" Left="320" File="Bitmaps/Game/Mouse_ShokoWhiteRescue.png" Time="0.08333"/>
+    <Frame Width="32" Height="32" Top="0" Left="352" File="Bitmaps/Game/Mouse_ShokoWhiteRescue.png" Time="0.08333"/>
+  </Animation>
+</AnimationSet>

@@ -93,7 +93,7 @@ public class Widget {
 			bottom_src.right = bottom_src.left + h_remainder;
 			
 			Rect bottom = new Rect(bottom_src);
-			bottom.offsetTo(ninePatchData.leftBorder + h_tiles * src_middle_w, source.getHeight() - ninePatchData.bottomBorder);
+			bottom.offsetTo(ninePatchData.leftBorder + h_tiles * src_middle_w, mBackbuffer.getHeight() - ninePatchData.bottomBorder);
 			canvas.drawBitmap(source, bottom_src, bottom, null);
 		}
 
@@ -164,9 +164,6 @@ public class Widget {
 			src_rect.bottom = src_rect.top + v_remainder;
 			
 			Rect dest_rect = new Rect(src_rect);
-			dest_rect.right = dest_rect.left + h_remainder;
-			dest_rect.bottom = dest_rect.top = v_remainder;
-			
 			dest_rect.offsetTo(ninePatchData.leftBorder + h_tiles * src_middle_w, ninePatchData.topBorder + v_tiles * src_middle_h);
 			canvas.drawBitmap(source, src_rect, dest_rect, null);
 		}

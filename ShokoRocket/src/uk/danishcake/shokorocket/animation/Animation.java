@@ -28,6 +28,8 @@ public class Animation {
 	private int mFPS = 15;
 	private int mTime = 0;
 	private String mName = "Default";
+	private int mOffsetX = 0;
+	private int mOffsetY = 0;
 	
 	/* getFrameCount
 	 * @return the number of frames in the animation 
@@ -90,20 +92,61 @@ public class Animation {
 		return mFrames.get(index);
 	}
 	
+	/**
+	 * Draws the current frame at the specified location. It will be automatically be adjusted for offset 
+	 * @param canvas The canvas to draw with
+	 * @param x The x coordinate (before offsets)
+	 * @param y The y coordinate (before offsets)
+	 */
+	public void DrawCurrentFrame(Canvas canvas, int x, int y)
+	{
+		canvas.drawBitmap(getCurrentFrame(), x + mOffsetX, y + mOffsetY, null);
+	}
+	
 	
 	/* loadAnimation
 	 * Takes an animation element from XML and loads the frames associated
 	 */
-	private static Animation loadAnimation(Context context, Element animation) throws IOException
+	private static Animation loadAnimation(Context context, Element animation, float scale) throws IOException
 	{
 		Animation an = new Animation();
 		String animation_name = animation.getAttribute("Name");
 		String fps_string = animation.getAttribute("FPS");
+		String xOffsetString = animation.getAttribute("OffsetX");
+		String yOffsetString = animation.getAttribute("OffsetY");
+		
 		HashMap<String, Bitmap> src_cache = new HashMap<String, Bitmap>();
-		int fps = Integer.getInteger(fps_string, 15);
+		int fps = 15;
+		try
+		{
+			fps = Integer.parseInt(fps_string);	
+		} catch(NumberFormatException nfe)
+		{
+			//Nothing to do
+		}
+	
+		int xOffset = 0;
+		try
+		{
+			xOffset = (int)(Integer.parseInt(xOffsetString) * scale);	
+		} catch(NumberFormatException nfe)
+		{
+			//Nothing to do
+		}
+		
+		int yOffset = 0;
+		try
+		{
+			yOffset = (int)(Integer.parseInt(yOffsetString) * scale);	
+		} catch(NumberFormatException nfe)
+		{
+			//Nothing to do
+		}
 		
 		an.mFPS = fps;
 		an.mName = animation_name;
+		an.mOffsetX = xOffset;
+		an.mOffsetY = yOffset;
 		
 		NodeList frames = ((Element)animation).getElementsByTagName("Frame");
 		for(int i = 0; i < frames.getLength(); i++)
@@ -133,6 +176,14 @@ public class Animation {
 				}
 				src_cache.put(filename, src);
 				Bitmap dest = Bitmap.createBitmap(src, left, top, width, height);
+				if(scale != 1.0f)
+				{
+					int scaled_width = (int)(dest.getWidth() * scale);
+					int scaled_height = (int)(dest.getHeight() * scale);
+					if(scaled_width == 0) scaled_width = 1;
+					if(scaled_height == 0) scaled_height = 1;
+					dest = Bitmap.createScaledBitmap(dest, scaled_width, scaled_height, true);
+				}
 				
 				an.AddFrame(dest);
 			} catch(NumberFormatException nfe)
@@ -144,10 +195,15 @@ public class Animation {
 		return an;
 	}
 	
+	public static Map<String, Animation> GetAnimations(Context context, String file) throws IOException
+	{
+		return GetAnimations(context, file, 1.0f);
+	}
+	
 	/* GetAnimations
 	 * 
 	 */
-	public static Map<String, Animation> GetAnimations(Context context, String file) throws IOException
+	public static Map<String, Animation> GetAnimations(Context context, String file, float scale) throws IOException
 	{
 		try
 		{
@@ -163,7 +219,7 @@ public class Animation {
 			Map<String, Animation> animation_map = new HashMap<String, Animation>(); 
 			for(int i = 0; i < animations.getLength(); i++)
 			{
-				Animation animation = loadAnimation(context, (Element)animations.item(i));
+				Animation animation = loadAnimation(context, (Element)animations.item(i), scale);
 				animation_map.put(animation.getName(), animation);
 			}
 			return animation_map;

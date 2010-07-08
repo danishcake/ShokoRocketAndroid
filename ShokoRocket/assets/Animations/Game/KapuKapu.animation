@@ -1,0 +1,39 @@
+<AnimationSet>
+  <Animation Name="North" OffsetY="-6" OffsetX="0" FPS="10">
+    <Frame Width="32" Height="48" Top="144" Left="0" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+    <Frame Width="32" Height="48" Top="144" Left="32" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+    <Frame Width="32" Height="48" Top="144" Left="64" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+    <Frame Width="32" Height="48" Top="144" Left="96" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+  </Animation>
+  <Animation Name="South" OffsetY="-6" OffsetX="0" FPS="10">
+    <Frame Width="32" Height="48" Top="96" Left="0" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+    <Frame Width="32" Height="48" Top="96" Left="32" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+    <Frame Width="32" Height="48" Top="96" Left="64" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+    <Frame Width="32" Height="48" Top="96" Left="96" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+  </Animation>
+  <Animation Name="East" OffsetY="-6" OffsetX="0" FPS="10">
+    <Frame Width="32" Height="48" Top="48" Left="0" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+    <Frame Width="32" Height="48" Top="48" Left="32" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+    <Frame Width="32" Height="48" Top="48" Left="64" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+    <Frame Width="32" Height="48" Top="48" Left="96" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+  </Animation>
+  <Animation Name="West" OffsetY="-6" OffsetX="0" FPS="10">
+    <Frame Width="32" Height="48" Top="0" Left="0" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+    <Frame Width="32" Height="48" Top="0" Left="32" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+    <Frame Width="32" Height="48" Top="0" Left="64" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+    <Frame Width="32" Height="48" Top="0" Left="96" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+  </Animation>
+  <Animation Name="Stopped" OffsetY="-6" OffsetX="0" FPS="10">
+    <Frame Width="32" Height="48" Top="96" Left="0" File="Bitmaps/Game/KapuKapu.png" Time="0.2"/>
+  </Animation>
+  <Animation Name="Death" OffsetY="-6" OffsetX="0" FPS="8">
+    <Frame Width="32" Height="48" Top="0" Left="0" File="Bitmaps/Game/KapuKapuDeath.png" Time="0.125"/>
+	<Frame Width="32" Height="48" Top="0" Left="32" File="Bitmaps/Game/KapuKapuDeath.png" Time="0.125"/>
+	<Frame Width="32" Height="48" Top="0" Left="64" File="Bitmaps/Game/KapuKapuDeath.png" Time="0.125"/>
+	<Frame Width="32" Height="48" Top="0" Left="96" File="Bitmaps/Game/KapuKapuDeath.png" Time="0.125"/>
+	<Frame Width="32" Height="48" Top="0" Left="128" File="Bitmaps/Game/KapuKapuDeath.png" Time="0.125"/>
+	<Frame Width="32" Height="48" Top="0" Left="160" File="Bitmaps/Game/KapuKapuDeath.png" Time="0.125"/>
+	<Frame Width="32" Height="48" Top="0" Left="193" File="Bitmaps/Game/KapuKapuDeath.png" Time="0.125"/>
+	<Frame Width="32" Height="48" Top="0" Left="224" File="Bitmaps/Game/KapuKapuDeath.png" Time="0.125"/>
+  </Animation>
+</AnimationSet>
