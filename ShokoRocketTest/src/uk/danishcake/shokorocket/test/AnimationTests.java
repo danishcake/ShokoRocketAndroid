@@ -1,7 +1,6 @@
 package uk.danishcake.shokorocket.test;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 
 import android.graphics.Bitmap;

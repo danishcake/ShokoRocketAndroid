@@ -3,14 +3,12 @@ package uk.danishcake.shokorocket.animation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.SquareType;
 import uk.danishcake.shokorocket.simulation.Vector2i;
@@ -53,6 +51,10 @@ public class GameDrawer {
 		mDrawOffsetY = y;
 	}
 	
+	public int getGridSize() {
+		return mGridSize;
+	}
+	
 	/**
 	 * Creates the background texture
 	 * @param world The world to create the background texture from
@@ -64,6 +66,7 @@ public class GameDrawer {
 		{
 			mWorldBitmap = Bitmap.createBitmap(world.getWidth() * mGridSize, world.getHeight() * mGridSize, Bitmap.Config.ARGB_8888);
 			Canvas world_canvas = new Canvas(mWorldBitmap);
+			world_canvas.drawARGB(255, 255, 255, 255);
 			
 			for(int y = 0; y < world.getHeight(); y++)
 			{
@@ -184,19 +187,49 @@ public class GameDrawer {
 		ArrayList<Walker> cats = world.getLiveCats();
 		for (Walker walker : mice) {
 			Vector2i position = walker.getPosition();
-			int x = position.x * mGridSize + mDrawOffsetX + (mGridSize * walker.getFraction() / walker.FractionReset);
-			int y = position.y * mGridSize + mDrawOffsetY + (mGridSize * walker.getFraction() / walker.FractionReset);
+			int x = position.x * mGridSize + mDrawOffsetX + (mGridSize * walker.getFraction() / Walker.FractionReset);
+			int y = position.y * mGridSize + mDrawOffsetY + (mGridSize * walker.getFraction() / Walker.FractionReset);
 			Animation animation = mMouseAnimations.get(walker.getDirection());
 			if(animation != null) 
 				animation.DrawCurrentFrame(canvas, x, y);
 		}
 		for (Walker walker : cats) {
 			Vector2i position = walker.getPosition();
-			int x = position.x * mGridSize + mDrawOffsetX + (mGridSize * walker.getFraction() / walker.FractionReset);
-			int y = position.y * mGridSize + mDrawOffsetY + (mGridSize * walker.getFraction() / walker.FractionReset);
+			int x = position.x * mGridSize + mDrawOffsetX + (mGridSize * walker.getFraction() / Walker.FractionReset);
+			int y = position.y * mGridSize + mDrawOffsetY + (mGridSize * walker.getFraction() / Walker.FractionReset);
 			Animation animation = mCatAnimations.get(walker.getDirection());
 			if(animation != null) 
 				animation.DrawCurrentFrame(canvas, x, y);		
+		}
+		for(int x = 0; x < world.getWidth(); x++)
+		{
+			for(int y = 0; y < world.getHeight(); y++)
+			{
+				SquareType square = world.getSpecialSquare(x, y);
+				int drawX = x * mGridSize + mDrawOffsetX;
+				int drawY = y * mGridSize + mDrawOffsetY;
+				switch(square)
+				{
+				case Hole:
+					mHoleAnimation.DrawCurrentFrame(canvas, drawX, drawY);
+					break;
+				case Rocket:
+					mRocketAnimation.DrawCurrentFrame(canvas, drawX, drawY);
+					break;
+				case NorthArrow:
+				case SouthArrow:
+				case EastArrow:
+				case WestArrow:
+					mFullArrowAnimations.get(square.GetDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+					break;
+				case NorthHalfArrow:
+				case SouthHalfArrow:
+				case EastHalfArrow:
+				case WestHalfArrow:
+					mHalfArrowAnimations.get(square.GetDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+					break;
+				}
+			}
 		}
 	}
 	

@@ -13,4 +13,11 @@ public class ShokoRocketActivity extends Activity {
         mGameView = new GameView(getApplicationContext());
         setContentView(mGameView);
     }
+    
+    @Override
+    public void onBackPressed() {
+    	//Sometimes I want to override back
+    	if(!mGameView.OverrideBack())
+    		super.onBackPressed();
+    }
 }

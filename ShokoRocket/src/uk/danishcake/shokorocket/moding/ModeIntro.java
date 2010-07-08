@@ -5,7 +5,6 @@ import java.util.Map;
 
 import uk.danishcake.shokorocket.animation.Animation;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Interpolator;
 import android.graphics.Matrix;

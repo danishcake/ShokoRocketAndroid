@@ -9,4 +9,5 @@
     </application>
 
     <instrumentation android:targetPackage="uk.danishcake.shokorocket" android:name="android.test.InstrumentationTestRunner" />
+<uses-sdk android:targetSdkVersion="7" android:minSdkVersion="7"></uses-sdk>
 </manifest> 

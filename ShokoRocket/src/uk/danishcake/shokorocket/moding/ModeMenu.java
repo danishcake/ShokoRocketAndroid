@@ -2,9 +2,6 @@ package uk.danishcake.shokorocket.moding;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
-
-import uk.danishcake.shokorocket.animation.Animation;
 import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.Widget;
@@ -15,10 +12,7 @@ import uk.danishcake.shokorocket.simulation.World;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Interpolator;
-import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.graphics.Interpolator.Result;
 
 
 public class ModeMenu extends Mode {
@@ -32,9 +26,12 @@ public class ModeMenu extends Mode {
 	private int mLevelIndex = 0;
 	private int mLevelPackIndex = 0;
 	private Context mContext;
+	private boolean mSetup = false;
 	
 	@Override
 	public void Setup(Context context) {
+		if(mSetup)
+			return;
 		mContext = context;
 		
 		try
@@ -109,6 +106,13 @@ public class ModeMenu extends Mode {
 				}
 			});
 			
+			playMap.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					mPendMode = new ModeGame(mWorld, ModeMenu.this);
+				}
+			});
+			
 		} catch(IOException io_ex)
 		{
 			//TODO log
@@ -145,7 +149,8 @@ public class ModeMenu extends Mode {
 		}
 		
 		mGameDrawer.Setup(context, 16);
-		ChangeLevel();		
+		ChangeLevel();
+		mSetup = true;
 	}
 	
 	/**
@@ -168,7 +173,11 @@ public class ModeMenu extends Mode {
 	
 	@Override
 	public Mode Teardown() {
-		return super.Teardown();
+		Mode next_mode = super.Teardown();
+		mPendMode = null;
+		mPendTimer = 0;
+		mAge = 0;
+		return next_mode;
 	}
 	
 	@Override
@@ -182,6 +191,7 @@ public class ModeMenu extends Mode {
 	public void Redraw(Canvas canvas) {
 		mGameDrawer.Draw(canvas, mWorld);
 		mWidgetPage.Draw(canvas);
+		super.Redraw(canvas);
 	}
 	
 	@Override

@@ -1,7 +1,6 @@
 package uk.danishcake.shokorocket.gui;
 
 import java.util.ArrayList;
-import java.util.List;
 import android.graphics.Canvas;
 
 /**

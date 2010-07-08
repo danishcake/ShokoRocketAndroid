@@ -3,23 +3,18 @@ package uk.danishcake.shokorocket;
 import uk.danishcake.shokorocket.moding.GameStateMachine;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.os.Handler;
 import android.view.SurfaceHolder;
 
 
 public class GameThread extends Thread {
 	private SurfaceHolder mSurfaceHolder;
-	private Handler mHandler;
-	private Context mContext;
 	private boolean mRunning = true;
 	private GameStateMachine mGame;
 	
 	public GameThread(SurfaceHolder surfaceHolder, Handler handler, Context context, GameStateMachine game)
 	{
 		mSurfaceHolder = surfaceHolder;
-		mHandler = handler;
-		mContext = context;
 		mGame = game;
 		mGame.setContext(context);
 	}

@@ -80,6 +80,15 @@ public class Mode {
 	}
 	
 	/**
+	 * Called when back pressed.
+	 * @return True if default behaviour to be overriden
+	 */
+	public boolean handleBack() {
+		return false;
+	}
+	
+	
+	/**
 	 * ScreenChanged
 	 * Called when the screen geometry changes, or just before Setup
 	 * @param width

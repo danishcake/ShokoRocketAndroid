@@ -19,9 +19,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory.Options;
-import android.location.Address;
 
 public class Animation {
 	private ArrayList<Bitmap> mFrames = new ArrayList<Bitmap>();

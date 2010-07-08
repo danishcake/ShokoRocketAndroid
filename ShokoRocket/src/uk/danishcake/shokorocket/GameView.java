@@ -2,15 +2,11 @@ package uk.danishcake.shokorocket;
 
 import uk.danishcake.shokorocket.moding.GameStateMachine;
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.os.Handler;
 import android.view.MotionEvent;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.View.OnTouchListener;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -37,7 +33,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			return true;
 		}
 	};
-
+	
+	public boolean OverrideBack()
+	{
+		return mGame.HandleBack();
+	}
+	
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
 		mGame.ScreenChanged(width, height);

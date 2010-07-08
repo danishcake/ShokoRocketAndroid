@@ -41,6 +41,14 @@ public class GameStateMachine {
 		mMode.Redraw(canvas);
 	}
 	
+	/**
+	 * Called when back pressed.
+	 * @return True if default back behaviour to be overriden
+	 */
+	public boolean HandleBack() {
+		return mMode.handleBack();
+	}
+	
 	public void HandleTouch(MotionEvent event) {
 		//Recognise gestures here and pass to modes
 		if(event.getAction() == MotionEvent.ACTION_UP && (event.getEventTime() - event.getDownTime()) < 500)
