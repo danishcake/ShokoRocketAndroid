@@ -14,6 +14,7 @@ import uk.danishcake.shokorocket.simulation.SquareType;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.Walker;
 import uk.danishcake.shokorocket.simulation.World;
+import uk.danishcake.shokorocket.simulation.Walker.WalkerState;
 
 /**
  * Encapsulates methods to draw a world
@@ -24,7 +25,10 @@ public class GameDrawer {
 	private Bitmap mWorldBitmap = null;
 	private boolean mAnimationsLoaded = false;
 	private EnumMap<Direction, Animation> mMouseAnimations = new EnumMap<Direction, Animation>(Direction.class);
+	private Animation mMouseDeathAnimation = null;
+	private Animation mMouseRescueAnimation = null;
 	private EnumMap<Direction, Animation> mCatAnimations = new EnumMap<Direction, Animation>(Direction.class);
+	private Animation mCatDeathAnimation = null;
 	private Animation mRocketAnimation = null;
 	private Animation mHoleAnimation = null;
 	private Animation mRingAnimation = null;
@@ -34,7 +38,6 @@ public class GameDrawer {
 	private Bitmap mTileB = null;
 	private Animation mNorthWall = null;
 	private Animation mWestWall = null;
-	
 	
 	private int mGridSize = 32;
 	
@@ -125,15 +128,17 @@ public class GameDrawer {
 				mMouseAnimations.put(Direction.East, mouse_animations.get("East"));
 				mMouseAnimations.put(Direction.West, mouse_animations.get("West"));
 				mMouseAnimations.put(Direction.Invalid, mouse_animations.get("Stopped"));
-				//TODO rescue, and death of mouse
-				
+				mMouseDeathAnimation = mouse_animations.get("Death");
+				mMouseRescueAnimation = mouse_animations.get("Rescue");
+
 				Map<String, Animation> cat_animations = Animation.GetAnimations(context, "Animations/Game/KapuKapu.animation", scale);
 				mCatAnimations.put(Direction.North, cat_animations.get("North"));
 				mCatAnimations.put(Direction.South, cat_animations.get("South"));
 				mCatAnimations.put(Direction.East, cat_animations.get("East"));
 				mCatAnimations.put(Direction.West, cat_animations.get("West"));
 				mCatAnimations.put(Direction.Invalid, cat_animations.get("Stopped"));
-				//TODO death of cat
+				mCatDeathAnimation = cat_animations.get("Death");
+
 				
 				Map<String, Animation> arrow_animations = Animation.GetAnimations(context, "Animations/Game/Arrows.animation", scale);
 				mFullArrowAnimations.put(Direction.North, arrow_animations.get("North"));
@@ -187,20 +192,141 @@ public class GameDrawer {
 		ArrayList<Walker> cats = world.getLiveCats();
 		for (Walker walker : mice) {
 			Vector2i position = walker.getPosition();
-			int x = position.x * mGridSize + mDrawOffsetX + (mGridSize * walker.getFraction() / Walker.FractionReset);
-			int y = position.y * mGridSize + mDrawOffsetY + (mGridSize * walker.getFraction() / Walker.FractionReset);
+			int x = position.x * mGridSize + mDrawOffsetX;
+			int y = position.y * mGridSize + mDrawOffsetY;
+			switch(walker.getDirection())
+			{
+			case North:
+				y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case South:
+				y += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case East:
+				x += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case West:
+				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			}
 			Animation animation = mMouseAnimations.get(walker.getDirection());
 			if(animation != null) 
 				animation.DrawCurrentFrame(canvas, x, y);
 		}
 		for (Walker walker : cats) {
 			Vector2i position = walker.getPosition();
-			int x = position.x * mGridSize + mDrawOffsetX + (mGridSize * walker.getFraction() / Walker.FractionReset);
-			int y = position.y * mGridSize + mDrawOffsetY + (mGridSize * walker.getFraction() / Walker.FractionReset);
+			int x = position.x * mGridSize + mDrawOffsetX;
+			int y = position.y * mGridSize + mDrawOffsetY;
+			switch(walker.getDirection())
+			{
+			case North:
+				y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case South:
+				y += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case East:
+				x += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case West:
+				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			}
 			Animation animation = mCatAnimations.get(walker.getDirection());
 			if(animation != null) 
 				animation.DrawCurrentFrame(canvas, x, y);		
 		}
+		for(Walker walker : world.getDeadMice())
+		{
+			Vector2i position = walker.getPosition();
+			int x = position.x * mGridSize + mDrawOffsetX;
+			int y = position.y * mGridSize + mDrawOffsetY;
+			switch(walker.getDirection())
+			{
+			case North:
+				y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case South:
+				y += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case East:
+				x += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case West:
+				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			}
+			
+			mRingAnimation.DrawCurrentFrame(canvas, x, y);
+			
+			int death_time = walker.getDeathTime();
+			if(death_time < 5000)
+			{
+				y -= walker.getDeathTime() * 20 / 5000;
+				mMouseDeathAnimation.DrawFrameAtTime(canvas, x, y, death_time / 5);
+			}
+		}
+		for(Walker walker : world.getRescuedMice())
+		{
+			Vector2i position = walker.getPosition();
+			int x = position.x * mGridSize + mDrawOffsetX;
+			int y = position.y * mGridSize + mDrawOffsetY;
+			switch(walker.getDirection())
+			{
+			case North:
+				y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case South:
+				y += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case East:
+				x += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case West:
+				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			}
+			
+			mRingAnimation.DrawCurrentFrame(canvas, x, y);
+			
+			int death_time = walker.getDeathTime();
+			if(death_time < 5000)
+			{
+				mMouseRescueAnimation.DrawFrameAtTime(canvas, x, y, death_time / 5);
+			}
+		}
+		for(Walker walker : world.getDeadCats())
+		{
+			if(walker.getWalkerState() == WalkerState.Rescued)
+			{
+				Vector2i position = walker.getPosition();
+				int x = position.x * mGridSize + mDrawOffsetX;
+				int y = position.y * mGridSize + mDrawOffsetY;
+				switch(walker.getDirection())
+				{
+				case North:
+					y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+					break;
+				case South:
+					y += (mGridSize * walker.getFraction() / Walker.FractionReset);
+					break;
+				case East:
+					x += (mGridSize * walker.getFraction() / Walker.FractionReset);
+					break;
+				case West:
+					x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+					break;
+				}
+				mRingAnimation.DrawCurrentFrame(canvas, x, y);
+				
+				int death_time = walker.getDeathTime();
+				if(death_time < 5000)
+				{
+					mCatDeathAnimation.DrawFrameAtTime(canvas, x, y, death_time / 5);
+				}
+			}
+		}
+		
 		for(int x = 0; x < world.getWidth(); x++)
 		{
 			for(int y = 0; y < world.getHeight(); y++)

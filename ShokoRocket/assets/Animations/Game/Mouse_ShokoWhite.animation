@@ -26,11 +26,11 @@
   <Animation Name="Stopped">
     <Frame Width="32" Height="32" Top="0" Left="0" File="Bitmaps/Game/Mouse_ShokoWhite.png" Time="0.3"/>
   </Animation>
-  <Animation Name="Death">
+  <Animation Name="Death" FPS="2">
     <Frame Width="32" Height="32" Top="0" Left="0" File="Bitmaps/Game/Mouse_ShokoWhiteDeath.png" Time="0.3"/>
     <Frame Width="32" Height="32" Top="0" Left="32" File="Bitmaps/Game/Mouse_ShokoWhiteDeath.png" Time="0.3"/>
   </Animation>
-  <Animation Name="Rescue">
+  <Animation Name="Rescue" FPS="8">
     <Frame Width="32" Height="32" Top="0" Left="0" File="Bitmaps/Game/Mouse_ShokoWhiteRescue.png" Time="0.08333"/>
     <Frame Width="32" Height="32" Top="0" Left="32" File="Bitmaps/Game/Mouse_ShokoWhiteRescue.png" Time="0.08333"/>
     <Frame Width="32" Height="32" Top="0" Left="64" File="Bitmaps/Game/Mouse_ShokoWhiteRescue.png" Time="0.08333"/>

@@ -871,19 +871,19 @@ public class World {
 				
 				for (Walker mouse : mLiveMice) {
 					mouse.Advance(sub_timespan);
-					if(mouse.getWalkerState() == WalkerState.Dead)
+					if(mouse.getWalkerState() == WalkerState.Dead && !justDeadMice.contains(mouse))
 					{
 						justDeadMice.add(mouse);
 						mWorldState = WorldState.Failed;
 					}
-					if(mouse.getWalkerState() == WalkerState.Rescued)
+					if(mouse.getWalkerState() == WalkerState.Rescued && !justRescuedMice.contains(mouse))
 						justRescuedMice.add(mouse);
 				}
 				for (Walker cat : mLiveCats) {
 					cat.Advance(sub_timespan);
-					if(cat.getWalkerState() == WalkerState.Dead)
+					if(cat.getWalkerState() == WalkerState.Dead && !justDeadCats.contains(cat))
 						justDeadCats.add(cat);
-					if(cat.getWalkerState() == WalkerState.Rescued)
+					if(cat.getWalkerState() == WalkerState.Rescued && !justDeadCats.contains(cat))
 					{
 						justDeadCats.add(cat);
 						mWorldState = WorldState.Failed;
@@ -893,7 +893,7 @@ public class World {
 				for(Walker cat : mLiveCats) {
 					for(Walker mouse : mLiveMice) {
 						//Calculate distance
-						if(checkCollision(cat, mouse))
+						if(checkCollision(cat, mouse) && !justDeadMice.contains(mouse))
 						{
 							justDeadMice.add(mouse);
 							mWorldState = WorldState.Failed;
@@ -906,6 +906,19 @@ public class World {
 				mRescuedMice.addAll(justRescuedMice);
 				mLiveCats.removeAll(justDeadCats);
 				mDeadCats.addAll(justDeadCats);
+			}
+			
+			for(Walker mouse : mDeadMice)
+			{
+				mouse.DeathTick(sub_timespan);
+			}
+			for(Walker mouse : mRescuedMice)
+			{
+				mouse.DeathTick(sub_timespan);
+			}
+			for(Walker cat : mDeadCats)
+			{
+				cat.DeathTick(sub_timespan);
 			}
 		}
 	}

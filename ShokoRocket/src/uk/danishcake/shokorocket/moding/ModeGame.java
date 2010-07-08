@@ -8,6 +8,7 @@ import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.simulation.World;
+import uk.danishcake.shokorocket.simulation.World.WorldState;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -19,6 +20,11 @@ public class ModeGame extends Mode {
 	private GameDrawer mGameDrawer = new GameDrawer();
 	private World mWorld;
 	private ModeMenu mModeMenu;
+	private int mResetTimer = 0;
+	private static final int ResetTime = 1500;
+	
+	enum RunningMode { Stopped, Running, RunningFast }
+	private RunningMode mRunningMode = RunningMode.Stopped;
 	
 	public ModeGame(World world, ModeMenu menu)
 	{
@@ -46,9 +52,34 @@ public class ModeGame extends Mode {
 			
 			Widget reset = new Widget(btn_np, new Rect(mScreenWidth - 64 - 16, mScreenHeight - 64, mScreenWidth - 16, mScreenHeight - 16));
 			reset.setText("Reset");
+			reset.setOnClickListener(new OnClickListener() {				
+				@Override
+				public void OnClick(Widget widget) {
+					if(mRunningMode == RunningMode.Stopped)
+					{
+						mWorld.Reset();
+						mWorld.ClearArrows();
+					}
+					else if(mRunningMode == RunningMode.Running || mRunningMode == RunningMode.RunningFast)
+					{
+						mWorld.Reset();
+						mRunningMode = RunningMode.Stopped;
+					}
+				}
+			});
 			
 			Widget go = new Widget(btn_np, new Rect(mScreenWidth - 64 - 64 - 4 - 16, mScreenHeight - 64, mScreenWidth - 64 - 4 - 16, mScreenHeight - 16));
 			go.setText("Go");
+			go.setOnClickListener(new OnClickListener() {				
+				@Override
+				public void OnClick(Widget widget) {
+					if(mRunningMode == RunningMode.Stopped)
+						mRunningMode = RunningMode.Running;
+					else if(mRunningMode == RunningMode.Running)
+						mRunningMode = RunningMode.RunningFast;
+				}
+			});
+			
 			
 			Widget back = new Widget(btn_np, new Rect(16, mScreenHeight - 64, 16 + 64, mScreenHeight - 16));
 			back.setText("Back");
@@ -67,10 +98,6 @@ public class ModeGame extends Mode {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-
-		
-		
 	}
 	
 	@Override
@@ -80,6 +107,30 @@ public class ModeGame extends Mode {
 	
 	@Override
 	public ModeAction Tick(int timespan) {
+		final int TimeRate = 5;
+		int rate = 1;
+		switch(mRunningMode)
+		{
+		case Stopped:
+			break;
+		case RunningFast:
+			rate = 3; //Fall through
+		case Running:
+			mWorld.Tick(timespan * rate * TimeRate);
+			WorldState state = mWorld.getWorldState();
+			if(state == WorldState.Failed)
+			{
+				mResetTimer += timespan;
+				if(mResetTimer > ResetTime)
+				{
+					mWorld.Reset();
+					mRunningMode = RunningMode.Stopped;
+				}
+			} else
+				mResetTimer = 0;
+			break;
+		}
+		
 		mWidgetPage.Tick(timespan);
 		mGameDrawer.Tick(timespan);
 		return super.Tick(timespan);
@@ -99,6 +150,8 @@ public class ModeGame extends Mode {
 	
 	@Override
 	public boolean handleBack() {
+		mWorld.Reset();
+		mWorld.ClearArrows();
 		mPendMode = mModeMenu;
 		return true;
 	}

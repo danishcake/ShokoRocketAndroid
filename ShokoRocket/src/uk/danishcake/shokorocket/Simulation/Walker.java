@@ -17,7 +17,8 @@ public class Walker {
 	private int mY = 0;
 	private int mStartingX = 0;
 	private int mStartingY = 0;
-	private int mFractional = 0; //Resets at FractionReset - 1000ms at speed MouseSpeed 
+	private int mFractional = 0; //Resets at FractionReset - 1000ms at speed MouseSpeed
+	private int mDeathTime = 0;
 	public static final int FractionReset = 3000000;
 	public static final int MouseSpeed = 3000;
 	public static final int CatSpeed = 2000;
@@ -106,6 +107,13 @@ public class Walker {
 	public World getWorld() {
 		return mWorld;
 	}
+	/**
+	 * Gets the time spent dead
+	 * @return milliseconds spent dead
+	 */
+	public int getDeathTime() {
+		return mDeathTime;
+	}
 	
 	/* Advances time for the walker.
 	 * @param timespan the timespan to advance for in milliseconds
@@ -140,6 +148,11 @@ public class Walker {
 		}
 	}
 	
+	public void DeathTick(int timespan)
+	{
+		mDeathTime += timespan;
+	}
+	
 	/* Reset
 	 * Restores starting position and revives the dead or rescued
 	 */
@@ -150,6 +163,7 @@ public class Walker {
 		mDirection = mStartingDirection;
 		mWalkerState = WalkerState.Alive;
 		mFirstAdvance = true;
+		mDeathTime = 0;
 	}
 	
 	/* wrapAround

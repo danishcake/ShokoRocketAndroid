@@ -90,6 +90,17 @@ public class Animation {
 	}
 	
 	/**
+	 * Gets the frame at a particular time
+	 * @param time milliseconds
+	 */
+	public Bitmap getFrameByTime(int time) {
+		int frameTime = 1000 / mFPS;
+		int index = time / frameTime;
+		index %= mFrames.size();
+		return mFrames.get(index);
+	}
+	
+	/**
 	 * Draws the current frame at the specified location. It will be automatically be adjusted for offset 
 	 * @param canvas The canvas to draw with
 	 * @param x The x coordinate (before offsets)
@@ -100,6 +111,17 @@ public class Animation {
 		canvas.drawBitmap(getCurrentFrame(), x + mOffsetX, y + mOffsetY, null);
 	}
 	
+	/**
+	 * Draws the frame at the specified time at the specified loation, adjusted for offsets
+	 * @param canvas
+	 * @param x
+	 * @param y
+	 * @param time
+	 */
+	public void DrawFrameAtTime(Canvas canvas, int x, int y, int time)
+	{
+		canvas.drawBitmap(getFrameByTime(time), x + mOffsetX, y +mOffsetY, null);
+	}	
 	
 	/* loadAnimation
 	 * Takes an animation element from XML and loads the frames associated
