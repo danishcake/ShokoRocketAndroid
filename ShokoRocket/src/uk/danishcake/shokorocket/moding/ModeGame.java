@@ -16,7 +16,10 @@ import uk.danishcake.shokorocket.simulation.World.WorldState;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.graphics.Paint.Align;
 
 public class ModeGame extends Mode {
 	private Context mContext;
@@ -27,7 +30,9 @@ public class ModeGame extends Mode {
 	private int mResetTimer = 0;
 	private static final int ResetTime = 1500;
 	private Vector2i mCursorPosition = new Vector2i(-1, -1);
-	private EnumMap<Direction, Widget> mArrowWidgets = new EnumMap<Direction, Widget>(Direction.class);	
+	private EnumMap<Direction, Widget> mArrowWidgets = new EnumMap<Direction, Widget>(Direction.class);
+	boolean mCompleted = false;
+	int mCompleteAge = 0;
 	
 	enum RunningMode { Stopped, Running, RunningFast }
 	private RunningMode mRunningMode = RunningMode.Stopped;
@@ -203,6 +208,11 @@ public class ModeGame extends Mode {
 				}
 			} else
 				mResetTimer = 0;
+			if(state == WorldState.Success && !mCompleted)
+			{
+				mCompleted = true;
+				mCompleteAge = mAge;
+			}
 			break;
 		}
 		
@@ -220,19 +230,51 @@ public class ModeGame extends Mode {
 		}
 		
 		mWidgetPage.Draw(canvas);
+		
+		if(mCompleted)
+		{
+			float scale = ((float)mAge - (float)mCompleteAge) / 1500.0f;
+			if(scale > 1.0f)
+				scale = 1.0f;
+			scale = (float) Math.pow(scale, 0.5d);
+			
+			Paint text_paint = new Paint();
+			text_paint.setAntiAlias(true);
+			text_paint.setTypeface(Typeface.MONOSPACE);
+			text_paint.setTextAlign(Align.CENTER);
+			text_paint.setTextSize(50);
+			text_paint.setFakeBoldText(true);
+			text_paint.setARGB(255, 255, 255, 255);
+			int y = (int)(-(text_paint.descent() - text_paint.ascent()) + (float)mScreenHeight * scale);
+			
+			
+			canvas.drawText("Success", mScreenWidth/2, y, text_paint);
+			text_paint.setFakeBoldText(false);
+			text_paint.setARGB(255, 0, 166, 0);
+			canvas.drawText("Success", mScreenWidth/2, y, text_paint);
+			
+			
+		}
+			
 		super.Redraw(canvas);
 	}
 	
 	@Override
 	public void handleTap(int x, int y) {
-		mWidgetPage.handleTap(x, y);
-		Vector2i offset = mGameDrawer.getDrawOffset();
-		int grid_x = (x - offset.x) / mGameDrawer.getGridSize();
-		int grid_y = (y - offset.y) / mGameDrawer.getGridSize();
-		if(grid_x >= 0 && grid_y >= 0 && grid_x < mWorld.getWidth() && grid_y < mWorld.getHeight())
+		if(!mCompleted)
 		{
-			mCursorPosition.x = grid_x;
-			mCursorPosition.y = grid_y;
+			mWidgetPage.handleTap(x, y);
+			Vector2i offset = mGameDrawer.getDrawOffset();
+			int grid_x = (x - offset.x) / mGameDrawer.getGridSize();
+			int grid_y = (y - offset.y) / mGameDrawer.getGridSize();
+			if(grid_x >= 0 && grid_y >= 0 && grid_x < mWorld.getWidth() && grid_y < mWorld.getHeight())
+			{
+				mCursorPosition.x = grid_x;
+				mCursorPosition.y = grid_y;
+			}
+		} else
+		{
+			mPendMode = mModeMenu;
 		}
 	}
 	

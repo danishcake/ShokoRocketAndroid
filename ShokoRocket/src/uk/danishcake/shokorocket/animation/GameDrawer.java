@@ -182,8 +182,8 @@ public class GameDrawer {
 				Bitmap rawTileB = BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/Game/TileB.png"));
 				mTileB = Bitmap.createScaledBitmap(rawTileB, mGridSize, mGridSize, true);
 				
-				//TODO add proper cursor
-				mCursorAnimation = mRingAnimation;
+				Map<String, Animation> cursor_animations = Animation.GetAnimations(context, "Animations/Game/Cursor.animation", scale); 
+				mCursorAnimation = cursor_animations.get("All");
 				
 				mAnimationsLoaded = true;
 			} catch(IOException ex)

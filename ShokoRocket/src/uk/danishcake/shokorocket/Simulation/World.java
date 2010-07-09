@@ -920,6 +920,11 @@ public class World {
 			{
 				cat.DeathTick(sub_timespan);
 			}
+			
+			if(mDeadMice.size() == 0 && mLiveMice.size() == 0 && mRescuedMice.size() > 0)
+			{
+				mWorldState = WorldState.Success;
+			}
 		}
 	}
 	
