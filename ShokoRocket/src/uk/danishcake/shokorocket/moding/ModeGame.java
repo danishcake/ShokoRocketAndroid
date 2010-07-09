@@ -70,6 +70,7 @@ public class ModeGame extends Mode {
 					{
 						mWorld.Reset();
 						mWorld.ClearArrows();
+						updateArrowStock();
 					}
 					else if(mRunningMode == RunningMode.Running || mRunningMode == RunningMode.RunningFast)
 					{
@@ -173,6 +174,9 @@ public class ModeGame extends Mode {
 	
 	@Override
 	public Mode Teardown() {
+		mWorld.Reset();
+		mRunningMode = RunningMode.Stopped;
+		mWorld.ClearArrows();
 		return super.Teardown();
 	}
 	
@@ -234,8 +238,6 @@ public class ModeGame extends Mode {
 	
 	@Override
 	public boolean handleBack() {
-		mWorld.Reset();
-		mWorld.ClearArrows();
 		mPendMode = mModeMenu;
 		return true;
 	}

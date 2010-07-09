@@ -209,7 +209,7 @@ public class Walker {
 					SquareType reduced = square.Diminish();
 					mWorld.setSpecialSquare(mX, mY, reduced);
 				}
-				setDirection(arrow_direction);
+				mDirection = arrow_direction;
 			}
 			//Now interact with walls
 			if(!mWorld.getDirection(mX, mY, mDirection))

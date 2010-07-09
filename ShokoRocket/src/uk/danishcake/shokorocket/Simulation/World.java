@@ -941,6 +941,14 @@ public class World {
 			cat.Reset();
 		}
 		
+		for(int x = 0; x < mWidth; x++)
+		{
+			for(int y = 0; y < mHeight; y++)
+			{
+				mSpecialSquares[wallIndex(x,y)] = mSpecialSquares[wallIndex(x,y)].Restore();
+			}
+		}
+		
 		mWorldState = WorldState.OK;
 	}
 	
