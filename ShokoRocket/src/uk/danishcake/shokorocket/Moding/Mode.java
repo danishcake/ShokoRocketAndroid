@@ -1,5 +1,6 @@
 package uk.danishcake.shokorocket.moding;
 
+import uk.danishcake.shokorocket.simulation.Direction;
 import android.content.Context;
 import android.graphics.Canvas;
 
@@ -85,6 +86,13 @@ public class Mode {
 	 */
 	public boolean handleBack() {
 		return false;
+	}
+	
+	/**
+	 * Handles the direction pad input
+	 */
+	public void handleDPad(Direction direction) {
+		
 	}
 	
 	

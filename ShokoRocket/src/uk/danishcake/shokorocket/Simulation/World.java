@@ -52,6 +52,8 @@ public class World {
 	private ArrayList<Direction> mArrowStock = new ArrayList<Direction>();
 	private boolean mUnlimitedArrows = false;
 	
+	private String mIdentifier = "";
+	
 	/* getWidth
 	 * @return width of the level - defaults to 12
 	 */
@@ -77,6 +79,22 @@ public class World {
 	 */	
 	public String getLevelName() {
 		return mLevelName;
+	}
+	
+	/**
+	 * Gets an identifier for this level 
+	 * @return
+	 */
+	public String getIdentifier() {
+		return mIdentifier;
+	}
+	
+	/**
+	 * Sets the identifier for this level. Planned use is the filename
+	 * @param id
+	 */
+	public void setIdentifier(String id) {
+		mIdentifier = id;
 	}
 	
 	/* getLiveMice

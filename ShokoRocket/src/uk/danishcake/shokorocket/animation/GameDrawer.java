@@ -39,6 +39,7 @@ public class GameDrawer {
 	private Animation mNorthWall = null;
 	private Animation mWestWall = null;
 	private Animation mCursorAnimation = null;
+	private Animation mTickAnimation = null;
 	
 	private int mGridSize = 32;
 	
@@ -66,6 +67,10 @@ public class GameDrawer {
 	public void DrawCursor(Canvas canvas, int x, int y) 
 	{
 		mCursorAnimation.DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY);
+	}
+	
+	public Animation GetTick() {
+		return mTickAnimation;
 	}
 	
 	/**
@@ -184,6 +189,10 @@ public class GameDrawer {
 				
 				Map<String, Animation> cursor_animations = Animation.GetAnimations(context, "Animations/Game/Cursor.animation", scale); 
 				mCursorAnimation = cursor_animations.get("All");
+
+				Map<String, Animation> tick_animations = Animation.GetAnimations(context, "Animations/Game/Tick.animation"); 
+				mTickAnimation = tick_animations.get("All");
+				
 				
 				mAnimationsLoaded = true;
 			} catch(IOException ex)

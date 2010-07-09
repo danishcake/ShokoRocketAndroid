@@ -33,14 +33,16 @@ public class ModeGame extends Mode {
 	private EnumMap<Direction, Widget> mArrowWidgets = new EnumMap<Direction, Widget>(Direction.class);
 	boolean mCompleted = false;
 	int mCompleteAge = 0;
+	private Progress mProgress;
 	
 	enum RunningMode { Stopped, Running, RunningFast }
 	private RunningMode mRunningMode = RunningMode.Stopped;
 	
-	public ModeGame(World world, ModeMenu menu)
+	public ModeGame(World world, ModeMenu menu, Progress progress)
 	{
 		mWorld = world;
 		mModeMenu = menu;
+		mProgress = progress;
 	}
 	
 	@Override
@@ -182,6 +184,8 @@ public class ModeGame extends Mode {
 		mWorld.Reset();
 		mRunningMode = RunningMode.Stopped;
 		mWorld.ClearArrows();
+		if(mCompleted)
+			mProgress.MarkComplete(mWorld.getIdentifier());
 		return super.Teardown();
 	}
 	
@@ -282,6 +286,36 @@ public class ModeGame extends Mode {
 	public boolean handleBack() {
 		mPendMode = mModeMenu;
 		return true;
+	}
+	
+	@Override
+	public void handleDPad(Direction direction) {
+		if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
+		{
+			switch(direction)
+			{
+			case North:
+				mCursorPosition.y--;
+				if (mCursorPosition.y < 0)
+					mCursorPosition.y = 0;
+				break;
+			case South:
+				mCursorPosition.y++;
+				if (mCursorPosition.y >= mWorld.getHeight())
+					mCursorPosition.y = mWorld.getHeight() - 1;
+				break;
+			case West:
+				mCursorPosition.x--;
+				if (mCursorPosition.x < 0)
+					mCursorPosition.x = 0;
+				break;
+			case East:
+				mCursorPosition.x++;
+				if (mCursorPosition.x >= mWorld.getWidth())
+					mCursorPosition.x = mWorld.getWidth() - 1;
+				break;
+			}
+		}
 	}
 	
 	private void updateArrowStock() {

@@ -7,6 +7,7 @@ import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.gui.OnClickListener;
+import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.World;
 
 import android.content.Context;
@@ -27,12 +28,18 @@ public class ModeMenu extends Mode {
 	private int mLevelPackIndex = 0;
 	private Context mContext;
 	private boolean mSetup = false;
+	private Progress mProgress;
+	private boolean mDrawTick = false;
 	
 	@Override
 	public void Setup(Context context) {
 		if(mSetup)
+		{
+			mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
 			return;
+		}
 		mContext = context;
+		mProgress = new Progress(context);
 		
 		try
 		{
@@ -109,7 +116,7 @@ public class ModeMenu extends Mode {
 			playMap.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
-					mPendMode = new ModeGame(mWorld, ModeMenu.this);
+					mPendMode = new ModeGame(mWorld, ModeMenu.this, mProgress);
 				}
 			});
 			
@@ -161,10 +168,14 @@ public class ModeMenu extends Mode {
 		try
 		{
 			mWorld = new World(mContext.getAssets().open(mLevels[mLevelPackIndex][mLevelIndex]));
+			mWorld.setIdentifier(mLevels[mLevelPackIndex][mLevelIndex]);
 			mLevelPackName.setText(mLevelPacks[mLevelPackIndex]);
 			mLevelName.setText(Integer.toString(mLevelIndex+1)+ "/" + Integer.toString(mLevels[mLevelPackIndex].length) + ": " + mWorld.getLevelName());
 			mGameDrawer.CreateBackground(mWorld);
 			mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * 16 / 2), 68 + 48 + 4);
+			mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
+				
+			
 		} catch(IOException io_ex)
 		{
 			//TODO log
@@ -191,6 +202,12 @@ public class ModeMenu extends Mode {
 	public void Redraw(Canvas canvas) {
 		mGameDrawer.Draw(canvas, mWorld);
 		mWidgetPage.Draw(canvas);
+		if(mDrawTick)
+		{
+			Vector2i offset = mGameDrawer.getDrawOffset();
+			mGameDrawer.GetTick().DrawCurrentFrame(canvas, mScreenWidth - 16 - 32 - 8,  68 + 8);
+		}
+		
 		super.Redraw(canvas);
 	}
 	

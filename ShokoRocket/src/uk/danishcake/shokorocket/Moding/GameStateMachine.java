@@ -1,5 +1,6 @@
 package uk.danishcake.shokorocket.moding;
 
+import uk.danishcake.shokorocket.simulation.Direction;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
@@ -54,8 +55,11 @@ public class GameStateMachine {
 		if(event.getAction() == MotionEvent.ACTION_UP && (event.getEventTime() - event.getDownTime()) < 500)
 		{
 			mMode.handleTap((int)event.getX(), (int)event.getY());
-		}
-		
+		}		
+	}
+	
+	public void HandleDPad(Direction direction) {
+		mMode.handleDPad(direction);
 	}
 
 	public void setContext(Context context) {
