@@ -14,7 +14,7 @@ public class Mode {
 	protected int mPendTime = 500;
 	protected int mPendTimer = 0; 
 	protected int mAge = 0;
-	protected int mFade = 0;
+	protected int mFade = 255;
 	protected int mFadeR = 255;
 	protected int mFadeB = 255;
 	protected int mFadeG = 255;
