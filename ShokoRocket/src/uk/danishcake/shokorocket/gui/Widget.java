@@ -22,6 +22,14 @@ public class Widget {
 	private Rect mBounds;
 	private String mText = "";
 	private OnClickListener mOnClick = null;
+	public enum VerticalAlignment {
+		Top, Middle, Bottom
+	}
+	public enum HorizontalAlignment {
+		Left, Middle, Right
+	}
+	private VerticalAlignment mVerticalAlignment = VerticalAlignment.Middle;
+	private HorizontalAlignment mHorizontalAlignment = HorizontalAlignment.Middle;
 	
 	private static final int DepressedTime = 150; 
 	/**
@@ -177,6 +185,14 @@ public class Widget {
 		}
 	}
 	
+	public void setVerticalAlignment(VerticalAlignment alignment) {
+		mVerticalAlignment = alignment;
+	}
+	
+	public void setHorizontalAlignment(HorizontalAlignment alignment) {
+		mHorizontalAlignment = alignment;
+	}
+	
 	/**
 	 * Sets the callback to fire when tapped
 	 * @param callback
@@ -217,13 +233,42 @@ public class Widget {
 		
 		//Apply text
 		Paint text_paint = new Paint();
-		text_paint.setTextAlign(Align.CENTER);
+		int horizontalPosition = 0;
+		switch(mHorizontalAlignment)
+		{
+		case Left:
+			text_paint.setTextAlign(Align.LEFT);
+			horizontalPosition = 4;
+			break;
+		case Middle:
+			text_paint.setTextAlign(Align.CENTER);
+			horizontalPosition = mBounds.width() / 2;
+			break;
+		case Right:
+			text_paint.setTextAlign(Align.RIGHT);
+			horizontalPosition = mBounds.right - 4;
+			break;
+		}
+		int verticalPosition = 0;
+		switch(mVerticalAlignment)
+		{
+		case Top:
+			verticalPosition = 8 + (int)(text_paint.descent() - text_paint.ascent());
+			break;
+		case Middle:
+			verticalPosition = mBounds.height() / 2 + ((int)((text_paint.descent() - text_paint.ascent()) / 2));
+			break;
+		case Bottom:
+			verticalPosition = mBounds.height() - (int)(text_paint.descent() - text_paint.ascent()) - 8;
+			break;
+		}
+		
 		text_paint.setARGB(255, 255, 255, 255);
 		text_paint.setTextSize(16);
 		text_paint.setAntiAlias(true);
 		text_paint.setTypeface(Typeface.SANS_SERIF);
 
-		canvas.drawText(mText, mBounds.width() / 2, mBounds.height() / 2, text_paint);
+		canvas.drawText(mText, horizontalPosition, verticalPosition, text_paint);
 		
 		if(mDepressedTime > 0)
 		{

@@ -120,7 +120,6 @@ public class ModeMenu extends Mode {
 		
 		try
 		{
-			ArrayList<String> level_list = new ArrayList<String>();
 			String[] level_packs = context.getAssets().list("Levels");
 			int level_pack_id = 0;
 			
@@ -129,6 +128,7 @@ public class ModeMenu extends Mode {
 			
 			for (String level_pack : level_packs) {
 				String[] levels = context.getAssets().list("Levels/" + level_pack);
+				ArrayList<String> level_list = new ArrayList<String>();
 				for (String level : levels) {
 					level_list.add("Levels/" + level_pack + "/" + level);
 				}

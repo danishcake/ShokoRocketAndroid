@@ -581,4 +581,25 @@ public class WorldWalkerIntegrationTests extends TestCase {
 		assertEquals(Direction.East, cat_to_die.getDirection());
 		assertEquals(WorldState.OK, world.getWorldState());
 	}
+	
+	public void testWalkerCollisionWhenAligned()
+	{
+		//BUG: When a mouse is running away from a cat
+		// C>M> 
+		//It should be safe, but it collides!
+		
+		World world = new World();
+		Walker mouse = new Walker();
+		mouse.setPosition(new Vector2i(5, 5));
+		mouse.setDirection(Direction.East);
+		world.addMouse(mouse);
+		
+		Walker cat = new Walker();
+		cat.setDirection(Direction.East);
+		cat.setPosition(new Vector2i(4, 5));
+		
+		world.Tick(2000);
+		assertEquals(WorldState.OK, world.getWorldState());
+		
+	}
 }

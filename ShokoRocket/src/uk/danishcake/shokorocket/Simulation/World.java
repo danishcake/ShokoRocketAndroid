@@ -772,74 +772,74 @@ public class World {
 	 * Checks if the two walkers are close
 	 */
 	private boolean checkCollision(Walker cat, Walker mouse) {
-		final int FractionScale = 1000;
-		final int CollisionRadius = 333*333;
+		final long FractionScale = 1000;
+		final long CollisionRadius = 333*333;
 		Vector2i cat_pos = cat.getPosition();
 		Vector2i mouse_pos = mouse.getPosition();
-		cat_pos.x = cat_pos.x * FractionScale;
-		cat_pos.y = cat_pos.y * FractionScale;
-		mouse_pos.x = mouse_pos.x * FractionScale;
-		mouse_pos.y = mouse_pos.y * FractionScale;
+		long cat_pos_x = cat_pos.x * FractionScale;
+		long cat_pos_y = cat_pos.y * FractionScale;
+		long mouse_pos_x = mouse_pos.x * FractionScale;
+		long mouse_pos_y = mouse_pos.y * FractionScale;
 		
 		switch(cat.getDirection())
 		{
 		case East:
-			cat_pos.x += cat.getFraction() * FractionScale / Walker.FractionReset;
+			cat_pos_x += cat.getFraction() * FractionScale / Walker.FractionReset;
 			break;
 		case North:
-			cat_pos.y -= cat.getFraction() * FractionScale / Walker.FractionReset;
+			cat_pos_y -= cat.getFraction() * FractionScale / Walker.FractionReset;
 			break;
 		case South:
-			cat_pos.y += cat.getFraction() * FractionScale / Walker.FractionReset;
+			cat_pos_y += cat.getFraction() * FractionScale / Walker.FractionReset;
 			break;
 		case West:
-			cat_pos.x -= cat.getFraction() * FractionScale / Walker.FractionReset;
+			cat_pos_x -= cat.getFraction() * FractionScale / Walker.FractionReset;
 			break;	
 		}
 		
 		switch(mouse.getDirection())
 		{
 		case East:
-			mouse_pos.x += mouse.getFraction() * FractionScale / Walker.FractionReset;
+			mouse_pos_x += mouse.getFraction() * FractionScale / Walker.FractionReset;
 			break;
 		case North:
-			mouse_pos.y -= mouse.getFraction() * FractionScale / Walker.FractionReset;
+			mouse_pos_y -= mouse.getFraction() * FractionScale / Walker.FractionReset;
 			break;
 		case South:
-			mouse_pos.y += mouse.getFraction() * FractionScale / Walker.FractionReset;
+			mouse_pos_y += mouse.getFraction() * FractionScale / Walker.FractionReset;
 			break;
 		case West:
-			mouse_pos.x -= mouse.getFraction() * FractionScale / Walker.FractionReset;
+			mouse_pos_x -= mouse.getFraction() * FractionScale / Walker.FractionReset;
 			break;	
 		}
 		
-		int dx = mouse_pos.x - cat_pos.x;
-		int dy = mouse_pos.y - cat_pos.y;
+		long dx = mouse_pos_x - cat_pos_x;
+		long dy = mouse_pos_y - cat_pos_y;
 		dx *= dx;
 		dy *= dy;
 		//Collision has occurred if closer than 0.333
-		int range_sqr = dx + dy;
+		long range_sqr = dx + dy;
 
 		
 		
 		
 		
-		if(mouse_pos.x > mWidth * FractionScale / 2)
-			mouse_pos.x -= mWidth * FractionScale;
-		if(mouse_pos.y > mHeight * FractionScale / 2)
-			mouse_pos.y -= mHeight * FractionScale;
+		if(mouse_pos_x > mWidth * FractionScale / 2)
+			mouse_pos_x -= mWidth * FractionScale;
+		if(mouse_pos_y > mHeight * FractionScale / 2)
+			mouse_pos_y -= mHeight * FractionScale;
 		
-		if(cat_pos.x > mWidth * FractionScale / 2)
-			cat_pos.x -= mWidth * FractionScale;
-		if(cat_pos.y > mHeight * FractionScale / 2)
-			cat_pos.y -= mHeight * FractionScale;
+		if(cat_pos_x > mWidth * FractionScale / 2)
+			cat_pos_x -= mWidth * FractionScale;
+		if(cat_pos_y > mHeight * FractionScale / 2)
+			cat_pos_y -= mHeight * FractionScale;
 		
-		int dx2 = mouse_pos.x - cat_pos.x;
-		int dy2 = mouse_pos.y - cat_pos.y;
+		long dx2 = mouse_pos_x - cat_pos_x;
+		long dy2 = mouse_pos_y - cat_pos_y;
 		dx2 *= dx2;
 		dy2 *= dy2;
 		//Collision has occurred if closer than 0.333
-		int range_sqr2 = dx2 + dy2;
+		long range_sqr2 = dx2 + dy2;
 
 
 		if(range_sqr <= CollisionRadius)

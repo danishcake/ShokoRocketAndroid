@@ -49,7 +49,7 @@ public class Mode {
 			mPendTimer += timespan;
 		}
 
-		if(mAge <  mPendTime)
+		if(mAge < mPendTime)
 			mFade = 255 - (255 * mAge / mPendTime);
 		else
 			mFade = 255 * mPendTimer / mPendTime;

@@ -38,6 +38,7 @@ public class GameDrawer {
 	private Bitmap mTileB = null;
 	private Animation mNorthWall = null;
 	private Animation mWestWall = null;
+	private Animation mCursorAnimation = null;
 	
 	private int mGridSize = 32;
 	
@@ -54,8 +55,17 @@ public class GameDrawer {
 		mDrawOffsetY = y;
 	}
 	
+	public Vector2i getDrawOffset() {
+		return new Vector2i(mDrawOffsetX, mDrawOffsetY);
+	}
+	
 	public int getGridSize() {
 		return mGridSize;
+	}
+	
+	public void DrawCursor(Canvas canvas, int x, int y) 
+	{
+		mCursorAnimation.DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY);
 	}
 	
 	/**
@@ -172,6 +182,9 @@ public class GameDrawer {
 				Bitmap rawTileB = BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/Game/TileB.png"));
 				mTileB = Bitmap.createScaledBitmap(rawTileB, mGridSize, mGridSize, true);
 				
+				//TODO add proper cursor
+				mCursorAnimation = mRingAnimation;
+				
 				mAnimationsLoaded = true;
 			} catch(IOException ex)
 			{
@@ -188,6 +201,40 @@ public class GameDrawer {
 	{
 		if(mWorldBitmap != null)
 			canvas.drawBitmap(mWorldBitmap, mDrawOffsetX, mDrawOffsetY, null);
+		//Draw rockets, arrows & holes		
+		for(int x = 0; x < world.getWidth(); x++)
+		{
+			for(int y = 0; y < world.getHeight(); y++)
+			{
+				SquareType square = world.getSpecialSquare(x, y);
+				int drawX = x * mGridSize + mDrawOffsetX;
+				int drawY = y * mGridSize + mDrawOffsetY;
+				switch(square)
+				{
+				case Hole:
+					mHoleAnimation.DrawCurrentFrame(canvas, drawX, drawY);
+					break;
+				case Rocket:
+					mRocketAnimation.DrawCurrentFrame(canvas, drawX, drawY);
+					break;
+				case NorthArrow:
+				case SouthArrow:
+				case EastArrow:
+				case WestArrow:
+					mFullArrowAnimations.get(square.GetDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+					break;
+				case NorthHalfArrow:
+				case SouthHalfArrow:
+				case EastHalfArrow:
+				case WestHalfArrow:
+					mHalfArrowAnimations.get(square.GetDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+					break;
+				}
+			}
+		}
+		
+		
+		//Draw cats & mice
 		ArrayList<Walker> mice = world.getLiveMice();
 		ArrayList<Walker> cats = world.getLiveCats();
 		for (Walker walker : mice) {
@@ -287,8 +334,6 @@ public class GameDrawer {
 				break;
 			}
 			
-			mRingAnimation.DrawCurrentFrame(canvas, x, y);
-			
 			int death_time = walker.getDeathTime();
 			if(death_time < 5000)
 			{
@@ -327,36 +372,6 @@ public class GameDrawer {
 			}
 		}
 		
-		for(int x = 0; x < world.getWidth(); x++)
-		{
-			for(int y = 0; y < world.getHeight(); y++)
-			{
-				SquareType square = world.getSpecialSquare(x, y);
-				int drawX = x * mGridSize + mDrawOffsetX;
-				int drawY = y * mGridSize + mDrawOffsetY;
-				switch(square)
-				{
-				case Hole:
-					mHoleAnimation.DrawCurrentFrame(canvas, drawX, drawY);
-					break;
-				case Rocket:
-					mRocketAnimation.DrawCurrentFrame(canvas, drawX, drawY);
-					break;
-				case NorthArrow:
-				case SouthArrow:
-				case EastArrow:
-				case WestArrow:
-					mFullArrowAnimations.get(square.GetDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
-					break;
-				case NorthHalfArrow:
-				case SouthHalfArrow:
-				case EastHalfArrow:
-				case WestHalfArrow:
-					mHalfArrowAnimations.get(square.GetDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
-					break;
-				}
-			}
-		}
 	}
 	
 	/**
