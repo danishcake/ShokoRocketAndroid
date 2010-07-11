@@ -14,6 +14,7 @@ public class ModeIntro extends Mode {
 	Animation mLogoLeft;
 	Animation mLogoRight;
 	Interpolator mLogoInterpolator = null;
+	Matrix mMatrix = new Matrix();
 	
 	public ModeIntro() {
 	}
@@ -61,20 +62,21 @@ public class ModeIntro extends Mode {
 		float x = interpolated[0];
 		float y = interpolated[1];
 		float angle = interpolated[2];
-		Matrix matrix = new Matrix();
+		
+		mMatrix.reset();
 		if(interp_result != Result.FREEZE_END)
-			matrix.setRotate(angle, 100, 50);
+			mMatrix.setRotate(angle, 100, 50);
 		else
-			matrix.setRotate(-(mAge - 3500) / 30, 100, 50);
+			mMatrix.setRotate(-(mAge - 3500) / 30, 100, 50);
 
-		matrix.postTranslate(x, y);
+		mMatrix.postTranslate(x, y);
 		
 		if(mAge < 2500)
 		{
-			canvas.drawBitmap(mLogoRight.getCurrentFrame(), matrix, null);
+			canvas.drawBitmap(mLogoRight.getCurrentFrame(), mMatrix, null);
 		} else
 		{
-			canvas.drawBitmap(mLogoLeft.getCurrentFrame(), matrix, null);
+			canvas.drawBitmap(mLogoLeft.getCurrentFrame(), mMatrix, null);
 		}
 		super.Redraw(canvas);
 	}

@@ -95,6 +95,10 @@ public class Mode {
 		
 	}
 	
+	public void handleGesture(Direction direction) {
+		
+	}
+	
 	
 	/**
 	 * ScreenChanged

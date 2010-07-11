@@ -33,20 +33,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				return true;
 			}
 		});
-		/*
-		setOnKeyListener(new OnKeyListener() {
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				if(keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
-					mGame.HandleDPad(Direction.South);
-				else if(keyCode == KeyEvent.KEYCODE_DPAD_UP)
-					mGame.HandleDPad(Direction.North);
-				else if(keyCode == KeyEvent.KEYCODE_DPAD_LEFT)
-					mGame.HandleDPad(Direction.West);
-				else if(keyCode == KeyEvent.KEYCODE_DPAD_RIGHT)
-					mGame.HandleDPad(Direction.East);
-				return false;
-			}
-		});*/
 	} 
 	
 	public boolean OverrideBack()

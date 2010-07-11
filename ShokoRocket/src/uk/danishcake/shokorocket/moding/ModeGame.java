@@ -50,9 +50,13 @@ public class ModeGame extends Mode {
 		mContext = context;
 		//Setup autoscaling?
 		int required_width = mWorld.getWidth() * 32;
-		float scale = mScreenWidth / (float)required_width;
-		if(required_width > mScreenWidth)
-			mGameDrawer.Setup(mContext, (int)(32 * scale));
+		int required_height = mWorld.getHeight() * 32;
+		float scaleX = ((float)mScreenWidth - 16) / (float)required_width;
+		float scaleY = ((float)(mScreenHeight - 156 - 8)) / (float)required_height;
+		float smaller = scaleX < scaleY ? scaleX : scaleY;
+		
+		if(smaller < 1)
+			mGameDrawer.Setup(mContext, (int)(32 * smaller));
 		else
 			mGameDrawer.Setup(mContext, 32);
 		mGameDrawer.CreateBackground(mWorld);
@@ -109,7 +113,7 @@ public class ModeGame extends Mode {
 				}
 			});
 			
-			Widget west_arrows = new Widget(west_arrow_np, new Rect(16, 256, 16+48, 256 + 72));
+			Widget west_arrows = new Widget(west_arrow_np, new Rect(16, mScreenHeight - 72 - 16 - 48 - 8, 16+48, mScreenHeight - 16 - 48 - 8));
 			west_arrows.setText("0");
 			west_arrows.setVerticalAlignment(Widget.VerticalAlignment.Top);
 			west_arrows.setOnClickListener(new OnClickListener() {
@@ -122,7 +126,7 @@ public class ModeGame extends Mode {
 			});
 			
 			//Given width 480 take 16 from each side and width -> 400 ->100 spacing
-			Widget north_arrows = new Widget(north_arrow_np, new Rect(16 + (mScreenWidth - 32 - 48) / 3, 256, 16 + (mScreenWidth - 32 - 48) / 3 + 48, 256 + 72));
+			Widget north_arrows = new Widget(north_arrow_np, new Rect(16 + (mScreenWidth - 32 - 48) / 3, mScreenHeight - 72 - 16 - 48 - 8, 16 + (mScreenWidth - 32 - 48) / 3 + 48, mScreenHeight - 16 - 48 - 8));
 			north_arrows.setText("0");
 			north_arrows.setVerticalAlignment(Widget.VerticalAlignment.Top);
 			north_arrows.setOnClickListener(new OnClickListener() {
@@ -134,7 +138,7 @@ public class ModeGame extends Mode {
 				}
 			});
 			
-			Widget south_arrows = new Widget(south_arrow_np, new Rect(16 + 2 * + (mScreenWidth - 32 - 48) / 3, 256, 16 + 2 * (mScreenWidth - 32 - 48) / 3 + 48, 256 + 72));
+			Widget south_arrows = new Widget(south_arrow_np, new Rect(16 + 2 * + (mScreenWidth - 32 - 48) / 3, mScreenHeight - 72 - 16 - 48 - 8, 16 + 2 * (mScreenWidth - 32 - 48) / 3 + 48, mScreenHeight - 16 - 48 - 8));
 			south_arrows.setText("0");
 			south_arrows.setVerticalAlignment(Widget.VerticalAlignment.Top);
 			south_arrows.setOnClickListener(new OnClickListener() {
@@ -146,7 +150,7 @@ public class ModeGame extends Mode {
 				}
 			});
 		
-			Widget east_arrows = new Widget(east_arrow_np, new Rect(mScreenWidth - 16 - 48, 256, mScreenWidth - 16, 256 + 72));
+			Widget east_arrows = new Widget(east_arrow_np, new Rect(mScreenWidth - 16 - 48, mScreenHeight - 72 - 16 - 48 - 8, mScreenWidth - 16, mScreenHeight - 16 - 48 - 8));
 			east_arrows.setText("0");
 			east_arrows.setVerticalAlignment(Widget.VerticalAlignment.Top);
 			east_arrows.setOnClickListener(new OnClickListener() {
@@ -316,6 +320,30 @@ public class ModeGame extends Mode {
 				break;
 			}
 		}
+	}
+	
+	@Override
+	public void handleGesture(Direction direction) {
+		if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
+		{
+			switch(direction)
+			{
+			case North:
+				mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.North);
+				break;
+			case South:
+				mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.South);
+				break;
+			case West:
+				mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.West);
+				break;
+			case East:
+				mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.East);
+				break;
+			}
+			updateArrowStock();
+		}
+
 	}
 	
 	private void updateArrowStock() {
