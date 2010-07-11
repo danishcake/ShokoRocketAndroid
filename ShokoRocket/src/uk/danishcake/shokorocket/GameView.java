@@ -4,7 +4,6 @@ import uk.danishcake.shokorocket.moding.GameStateMachine;
 import uk.danishcake.shokorocket.simulation.Direction;
 import android.content.Context;
 import android.os.Handler;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;

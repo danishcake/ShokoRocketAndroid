@@ -21,6 +21,7 @@ public class Widget {
 	private int mDepressedTime = 0;
 	private Rect mBounds;
 	private String mText = "";
+	private int mFontSize = 16;
 	private OnClickListener mOnClick = null;
 	public enum VerticalAlignment {
 		Top, Middle, Bottom
@@ -193,6 +194,10 @@ public class Widget {
 		mHorizontalAlignment = alignment;
 	}
 	
+	public void setFontSize(int fontSize) {
+		mFontSize = fontSize;
+	}
+	
 	/**
 	 * Sets the callback to fire when tapped
 	 * @param callback
@@ -264,7 +269,7 @@ public class Widget {
 		}
 		
 		text_paint.setARGB(255, 255, 255, 255);
-		text_paint.setTextSize(16);
+		text_paint.setTextSize(mFontSize);
 		text_paint.setAntiAlias(true);
 		text_paint.setTypeface(Typeface.SANS_SERIF);
 

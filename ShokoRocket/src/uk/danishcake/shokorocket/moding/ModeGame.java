@@ -13,6 +13,7 @@ import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.World;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.World.WorldState;
+import uk.danishcake.shokorocket.sound.SoundManager;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -35,6 +36,15 @@ public class ModeGame extends Mode {
 	int mCompleteAge = 0;
 	private Progress mProgress;
 	
+	private int mBtnSize = 48;
+	private int mBtnSize2 = 64;
+	private int mBtnSep = 8;
+	private int mBtnBorder = 16;
+	private int mFontSize = 16;
+	
+	private int mCatSound = -1;
+	private int mClickSound = -1;
+	
 	enum RunningMode { Stopped, Running, RunningFast }
 	private RunningMode mRunningMode = RunningMode.Stopped;
 	
@@ -43,12 +53,21 @@ public class ModeGame extends Mode {
 		mWorld = world;
 		mModeMenu = menu;
 		mProgress = progress;
+		
+		try
+		{
+			mCatSound = SoundManager.LoadSound("Sounds/Cat.ogg");
+			mClickSound = SoundManager.LoadSound("Sounds/Click.ogg");
+		} catch(IOException io_ex)
+		{
+			//TODO log
+		}
 	}
 	
 	@Override
 	public void Setup(Context context) {
 		mContext = context;
-		//Setup autoscaling?
+		//Setup autoscaling
 		int required_width = mWorld.getWidth() * 32;
 		int required_height = mWorld.getHeight() * 32;
 		float scaleX = ((float)mScreenWidth - 16) / (float)required_width;
@@ -63,6 +82,11 @@ public class ModeGame extends Mode {
 		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), 16);
 		
 		//Setup widgets
+		if(mScreenWidth > 320) {
+			mBtnSize = 72;
+			mBtnSize2 = 96;
+			mFontSize = 28;
+		}
 		NinePatchData btn_np;
 		try {
 			btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/GUI/Blank64x64.png")), 24, 24, 24, 24);
@@ -72,11 +96,12 @@ public class ModeGame extends Mode {
 			NinePatchData east_arrow_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/GUI/EastArrowBox.png")), 8, 8, 22, 42);
 			
 			
-			Widget reset = new Widget(btn_np, new Rect(mScreenWidth - 64 - 16, mScreenHeight - 64, mScreenWidth - 16, mScreenHeight - 16));
+			Widget reset = new Widget(btn_np, new Rect(mScreenWidth - (mBtnSize2 + mBtnBorder), mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
 			reset.setText("Reset");
 			reset.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void OnClick(Widget widget) {
+					SoundManager.PlaySound(mClickSound);
 					if(mRunningMode == RunningMode.Stopped)
 					{
 						mWorld.Reset();
@@ -91,11 +116,12 @@ public class ModeGame extends Mode {
 				}
 			});
 			
-			Widget go = new Widget(btn_np, new Rect(mScreenWidth - 64 - 64 - 4 - 16, mScreenHeight - 64, mScreenWidth - 64 - 4 - 16, mScreenHeight - 16));
+			Widget go = new Widget(btn_np, new Rect(mScreenWidth - mBtnSize2 - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnBorder));
 			go.setText("Go");
 			go.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void OnClick(Widget widget) {
+					SoundManager.PlaySound(mClickSound);
 					if(mRunningMode == RunningMode.Stopped)
 						mRunningMode = RunningMode.Running;
 					else if(mRunningMode == RunningMode.Running)
@@ -104,21 +130,29 @@ public class ModeGame extends Mode {
 			});
 			
 			
-			Widget back = new Widget(btn_np, new Rect(16, mScreenHeight - 64, 16 + 64, mScreenHeight - 16));
+			Widget back = new Widget(btn_np, new Rect(mBtnBorder, mScreenHeight - mBtnSize - mBtnBorder, mBtnBorder + mBtnSize2, mScreenHeight - mBtnBorder));
 			back.setText("Back");
 			back.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
+					SoundManager.PlaySound(mClickSound);
 					mPendMode = mModeMenu;
 				}
 			});
 			
-			Widget west_arrows = new Widget(west_arrow_np, new Rect(16, mScreenHeight - 72 - 16 - 48 - 8, 16+48, mScreenHeight - 16 - 48 - 8));
+			go.setFontSize(mFontSize);
+			reset.setFontSize(mFontSize);
+			back.setFontSize(mFontSize);
+			
+			
+			
+			Widget west_arrows = new Widget(west_arrow_np, new Rect(16, mScreenHeight - 72 - mBtnBorder - mBtnSize - mBtnSep, mBtnBorder + 48, mScreenHeight - mBtnBorder - mBtnSize - mBtnSep));
 			west_arrows.setText("0");
 			west_arrows.setVerticalAlignment(Widget.VerticalAlignment.Top);
 			west_arrows.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
+					SoundManager.PlaySound(mClickSound);
 					if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
 						mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.West);
 					updateArrowStock();
@@ -126,36 +160,48 @@ public class ModeGame extends Mode {
 			});
 			
 			//Given width 480 take 16 from each side and width -> 400 ->100 spacing
-			Widget north_arrows = new Widget(north_arrow_np, new Rect(16 + (mScreenWidth - 32 - 48) / 3, mScreenHeight - 72 - 16 - 48 - 8, 16 + (mScreenWidth - 32 - 48) / 3 + 48, mScreenHeight - 16 - 48 - 8));
+			Widget north_arrows = new Widget(north_arrow_np, new Rect(mBtnBorder + (mScreenWidth - mBtnBorder * 2 - 48) / 3,
+					          										  mScreenHeight - 72 - mBtnBorder - mBtnSize - mBtnSep, 
+					          										  mBtnBorder + (mScreenWidth - mBtnBorder * 2 - 48) / 3 + 48, 
+					          										  mScreenHeight - mBtnBorder - mBtnSize - mBtnSep));
 			north_arrows.setText("0");
 			north_arrows.setVerticalAlignment(Widget.VerticalAlignment.Top);
 			north_arrows.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
+					SoundManager.PlaySound(mClickSound);
 					if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
 						mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.North);
 					updateArrowStock();
 				}
 			});
 			
-			Widget south_arrows = new Widget(south_arrow_np, new Rect(16 + 2 * + (mScreenWidth - 32 - 48) / 3, mScreenHeight - 72 - 16 - 48 - 8, 16 + 2 * (mScreenWidth - 32 - 48) / 3 + 48, mScreenHeight - 16 - 48 - 8));
+			Widget south_arrows = new Widget(south_arrow_np, new Rect(mBtnBorder + 2 * (mScreenWidth - mBtnBorder * 2 - 48) / 3,
+					  												  mScreenHeight - 72 - mBtnBorder - mBtnSize - mBtnSep, 
+					  												  mBtnBorder + 2 * (mScreenWidth - mBtnBorder * 2 - 48) / 3 + 48, 
+					  												  mScreenHeight - mBtnBorder - mBtnSize - mBtnSep));
 			south_arrows.setText("0");
 			south_arrows.setVerticalAlignment(Widget.VerticalAlignment.Top);
 			south_arrows.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
+					SoundManager.PlaySound(mClickSound);
 					if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
 						mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.South);
 					updateArrowStock();
 				}
 			});
 		
-			Widget east_arrows = new Widget(east_arrow_np, new Rect(mScreenWidth - 16 - 48, mScreenHeight - 72 - 16 - 48 - 8, mScreenWidth - 16, mScreenHeight - 16 - 48 - 8));
+			Widget east_arrows = new Widget(east_arrow_np, new Rect(mScreenWidth - mBtnBorder - 48,
+																  	mScreenHeight - 72 - mBtnBorder - mBtnSize - mBtnSep,
+																  	mScreenWidth - mBtnBorder,
+																  	mScreenHeight - mBtnBorder - mBtnSize - mBtnSep));
 			east_arrows.setText("0");
 			east_arrows.setVerticalAlignment(Widget.VerticalAlignment.Top);
 			east_arrows.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
+					SoundManager.PlaySound(mClickSound);
 					if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
 						mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.East);
 					updateArrowStock();
@@ -279,6 +325,7 @@ public class ModeGame extends Mode {
 			{
 				mCursorPosition.x = grid_x;
 				mCursorPosition.y = grid_y;
+				SoundManager.PlaySound(mClickSound);
 			}
 		} else
 		{

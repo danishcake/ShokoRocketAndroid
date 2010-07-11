@@ -4,13 +4,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.nio.CharBuffer;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.HashSet;
-
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -38,7 +34,6 @@ public class Progress {
 		//Load
 		try {                                            
 			FileInputStream is = mContext.openFileInput("ShokoRocketProgress.xml");
-			String all = Integer.toString(is.available());
 			javax.xml.parsers.DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			dbf.setValidating(false);
 			dbf.setCoalescing(false);
@@ -82,8 +77,6 @@ public class Progress {
 				osw.write("  <Level>" + level + "</Level>\n");
 			}
 			osw.write("</Progress>");
-			
-			int bytes_writen = (int) os.getChannel().position();
 			
 			osw.close();
 		} catch (FileNotFoundException e) {

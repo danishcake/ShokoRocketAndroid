@@ -1,30 +1,37 @@
 package uk.danishcake.shokorocket;
 
 import uk.danishcake.shokorocket.simulation.Direction;
+import uk.danishcake.shokorocket.sound.SoundManager;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class ShokoRocketActivity extends Activity {
 	
 	private GameView mGameView;
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	SoundManager.Initialise(getApplicationContext());
         super.onCreate(savedInstanceState);
+        
+        requestWindowFeature(Window.FEATURE_NO_TITLE);  
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   
+        					 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         mGameView = new GameView(getApplicationContext());
         setContentView(mGameView);
     }
-    
-    @Override
-    public void onBackPressed() {
-    	//Sometimes I want to override back
-    	if(!mGameView.OverrideBack())
-    		super.onBackPressed();
-    }
-    
+
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
+    	if(keyCode == KeyEvent.KEYCODE_BACK)
+    	{
+        	return mGameView.OverrideBack();        		
+    	}
 		if(keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
 		{
 			mGameView.HandleDPad(Direction.South);

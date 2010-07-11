@@ -74,7 +74,7 @@ public class GameStateMachine {
 			int deltaX = (int)event.getX() - mTapStartX;
 			int deltaY = (int)event.getY() - mTapStartY;
 			int lengthSq = deltaX * deltaX + deltaY * deltaY;
-			int tapLengthMaxSq = 100*2;
+			int tapLengthMaxSq = (mScreenWidth / 12) * (mScreenWidth / 12) * 2;
 			if(lengthSq < tapLengthMaxSq)
 			{
 				if(event.getEventTime() - event.getDownTime() < TapTime) 

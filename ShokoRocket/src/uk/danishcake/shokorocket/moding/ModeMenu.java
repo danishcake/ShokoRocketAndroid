@@ -9,6 +9,7 @@ import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.World;
+import uk.danishcake.shokorocket.sound.SoundManager;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -31,6 +32,13 @@ public class ModeMenu extends Mode {
 	private Progress mProgress;
 	private boolean mDrawTick = false;
 	
+	private int mBtnSize = 48;
+	private int mBtnSep = 8;
+	private int mBtnBorder = 16;
+	private int mFontSize = 16;
+	
+	private int mClickSound = -1;
+	
 	@Override
 	public void Setup(Context context) {
 		if(mSetup)
@@ -41,27 +49,42 @@ public class ModeMenu extends Mode {
 		mContext = context;
 		mProgress = new Progress(context);
 		
+		if(mScreenWidth > 320) {
+			mBtnSize = 72;
+			mFontSize = 28;
+		}
+		
+		try
+		{
+			mClickSound = SoundManager.LoadSound("Sounds/Click.ogg");
+		} catch(IOException io_ex)
+		{
+			//TODO log
+		}
+		
 		try
 		{
 			NinePatchData btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/GUI/Blank64x64.png")), 24, 24, 24, 24);
 		
-			mLevelPackName = new Widget(btn_np, new Rect(68, 16, mScreenWidth - 68, 64));
-			Widget levelPackLeft = new Widget(btn_np, new Rect(16, 16, 64, 64));
+			mLevelPackName = new Widget(btn_np, new Rect(mBtnSize + mBtnSep + mBtnBorder, mBtnBorder, mScreenWidth - (mBtnSize + mBtnBorder + mBtnSep), mBtnBorder + mBtnSize));
+			
+			Widget levelPackLeft = new Widget(btn_np, new Rect(mBtnBorder, mBtnBorder, mBtnBorder + mBtnSize, mBtnBorder + mBtnSize));
 			levelPackLeft.setText("<");
-			Widget levelPackRight = new Widget(btn_np, new Rect(mScreenWidth - 64, 16, mScreenWidth - 16, 64));
+
+			Widget levelPackRight = new Widget(btn_np, new Rect(mScreenWidth - (mBtnBorder + mBtnSize), mBtnBorder, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize));
 			levelPackRight.setText(">");
 			
 
-			mLevelName = new Widget(btn_np, new Rect(16, 68, mScreenWidth - 16, 68 + 48)); 
+			mLevelName = new Widget(btn_np, new Rect(mBtnBorder, mBtnSize + mBtnSep + mBtnBorder, mScreenWidth - mBtnBorder, mBtnSize + mBtnSep + mBtnBorder + mBtnSize)); 
 			mLevelName.setText("Level name");
 			
-			Widget scrollLeft = new Widget(btn_np, new Rect(16, mScreenHeight - 64, 64, mScreenHeight - 16));
+			Widget scrollLeft = new Widget(btn_np, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mBtnSize + mBtnBorder, mScreenHeight - mBtnBorder));
 			scrollLeft.setText("<");
 			
-			Widget scrollRight = new Widget(btn_np, new Rect(mScreenWidth - 64, mScreenHeight - 64, mScreenWidth - 16, mScreenHeight - 16));
+			Widget scrollRight = new Widget(btn_np, new Rect(mScreenWidth - (mBtnSize + mBtnBorder), mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
 			scrollRight.setText(">");
 			
-			Widget playMap = new Widget(btn_np, new Rect(68, mScreenHeight - 64, mScreenWidth - 68, mScreenHeight - 16));
+			Widget playMap = new Widget(btn_np, new Rect(mBtnSize + mBtnBorder + mBtnSep, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - (mBtnSize + mBtnBorder + mBtnSep), mScreenHeight - mBtnBorder));
 			playMap.setText("Play");
 			
 			
@@ -74,6 +97,15 @@ public class ModeMenu extends Mode {
 			mWidgetPage.addWidget(scrollLeft);
 			mWidgetPage.addWidget(playMap);
 			
+			levelPackLeft.setFontSize(mFontSize);
+			levelPackRight.setFontSize(mFontSize);
+			mLevelPackName.setFontSize(mFontSize);
+			mLevelName.setFontSize(mFontSize);
+			scrollRight.setFontSize(mFontSize);
+			scrollLeft.setFontSize(mFontSize);
+			playMap.setFontSize(mFontSize);
+			
+			
 			
 			scrollRight.setOnClickListener(new OnClickListener() {
 				@Override
@@ -81,7 +113,7 @@ public class ModeMenu extends Mode {
 					mLevelIndex++;
 					mLevelIndex %= mLevels[mLevelPackIndex].length;
 					ChangeLevel();
-
+					SoundManager.PlaySound(mClickSound);
 				}
 			});
 			scrollLeft.setOnClickListener(new OnClickListener() {
@@ -91,6 +123,7 @@ public class ModeMenu extends Mode {
 					if(mLevelIndex < 0)
 						mLevelIndex += mLevels[mLevelPackIndex].length;
 					ChangeLevel();
+					SoundManager.PlaySound(mClickSound);
 				}
 			});
 			levelPackLeft.setOnClickListener(new OnClickListener() {
@@ -101,6 +134,7 @@ public class ModeMenu extends Mode {
 						mLevelPackIndex += mLevels.length;
 					mLevelIndex = 0;
 					ChangeLevel();
+					SoundManager.PlaySound(mClickSound);
 				}
 			});
 			levelPackRight.setOnClickListener(new OnClickListener() {
@@ -110,6 +144,7 @@ public class ModeMenu extends Mode {
 					mLevelPackIndex %= mLevels.length;
 					mLevelIndex = 0;
 					ChangeLevel();
+					SoundManager.PlaySound(mClickSound);
 				}
 			});
 			
@@ -117,6 +152,7 @@ public class ModeMenu extends Mode {
 				@Override
 				public void OnClick(Widget widget) {
 					mPendMode = new ModeGame(mWorld, ModeMenu.this, mProgress);
+					SoundManager.PlaySound(mClickSound);
 				}
 			});
 			
@@ -172,10 +208,8 @@ public class ModeMenu extends Mode {
 			mLevelPackName.setText(mLevelPacks[mLevelPackIndex]);
 			mLevelName.setText(Integer.toString(mLevelIndex+1)+ "/" + Integer.toString(mLevels[mLevelPackIndex].length) + ": " + mWorld.getLevelName());
 			mGameDrawer.CreateBackground(mWorld);
-			mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * 16 / 2), 68 + 48 + 4);
+			mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mBtnBorder / 2), mBtnBorder + mBtnSize + mBtnSep + mBtnSize + 4);
 			mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
-				
-			
 		} catch(IOException io_ex)
 		{
 			//TODO log
@@ -204,8 +238,7 @@ public class ModeMenu extends Mode {
 		mWidgetPage.Draw(canvas);
 		if(mDrawTick)
 		{
-			Vector2i offset = mGameDrawer.getDrawOffset();
-			mGameDrawer.GetTick().DrawCurrentFrame(canvas, mScreenWidth - 16 - 32 - 8,  68 + 8);
+			mGameDrawer.GetTick().DrawCurrentFrame(canvas, mScreenWidth - mBtnBorder - mBtnSize + mBtnBorder - mBtnSep,  mBtnBorder + mBtnSep + mBtnSize + mBtnSep);
 		}
 		
 		super.Redraw(canvas);
