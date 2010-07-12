@@ -7,7 +7,6 @@ import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.gui.OnClickListener;
-import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.World;
 import uk.danishcake.shokorocket.sound.SoundManager;
 

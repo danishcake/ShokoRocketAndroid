@@ -44,6 +44,7 @@ public class ModeGame extends Mode {
 	
 	private int mCatSound = -1;
 	private int mClickSound = -1;
+	private int mMouseSound = -1; 
 	
 	enum RunningMode { Stopped, Running, RunningFast }
 	private RunningMode mRunningMode = RunningMode.Stopped;
@@ -58,6 +59,7 @@ public class ModeGame extends Mode {
 		{
 			mCatSound = SoundManager.LoadSound("Sounds/Cat.ogg");
 			mClickSound = SoundManager.LoadSound("Sounds/Click.ogg");
+			mMouseSound = SoundManager.LoadSound("Sounds/Mouse.ogg");
 		} catch(IOException io_ex)
 		{
 			//TODO log
@@ -251,9 +253,15 @@ public class ModeGame extends Mode {
 			rate = 3; //Fall through
 		case Running:
 			mWorld.Tick(timespan * rate * TimeRate);
+			if(mWorld.getMouseRescued())
+				SoundManager.PlaySound(mMouseSound);
 			WorldState state = mWorld.getWorldState();
 			if(state == WorldState.Failed)
 			{
+				if(mResetTimer == 0)
+				{
+					SoundManager.PlaySound(mCatSound);
+				}
 				mResetTimer += timespan;
 				if(mResetTimer > ResetTime)
 				{

@@ -54,6 +54,8 @@ public class World {
 	
 	private String mIdentifier = "";
 	
+	private boolean mMouseRescued = false;
+	
 	/* getWidth
 	 * @return width of the level - defaults to 12
 	 */
@@ -354,6 +356,12 @@ public class World {
 	 */
 	public ArrayList<Direction> getArrowStock() {
 		return mArrowStock;
+	}
+	
+	public boolean getMouseRescued() {
+		boolean mouse_rescued = mMouseRescued;
+		mMouseRescued = false;
+		return mouse_rescued;
 	}
 	
 	/* World()
@@ -895,7 +903,10 @@ public class World {
 						mWorldState = WorldState.Failed;
 					}
 					if(mouse.getWalkerState() == WalkerState.Rescued && !justRescuedMice.contains(mouse))
+					{
 						justRescuedMice.add(mouse);
+						mMouseRescued = true;
+					}
 				}
 				for (Walker cat : mLiveCats) {
 					cat.Advance(sub_timespan);

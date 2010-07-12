@@ -3,6 +3,7 @@ package uk.danishcake.shokorocket;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.app.Activity;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Window;
@@ -15,6 +16,7 @@ public class ShokoRocketActivity extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	setVolumeControlStream(AudioManager.STREAM_MUSIC);
     	SoundManager.Initialise(getApplicationContext());
         super.onCreate(savedInstanceState);
         
