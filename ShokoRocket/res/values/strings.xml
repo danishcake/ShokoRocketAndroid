@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_description">A clone of Chu Chu Rocket, save the mice from the evil cats!</string>
     
     <string name="app_name">Shoko Rocket</string>
 </resources>
