@@ -1,0 +1,8 @@
+<AnimationSet>
+  <Animation Name="TileA">
+    <Frame Width="64" Height="64" Top="0" Left="0" File="Bitmaps/Game/TileA-hdpi.png" Time="0.5"/>
+  </Animation>
+  <Animation Name="TileB">
+    <Frame Width="64" Height="64" Top="0" Left="0" File="Bitmaps/Game/TileB-hdpi.png" Time="0.5"/>
+  </Animation>
+</AnimationSet>

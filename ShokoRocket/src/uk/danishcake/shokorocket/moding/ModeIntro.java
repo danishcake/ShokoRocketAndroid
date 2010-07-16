@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Interpolator;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Interpolator.Result;
 
 public class ModeIntro extends Mode {
@@ -56,7 +57,10 @@ public class ModeIntro extends Mode {
 			mLogoInterpolator.setKeyFrame(4, 3500, new float[]{canvas.getWidth() / 2 - 100, canvas.getHeight() / 2 - 50, 0});
 		}
 		
-		canvas.drawARGB(255,0,255,255);
+		Paint fill_paint = new Paint();
+		fill_paint.setARGB(255, 0, 255, 255);
+		canvas.drawPaint(fill_paint);
+		//canvas.drawARGB(255,0,255,255);
 		float[] interpolated = new float[3];
 		Result interp_result = mLogoInterpolator.timeToValues(mAge, interpolated);
 		float x = interpolated[0];

@@ -9,10 +9,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         
+
 </activity>
 
     </application>
 
 
 <uses-sdk android:targetSdkVersion="7" android:minSdkVersion="7"></uses-sdk>
+
+<supports-screens android:largeScreens="true" android:normalScreens="true" android:anyDensity="true" android:resizeable="true" android:smallScreens="true"></supports-screens>
 </manifest> 

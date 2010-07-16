@@ -219,10 +219,29 @@ public class Animation {
 		return GetAnimations(context, file, 1.0f);
 	}
 	
+	public static Map<String, Animation> GetAnimations(Context context, int res_id) throws IOException
+	{
+		return GetAnimations(context, res_id, 1.0f);
+	}
+	
+	/* GetAnimations
+	 * 
+	 */
+	public static Map<String, Animation> GetAnimations(Context context, int res_id, float scale) throws IOException
+	{
+	 	return GetAnimations(context, context.getResources().openRawResource(res_id), scale);
+	
+	}
+	
 	/* GetAnimations
 	 * 
 	 */
 	public static Map<String, Animation> GetAnimations(Context context, String file, float scale) throws IOException
+	{
+		return GetAnimations(context, context.getAssets().open(file), scale);
+	}
+	
+	private static Map<String, Animation> GetAnimations(Context context, InputStream input, float scale) throws IOException
 	{
 		try
 		{
@@ -231,7 +250,7 @@ public class Animation {
 			dbf.setCoalescing(false);
 			dbf.setExpandEntityReferences(false);
 			javax.xml.parsers.DocumentBuilder dbuilder = dbf.newDocumentBuilder();
-			Document document = dbuilder.parse(context.getAssets().open(file));
+			Document document = dbuilder.parse(input);
 			Element root = document.getDocumentElement();
 						
 			NodeList animations = root.getElementsByTagName("Animation");

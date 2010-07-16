@@ -70,16 +70,17 @@ public class ModeGame extends Mode {
 	public void Setup(Context context) {
 		mContext = context;
 		//Setup autoscaling
-		int required_width = mWorld.getWidth() * 32;
-		int required_height = mWorld.getHeight() * 32;
+		int grid_size = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.grid_size);
+		int required_width = mWorld.getWidth() * grid_size ;
+		int required_height = mWorld.getHeight() * grid_size ;
 		float scaleX = ((float)mScreenWidth - 16) / (float)required_width;
 		float scaleY = ((float)(mScreenHeight - 156 - 8)) / (float)required_height;
 		float smaller = scaleX < scaleY ? scaleX : scaleY;
 		
 		if(smaller < 1)
-			mGameDrawer.Setup(mContext, (int)(32 * smaller));
+			mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller));
 		else
-			mGameDrawer.Setup(mContext, 32);
+			mGameDrawer.Setup(mContext, grid_size );
 		mGameDrawer.CreateBackground(mWorld);
 		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), 16);
 		

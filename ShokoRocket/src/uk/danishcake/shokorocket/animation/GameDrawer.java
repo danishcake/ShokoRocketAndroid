@@ -7,7 +7,6 @@ import java.util.Map;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.SquareType;
@@ -130,14 +129,17 @@ public class GameDrawer {
 	public void Setup(Context context, int gridSize)
 	{
 		mGridSize = gridSize;
-		float scale = ((float)mGridSize) / 32.0f; 
+		float referenceGridSize = (float)context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.grid_size);
+		float scale = ((float)mGridSize) / referenceGridSize; 
 
 		//Load unloaded animations
 		if(context != null && !mAnimationsLoaded)
 		{
 			try
 			{
-				Map<String, Animation> mouse_animations = Animation.GetAnimations(context, "Animations/Game/Mouse_ShokoWhite.animation", scale);			
+//				Map<String, Animation> mouse_animations = Animation.GetAnimations(context, "Animations/Game/Mouse_ShokoWhite.animation", scale);
+				
+				Map<String, Animation> mouse_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.mouse_shokowhite, scale);
 				mMouseAnimations.put(Direction.North, mouse_animations.get("North"));
 				mMouseAnimations.put(Direction.South, mouse_animations.get("South"));
 				mMouseAnimations.put(Direction.East, mouse_animations.get("East"));
@@ -146,7 +148,7 @@ public class GameDrawer {
 				mMouseDeathAnimation = mouse_animations.get("Death");
 				mMouseRescueAnimation = mouse_animations.get("Rescue");
 
-				Map<String, Animation> cat_animations = Animation.GetAnimations(context, "Animations/Game/KapuKapu.animation", scale);
+				Map<String, Animation> cat_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.kapukapu, scale);
 				mCatAnimations.put(Direction.North, cat_animations.get("North"));
 				mCatAnimations.put(Direction.South, cat_animations.get("South"));
 				mCatAnimations.put(Direction.East, cat_animations.get("East"));
@@ -155,42 +157,42 @@ public class GameDrawer {
 				mCatDeathAnimation = cat_animations.get("Death");
 
 				
-				Map<String, Animation> arrow_animations = Animation.GetAnimations(context, "Animations/Game/Arrows.animation", scale);
+				Map<String, Animation> arrow_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.arrows, scale);
 				mFullArrowAnimations.put(Direction.North, arrow_animations.get("North"));
 				mFullArrowAnimations.put(Direction.South, arrow_animations.get("South"));
 				mFullArrowAnimations.put(Direction.East, arrow_animations.get("East"));
 				mFullArrowAnimations.put(Direction.West, arrow_animations.get("West"));
 				mFullArrowAnimations.put(Direction.Invalid, arrow_animations.get("Stopped"));
 				
-				Map<String, Animation> half_arrow_animations = Animation.GetAnimations(context, "Animations/Game/HalfArrows.animation", scale);
+				Map<String, Animation> half_arrow_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.halfarrows, scale);
 				mHalfArrowAnimations.put(Direction.North, half_arrow_animations.get("North"));
 				mHalfArrowAnimations.put(Direction.South, half_arrow_animations.get("South"));
 				mHalfArrowAnimations.put(Direction.East, half_arrow_animations.get("East"));
 				mHalfArrowAnimations.put(Direction.West, half_arrow_animations.get("West"));
 				mHalfArrowAnimations.put(Direction.Invalid, half_arrow_animations.get("Stopped"));
 				
-				Map<String, Animation> rocket_animations = Animation.GetAnimations(context, "Animations/Game/Rocket.animation", scale);
+				Map<String, Animation> rocket_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.rocket, scale);
 				mRocketAnimation = rocket_animations.get("Normal");
 				
-				Map<String, Animation> hole_animations = Animation.GetAnimations(context, "Animations/Game/Hole.animation", scale);
+				Map<String, Animation> hole_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.hole, scale);
 				mHoleAnimation = hole_animations.get("All");				
 				
-				Map<String, Animation> ring_animations = Animation.GetAnimations(context, "Animations/Game/Ring.animation", scale);
+				Map<String, Animation> ring_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.ring, scale);
 				mRingAnimation = ring_animations.get("All");
 				
-				Map<String, Animation> wall_animations = Animation.GetAnimations(context, "Animations/Game/Walls.animation", scale);
+				Map<String, Animation> wall_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.walls, scale);
 				mNorthWall = wall_animations.get("Horizontal");
 				mWestWall = wall_animations.get("Vertical");
 				
-				Bitmap rawTileA = BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/Game/TileA.png"));
-				mTileA = Bitmap.createScaledBitmap(rawTileA, mGridSize, mGridSize, true);
-				Bitmap rawTileB = BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/Game/TileB.png"));
-				mTileB = Bitmap.createScaledBitmap(rawTileB, mGridSize, mGridSize, true);
+				Map<String, Animation> tile_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.tiles);
 				
-				Map<String, Animation> cursor_animations = Animation.GetAnimations(context, "Animations/Game/Cursor.animation", scale); 
+				mTileA = tile_animations.get("TileA").getCurrentFrame();
+				mTileB = tile_animations.get("TileB").getCurrentFrame();
+				
+				Map<String, Animation> cursor_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.cursor, scale); 
 				mCursorAnimation = cursor_animations.get("All");
 
-				Map<String, Animation> tick_animations = Animation.GetAnimations(context, "Animations/Game/Tick.animation"); 
+				Map<String, Animation> tick_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.tick); 
 				mTickAnimation = tick_animations.get("All");
 				
 				

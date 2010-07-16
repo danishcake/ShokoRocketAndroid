@@ -190,7 +190,7 @@ public class ModeMenu extends Mode {
 			//TODO log
 		}
 		
-		mGameDrawer.Setup(context, 16);
+		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size));
 		ChangeLevel();
 		mSetup = true;
 	}
@@ -207,7 +207,7 @@ public class ModeMenu extends Mode {
 			mLevelPackName.setText(mLevelPacks[mLevelPackIndex]);
 			mLevelName.setText(Integer.toString(mLevelIndex+1)+ "/" + Integer.toString(mLevels[mLevelPackIndex].length) + ": " + mWorld.getLevelName());
 			mGameDrawer.CreateBackground(mWorld);
-			mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mBtnBorder / 2), mBtnBorder + mBtnSize + mBtnSep + mBtnSize + 4);
+			mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mBtnBorder + mBtnSize + mBtnSep + mBtnSize + 4);
 			mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
 		} catch(IOException io_ex)
 		{

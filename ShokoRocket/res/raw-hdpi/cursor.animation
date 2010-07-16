@@ -1,0 +1,5 @@
+<AnimationSet>
+  <Animation Name="All">
+    <Frame Width="64" Height="64" Top="0" Left="0" File="Bitmaps/Game/Cursor-hdpi.png" Time="0.5"/>
+  </Animation>
+</AnimationSet>
