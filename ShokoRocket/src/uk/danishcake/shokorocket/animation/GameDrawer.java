@@ -38,6 +38,7 @@ public class GameDrawer {
 	private Animation mNorthWall = null;
 	private Animation mWestWall = null;
 	private Animation mCursorAnimation = null;
+	private Animation mTransCursorAnimation = null;
 	private Animation mTickAnimation = null;
 	
 	private int mGridSize = 32;
@@ -63,9 +64,12 @@ public class GameDrawer {
 		return mGridSize;
 	}
 	
-	public void DrawCursor(Canvas canvas, int x, int y) 
+	public void DrawCursor(Canvas canvas, int x, int y, boolean running) 
 	{
-		mCursorAnimation.DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY);
+		if(running)
+			mTransCursorAnimation.DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY);
+		else
+			mCursorAnimation.DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY);
 	}
 	
 	public Animation GetTick() {
@@ -190,7 +194,8 @@ public class GameDrawer {
 				mTileB = tile_animations.get("TileB").getCurrentFrame();
 				
 				Map<String, Animation> cursor_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.cursor, scale); 
-				mCursorAnimation = cursor_animations.get("All");
+				mCursorAnimation = cursor_animations.get("Normal");
+				mTransCursorAnimation = cursor_animations.get("Faded");
 
 				Map<String, Animation> tick_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.tick); 
 				mTickAnimation = tick_animations.get("All");

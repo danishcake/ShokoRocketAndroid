@@ -84,12 +84,12 @@ public class ModeGame extends Mode {
 		mGameDrawer.CreateBackground(mWorld);
 		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), 16);
 		
-		//Setup widgets
-		if(mScreenWidth > 320) {
-			mBtnSize = 72;
-			mBtnSize2 = 96;
-			mFontSize = 28;
-		}
+		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
+		mBtnSize2 = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_wide_size);
+		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
+		mBtnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
+		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
+
 		NinePatchData btn_np;
 		try {
 			btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/GUI/Blank64x64.png")), 24, 24, 24, 24);
@@ -143,12 +143,6 @@ public class ModeGame extends Mode {
 				}
 			});
 			
-			go.setFontSize(mFontSize);
-			reset.setFontSize(mFontSize);
-			back.setFontSize(mFontSize);
-			
-			
-			
 			Widget west_arrows = new Widget(west_arrow_np, new Rect(16, mScreenHeight - 72 - mBtnBorder - mBtnSize - mBtnSep, mBtnBorder + 48, mScreenHeight - mBtnBorder - mBtnSize - mBtnSep));
 			west_arrows.setText("0");
 			west_arrows.setVerticalAlignment(Widget.VerticalAlignment.Top);
@@ -156,11 +150,16 @@ public class ModeGame extends Mode {
 				@Override
 				public void OnClick(Widget widget) {
 					SoundManager.PlaySound(mClickSound);
-					if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
+					if(mCursorPosition.x != -1 && mCursorPosition.y != -1 && mRunningMode == RunningMode.Stopped)
 						mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.West);
 					updateArrowStock();
 				}
 			});
+			
+			reset.setFontSize(mFontSize);
+			go.setFontSize(mFontSize);
+			back.setFontSize(mFontSize);
+			
 			
 			//Given width 480 take 16 from each side and width -> 400 ->100 spacing
 			Widget north_arrows = new Widget(north_arrow_np, new Rect(mBtnBorder + (mScreenWidth - mBtnBorder * 2 - 48) / 3,
@@ -173,7 +172,7 @@ public class ModeGame extends Mode {
 				@Override
 				public void OnClick(Widget widget) {
 					SoundManager.PlaySound(mClickSound);
-					if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
+					if(mCursorPosition.x != -1 && mCursorPosition.y != -1 && mRunningMode == RunningMode.Stopped)
 						mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.North);
 					updateArrowStock();
 				}
@@ -189,7 +188,7 @@ public class ModeGame extends Mode {
 				@Override
 				public void OnClick(Widget widget) {
 					SoundManager.PlaySound(mClickSound);
-					if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
+					if(mCursorPosition.x != -1 && mCursorPosition.y != -1 && mRunningMode == RunningMode.Stopped)
 						mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.South);
 					updateArrowStock();
 				}
@@ -205,7 +204,7 @@ public class ModeGame extends Mode {
 				@Override
 				public void OnClick(Widget widget) {
 					SoundManager.PlaySound(mClickSound);
-					if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
+					if(mCursorPosition.x != -1 && mCursorPosition.y != -1 && mRunningMode == RunningMode.Stopped)
 						mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.East);
 					updateArrowStock();
 				}
@@ -216,6 +215,7 @@ public class ModeGame extends Mode {
 			mArrowWidgets.put(Direction.South, south_arrows);
 			mArrowWidgets.put(Direction.East, east_arrows);
 		
+			
 			mWidgetPage.addWidget(reset);
 			mWidgetPage.addWidget(go);
 			mWidgetPage.addWidget(back);
@@ -287,9 +287,9 @@ public class ModeGame extends Mode {
 	@Override
 	public void Redraw(Canvas canvas) {
 		mGameDrawer.Draw(canvas, mWorld);
-		if(mCursorPosition.x != -1 && mCursorPosition.y != -1 && mRunningMode == RunningMode.Stopped)
+		if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
 		{
-			mGameDrawer.DrawCursor(canvas, mCursorPosition.x, mCursorPosition.y);
+			mGameDrawer.DrawCursor(canvas, mCursorPosition.x, mCursorPosition.y, mRunningMode != RunningMode.Stopped);
 		}
 		
 		mWidgetPage.Draw(canvas);

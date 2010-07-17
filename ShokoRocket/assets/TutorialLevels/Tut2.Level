@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+    <Name>Tutorial 2</Name>
+    <Author>Edward Woolhouse</Author>
+    <Size x="6" y="6" />
+    <V x="0" y="0" />
+    <V x="0" y="1" />
+    <V x="0" y="2" />
+    <V x="0" y="3" />
+    <V x="0" y="4" />
+    <V x="0" y="5" />
+    <V x="3" y="5" />
+    <H x="0" y="0" />
+    <H x="0" y="1" />
+    <H x="0" y="3" />
+    <H x="0" y="5" />
+    <H x="1" y="0" />
+    <H x="1" y="5" />
+    <H x="2" y="0" />
+    <H x="2" y="5" />
+    <H x="3" y="0" />
+    <H x="4" y="0" />
+    <H x="5" y="0" />
+    <H x="5" y="2" />
+    <H x="5" y="4" />
+    <Hole x="0" y="2" />
+    <Rocket x="3" y="5" />
+    <Mouse x="0" y="0" d="East" />
+    <Cat x="0" y="4" d="East" />
+</Level>

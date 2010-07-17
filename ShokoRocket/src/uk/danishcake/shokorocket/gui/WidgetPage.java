@@ -10,9 +10,12 @@ import android.graphics.Canvas;
  */
 public class WidgetPage {
 	private ArrayList<Widget> mWidgets = new ArrayList<Widget>();
+	private int mFontSize = -1;
 	
 	public void addWidget(Widget widget) {
 		mWidgets.add(widget);
+		if(mFontSize > 0)
+			widget.setFontSize(mFontSize);
 	}
 	
 	public void handleTap(int x, int y) {
@@ -31,5 +34,9 @@ public class WidgetPage {
 		for (Widget widget : mWidgets) {
 			widget.Tick(timespan);
 		}	
+	}
+	
+	public void setFontSize(int fontSize) {
+		mFontSize = fontSize;
 	}
 }

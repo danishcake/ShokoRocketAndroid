@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -32,7 +35,7 @@ public class Progress {
 	{
 		mContext = context;
 		//Load
-		try {                                            
+		try {
 			FileInputStream is = mContext.openFileInput("ShokoRocketProgress.xml");
 			javax.xml.parsers.DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			dbf.setValidating(false);
@@ -64,7 +67,6 @@ public class Progress {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 	
 	private void saveData() {
@@ -98,5 +100,11 @@ public class Progress {
 	public boolean IsComplete(String level)
 	{
 		return mBeatenLevels.contains(level);
+	}
+	
+	public static boolean IsFirstRun(Context context)
+	{
+		List files = Arrays.asList(context.fileList()); 
+		return !files.contains("ShokoRocketProgress.xml");
 	}
 }

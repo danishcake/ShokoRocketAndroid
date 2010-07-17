@@ -2,4 +2,9 @@
 <resources>
     <integer name="grid_size">64</integer>
     <integer name="preview_grid_size">32</integer>
+    <integer name="btn_size">72</integer>
+    <integer name="btn_wide_size">96</integer>
+    <integer name="btn_sep">8</integer>
+    <integer name="btn_border">16</integer>
+    <integer name="btn_font_size">28</integer>
 </resources>

@@ -1,5 +1,7 @@
 package uk.danishcake.shokorocket.gui;
 
+import java.util.ArrayList;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -234,10 +236,44 @@ public class Widget {
 		canvas.drawPaint(clear_paint);
 
 		canvas.drawBitmap(mBackbuffer, 0, 0, null);
-		
-		
+
 		//Apply text
 		Paint text_paint = new Paint();
+		text_paint.setARGB(255, 255, 255, 255);
+		text_paint.setTextSize(mFontSize);
+		text_paint.setAntiAlias(true);
+		text_paint.setTypeface(Typeface.SANS_SERIF);
+		
+		
+		//Split text by newline character
+		String[] split_a = mText.split("\n");
+		ArrayList<String> split_b = new ArrayList<String>();
+		for (String line : split_a) {
+			//Iterate over characters, and split once long enough
+			int char_read = 0;
+			while(char_read < line.length())
+			{
+				int char_start = char_read;
+				char_read += text_paint.breakText(line.substring(char_read), true, mBounds.width() - 16, null);
+				if(line.length() > char_read)
+				{
+					//Work backwards from this point to find best point to split at
+					for(int i = char_read-1; i > char_start; i--)
+					{
+						if(line.charAt(i) == ' ')
+						{
+							char_read = i;
+							break;
+						}
+					}
+				}
+				split_b.add(line.substring(char_start, char_read));
+			}
+		}
+		
+		
+
+		
 		int horizontalPosition = 0;
 		switch(mHorizontalAlignment)
 		{
@@ -255,25 +291,25 @@ public class Widget {
 			break;
 		}
 		int verticalPosition = 0;
+		int lineHeight = (int)(text_paint.descent() - text_paint.ascent());
 		switch(mVerticalAlignment)
 		{
 		case Top:
-			verticalPosition = 8 + (int)(text_paint.descent() - text_paint.ascent());
+			verticalPosition = 8 + lineHeight;
 			break;
 		case Middle:
-			verticalPosition = mBounds.height() / 2 + ((int)((text_paint.descent() - text_paint.ascent()) / 2));
+			verticalPosition = mBounds.height() / 2 + (lineHeight / 2) -
+			lineHeight * split_b.size() / 2;
 			break;
 		case Bottom:
-			verticalPosition = mBounds.height() - (int)(text_paint.descent() - text_paint.ascent()) - 8;
+			verticalPosition = mBounds.height() - lineHeight * split_b.size() - 8;
 			break;
 		}
+		for(int i = 0; i < split_b.size(); i++)
+		{
+			canvas.drawText(split_b.get(i), horizontalPosition, verticalPosition + lineHeight * i, text_paint);	
+		}
 		
-		text_paint.setARGB(255, 255, 255, 255);
-		text_paint.setTextSize(mFontSize);
-		text_paint.setAntiAlias(true);
-		text_paint.setTypeface(Typeface.SANS_SERIF);
-
-		canvas.drawText(mText, horizontalPosition, verticalPosition, text_paint);
 		
 		if(mDepressedTime > 0)
 		{

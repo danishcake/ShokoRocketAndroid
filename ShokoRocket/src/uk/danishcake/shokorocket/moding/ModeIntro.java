@@ -16,12 +16,14 @@ public class ModeIntro extends Mode {
 	Animation mLogoRight;
 	Interpolator mLogoInterpolator = null;
 	Matrix mMatrix = new Matrix();
+	boolean mFirstRun = false;
 	
 	public ModeIntro() {
 	}
 	
 	@Override
 	public void Setup(Context context) {
+		mFirstRun = Progress.IsFirstRun(context);
 		try
 		{
 			Map<String, Animation> animations = Animation.GetAnimations(context, "Animations/Intro/Splash.animation"); 
@@ -87,7 +89,10 @@ public class ModeIntro extends Mode {
 	
 	@Override
 	public void handleTap(int x, int y) {
-		mPendMode = new ModeMenu();
+		if(mFirstRun)
+			mPendMode = new ModeTutorial(true);
+		else
+			mPendMode = new ModeMenu();
 	}
 }
 

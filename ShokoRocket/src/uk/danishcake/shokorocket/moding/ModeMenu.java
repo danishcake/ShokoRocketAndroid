@@ -48,11 +48,11 @@ public class ModeMenu extends Mode {
 		mContext = context;
 		mProgress = new Progress(context);
 		
-		if(mScreenWidth > 320) {
-			mBtnSize = 72;
-			mFontSize = 28;
-		}
-		
+		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
+		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
+		mBtnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
+		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
+	
 		try
 		{
 			mClickSound = SoundManager.LoadSound("Sounds/Click.ogg");
@@ -86,8 +86,12 @@ public class ModeMenu extends Mode {
 			Widget playMap = new Widget(btn_np, new Rect(mBtnSize + mBtnBorder + mBtnSep, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - (mBtnSize + mBtnBorder + mBtnSep), mScreenHeight - mBtnBorder));
 			playMap.setText("Play");
 			
+			Widget showTutorial = new Widget(btn_np, new Rect(mScreenWidth / 2 + mBtnSep, mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
+			showTutorial.setText("Tutorial");
 			
 			
+			
+			mWidgetPage.setFontSize(mFontSize);
 			mWidgetPage.addWidget(levelPackLeft);
 			mWidgetPage.addWidget(levelPackRight);
 			mWidgetPage.addWidget(mLevelPackName);
@@ -95,17 +99,9 @@ public class ModeMenu extends Mode {
 			mWidgetPage.addWidget(scrollRight);
 			mWidgetPage.addWidget(scrollLeft);
 			mWidgetPage.addWidget(playMap);
+			mWidgetPage.addWidget(showTutorial);
 			
-			levelPackLeft.setFontSize(mFontSize);
-			levelPackRight.setFontSize(mFontSize);
-			mLevelPackName.setFontSize(mFontSize);
-			mLevelName.setFontSize(mFontSize);
-			scrollRight.setFontSize(mFontSize);
-			scrollLeft.setFontSize(mFontSize);
-			playMap.setFontSize(mFontSize);
-			
-			
-			
+		
 			scrollRight.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
@@ -152,6 +148,13 @@ public class ModeMenu extends Mode {
 				public void OnClick(Widget widget) {
 					mPendMode = new ModeGame(mWorld, ModeMenu.this, mProgress);
 					SoundManager.PlaySound(mClickSound);
+				}
+			});
+			
+			showTutorial.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					mPendMode = new ModeTutorial(false);
 				}
 			});
 			
