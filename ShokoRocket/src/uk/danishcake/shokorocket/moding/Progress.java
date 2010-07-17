@@ -104,7 +104,7 @@ public class Progress {
 	
 	public static boolean IsFirstRun(Context context)
 	{
-		List files = Arrays.asList(context.fileList()); 
+		List<String> files = (List<String>)Arrays.asList(context.fileList()); 
 		return !files.contains("ShokoRocketProgress.xml");
 	}
 }

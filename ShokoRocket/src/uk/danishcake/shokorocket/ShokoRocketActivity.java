@@ -6,8 +6,6 @@ import android.app.Activity;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Window;
-import android.view.WindowManager;
 
 public class ShokoRocketActivity extends Activity {
 	

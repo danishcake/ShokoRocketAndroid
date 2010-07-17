@@ -1,14 +1,12 @@
 package uk.danishcake.shokorocket.moding;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.WidgetPage;
-import uk.danishcake.shokorocket.moding.ModeGame.RunningMode;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.World;
@@ -22,7 +20,6 @@ public class ModeTutorial extends Mode {
 	private boolean mFirstRun = false;
 	
 	private int mBtnSize = 48;
-	private int mBtnSizeWide = 64;
 	private int mBtnSep = 8;
 	private int mBtnBorder = 16;
 	private int mFontSize = 16;
@@ -162,7 +159,6 @@ public class ModeTutorial extends Mode {
 		mContext = context;
 		
 		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
-		mBtnSizeWide = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_wide_size);
 		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
 		mBtnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
 		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
