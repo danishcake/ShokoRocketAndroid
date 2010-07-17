@@ -14,6 +14,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.widget.Toast;
 
 
 public class ModeMenu extends Mode {
@@ -89,6 +90,8 @@ public class ModeMenu extends Mode {
 			Widget showTutorial = new Widget(btn_np, new Rect(mScreenWidth / 2 + mBtnSep, mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
 			showTutorial.setText("Tutorial");
 			
+			Widget loadEditor = new Widget(btn_np, new Rect(mBtnBorder , mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth / 2 - mBtnSep, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
+			loadEditor.setText("Editor");			
 			
 			
 			mWidgetPage.setFontSize(mFontSize);
@@ -100,6 +103,7 @@ public class ModeMenu extends Mode {
 			mWidgetPage.addWidget(scrollLeft);
 			mWidgetPage.addWidget(playMap);
 			mWidgetPage.addWidget(showTutorial);
+			mWidgetPage.addWidget(loadEditor);
 			
 		
 			scrollRight.setOnClickListener(new OnClickListener() {
@@ -155,6 +159,14 @@ public class ModeMenu extends Mode {
 				@Override
 				public void OnClick(Widget widget) {
 					mPendMode = new ModeTutorial(false);
+				}
+			});
+			
+			loadEditor.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					Toast t = Toast.makeText(mContext, "Coming soon!", Toast.LENGTH_SHORT);
+					t.show();
 				}
 			});
 			

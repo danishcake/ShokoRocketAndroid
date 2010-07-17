@@ -1,7 +1,7 @@
 .metadata/
 ShokoRocket/.settings/
 ShokoRocket/bin/
-ShokoRocketTest/gen/
+ShokoRocket/gen/*
 ShokoRocketTest/.settings/
 ShokoRocketTest/bin/
-ShokoRocketTest/gen/
+ShokoRocketTest/gen/*
