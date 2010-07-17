@@ -15,6 +15,7 @@ import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.World.WorldState;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -48,6 +49,11 @@ public class ModeGame extends Mode {
 	
 	enum RunningMode { Stopped, Running, RunningFast }
 	private RunningMode mRunningMode = RunningMode.Stopped;
+	
+	private Vector2i mGestureStart = new Vector2i(0, 0);
+	private Vector2i mGestureEnd = new Vector2i(0, 0);
+	private Direction mGestureDirection = Direction.Invalid;
+	private boolean mGestureInProgress = false;
 	
 	public ModeGame(World world, ModeMenu menu, Progress progress)
 	{
@@ -315,8 +321,18 @@ public class ModeGame extends Mode {
 			text_paint.setFakeBoldText(false);
 			text_paint.setARGB(255, 0, 166, 0);
 			canvas.drawText("Success", mScreenWidth/2, y, text_paint);
-			
-			
+		}
+		
+		if(mGestureInProgress)
+		{
+			Paint linePaint = new Paint();
+			linePaint.setARGB(255, 255, 0, 0);
+			linePaint.setStrokeWidth(6);
+
+			canvas.drawLine(mGestureStart.x, mGestureStart.y, mGestureEnd.x, mGestureEnd.y, linePaint);
+			Bitmap frame = mGameDrawer.GetArrow(mGestureDirection).getCurrentFrame();
+			if(mGestureDirection != Direction.Invalid)
+				canvas.drawBitmap(frame, (mGestureStart.x + mGestureEnd.x) / 2 - frame.getWidth() / 2, (mGestureStart.y + mGestureEnd.y) / 2 - frame.getHeight() / 2, null);
 		}
 			
 		super.Redraw(canvas);
@@ -386,20 +402,40 @@ public class ModeGame extends Mode {
 			{
 			case North:
 				mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.North);
+				SoundManager.PlaySound(mClickSound);
 				break;
 			case South:
 				mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.South);
+				SoundManager.PlaySound(mClickSound);
 				break;
 			case West:
 				mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.West);
+				SoundManager.PlaySound(mClickSound);
 				break;
 			case East:
 				mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.East);
+				SoundManager.PlaySound(mClickSound);
 				break;
 			}
 			updateArrowStock();
 		}
-
+	}
+	
+	@Override
+	public void previewGesture(int x1, int y1, int x2, int y2,
+			Direction direction) {
+		mGestureInProgress = true;
+		mGestureStart.x = x1;
+		mGestureStart.y = y1;
+		
+		mGestureEnd.x = x2;
+		mGestureEnd.y = y2;
+		mGestureDirection = direction;
+	}
+	
+	@Override
+	public void clearPreviewGesture() {
+		mGestureInProgress = false;
 	}
 	
 	private void updateArrowStock() {

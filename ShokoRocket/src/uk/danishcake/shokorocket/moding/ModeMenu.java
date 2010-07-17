@@ -159,6 +159,7 @@ public class ModeMenu extends Mode {
 				@Override
 				public void OnClick(Widget widget) {
 					mPendMode = new ModeTutorial(false);
+					SoundManager.PlaySound(mClickSound);
 				}
 			});
 			
@@ -167,6 +168,7 @@ public class ModeMenu extends Mode {
 				public void OnClick(Widget widget) {
 					Toast t = Toast.makeText(mContext, "Coming soon!", Toast.LENGTH_SHORT);
 					t.show();
+					SoundManager.PlaySound(mClickSound);
 				}
 			});
 			

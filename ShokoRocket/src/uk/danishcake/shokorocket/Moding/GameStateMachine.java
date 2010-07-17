@@ -54,9 +54,39 @@ public class GameStateMachine {
 		return mMode.handleBack();
 	}
 	
+	private Direction detectGesture(int x1, int y1, int x2, int y2)
+	{
+		int deltaX = x2 - x1;
+		int deltaY = y2 - y1;
+		int lengthSq = deltaX * deltaX + deltaY * deltaY;
+		int lengthReqSq = (mScreenHeight / 8) * (mScreenHeight / 8);
+
+		
+		double angularError = Math.cos(Math.PI / 3);
+		
+		if(lengthSq > lengthReqSq)
+		{
+			double angle = Math.atan2(deltaX, deltaY);
+			double dot_north = Math.sin(angle) * 0 + Math.cos(angle) * -1;
+			double dot_east = Math.sin(angle) * 1 + Math.cos(angle) * 0;
+			double dot_west = Math.sin(angle) * -1 + Math.cos(angle) * 0;
+			double dot_south = Math.sin(angle) * 0 + Math.cos(angle) * 1;
+			
+			if(dot_north > angularError)
+				return Direction.North;
+			if(dot_east > angularError)
+				return Direction.East;
+			if(dot_west > angularError)
+				return Direction.West;
+			if(dot_south > angularError)
+				return Direction.South;
+		}
+		return Direction.Invalid;
+	}
+	
 	public void HandleTouch(MotionEvent event) {
 		final int TapTime = 250;
-		//final int IgnoreTime = 1500;
+
 		if(event.getAction() == MotionEvent.ACTION_DOWN)
 		{
 			mTapStartX = (int)event.getX();
@@ -64,18 +94,19 @@ public class GameStateMachine {
 			mDragInProgress = true;
 		}
 		
-		
+		if(event.getAction() == MotionEvent.ACTION_MOVE && mDragInProgress)
+		{
+			Direction dir = detectGesture(mTapStartX, mTapStartY, (int)event.getX(), (int)event.getY());
+			mMode.previewGesture(mTapStartX, mTapStartY, (int)event.getX(), (int)event.getY(), dir);
+		}
 		
 		//Recognise gestures here and pass to modes
-		//If not moved more than 14px and less than 250ms then a tap
+		//If not moved more than a certain length and help shortly then a tap
 		//If moved more then a gesture
 		if(event.getAction() == MotionEvent.ACTION_UP)
 		{
-			int deltaX = (int)event.getX() - mTapStartX;
-			int deltaY = (int)event.getY() - mTapStartY;
-			int lengthSq = deltaX * deltaX + deltaY * deltaY;
-			int tapLengthMaxSq = (mScreenWidth / 12) * (mScreenWidth / 12) * 2;
-			if(lengthSq < tapLengthMaxSq)
+			Direction dir = detectGesture(mTapStartX, mTapStartY, (int)event.getX(), (int)event.getY());
+			if(dir == Direction.Invalid)
 			{
 				if(event.getEventTime() - event.getDownTime() < TapTime) 
 				{
@@ -84,34 +115,14 @@ public class GameStateMachine {
 				}
 			} else
 			{
-				int lengthReqSq = (mScreenHeight / 4) * (mScreenHeight / 4);
-				int shortReqX = mScreenWidth / 8;
-				int shortReqY = mScreenHeight / 8;
-				
-				if(lengthSq > lengthReqSq)
-				{
-					if(deltaX < shortReqX && deltaX > -shortReqX)
-					{
-						if(deltaY < 0)
-							mMode.handleGesture(Direction.North);
-						else
-							mMode.handleGesture(Direction.South);
-							
-					}
-					if(deltaY < shortReqY && deltaY > -shortReqY)
-					{
-						if(deltaX < 0)
-							mMode.handleGesture(Direction.West);
-						else
-							mMode.handleGesture(Direction.East);
-					}
-				}				
+				mMode.handleGesture(dir);
 			}
 		}
 		
 		if(event.getAction() == MotionEvent.ACTION_CANCEL || event.getAction() == MotionEvent.ACTION_UP)
 		{
 			mDragInProgress = false;
+			mMode.clearPreviewGesture();
 		}		
 	}
 	

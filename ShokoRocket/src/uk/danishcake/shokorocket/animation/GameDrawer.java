@@ -32,6 +32,7 @@ public class GameDrawer {
 	private Animation mHoleAnimation = null;
 	private Animation mRingAnimation = null;
 	private EnumMap<Direction, Animation> mFullArrowAnimations = new EnumMap<Direction, Animation>(Direction.class);
+	private EnumMap<Direction, Animation> mGestureArrowAnimations = new EnumMap<Direction, Animation>(Direction.class);
 	private EnumMap<Direction, Animation> mHalfArrowAnimations = new EnumMap<Direction, Animation>(Direction.class);
 	private Bitmap mTileA = null;
 	private Bitmap mTileB = null;
@@ -74,6 +75,10 @@ public class GameDrawer {
 	
 	public Animation GetTick() {
 		return mTickAnimation;
+	}
+	
+	public Animation GetArrow(Direction direction) {
+		return mGestureArrowAnimations.get(direction);
 	}
 	
 	/**
@@ -167,6 +172,14 @@ public class GameDrawer {
 				mFullArrowAnimations.put(Direction.East, arrow_animations.get("East"));
 				mFullArrowAnimations.put(Direction.West, arrow_animations.get("West"));
 				mFullArrowAnimations.put(Direction.Invalid, arrow_animations.get("Stopped"));
+				
+				Map<String, Animation> g_arrow_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.gesture_arrows);
+				mGestureArrowAnimations.put(Direction.North, g_arrow_animations.get("North"));
+				mGestureArrowAnimations.put(Direction.South, g_arrow_animations.get("South"));
+				mGestureArrowAnimations.put(Direction.East, g_arrow_animations.get("East"));
+				mGestureArrowAnimations.put(Direction.West, g_arrow_animations.get("West"));
+				mGestureArrowAnimations.put(Direction.Invalid, g_arrow_animations.get("Stopped"));
+				
 				
 				Map<String, Animation> half_arrow_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.halfarrows, scale);
 				mHalfArrowAnimations.put(Direction.North, half_arrow_animations.get("North"));
@@ -402,5 +415,6 @@ public class GameDrawer {
 		for (Animation animation : mCatAnimations.values()) {
 			animation.Tick(timespan);
 		}
+		mMouseDeathAnimation.Tick(timespan);
 	}
 }

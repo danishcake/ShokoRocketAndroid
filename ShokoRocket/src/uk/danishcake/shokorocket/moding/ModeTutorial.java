@@ -10,7 +10,9 @@ import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.World;
+import uk.danishcake.shokorocket.sound.SoundManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -23,6 +25,8 @@ public class ModeTutorial extends Mode {
 	private int mBtnSep = 8;
 	private int mBtnBorder = 16;
 	private int mFontSize = 16;
+	
+	private int mClickSound = -1;
 	
 	private WidgetPage mWidgetPage = new WidgetPage();
 	private Widget mNextButton = null;
@@ -43,6 +47,7 @@ public class ModeTutorial extends Mode {
 		public void OnClick(Widget widget) {
 			mExplanation.setText("You must save the mice from the evil space cats");
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
+			SoundManager.PlaySound(mClickSound);
 		}
 	},
 	new OnClickListener() {
@@ -50,6 +55,7 @@ public class ModeTutorial extends Mode {
 		public void OnClick(Widget widget) {
 			mExplanation.setText("The mice are not very clever, so you need to direct them to the rockets");
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
+			SoundManager.PlaySound(mClickSound);
 		}
 	},
 	new OnClickListener() {
@@ -57,6 +63,7 @@ public class ModeTutorial extends Mode {
 		public void OnClick(Widget widget) {
 			mExplanation.setText("Do this by placing arrows for them to follow");
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
+			SoundManager.PlaySound(mClickSound);
 		}
 	},
 	new OnClickListener() {
@@ -66,6 +73,7 @@ public class ModeTutorial extends Mode {
 			mCursorPosition.x = 1;
 			mCursorPosition.y = 4;
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
+			SoundManager.PlaySound(mClickSound);
 		}
 	},
 	new OnClickListener() {
@@ -75,6 +83,7 @@ public class ModeTutorial extends Mode {
 			
 			mSwipeStart = mAge;
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
+			SoundManager.PlaySound(mClickSound);
 		}
 	},
 	new OnClickListener() {
@@ -87,6 +96,7 @@ public class ModeTutorial extends Mode {
 			}
 			mSwipeStart = 0;
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
+			SoundManager.PlaySound(mClickSound);
 		}
 	},
 	new OnClickListener() {
@@ -94,6 +104,7 @@ public class ModeTutorial extends Mode {
 		public void OnClick(Widget widget) {
 			mExplanation.setText("You can always remove them the same way they were placed, or use the reset button to clear all the arrows");
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
+			SoundManager.PlaySound(mClickSound);
 		}
 	},
 	new OnClickListener() {
@@ -102,6 +113,7 @@ public class ModeTutorial extends Mode {
 			mExplanation.setText("Tap start once the arrows are in place. If you don't have the answer then hit reset and try again");
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
 			mRunning = true;
+			SoundManager.PlaySound(mClickSound);
 		}
 	},
 	new OnClickListener() {
@@ -117,6 +129,7 @@ public class ModeTutorial extends Mode {
 			mCursorPosition.x = -1;
 			mExplanation.setText("You need to prevent mice from falling into black holes, and stop cats reaching the rocket");
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
+			SoundManager.PlaySound(mClickSound);
 		}
 	},
 	new OnClickListener() {
@@ -124,6 +137,7 @@ public class ModeTutorial extends Mode {
 		public void OnClick(Widget widget) {
 			mExplanation.setText("Note that problem points are highlighted with a circle. Just hit reset and try again!");
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
+			SoundManager.PlaySound(mClickSound);
 		}
 	},
 	new OnClickListener() {
@@ -131,6 +145,22 @@ public class ModeTutorial extends Mode {
 		public void OnClick(Widget widget) {
 			try {
 				mWorld = new World(mContext.getAssets().open("TutorialLevels/Tut3.Level"));
+				mGameDrawer.CreateBackground(mWorld);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			mCursorPosition.x = -1;
+			mExplanation.setText("Don't let cats kill any mice");
+			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
+			SoundManager.PlaySound(mClickSound);
+		}
+	},
+	new OnClickListener() {
+		@Override
+		public void OnClick(Widget widget) {
+			try {
+				mWorld = new World(mContext.getAssets().open("TutorialLevels/Tut4.Level"));
 				mWorld.LoadSolution();
 				mGameDrawer.CreateBackground(mWorld);
 			} catch (IOException e) {
@@ -140,12 +170,17 @@ public class ModeTutorial extends Mode {
 			mExplanation.setText("Cats will destroy arrows if they hit them head on, but not if they hit them from the side");
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
 			mNextButton.setText("Finish");
+			SoundManager.PlaySound(mClickSound);
 		}
 	},
 	new OnClickListener() {
 		@Override
 		public void OnClick(Widget widget) {
-			ModeTutorial.this.mPendMode = new ModeMenu(); 
+			if(mPendMode == null)
+			{
+				mPendMode = new ModeMenu();
+				SoundManager.PlaySound(mClickSound);
+			}
 		}
 	},
 	};
@@ -157,6 +192,14 @@ public class ModeTutorial extends Mode {
 	public void Setup(Context context)
 	{
 		mContext = context;
+		
+		try
+		{
+			mClickSound = SoundManager.LoadSound("Sounds/Click.ogg");
+		} catch(IOException io_ex)
+		{
+			//TODO log
+		}
 		
 		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
 		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
@@ -231,6 +274,10 @@ public class ModeTutorial extends Mode {
 			
 			float end_x = (float)mBtnBorder + (float)(mScreenWidth - mBtnBorder * 2) * (float)(mAge - mSwipeStart) / (float)SwipeTime;  
 			canvas.drawLine(mBtnBorder, mScreenHeight / 2, end_x, mScreenHeight / 2, linePaint);
+			
+			float mid_x = (float)mBtnBorder + (float)(mScreenWidth - mBtnBorder * 2) * (float)(mAge - mSwipeStart) / (2.0f * (float)SwipeTime);
+			Bitmap arrow = mGameDrawer.GetArrow(Direction.East).getCurrentFrame();
+			canvas.drawBitmap(arrow, mid_x - arrow.getWidth() / 2, mScreenHeight / 2 - arrow.getHeight() / 2, null);
 		}
 
 		super.Redraw(canvas);

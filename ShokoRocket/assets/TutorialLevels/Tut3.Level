@@ -10,25 +10,16 @@
     <V x="0" y="4" />
     <V x="0" y="5" />
     <H x="0" y="0" />
+    <H x="0" y="2" />
+    <H x="0" y="4" />
     <H x="1" y="0" />
     <H x="2" y="0" />
     <H x="3" y="0" />
     <H x="4" y="0" />
     <H x="5" y="0" />
-    <Arrow x="0" y="1" d="South" />
-    <Arrow x="0" y="4" d="North" />
-    <Arrow x="1" y="0" d="East" />
-    <Arrow x="1" y="1" d="South" />
-    <Arrow x="1" y="4" d="North" />
-    <Arrow x="1" y="5" d="East" />
-    <Arrow x="3" y="1" d="East" />
-    <Arrow x="3" y="4" d="North" />
-    <Arrow x="4" y="0" d="West" />
-    <Arrow x="4" y="1" d="South" />
-    <Arrow x="4" y="4" d="West" />
-    <Arrow x="4" y="5" d="West" />
-    <Arrow x="5" y="1" d="South" />
-    <Arrow x="5" y="4" d="North" />
-    <Cat x="1" y="1" d="South" />
-    <Cat x="4" y="1" d="South" />
+    <H x="5" y="1" />
+    <H x="5" y="3" />
+    <H x="5" y="5" />
+    <Mouse x="5" y="0" d="West" />
+    <Cat x="5" y="5" d="West" />
 </Level>

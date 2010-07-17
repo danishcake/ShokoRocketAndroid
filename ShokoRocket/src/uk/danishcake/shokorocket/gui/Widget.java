@@ -298,8 +298,7 @@ public class Widget {
 			verticalPosition = 8 + lineHeight;
 			break;
 		case Middle:
-			verticalPosition = mBounds.height() / 2 + (lineHeight / 2) -
-			lineHeight * split_b.size() / 2;
+			verticalPosition = mBounds.height() / 2 - (lineHeight * (split_b.size() - 1)) / 2 + (int)text_paint.descent();
 			break;
 		case Bottom:
 			verticalPosition = mBounds.height() - lineHeight * split_b.size() - 8;

@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class ShokoRocketActivity extends Activity {
 	
@@ -17,11 +19,11 @@ public class ShokoRocketActivity extends Activity {
     	setVolumeControlStream(AudioManager.STREAM_MUSIC);
     	SoundManager.Initialise(getApplicationContext());
         super.onCreate(savedInstanceState);
-        /*
+        
         requestWindowFeature(Window.FEATURE_NO_TITLE);  
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   
         					 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-*/
+
         mGameView = new GameView(getApplicationContext());
         setContentView(mGameView);
     }

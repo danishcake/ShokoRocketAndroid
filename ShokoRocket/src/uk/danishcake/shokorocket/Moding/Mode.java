@@ -95,10 +95,31 @@ public class Mode {
 		
 	}
 	
+	/**
+	 * Handles a swipe motion on the screen
+	 * @param direction
+	 */
 	public void handleGesture(Direction direction) {
 		
 	}
 	
+	/**
+	 * Allows a mode to display an indication of what type of gesture is to be performed 
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
+	 * @param direction
+	 */
+	public void previewGesture(int x1, int y1, int x2, int y2, Direction direction)
+	{
+	
+	}
+	
+	public void clearPreviewGesture()
+	{
+		
+	}
 	
 	/**
 	 * ScreenChanged
@@ -111,4 +132,6 @@ public class Mode {
 		mScreenWidth = width;
 		mScreenHeight = height;
 	}
+	
+
 }
