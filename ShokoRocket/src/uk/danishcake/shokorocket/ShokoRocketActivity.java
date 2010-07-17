@@ -19,20 +19,21 @@ public class ShokoRocketActivity extends Activity {
     	setVolumeControlStream(AudioManager.STREAM_MUSIC);
     	SoundManager.Initialise(getApplicationContext());
         super.onCreate(savedInstanceState);
-        
+        /*
         requestWindowFeature(Window.FEATURE_NO_TITLE);  
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   
         					 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+*/
         mGameView = new GameView(getApplicationContext());
         setContentView(mGameView);
     }
-
+    
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
     	if(keyCode == KeyEvent.KEYCODE_BACK)
     	{
-        	return mGameView.OverrideBack();        		
+        	if(mGameView.OverrideBack())        		
+        		return true;
     	}
 		if(keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
 		{
@@ -52,6 +53,6 @@ public class ShokoRocketActivity extends Activity {
 			return true;
 		}
 		
-		return false;
+		return super.onKeyUp(keyCode, event);
     }
 }
