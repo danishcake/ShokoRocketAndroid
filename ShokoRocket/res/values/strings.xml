@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="level_create">Create</string>
+    <string name="level_default_author">Unknown Author</string>
+    <string name="level_default_name">Unnamed Level</string>
+    <string name="level_name_description">The name to display in the user interface</string>
+    <string name="level_size_y_prompt">Select the level height</string>
+    <string name="level_size_x_prompt">Select the width</string>
+    <string name="level_width_label">Level width</string>
+    <string name="level_height_label">Level height</string>
     <string name="app_description">A clone of Chu Chu Rocket, save the mice from the evil cats!</string>
     
     <string name="app_name">Shoko Rocket</string>

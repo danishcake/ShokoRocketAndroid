@@ -14,7 +14,6 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.widget.Toast;
 
 
 public class ModeMenu extends Mode {
@@ -150,7 +149,8 @@ public class ModeMenu extends Mode {
 			playMap.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
-					mPendMode = new ModeGame(mWorld, ModeMenu.this, mProgress);
+					if(mPendMode == null)
+						mPendMode = new ModeGame(mWorld, ModeMenu.this, mProgress);
 					SoundManager.PlaySound(mClickSound);
 				}
 			});
@@ -158,7 +158,8 @@ public class ModeMenu extends Mode {
 			showTutorial.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
-					mPendMode = new ModeTutorial(false);
+					if(mPendMode == null)
+						mPendMode = new ModeTutorial(false);
 					SoundManager.PlaySound(mClickSound);
 				}
 			});
@@ -166,8 +167,8 @@ public class ModeMenu extends Mode {
 			loadEditor.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
-					Toast t = Toast.makeText(mContext, "Coming soon!", Toast.LENGTH_SHORT);
-					t.show();
+					if(mPendMode == null)
+						mPendMode = new ModeEditor(ModeMenu.this);
 					SoundManager.PlaySound(mClickSound);
 				}
 			});

@@ -36,6 +36,14 @@ public class Walker {
 	public Vector2i getPosition() {
 		return new Vector2i(mX, mY);
 	}
+	/**
+	 * Gets the initial position of the walker
+	 * @return
+	 */
+	public Vector2i getStartingPosition() {
+		return new Vector2i(mStartingX, mStartingY);
+	}
+	
 	/* Sets the position of the walker
 	 * @param position The position
 	 */

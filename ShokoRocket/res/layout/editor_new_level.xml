@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_height="wrap_content" android:orientation="vertical" android:layout_width="fill_parent" android:minWidth="280dip">
+
+<TextView android:layout_height="wrap_content" android:id="@+id/LevelSize" android:layout_width="wrap_content" android:text="@string/level_width_label" android:layout_marginLeft="4dip"></TextView>
+
+<Spinner android:layout_height="wrap_content" android:id="@+id/LevelWidth" android:entries="@array/level_dimensions" android:prompt="@string/level_size_x_prompt" android:layout_weight="0" android:layout_width="fill_parent" android:layout_margin="1dip"></Spinner><TextView android:layout_height="wrap_content" android:id="@+id/LevelSize" android:layout_width="wrap_content" android:text="@string/level_height_label" android:layout_marginLeft="4dip"></TextView>
+
+<Spinner android:layout_height="wrap_content" android:id="@+id/LevelHeight" android:entries="@array/level_dimensions" android:prompt="@string/level_size_y_prompt" android:layout_weight="0" android:layout_width="fill_parent" android:layout_margin="1dip"></Spinner>
+<EditText android:layout_height="wrap_content" android:contentDescription="@string/level_name_description" android:inputType="textPersonName" android:text="@string/level_default_name" android:id="@+id/LevelName" android:layout_weight="0" android:layout_width="fill_parent" android:layout_margin="1dip"></EditText>
+<EditText android:layout_height="wrap_content" android:inputType="textPersonName" android:text="@string/level_default_author" android:id="@+id/LevelAuthor" android:layout_weight="0" android:layout_width="fill_parent" android:layout_margin="1dip"></EditText>
+<Button android:layout_height="wrap_content" android:id="@+id/CreateLevel" android:text="@string/level_create" android:layout_weight="0" android:layout_width="fill_parent" android:layout_margin="1dip"></Button>
+</LinearLayout>

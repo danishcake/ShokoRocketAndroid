@@ -47,7 +47,7 @@ public class ModeGame extends Mode {
 	private int mClickSound = -1;
 	private int mMouseSound = -1; 
 	
-	enum RunningMode { Stopped, Running, RunningFast }
+	
 	private RunningMode mRunningMode = RunningMode.Stopped;
 	
 	private Vector2i mGestureStart = new Vector2i(0, 0);

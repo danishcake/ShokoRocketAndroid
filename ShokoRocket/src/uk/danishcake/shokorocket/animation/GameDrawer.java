@@ -131,6 +131,40 @@ public class GameDrawer {
 		}		
 	}
 	
+	public void DrawBackground(Canvas canvas, World world)
+	{
+		for(int y = 0; y < world.getHeight(); y++)
+		{
+			boolean use_tile_a = (y % 2 == 0);
+			for(int x = 0; x < world.getWidth(); x++)	
+			{
+				if(use_tile_a)
+					canvas.drawBitmap(mTileA, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY, null);
+				else
+					canvas.drawBitmap(mTileB, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY, null);
+				use_tile_a = !use_tile_a;
+			}
+		}
+		for(int y = 0; y < world.getHeight(); y++)
+		{
+			for(int x = 0; x < world.getWidth(); x++)
+			{
+				if(world.getWest(x, y))
+				{
+					mWestWall.DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY);
+					if(x == 0)
+						mWestWall.DrawCurrentFrame(canvas, world.getWidth() * mGridSize - mWestWall.getCurrentFrame().getWidth() + mDrawOffsetX, y * mGridSize + mDrawOffsetY);
+				}
+				if(world.getNorth(x, y))
+				{
+					mNorthWall.DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY);
+					if(y == 0)
+						mNorthWall.DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, world.getHeight() * mGridSize - mNorthWall.getCurrentFrame().getHeight() + mDrawOffsetY);
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Loads any unloaded textures
 	 * @param context The context to obtain animations from
@@ -201,7 +235,7 @@ public class GameDrawer {
 				mNorthWall = wall_animations.get("Horizontal");
 				mWestWall = wall_animations.get("Vertical");
 				
-				Map<String, Animation> tile_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.tiles);
+				Map<String, Animation> tile_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.tiles, scale);
 				
 				mTileA = tile_animations.get("TileA").getCurrentFrame();
 				mTileB = tile_animations.get("TileB").getCurrentFrame();

@@ -24,7 +24,7 @@ public class ShokoRocketActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   
         					 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        mGameView = new GameView(getApplicationContext());
+        mGameView = new GameView(this);
         setContentView(mGameView);
     }
     

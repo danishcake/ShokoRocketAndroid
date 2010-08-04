@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -76,11 +77,27 @@ public class World {
 		return mLevelAuthor;
 	}
 	
+	/**
+	 * Sets the level author
+	 * @param author The name of the author
+	 */
+	public void setAuthor(String author) {
+		mLevelAuthor = author;
+	}
+	
 	/* getLevelName
 	 * @return the name of the level
 	 */	
 	public String getLevelName() {
 		return mLevelName;
+	}
+	
+	/**
+	 * Sets the level name
+	 * @param name The name of the level
+	 */
+	public void setLevelName(String name) {
+		mLevelName = name;
 	}
 	
 	/**
@@ -154,6 +171,118 @@ public class World {
 		walker.setWalkerType(WalkerType.Cat);
 	}
 	
+	private void clearWalker(int x, int y) {
+		Iterator<Walker> m_it = mLiveMice.iterator();
+		while(m_it.hasNext())
+		{
+			Walker walker = m_it.next();
+			Vector2i walker_position = walker.getStartingPosition();
+			if(walker_position.x == x && walker_position.y == y)
+			{
+				m_it.remove();
+			}
+		}
+		
+		Iterator<Walker> c_it = mLiveCats.iterator();
+		while(c_it.hasNext())
+		{
+			Walker walker = c_it.next();
+			Vector2i walker_position = walker.getStartingPosition();
+			if(walker_position.x == x && walker_position.y == y)
+			{
+				c_it.remove();
+			}
+		}		
+	}
+	
+	/**
+	 * toggleMouse
+	 * @param x X position
+	 * @param y Y position
+	 * @param direction Direction to face
+	 */
+	public void toggleMouse(int x, int y, Direction direction) {
+		boolean found = false;
+		Iterator<Walker> m_it = mLiveMice.iterator();
+		while(m_it.hasNext())
+		{
+			Walker walker = m_it.next();
+			Vector2i walker_position = walker.getStartingPosition();
+			if(walker_position.x == x && walker_position.y == y)
+			{
+				if(walker.getDirection() == direction)
+					found = true;
+				m_it.remove();
+			}
+		}
+		
+		Iterator<Walker> c_it = mLiveCats.iterator();
+		while(c_it.hasNext())
+		{
+			Walker walker = c_it.next();
+			Vector2i walker_position = walker.getStartingPosition();
+			if(walker_position.x == x && walker_position.y == y)
+			{
+				c_it.remove();
+			}
+		}
+		if(getSpecialSquare(x, y) == SquareType.Hole || getSpecialSquare(x, y) == SquareType.Rocket)
+			setSpecialSquare(x, y, SquareType.Empty);
+		
+		if(!found)
+		{
+			Walker walker = new Walker();
+			walker.setDirection(direction);
+			walker.setPosition(new Vector2i(x, y));
+			addMouse(walker);
+		}
+	}
+	
+	/**
+	 * toggleCat
+	 * @param x X position
+	 * @param y Y position
+	 * @param direction Direction to face
+	 */
+	public void toggleCat(int x, int y, Direction direction) {
+		boolean found = false;
+		Iterator<Walker> m_it = mLiveMice.iterator();
+		while(m_it.hasNext())
+		{
+			Walker walker = m_it.next();
+			Vector2i walker_position = walker.getStartingPosition();
+			if(walker_position.x == x && walker_position.y == y)
+			{
+				m_it.remove();
+			}
+		}
+		
+		Iterator<Walker> c_it = mLiveCats.iterator();
+		while(c_it.hasNext())
+		{
+			Walker walker = c_it.next();
+			Vector2i walker_position = walker.getStartingPosition();
+			if(walker_position.x == x && walker_position.y == y)
+			{
+				if(walker.getDirection() == direction)
+					found = true;
+				c_it.remove();
+			}
+		}
+		if(getSpecialSquare(x, y) == SquareType.Hole || getSpecialSquare(x, y) == SquareType.Rocket)
+			setSpecialSquare(x, y, SquareType.Empty);
+		
+		if(!found)
+		{
+			Walker walker = new Walker();
+			walker.setDirection(direction);
+			walker.setPosition(new Vector2i(x, y));
+			addCat(walker);
+		}
+	}
+	
+	
+	
 	/* getHole
 	 * @return if there is a hole at x/y
 	 */
@@ -165,6 +294,7 @@ public class World {
 	 * Sets the hole at x/y to hole. Will not clear a rocket
 	 */
 	public void setHole(int x, int y, boolean hole) {
+		clearWalker(x, y);
 		if(hole)
 			mSpecialSquares[wallIndex(x, y)] = SquareType.Hole;
 		else if(mSpecialSquares[wallIndex(x, y)] == SquareType.Hole)
@@ -176,6 +306,7 @@ public class World {
 	 */
 	public void toggleHole(int x, int y)
 	{
+		clearWalker(x, y);
 		if(mSpecialSquares[wallIndex(x, y)] == SquareType.Hole)
 			mSpecialSquares[wallIndex(x, y)] = SquareType.Empty;
 		else
@@ -193,6 +324,7 @@ public class World {
 	 * Sets the rocket at x/y to rocket. Will not clear a hole
 	 */
 	public void setRocket(int x, int y, boolean rocket) {
+		clearWalker(x, y);
 		if(rocket)
 			mSpecialSquares[wallIndex(x, y)] = SquareType.Rocket;
 		else if(mSpecialSquares[wallIndex(x, y)] == SquareType.Rocket)
@@ -203,6 +335,7 @@ public class World {
 	 * Toggles the rocket at x/y. If a hole is present it changes it to a rocket 
 	 */
 	public void toggleRocket(int x, int y) {
+		clearWalker(x, y);
 		if(mSpecialSquares[wallIndex(x, y)] == SquareType.Rocket)
 			mSpecialSquares[wallIndex(x, y)] = SquareType.Empty;
 		else
@@ -362,6 +495,15 @@ public class World {
 		boolean mouse_rescued = mMouseRescued;
 		mMouseRescued = false;
 		return mouse_rescued;
+	}
+	
+	public World(int width, int height)
+	{
+		mWidth = width;
+		mHeight = height;
+		defaultWalls();
+		defaultSpecialSquares();
+		mUnlimitedArrows = true;
 	}
 	
 	/* World()
@@ -792,6 +934,24 @@ public class World {
 			throw new InvalidParameterException("x/y outside valid world area");
 		int wi = wallIndex(x, (y + 1) % mHeight);
 		mWalls[wi] = (mWalls[wi] & ~eNorthWall) | (set ? eNorthWall : 0);		
+	}
+	
+	public void toggleDirection(int x, int y, Direction direction) {
+		switch(direction)
+		{
+		case North:
+			setNorth(x, y, !getDirection(x, y, direction));
+			break;
+		case South:
+			setSouth(x, y, !getDirection(x, y, direction));
+			break;
+		case East:
+			setEast(x, y, !getDirection(x, y, direction));
+			break;
+		case West:
+			setWest(x, y, !getDirection(x, y, direction));
+			break;
+		}
 	}
 	
 	/* checkCollision
