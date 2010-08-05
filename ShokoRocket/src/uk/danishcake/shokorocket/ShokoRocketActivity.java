@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -54,5 +56,24 @@ public class ShokoRocketActivity extends Activity {
 		}
 		
 		return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	return mGameView.handleMenuSelection(item);
+    }
+    
+    private boolean updateOptionsMenu(Menu menu) {
+    	return mGameView.getMenu(menu);
+    }
+    
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+    	return updateOptionsMenu(menu);
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	return updateOptionsMenu(menu);
     }
 }

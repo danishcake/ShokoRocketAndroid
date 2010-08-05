@@ -1,5 +1,7 @@
 package uk.danishcake.shokorocket;
 
+import java.util.concurrent.Semaphore;
+
 import uk.danishcake.shokorocket.moding.GameStateMachine;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,12 +13,14 @@ public class GameThread extends Thread {
 	private SurfaceHolder mSurfaceHolder;
 	private boolean mRunning = true;
 	private GameStateMachine mGame;
+	private Semaphore mSemaphore;
 	
-	public GameThread(SurfaceHolder surfaceHolder, Handler handler, Context context, GameStateMachine game)
+	public GameThread(SurfaceHolder surfaceHolder, Handler handler, Context context, GameStateMachine game, Semaphore semaphore)
 	{
 		mSurfaceHolder = surfaceHolder;
 		mGame = game;
 		mGame.setContext(context);
+		mSemaphore = semaphore;
 	}
 	
 	public void StopRunning() {mRunning = false;}
@@ -27,28 +31,36 @@ public class GameThread extends Thread {
 		{
 			long update_start = System.nanoTime();
 			//Update game
-			boolean exit = mGame.Tick(20);
-			
-			if(exit)
-			{ //TODO provide a proper exit
-				
-			}
-			
-			//Draw
-			Canvas canvas = null;
 			try
 			{
-				canvas = mSurfaceHolder.lockCanvas();
+				mSemaphore.acquire();
+				boolean exit = mGame.Tick(20);
 				
-				synchronized (mSurfaceHolder) {
-					canvas.drawRGB(0, 0, 0);
-					//Now draw my sprites
-					mGame.Redraw(canvas);
+				if(exit)
+				{ //TODO provide a proper exit
+					
 				}
-			} finally
+				
+				//Draw
+				Canvas canvas = null;
+				try
+				{
+					canvas = mSurfaceHolder.lockCanvas();
+					
+					synchronized (mSurfaceHolder) {
+						canvas.drawRGB(0, 0, 0);
+						//Now draw my sprites
+						mGame.Redraw(canvas);
+					}
+				} finally
+				{
+					if(canvas != null)
+						mSurfaceHolder.unlockCanvasAndPost(canvas);
+				}
+				mSemaphore.release();
+			} catch(InterruptedException int_ex)
 			{
-				if(canvas != null)
-					mSurfaceHolder.unlockCanvasAndPost(canvas);
+				
 			}
 			
 			//Sleep for remainder of frame

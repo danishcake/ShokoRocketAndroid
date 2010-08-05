@@ -11,6 +11,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -38,6 +41,55 @@ public class ModeEditor extends Mode {
 	private Widget mEditModeWidget;
 
 	private Dialog mNewLevelDialog = null;
+	private Runnable mNewLevelRunnable = new Runnable() {
+		public void run() {
+			mNewLevelDialog = new Dialog(mContext);
+			mNewLevelDialog.setContentView(uk.danishcake.shokorocket.R.layout.editor_new_level);
+			mNewLevelDialog.setTitle("Create a new level");
+			((Spinner)mNewLevelDialog.findViewById(R.id.LevelWidth)).setSelection(9);
+			((Spinner)mNewLevelDialog.findViewById(R.id.LevelHeight)).setSelection(6);
+			
+			Button createLevel = (Button) mNewLevelDialog.findViewById(R.id.CreateLevel);
+			createLevel.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					Spinner width_spinner = (Spinner) mNewLevelDialog.findViewById(R.id.LevelWidth);
+					Spinner height_spinner = (Spinner) mNewLevelDialog.findViewById(R.id.LevelHeight);
+					TextView level_author = (TextView) mNewLevelDialog.findViewById(R.id.LevelAuthor);
+					TextView level_name = (TextView) mNewLevelDialog.findViewById(R.id.LevelName);
+					
+					World world = new World(Integer.parseInt((String)width_spinner.getSelectedItem()),
+											Integer.parseInt((String)height_spinner.getSelectedItem()));
+					world.setAuthor(level_author.getText().toString());
+					world.setLevelName(level_name.getText().toString());
+					
+					mGameDrawer = new GameDrawer();
+
+					int grid_size = mContext.getResources().getInteger(R.integer.grid_size);
+					int required_width = world.getWidth() * grid_size ;
+					int required_height = world.getHeight() * grid_size ;
+					float scaleX = ((float)mScreenWidth - 16) / (float)required_width;
+					float scaleY = ((float)(mScreenHeight - 156 - 8)) / (float)required_height;
+					float smaller = scaleX < scaleY ? scaleX : scaleY;
+					
+					if(smaller < 1)
+						mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller));
+					else
+						mGameDrawer.Setup(mContext, grid_size );
+					//mGameDrawer.CreateBackground(world);
+					mGameDrawer.setDrawOffset(mScreenWidth / 2 - (world.getWidth() * mGameDrawer.getGridSize() / 2), 16);
+					
+					mWorld = world;
+					mWidgetPage = new WidgetPage();
+					InitialiseWidgets();
+					
+					mNewLevelDialog.dismiss();
+					mNewLevelDialog = null;			
+				}
+			});
+			mNewLevelDialog.show();
+		}
+	};
+	
 	private Context mContext;
 	private World mWorld = null;
 	private GameDrawer mGameDrawer = null;
@@ -68,6 +120,21 @@ public class ModeEditor extends Mode {
 	private int mBtnSep = 8;
 	private int mBtnBorder = 16;
 	private int mFontSize = 16;
+	
+	private Menu mMenu = null;
+	private final int E_MENU_NEW = 1;
+	private final int E_MENU_SAVE = 2;
+	private final int E_MENU_SHARE = 3;
+	private final int E_MENU_PROPERTIES = 4;
+	private final int E_MENU_VERIFY = 5;
+	
+	private final int E_MENU_WALLMODE = 6;
+	private final int E_MENU_MOUSEMODE = 7;
+	private final int E_MENU_CATMODE = 8;
+	private final int E_MENU_ROCKETMODE = 9;
+	private final int E_MENU_HOLEMODE = 10;
+	private final int E_MENU_ARROWMODE = 11;
+	
 	
 	public ModeEditor(ModeMenu menu)
 	{
@@ -135,58 +202,7 @@ public class ModeEditor extends Mode {
 		mWidgetPage.setFontSize(mFontSize);
 		
 		Handler handler = new Handler(context.getMainLooper());
-		handler.post(new Runnable() {
-			public void run() {
-				mNewLevelDialog = new Dialog(context);
-				mNewLevelDialog.setContentView(uk.danishcake.shokorocket.R.layout.editor_new_level);
-				mNewLevelDialog.setTitle("Create a new level");
-				((Spinner)mNewLevelDialog.findViewById(R.id.LevelWidth)).setSelection(9);
-				((Spinner)mNewLevelDialog.findViewById(R.id.LevelHeight)).setSelection(6);
-				
-				Button createLevel = (Button) mNewLevelDialog.findViewById(R.id.CreateLevel);
-				createLevel.setOnClickListener(new OnClickListener() {
-					public void onClick(View v) {
-						Spinner width_spinner = (Spinner) mNewLevelDialog.findViewById(R.id.LevelWidth);
-						Spinner height_spinner = (Spinner) mNewLevelDialog.findViewById(R.id.LevelHeight);
-						TextView level_author = (TextView) mNewLevelDialog.findViewById(R.id.LevelAuthor);
-						TextView level_name = (TextView) mNewLevelDialog.findViewById(R.id.LevelName);
-						
-						World world = new World(Integer.parseInt((String)width_spinner.getSelectedItem()),
-												Integer.parseInt((String)height_spinner.getSelectedItem()));
-						world.setAuthor(level_author.getText().toString());
-						world.setLevelName(level_name.getText().toString());
-						
-						mGameDrawer = new GameDrawer();
-
-						int grid_size = context.getResources().getInteger(R.integer.grid_size);
-						int required_width = world.getWidth() * grid_size ;
-						int required_height = world.getHeight() * grid_size ;
-						float scaleX = ((float)mScreenWidth - 16) / (float)required_width;
-						float scaleY = ((float)(mScreenHeight - 156 - 8)) / (float)required_height;
-						float smaller = scaleX < scaleY ? scaleX : scaleY;
-						
-						if(smaller < 1)
-							mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller));
-						else
-							mGameDrawer.Setup(mContext, grid_size );
-						//mGameDrawer.CreateBackground(world);
-						mGameDrawer.setDrawOffset(mScreenWidth / 2 - (world.getWidth() * mGameDrawer.getGridSize() / 2), 16);
-						
-						mWorld = world;
-						
-						InitialiseWidgets();
-						
-						mNewLevelDialog.dismiss();
-						mNewLevelDialog = null;
-					}
-				});
-				
-				mNewLevelDialog.show();
-			}
-		});
-		
-		
-		
+		handler.post(mNewLevelRunnable);
 	}
 	
 	@Override
@@ -339,6 +355,100 @@ public class ModeEditor extends Mode {
 				break;	
 			}
 		}
+	}
+	
+	@Override
+	public boolean getMenu(Menu menu) {
+		menu.clear();
+	//	SubMenu sm = menu.addSubMenu("File");
+		menu.add(0, E_MENU_NEW, 0, "New");
+		menu.add(0, E_MENU_SAVE, 0, "Save");
+		menu.add(0, E_MENU_SHARE, 0, "Share");
+		
+		
+	//	SubMenu sm2 = menu.addSubMenu("Level");
+		menu.add(1, E_MENU_PROPERTIES, 0, "Properties");
+		menu.add(1, E_MENU_VERIFY, 0, "Verify");
+		
+		SubMenu sm_edit = menu.addSubMenu("Edit mode");
+		MenuItem mi_walls = sm_edit.add(2, E_MENU_WALLMODE, 0, "Walls");
+		MenuItem mi_mice = sm_edit.add(2, E_MENU_MOUSEMODE, 0, "Mice");
+		MenuItem mi_cats = sm_edit.add(2, E_MENU_CATMODE, 0, "Cats");
+		MenuItem mi_arrows = sm_edit.add(2, E_MENU_ARROWMODE, 0, "Arrows");
+		MenuItem mi_rocket = sm_edit.add(2, E_MENU_ROCKETMODE, 0, "Rocket");
+		MenuItem mi_holes = sm_edit.add(2, E_MENU_HOLEMODE, 0, "Hole");
+		sm_edit.setGroupCheckable(2, true, true);
+		
+		switch(mEditMode)
+		{
+		case Arrows:
+			mi_arrows.setChecked(true);
+			break;
+		case Cats:
+			mi_cats.setChecked(true);
+			break;
+		case Holes:
+			mi_holes.setChecked(true);
+			break;
+		case Mice:
+			mi_mice.setChecked(true);
+			break;
+		case Rockets:
+			mi_rocket.setChecked(true);
+			break;
+		case Walls:
+			mi_walls.setChecked(true);
+			break;
+		}
+
+		return true;
+	}
+	
+	@Override
+	public boolean handleMenuSelection(MenuItem item) {
+		switch(item.getItemId())
+		{
+		case E_MENU_NEW:
+			mWorld = null;
+			Handler handler = new Handler(mContext.getMainLooper());
+			handler.post(mNewLevelRunnable);			
+			break;
+		case E_MENU_SAVE:
+			break;
+		case E_MENU_SHARE:
+			break;
+		case E_MENU_VERIFY:
+			break;
+		case E_MENU_PROPERTIES:
+			break;
+		case E_MENU_WALLMODE:
+			mEditMode = EditMode.Walls;
+			mEditModeWidget.setText("Walls");
+			break;
+		case E_MENU_MOUSEMODE:
+			mEditMode = EditMode.Mice;
+			mEditModeWidget.setText("Mice");
+			break;
+		case E_MENU_CATMODE:
+			mEditMode = EditMode.Cats;
+			mEditModeWidget.setText("Cats");
+			break;
+		case E_MENU_ARROWMODE:
+			mEditMode = EditMode.Arrows;
+			mEditModeWidget.setText("Arrows");
+			break;
+		case E_MENU_HOLEMODE:
+			mEditMode = EditMode.Holes;
+			mEditModeWidget.setText("Holes");
+			break;
+		case E_MENU_ROCKETMODE:
+			mEditMode = EditMode.Rockets;
+			mEditModeWidget.setText("Rockets");
+			break;
+		default:
+			return false;
+		}
+		return true;
 	}
 	
 	@Override

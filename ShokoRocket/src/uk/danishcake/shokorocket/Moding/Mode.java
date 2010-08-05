@@ -3,6 +3,8 @@ package uk.danishcake.shokorocket.moding;
 import uk.danishcake.shokorocket.simulation.Direction;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.view.Menu;
+import android.view.MenuItem;
 
 /**
  * Base class representing a state in the {@link GameStateMachine}.
@@ -133,5 +135,25 @@ public class Mode {
 		mScreenHeight = height;
 	}
 	
+	/**
+	 * Called when mode changes, before Setup. If not overriden then no menu 
+	 * will be available.
+	 * @return Menu to display for the current mode
+	 */
+	public boolean getMenu(Menu menu)
+	{
+		return false;
+	}
+
+	/**
+	 * Called when a menu item has been selected, allowing modes to handle the selection
+	 * @param item
+	 * @return
+	 */
+	public boolean handleMenuSelection(MenuItem item)
+	{
+		
+		return false;
+	}
 
 }

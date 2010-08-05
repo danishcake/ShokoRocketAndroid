@@ -1,8 +1,11 @@
 package uk.danishcake.shokorocket.moding;
 
+import uk.danishcake.shokorocket.ShokoRocketActivity;
 import uk.danishcake.shokorocket.simulation.Direction;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 
 public class GameStateMachine {
@@ -132,5 +135,13 @@ public class GameStateMachine {
 
 	public void setContext(Context context) {
 		mContext = context;
+	}
+	
+	public boolean getMenu(Menu menu) {
+		return mMode.getMenu(menu);
+	}
+	
+	public boolean handleMenuSelection(MenuItem item) {
+		return mMode.handleMenuSelection(item);
 	}
 }
