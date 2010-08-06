@@ -1,5 +1,8 @@
 package uk.danishcake.shokorocket.moding;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import android.app.AlertDialog;
@@ -7,11 +10,13 @@ import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
@@ -22,6 +27,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.NinePatchData;
@@ -103,6 +109,8 @@ public class ModeEditor extends Mode {
 		}
 	};
 	
+	private Dialog mPickFilenameDialog = null;
+	
 	private Context mContext;
 	private World mWorld = null;
 	private GameDrawer mGameDrawer = null;
@@ -119,7 +127,7 @@ public class ModeEditor extends Mode {
 	
 	boolean mSaveNeeded = false;
 	boolean mValidated = false;
-	
+
 	private WidgetPage mWidgetPage = null;
 	
 	private Vector2i mCursorPosition = new Vector2i(-1, -1);
@@ -134,7 +142,6 @@ public class ModeEditor extends Mode {
 	private int mBtnBorder = 16;
 	private int mFontSize = 16;
 	
-	private Menu mMenu = null;
 	private final int E_MENU_NEW = 1;
 	private final int E_MENU_SAVE = 2;
 	private final int E_MENU_SHARE = 3;
@@ -266,7 +273,6 @@ public class ModeEditor extends Mode {
 			mGameDrawer.Tick(timespan);
 			mWidgetPage.Tick(timespan);
 		}
-		
 		
 		return super.Tick(timespan);
 	}
@@ -416,6 +422,25 @@ public class ModeEditor extends Mode {
 		return true;
 	}
 	
+	private void SaveLevel() 
+	{
+		try {
+			File root = new File(new File(Environment.getExternalStorageDirectory(), "ShokoRocket"), "My Levels");
+			File file = new File(root, mWorld.getFilename());
+			
+			root.mkdirs();
+			
+			FileOutputStream fos = new FileOutputStream(file);
+			
+			mWorld.Save(fos);
+			Toast.makeText(mContext, "Saved as " + file.getPath(), 1).show();
+		} catch (FileNotFoundException e) {
+			Log.e("ModeEditor.handleMenuSelection", e.getMessage());
+			Toast.makeText(mContext, "Unable to save " + e.getMessage(), 1).show();
+			mWorld.setLevelName("");
+		}		
+	}
+	
 	@Override
 	public boolean handleMenuSelection(MenuItem item) {
 		switch(item.getItemId())
@@ -443,10 +468,102 @@ public class ModeEditor extends Mode {
 			ad.show();
 			break;
 		case E_MENU_SAVE:
+			if(Verify())
+			{
+				if(mWorld.getFilename().length() == 0)
+				{
+					mPickFilenameDialog = new Dialog(mContext);
+					mPickFilenameDialog.setContentView(uk.danishcake.shokorocket.R.layout.editor_change_filename);
+					mPickFilenameDialog.setTitle("Enter filename");
+					
+					Button setFilename = (Button) mPickFilenameDialog.findViewById(R.id.SetFilename);
+					setFilename.setOnClickListener(new OnClickListener() {
+						public void onClick(View v) {
+							try
+							{
+								mSemaphore.acquire();
+								TextView filename_widget = (TextView) mPickFilenameDialog.findViewById(R.id.LevelFilename);
+								String filename = filename_widget.getText().toString();
+								
+								mWorld.setFilename(filename);
+								mPickFilenameDialog.dismiss();
+								
+								File root = new File(new File(Environment.getExternalStorageDirectory(), "ShokoRocket"), "My Levels");
+								File file = new File(root, mWorld.getFilename());
+								if(file.exists())
+								{
+									AlertDialog.Builder builder = new Builder(mContext);
+									builder.setMessage("File already exists. Overwrite?");
+									builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog, int which) {
+											try
+											{
+												mSemaphore.acquire();
+												SaveLevel();
+												mSemaphore.release();
+											} catch(InterruptedException int_ex)
+											{
+												Log.e("ModeEditor.handleMenuSelection, E_MENU_SAVE", "Semaphore interupted");
+											}
+										}
+									});
+									
+									builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog, int which) {
+											try
+											{
+												mSemaphore.acquire();
+												mWorld.setFilename("");
+												mSemaphore.release();
+											} catch(InterruptedException int_ex)
+											{
+												Log.e("ModeEditor.handleMenuSelection, E_MENU_SAVE", "Semaphore interupted");
+											}
+										}
+									});
+
+									builder.setOnCancelListener(new OnCancelListener() {
+										public void onCancel(DialogInterface dialog) {
+											try
+											{
+												mSemaphore.acquire();
+												mWorld.setFilename("");
+												mSemaphore.release();
+											} catch(InterruptedException int_ex)
+											{
+												Log.e("ModeEditor.handleMenuSelection, E_MENU_SAVE", "Semaphore interupted");
+											}	
+										}
+									});
+									AlertDialog ad = builder.create();
+									ad.show();
+								} else
+								{
+									SaveLevel();
+								}
+
+								mSemaphore.release();
+							} catch(InterruptedException int_ex)
+							{
+								//Todo log
+							}
+						}
+						});
+					mPickFilenameDialog.show();
+					
+				} else
+					SaveLevel();
+			}
+			else
+				Toast.makeText(mContext, "Solution invalid", 1).show();
 			break;
 		case E_MENU_SHARE:
 			break;
 		case E_MENU_VERIFY:
+			if(Verify())
+				Toast.makeText(mContext, "Solution valid", 1).show();
+			else
+				Toast.makeText(mContext, "Solution invalid", 1).show();
 			break;
 		case E_MENU_PROPERTIES:
 			break;
@@ -477,6 +594,11 @@ public class ModeEditor extends Mode {
 		default:
 			return false;
 		}
+		return true;
+	}
+	
+	private boolean Verify()
+	{
 		return true;
 	}
 	

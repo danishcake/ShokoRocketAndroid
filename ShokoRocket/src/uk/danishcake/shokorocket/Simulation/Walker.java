@@ -60,6 +60,15 @@ public class Walker {
 	public Direction getDirection() {
 		return mDirection;
 	}
+	
+	/**
+	 * Gets the starting direction
+	 * @return The starting direction (the direction last set with setDirection)
+	 */
+	public Direction getStartingDirection() {
+		return mStartingDirection;
+	}
+	
 	/* Sets the direction faced by the walker
 	 * @param direction direction to be faced by the walker
 	 */

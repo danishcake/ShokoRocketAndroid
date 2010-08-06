@@ -2,7 +2,6 @@ package uk.danishcake.shokorocket.moding;
 
 import java.util.concurrent.Semaphore;
 
-import uk.danishcake.shokorocket.ShokoRocketActivity;
 import uk.danishcake.shokorocket.simulation.Direction;
 import android.content.Context;
 import android.graphics.Canvas;

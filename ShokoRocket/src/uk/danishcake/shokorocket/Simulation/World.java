@@ -5,6 +5,8 @@ import uk.danishcake.shokorocket.simulation.Walker.WalkerType;
 
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,6 +20,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.NamedNodeMap;
 import org.xml.sax.SAXException;
+
 
 
 public class World {
@@ -54,6 +57,7 @@ public class World {
 	private boolean mUnlimitedArrows = false;
 	
 	private String mIdentifier = "";
+	private String mFilename = "";
 	
 	private boolean mMouseRescued = false;
 	
@@ -98,6 +102,22 @@ public class World {
 	 */
 	public void setLevelName(String name) {
 		mLevelName = name;
+	}
+	
+	/**
+	 * Sets the filename. This is used to determine if a file has already been saved
+	 * @param name The filename to store. 
+	 */
+	public void setFilename(String name) {
+		mFilename = name;
+	}
+	
+	/**
+	 * Gets the filename. If it has not been set then it returns ""
+	 * @return The filename set by setFilename
+	 */
+	public String getFilename() {
+		return mFilename;
 	}
 	
 	/**
@@ -809,6 +829,77 @@ public class World {
 			} 
 		}
 	}
+	
+	public void Save(OutputStream output)
+	{
+		//Unfortunately there is not built in XML writing in android until API 8, so will roll my own
+		
+		PrintStream out = new PrintStream(output);
+		//XML preamble
+		out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+		out.println("<Level>");
+		//Save properties
+		out.println("<Name>" + mLevelName + "</Name>");
+		out.println("<Author>" + mLevelAuthor + "</Author>");
+		out.println("<Size x=\"" + Integer.toString(mWidth) + "\" y=\"" + Integer.toString(mHeight) + "\"/>");
+		//Save walls
+		for(int y = 0; y < mHeight; y++)
+		{
+			for(int x = 0; x <mWidth; x++)
+			{
+				if(getWest(x, y))
+					out.println("<V x=\"" + Integer.toString(x) + "\" y=\"" + Integer.toString(y) + "\" />");
+				if(getNorth(x, y))
+					out.println("<H x=\"" + Integer.toString(x) + "\" y=\"" + Integer.toString(y) + "\" />");
+			}
+		}
+		//Save mice
+		for (Walker mouse : mLiveMice) {
+			out.println("<Mouse x=\"" + Integer.toString(mouse.getStartingPosition().x) + "\" y=\"" + Integer.toString(mouse.getStartingPosition().y) + "\" d=\"" + mouse.getStartingDirection().toString() + "\" />");
+		}
+		//Save cats
+		for (Walker cat : mLiveCats) {
+			out.println("<Cat x=\"" + Integer.toString(cat.getStartingPosition().x) + "\" y=\"" + Integer.toString(cat.getStartingPosition().y) + "\" d=\"" + cat.getStartingDirection().toString() + "\" />");
+		}
+		//Save rockets
+		//Save holes
+		//Save arrows
+		for(int y = 0; y < mHeight; y++)
+		{
+			for(int x = 0; x <mWidth; x++)
+			{
+				SquareType square = getSpecialSquare(x, y); 
+				switch(square)
+				{
+				case Rocket:
+					out.println("<Rocket x=\"" + Integer.toString(x) + "\" y=\"" + Integer.toString(y) + "\" />");
+					break;
+				case Hole:
+					out.println("<Hole x=\"" + Integer.toString(x) + "\" y=\"" + Integer.toString(y) + "\" />");
+					break;
+				case EastArrow:
+				case EastHalfArrow:
+				case EastDestroyedArrow:
+				case WestArrow:
+				case WestHalfArrow:
+				case WestDestroyedArrow:
+				case NorthArrow:
+				case NorthHalfArrow:
+				case NorthDestroyedArrow:
+				case SouthArrow:
+				case SouthHalfArrow:
+				case SouthDestroyedArrow:
+					Direction d = square.GetDirectionality();
+					out.println("<Arrow x=\"" + Integer.toString(x) + "\" y=\"" + Integer.toString(y) + " d=\"" + d.toString() + "\"/>");
+					break;
+				}
+			}
+		}		
+		out.println("</Level>");
+		out.flush();
+		out.close();
+	}
+	
 	
 	/* defaultWalls()
 	 * Sets the default walls around the edge

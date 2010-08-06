@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_height="wrap_content" android:orientation="vertical" android:layout_width="fill_parent" android:minWidth="280dip">
+
+<TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginLeft="4dip" android:id="@+id/LevelFilenameLabel" android:text="@string/level_filename_label"></TextView>
+<EditText android:layout_height="wrap_content" android:layout_weight="0" android:layout_width="fill_parent" android:layout_margin="1dip" android:id="@+id/LevelFilename" android:inputType="textNoSuggestions" android:text="@string/level_default_filename"></EditText>
+<Button android:layout_height="wrap_content" android:layout_weight="0" android:layout_width="fill_parent" android:layout_margin="1dip" android:text="@string/level_set_filename" android:id="@+id/SetFilename"></Button>
+</LinearLayout>

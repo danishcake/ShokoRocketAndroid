@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="level_set_filename">OK</string>
+    <string name="level_filename_label">Filename</string>
+    <string name="level_default_filename">Editor.Level</string>
     <string name="level_create">Create</string>
     <string name="level_default_author">Unknown Author</string>
     <string name="level_default_name">Unnamed Level</string>
