@@ -18,4 +18,5 @@
 <uses-sdk android:targetSdkVersion="7" android:minSdkVersion="7"></uses-sdk>
 
 <supports-screens android:largeScreens="true" android:normalScreens="true" android:anyDensity="true" android:resizeable="true" android:smallScreens="true"></supports-screens>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
 </manifest> 

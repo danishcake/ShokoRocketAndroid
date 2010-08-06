@@ -47,7 +47,8 @@ public class ModeEditor extends Mode {
 		Walls, Mice, Cats, Arrows, Holes, Rockets
 	}
 	private EditMode mEditMode = EditMode.Walls;
-	private Widget mEditModeWidget;
+	private Widget mEditModeWidget = null;
+	private Widget mTryWidget = null;
 
 	private Dialog mNewLevelDialog = null;
 	private Runnable mNewLevelRunnable = new Runnable() {
@@ -165,11 +166,19 @@ public class ModeEditor extends Mode {
 		try
 		{
 			NinePatchData np = new NinePatchData(BitmapFactory.decodeStream(mContext.getAssets().open("Bitmaps/GUI/Blank64x64.png")), 24, 24, 24, 24);
-			mEditModeWidget = new Widget(np, new Rect(mScreenWidth  - mBtnSize2 * 2 - mBtnBorder, 
+			mEditModeWidget = new Widget(np, new Rect(mScreenWidth  - mBtnSize2 * 2 - mBtnBorder + mBtnSep, 
 													  mScreenHeight - mBtnSize - mBtnBorder, 
 													  mScreenWidth  - mBtnBorder, 
 													  mScreenHeight - mBtnBorder));
 			mEditModeWidget.setText("Wall");
+			
+			mTryWidget = new Widget(np, new Rect(mScreenWidth  - mBtnSize2 * 4 - mBtnBorder, 
+												 mScreenHeight - mBtnSize - mBtnBorder, 
+												 mScreenWidth  - mBtnSize2 * 2 - mBtnBorder - mBtnSep, 
+												 mScreenHeight - mBtnBorder));
+			mTryWidget.setText("Try");
+			
+			
 			mEditModeWidget.setOnClickListener(new uk.danishcake.shokorocket.gui.OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
@@ -203,7 +212,30 @@ public class ModeEditor extends Mode {
 				}
 			});
 			
+			mTryWidget.setOnClickListener(new uk.danishcake.shokorocket.gui.OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					switch(mRunningMode)
+					{
+					case Stopped:
+						mRunningMode = RunningMode.Running;
+						mTryWidget.setText("Faster");
+						break;
+					case Running:
+						mRunningMode = RunningMode.RunningFast;
+						mTryWidget.setText("Reset");
+						break;
+					case RunningFast:
+						mRunningMode = RunningMode.Stopped;
+						mWorld.Reset();
+						mTryWidget.setText("Try");
+						break;
+					}
+				}
+			});
+			
 			mWidgetPage.addWidget(mEditModeWidget);
+			mWidgetPage.addWidget(mTryWidget);
 		} catch(IOException io_ex)
 		{
 			Log.e("ModeEditor.InitialiseWidget", "Unable to open Blank64x64.png");
@@ -264,6 +296,7 @@ public class ModeEditor extends Mode {
 					{
 						mWorld.Reset();
 						mRunningMode = RunningMode.Stopped;
+						mTryWidget.setText("Try");
 					}
 				} else
 					mResetTimer = 0;
@@ -348,7 +381,7 @@ public class ModeEditor extends Mode {
 	
 	@Override
 	public void handleGesture(Direction direction) {
-		if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
+		if(mCursorPosition.x != -1 && mCursorPosition.y != -1 && mRunningMode == RunningMode.Stopped)
 		{
 			switch(mEditMode)
 			{
@@ -356,7 +389,8 @@ public class ModeEditor extends Mode {
 				mWorld.toggleDirection(mCursorPosition.x, mCursorPosition.y, direction);
 				break;
 			case Arrows:
-				mWorld.setSpecialSquare(mCursorPosition.x, mCursorPosition.y, SquareType.Empty);
+				if(mWorld.getSpecialSquare(mCursorPosition.x, mCursorPosition.y).GetDirectionality() == Direction.Invalid)
+					mWorld.setSpecialSquare(mCursorPosition.x, mCursorPosition.y, SquareType.Empty);
 				mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, direction);
 				break;
 			case Mice:
@@ -484,12 +518,20 @@ public class ModeEditor extends Mode {
 								mSemaphore.acquire();
 								TextView filename_widget = (TextView) mPickFilenameDialog.findViewById(R.id.LevelFilename);
 								String filename = filename_widget.getText().toString();
+								if(!filename.endsWith(".Level"))
+								{
+									if(filename.endsWith("."))
+										filename = filename + "Level";
+									else
+										filename = filename + ".Level";
+								}
 								
 								mWorld.setFilename(filename);
 								mPickFilenameDialog.dismiss();
 								
 								File root = new File(new File(Environment.getExternalStorageDirectory(), "ShokoRocket"), "My Levels");
 								File file = new File(root, mWorld.getFilename());
+								
 								if(file.exists())
 								{
 									AlertDialog.Builder builder = new Builder(mContext);
@@ -597,9 +639,22 @@ public class ModeEditor extends Mode {
 		return true;
 	}
 	
+	/**
+	 * Checks that the level can be completed within 240s with the current arrows
+	 * @return
+	 */
 	private boolean Verify()
 	{
-		return true;
+		mRunningMode = RunningMode.Stopped;
+		mTryWidget.setText("Try");
+		mWorld.Reset();
+		for(int ms = 0; ms < 1000 * 240 && mWorld.getWorldState() == WorldState.OK; ms += 50) //Maximum 240s runtime
+		{
+			mWorld.Tick(50);
+		}
+		boolean success = mWorld.getWorldState() == WorldState.Success;
+		mWorld.Reset();
+		return success;
 	}
 	
 	@Override

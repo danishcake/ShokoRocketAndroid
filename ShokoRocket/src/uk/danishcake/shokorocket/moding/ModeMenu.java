@@ -1,5 +1,8 @@
 package uk.danishcake.shokorocket.moding;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import uk.danishcake.shokorocket.animation.GameDrawer;
@@ -14,6 +17,8 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.os.Environment;
+import android.util.Log;
 
 
 public class ModeMenu extends Mode {
@@ -182,27 +187,51 @@ public class ModeMenu extends Mode {
 		{
 			String[] level_packs = context.getAssets().list("Levels");
 			int level_pack_id = 0;
+			File root = new File(Environment.getExternalStorageDirectory(), "ShokoRocket");
+			File[] user_packs = root.listFiles(new FileFilter() {
+				public boolean accept(File pathname) {
+					return pathname.isDirectory();
+				}
+			});
 			
-			mLevels = new String[level_packs.length][];
-			mLevelPacks = new String[level_packs.length];
+			mLevels = new String[level_packs.length + user_packs.length][];
+			mLevelPacks = new String[level_packs.length + user_packs.length];
 			
+			//First list levels in assets
 			for (String level_pack : level_packs) {
 				String[] levels = context.getAssets().list("Levels/" + level_pack);
 				ArrayList<String> level_list = new ArrayList<String>();
 				for (String level : levels) {
-					level_list.add("Levels/" + level_pack + "/" + level);
+					level_list.add("assets://Levels/" + level_pack + "/" + level);
 				}
 				
 				mLevels[level_pack_id] = new String[levels.length];
-				level_list.toArray(mLevels[level_pack_id]);
-				
+				level_list.toArray(mLevels[level_pack_id]);	
 				mLevelPacks[level_pack_id] = level_pack;
 				
 				level_pack_id++;
 			}
 			
+			//Now list levels on external storage
+			for (File user_pack : user_packs)
+			{
+				File[] levels = user_pack.listFiles();
+				ArrayList<String> level_list = new ArrayList<String>();
+				for(File level : levels)
+				{
+					String path = level.getPath();
+					if(path.endsWith(".Level"))
+					{
+						level_list.add(level.getAbsolutePath());
+					}
+				}
+
+				mLevels[level_pack_id] = new String[level_list.size()];
+				level_list.toArray(mLevels[level_pack_id]);
+				mLevelPacks[level_pack_id] = user_pack.getName();		
 			
-			
+				level_pack_id++;
+			}
 		} catch(IOException io_ex)
 		{
 			//TODO log
@@ -220,16 +249,26 @@ public class ModeMenu extends Mode {
 	{
 		try
 		{
-			mWorld = new World(mContext.getAssets().open(mLevels[mLevelPackIndex][mLevelIndex]));
-			mWorld.setIdentifier(mLevels[mLevelPackIndex][mLevelIndex]);
+			String level_name = mLevels[mLevelPackIndex][mLevelIndex];
 			mLevelPackName.setText(mLevelPacks[mLevelPackIndex]);
+			
+			if(level_name.startsWith("assets://"))
+			{
+				mWorld = new World(mContext.getAssets().open(level_name.substring(9)));
+			} else
+			{
+				mWorld = new World(new FileInputStream(level_name));
+			}
+			mWorld.setIdentifier(mLevels[mLevelPackIndex][mLevelIndex]);
 			mLevelName.setText(Integer.toString(mLevelIndex+1)+ "/" + Integer.toString(mLevels[mLevelPackIndex].length) + ": " + mWorld.getLevelName());
 			mGameDrawer.CreateBackground(mWorld);
 			mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mBtnBorder + mBtnSize + mBtnSep + mBtnSize + 4);
 			mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
 		} catch(IOException io_ex)
 		{
-			//TODO log
+			Log.e("ModeMenu.ChangeLevel", "Error changing level");
+			mDrawTick = false;
+			mLevelName.setText("Error loading");
 		}	
 	}
 	

@@ -890,7 +890,7 @@ public class World {
 				case SouthHalfArrow:
 				case SouthDestroyedArrow:
 					Direction d = square.GetDirectionality();
-					out.println("<Arrow x=\"" + Integer.toString(x) + "\" y=\"" + Integer.toString(y) + " d=\"" + d.toString() + "\"/>");
+					out.println("<Arrow x=\"" + Integer.toString(x) + "\" y=\"" + Integer.toString(y) + "\" d=\"" + d.toString() + "\"/>");
 					break;
 				}
 			}
