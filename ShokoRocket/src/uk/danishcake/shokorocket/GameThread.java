@@ -18,9 +18,10 @@ public class GameThread extends Thread {
 	public GameThread(SurfaceHolder surfaceHolder, Handler handler, Context context, GameStateMachine game, Semaphore semaphore)
 	{
 		mSurfaceHolder = surfaceHolder;
+		mSemaphore = semaphore;
 		mGame = game;
 		mGame.setContext(context);
-		mSemaphore = semaphore;
+		mGame.setSemaphore(mSemaphore);
 	}
 	
 	public void StopRunning() {mRunning = false;}

@@ -1,5 +1,7 @@
 package uk.danishcake.shokorocket.moding;
 
+import java.util.concurrent.Semaphore;
+
 import uk.danishcake.shokorocket.simulation.Direction;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -13,6 +15,7 @@ import android.view.MenuItem;
  * top of this
  */
 public class Mode {
+	protected Semaphore mSemaphore = null;
 	protected Mode mPendMode = null;
 	protected int mPendTime = 500;
 	protected int mPendTimer = 0; 
@@ -155,5 +158,13 @@ public class Mode {
 		
 		return false;
 	}
-
+	
+	/**
+	 * Provides the semaphore to the mode
+	 * @param semaphore Used to prevent concurrent access to data from UI and game thread
+	 */
+	public void setSemaphore(Semaphore semaphore)
+	{
+		mSemaphore = semaphore;
+	}
 }

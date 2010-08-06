@@ -1,5 +1,7 @@
 package uk.danishcake.shokorocket.moding;
 
+import java.util.concurrent.Semaphore;
+
 import uk.danishcake.shokorocket.ShokoRocketActivity;
 import uk.danishcake.shokorocket.simulation.Direction;
 import android.content.Context;
@@ -17,6 +19,7 @@ public class GameStateMachine {
 	private int mTapStartX = 0;
 	private int mTapStartY = 0;
 	boolean mDragInProgress = false;
+	private Semaphore mSemaphore = null;
 
 	public GameStateMachine(Context context)
 	{
@@ -31,6 +34,7 @@ public class GameStateMachine {
 		{
 			mMode = mMode.Teardown();
 			mMode.ScreenChanged(mScreenWidth, mScreenHeight);
+			mMode.setSemaphore(mSemaphore);
 			mMode.Setup(mContext);
 		} else if(action == ModeAction.Exit)
 		{
@@ -143,5 +147,9 @@ public class GameStateMachine {
 	
 	public boolean handleMenuSelection(MenuItem item) {
 		return mMode.handleMenuSelection(item);
+	}
+	
+	public void setSemaphore(Semaphore semaphore) {
+		mSemaphore = semaphore;
 	}
 }

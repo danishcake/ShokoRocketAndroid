@@ -2,8 +2,11 @@ package uk.danishcake.shokorocket.moding;
 
 import java.io.IOException;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -52,6 +55,9 @@ public class ModeEditor extends Mode {
 			Button createLevel = (Button) mNewLevelDialog.findViewById(R.id.CreateLevel);
 			createLevel.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
+					try
+					{
+					mSemaphore.acquire();
 					Spinner width_spinner = (Spinner) mNewLevelDialog.findViewById(R.id.LevelWidth);
 					Spinner height_spinner = (Spinner) mNewLevelDialog.findViewById(R.id.LevelHeight);
 					TextView level_author = (TextView) mNewLevelDialog.findViewById(R.id.LevelAuthor);
@@ -80,10 +86,17 @@ public class ModeEditor extends Mode {
 					
 					mWorld = world;
 					mWidgetPage = new WidgetPage();
+					mWidgetPage.setFontSize(mFontSize);
 					InitialiseWidgets();
 					
 					mNewLevelDialog.dismiss();
-					mNewLevelDialog = null;			
+					mNewLevelDialog = null;
+					
+					mSemaphore.release();
+					} catch (InterruptedException int_ex)
+					{
+						Log.e("ModeEditor.newLevelRunnable.run", "Semaphore interupted");
+					}
 				}
 			});
 			mNewLevelDialog.show();
@@ -107,7 +120,7 @@ public class ModeEditor extends Mode {
 	boolean mSaveNeeded = false;
 	boolean mValidated = false;
 	
-	private WidgetPage mWidgetPage = new WidgetPage();
+	private WidgetPage mWidgetPage = null;
 	
 	private Vector2i mCursorPosition = new Vector2i(-1, -1);
 	private Vector2i mGestureStart = new Vector2i(0, 0);
@@ -199,7 +212,6 @@ public class ModeEditor extends Mode {
 		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
 		mBtnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
 		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
-		mWidgetPage.setFontSize(mFontSize);
 		
 		Handler handler = new Handler(context.getMainLooper());
 		handler.post(mNewLevelRunnable);
@@ -409,9 +421,26 @@ public class ModeEditor extends Mode {
 		switch(item.getItemId())
 		{
 		case E_MENU_NEW:
-			mWorld = null;
-			Handler handler = new Handler(mContext.getMainLooper());
-			handler.post(mNewLevelRunnable);			
+			AlertDialog.Builder builder = new Builder(mContext);
+			builder.setMessage("Are you sure you want to create a new level?");
+			builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					try
+					{
+						mSemaphore.acquire();
+						mWorld = null;
+						Handler handler = new Handler(mContext.getMainLooper());
+						handler.post(mNewLevelRunnable);
+						mSemaphore.release();
+					} catch(InterruptedException int_ex)
+					{
+						Log.e("ModeEditor.handleMenuSelection, E_MENU_NEW", "Semaphore interupted");
+					}
+				}
+			});
+			builder.setNegativeButton("No", null);
+			AlertDialog ad = builder.create();
+			ad.show();
 			break;
 		case E_MENU_SAVE:
 			break;
