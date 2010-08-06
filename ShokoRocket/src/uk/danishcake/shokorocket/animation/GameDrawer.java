@@ -133,6 +133,7 @@ public class GameDrawer {
 	
 	public void DrawBackground(Canvas canvas, World world)
 	{
+		int wall_offset = -mWestWall.getFrameByIndex(0).getWidth() / 2;
 		for(int y = 0; y < world.getHeight(); y++)
 		{
 			boolean use_tile_a = (y % 2 == 0);
@@ -151,13 +152,13 @@ public class GameDrawer {
 			{
 				if(world.getWest(x, y))
 				{
-					mWestWall.DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY);
+					mWestWall.DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX + wall_offset, y * mGridSize + mDrawOffsetY);
 					if(x == 0)
 						mWestWall.DrawCurrentFrame(canvas, world.getWidth() * mGridSize - mWestWall.getCurrentFrame().getWidth() + mDrawOffsetX, y * mGridSize + mDrawOffsetY);
 				}
 				if(world.getNorth(x, y))
 				{
-					mNorthWall.DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY);
+					mNorthWall.DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY + wall_offset);
 					if(y == 0)
 						mNorthWall.DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, world.getHeight() * mGridSize - mNorthWall.getCurrentFrame().getHeight() + mDrawOffsetY);
 				}
