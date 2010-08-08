@@ -1,5 +1,6 @@
 package uk.danishcake.shokorocket.moding;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -10,12 +11,15 @@ import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
@@ -631,7 +635,19 @@ public class ModeEditor extends Mode {
 						try
 						{
 							mSemaphore.acquire();
-							Toast.makeText(mContext, "Level shared", Toast.LENGTH_SHORT).show();
+							ByteArrayOutputStream output = new ByteArrayOutputStream();
+							
+							mWorld.Save(output);
+							
+							Intent intent = new Intent(Intent.ACTION_SENDTO);
+							Bundle extras = new Bundle();
+							extras.putString(Intent.EXTRA_SUBJECT, "ShokoRocket level");
+							extras.putString(Intent.EXTRA_TEXT, output.toString());
+							intent.putExtras(extras);
+							intent.setData(Uri.parse("mailto:danishcake@googlemail.com"));
+							
+							mContext.startActivity(intent);
+							
 							mShareDialog.dismiss();
 							mSemaphore.release();
 						} catch(InterruptedException int_ex)
