@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="level_submit">Agree and submit</string>
+    <string name="ShareExplanationText">This will email your creation to the author, who will endeavour to include it in future versions. Ensure that you have correctly entered your name and level name. By submitting you enter the level into the public domain. If you have multiple levels to submit then it may be more efficient to send them all from your PC - the levels are stored on the phone external storage</string>
     <string name="level_accept">Accept</string>
     <string name="level_set_filename">OK</string>
     <string name="level_filename_label">Filename</string>

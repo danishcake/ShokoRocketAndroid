@@ -95,7 +95,7 @@ public class ModeEditor extends Mode {
 	
 	private Dialog mPickFilenameDialog = null;
 	private Dialog mPickPropertiesDialog = null;
-	
+	private Dialog mShareDialog = null;	
 	private Context mContext;
 	private World mWorld = null;
 	private GameDrawer mGameDrawer = null;
@@ -486,10 +486,10 @@ public class ModeEditor extends Mode {
 			FileOutputStream fos = new FileOutputStream(file);
 			
 			mWorld.Save(fos);
-			Toast.makeText(mContext, "Saved as " + file.getPath(), 1).show();
+			Toast.makeText(mContext, "Saved as " + file.getPath(), Toast.LENGTH_SHORT).show();
 		} catch (FileNotFoundException e) {
 			Log.e("ModeEditor.handleMenuSelection", e.getMessage());
-			Toast.makeText(mContext, "Unable to save " + e.getMessage(), 1).show();
+			Toast.makeText(mContext, "Unable to save " + e.getMessage(), Toast.LENGTH_SHORT).show();
 			mWorld.setLevelName("");
 		}		
 	}
@@ -616,15 +616,42 @@ public class ModeEditor extends Mode {
 					SaveLevel();
 			}
 			else
-				Toast.makeText(mContext, "Solution invalid", 1).show();
+				Toast.makeText(mContext, "Solution invalid", Toast.LENGTH_SHORT).show();
 			break;
 		case E_MENU_SHARE:
+			if(Verify())	
+			{
+				mShareDialog = new Dialog(mContext);
+				mShareDialog.setTitle("Share your work");
+				mShareDialog.setContentView(R.layout.editor_share_level);
+				
+				Button submit = (Button) mShareDialog.findViewById(R.id.LevelSubmit);
+				submit.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						try
+						{
+							mSemaphore.acquire();
+							Toast.makeText(mContext, "Level shared", Toast.LENGTH_SHORT).show();
+							mShareDialog.dismiss();
+							mSemaphore.release();
+						} catch(InterruptedException int_ex)
+						{
+							Log.e("ModeEditor.HandleMenuSelection", "Semphore interupted");
+						}
+						
+					}
+				});
+				
+				mShareDialog.show();
+			}
+			else
+				Toast.makeText(mContext, "Solution invalid", Toast.LENGTH_SHORT).show();
 			break;
 		case E_MENU_VERIFY:
 			if(Verify())
-				Toast.makeText(mContext, "Solution valid", 1).show();
+				Toast.makeText(mContext, "Solution valid", Toast.LENGTH_SHORT).show();
 			else
-				Toast.makeText(mContext, "Solution invalid", 1).show();
+				Toast.makeText(mContext, "Solution invalid", Toast.LENGTH_SHORT).show();
 			break;
 		case E_MENU_PROPERTIES:
 			mPickPropertiesDialog = new Dialog(mContext);
