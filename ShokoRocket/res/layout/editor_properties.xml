@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_height="wrap_content" android:orientation="vertical" android:layout_width="fill_parent" android:minWidth="280dip">
+
+<EditText android:layout_height="wrap_content" android:contentDescription="@string/level_name_description" android:inputType="textPersonName" android:text="@string/level_default_name" android:layout_weight="0" android:layout_width="fill_parent" android:layout_margin="1dip" android:id="@+id/LevelNameProperties"></EditText>
+<EditText android:layout_height="wrap_content" android:inputType="textPersonName" android:text="@string/level_default_author" android:layout_weight="0" android:layout_width="fill_parent" android:layout_margin="1dip" android:id="@+id/LevelAuthorProperties"></EditText>
+<Button android:layout_height="wrap_content" android:layout_weight="0" android:layout_width="fill_parent" android:layout_margin="1dip" android:text="@string/level_accept" android:id="@+id/AcceptChanges"></Button>
+</LinearLayout>

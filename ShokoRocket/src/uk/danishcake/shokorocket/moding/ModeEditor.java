@@ -25,6 +25,7 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,30 +71,12 @@ public class ModeEditor extends Mode {
 					TextView level_author = (TextView) mNewLevelDialog.findViewById(R.id.LevelAuthor);
 					TextView level_name = (TextView) mNewLevelDialog.findViewById(R.id.LevelName);
 					
-					World world = new World(Integer.parseInt((String)width_spinner.getSelectedItem()),
-											Integer.parseInt((String)height_spinner.getSelectedItem()));
-					world.setAuthor(level_author.getText().toString());
-					world.setLevelName(level_name.getText().toString());
+					mWorld = new World(Integer.parseInt((String)width_spinner.getSelectedItem()),
+									   Integer.parseInt((String)height_spinner.getSelectedItem()));
+					mWorld.setAuthor(level_author.getText().toString());
+					mWorld.setLevelName(level_name.getText().toString());
 					
-					mGameDrawer = new GameDrawer();
-
-					int grid_size = mContext.getResources().getInteger(R.integer.grid_size);
-					int required_width = world.getWidth() * grid_size ;
-					int required_height = world.getHeight() * grid_size ;
-					float scaleX = ((float)mScreenWidth - 16) / (float)required_width;
-					float scaleY = ((float)(mScreenHeight - 156 - 8)) / (float)required_height;
-					float smaller = scaleX < scaleY ? scaleX : scaleY;
-					
-					if(smaller < 1)
-						mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller));
-					else
-						mGameDrawer.Setup(mContext, grid_size );
-					//mGameDrawer.CreateBackground(world);
-					mGameDrawer.setDrawOffset(mScreenWidth / 2 - (world.getWidth() * mGameDrawer.getGridSize() / 2), 16);
-					
-					mWorld = world;
-					mWidgetPage = new WidgetPage();
-					mWidgetPage.setFontSize(mFontSize);
+					InitialiseDrawing();
 					InitialiseWidgets();
 					
 					mNewLevelDialog.dismiss();
@@ -111,6 +94,7 @@ public class ModeEditor extends Mode {
 	};
 	
 	private Dialog mPickFilenameDialog = null;
+	private Dialog mPickPropertiesDialog = null;
 	
 	private Context mContext;
 	private World mWorld = null;
@@ -157,12 +141,39 @@ public class ModeEditor extends Mode {
 	private final int E_MENU_ARROWMODE = 11;
 	
 	
-	public ModeEditor(ModeMenu menu)
+	public ModeEditor(ModeMenu menu, World world)
 	{
+		mWorld = world;
 		mModeMenu = menu;
 	}
 	
+	/**
+	 * Sets up drawing after a new level is set
+	 */
+	private void InitialiseDrawing() {
+		mGameDrawer = new GameDrawer();
+
+		int grid_size = mContext.getResources().getInteger(R.integer.grid_size);
+		int required_width = mWorld.getWidth() * grid_size ;
+		int required_height = mWorld.getHeight() * grid_size ;
+		float scaleX = ((float)mScreenWidth - 16) / (float)required_width;
+		float scaleY = ((float)(mScreenHeight - 156 - 8)) / (float)required_height;
+		float smaller = scaleX < scaleY ? scaleX : scaleY;
+		
+		if(smaller < 1)
+			mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller));
+		else
+			mGameDrawer.Setup(mContext, grid_size );
+		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), 16);
+		
+	}
+	
+	/**
+	 * Sets up the widgets after a new level is set
+	 */
 	private void InitialiseWidgets() {
+		mWidgetPage = new WidgetPage();
+		mWidgetPage.setFontSize(mFontSize);
 		try
 		{
 			NinePatchData np = new NinePatchData(BitmapFactory.decodeStream(mContext.getAssets().open("Bitmaps/GUI/Blank64x64.png")), 24, 24, 24, 24);
@@ -252,8 +263,16 @@ public class ModeEditor extends Mode {
 		mBtnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
 		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
 		
-		Handler handler = new Handler(context.getMainLooper());
-		handler.post(mNewLevelRunnable);
+		if(mWorld == null)
+		{
+			Handler handler = new Handler(context.getMainLooper());
+			handler.post(mNewLevelRunnable);
+		} else
+		{
+			InitialiseDrawing();
+			InitialiseWidgets();
+			mWorld.LoadSolution();
+		}
 	}
 	
 	@Override
@@ -608,6 +627,37 @@ public class ModeEditor extends Mode {
 				Toast.makeText(mContext, "Solution invalid", 1).show();
 			break;
 		case E_MENU_PROPERTIES:
+			mPickPropertiesDialog = new Dialog(mContext);
+			mPickPropertiesDialog.setContentView(uk.danishcake.shokorocket.R.layout.editor_properties);
+			mPickPropertiesDialog.setTitle("Properties");
+			
+			EditText level_author = (EditText) mPickPropertiesDialog.findViewById(R.id.LevelAuthorProperties);
+			EditText level_name = (EditText) mPickPropertiesDialog.findViewById(R.id.LevelNameProperties);
+			
+			level_author.setText(mWorld.getAuthor());
+			level_name.setText(mWorld.getLevelName());
+			
+			Button accept = (Button) mPickPropertiesDialog.findViewById(R.id.AcceptChanges);
+			accept.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					try
+					{
+					mSemaphore.acquire();
+					EditText level_author = (EditText) mPickPropertiesDialog.findViewById(R.id.LevelAuthorProperties);
+					EditText level_name = (EditText) mPickPropertiesDialog.findViewById(R.id.LevelNameProperties);
+					
+					mWorld.setAuthor(level_author.getText().toString());
+					mWorld.setLevelName(level_name.getText().toString());
+					mPickPropertiesDialog.dismiss();
+					mSemaphore.release();
+					} catch(InterruptedException int_ex)
+					{
+						Log.e("ModeEditor.handleMenuSelection", "Semaphore interupted");
+					}
+				}
+			});
+			
+			mPickPropertiesDialog.show();
 			break;
 		case E_MENU_WALLMODE:
 			mEditMode = EditMode.Walls;

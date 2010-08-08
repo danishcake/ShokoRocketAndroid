@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="level_accept">Accept</string>
     <string name="level_set_filename">OK</string>
     <string name="level_filename_label">Filename</string>
     <string name="level_default_filename">Editor.Level</string>

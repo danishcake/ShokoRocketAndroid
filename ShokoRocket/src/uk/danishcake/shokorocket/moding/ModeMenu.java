@@ -13,7 +13,10 @@ import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.simulation.World;
 import uk.danishcake.shokorocket.sound.SoundManager;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -48,6 +51,7 @@ public class ModeMenu extends Mode {
 		if(mSetup)
 		{
 			mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
+			ChangeLevel();
 			return;
 		}
 		mContext = context;
@@ -173,8 +177,45 @@ public class ModeMenu extends Mode {
 				@Override
 				public void OnClick(Widget widget) {
 					if(mPendMode == null)
-						mPendMode = new ModeEditor(ModeMenu.this);
-					SoundManager.PlaySound(mClickSound);
+					{
+						if(mLevelPacks[mLevelPackIndex].equals("My Levels"))
+						{
+							AlertDialog.Builder builder = new Builder(mContext);
+							builder.setMessage("Edit this level?");
+							builder.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									try
+									{
+										mSemaphore.acquire();
+										mPendMode = new ModeEditor(ModeMenu.this, mWorld);
+										mSemaphore.release();
+									} catch(InterruptedException int_ex)
+									{
+										Log.e("ModeMenu.Setup", "Semaphore interupted");
+									}
+								}
+							});
+							builder.setNeutralButton("New", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									try
+									{
+										mSemaphore.acquire();
+										mPendMode = new ModeEditor(ModeMenu.this, null);
+										mSemaphore.release();
+									} catch(InterruptedException int_ex)
+									{
+										Log.e("ModeMenu.Setup", "Semaphore interupted");
+									}
+								}
+							});
+							builder.create().show();
+						} else
+						{
+							mPendMode = new ModeEditor(ModeMenu.this, null);					
+						}
+	
+						SoundManager.PlaySound(mClickSound);
+					}
 				}
 			});
 			
@@ -258,6 +299,8 @@ public class ModeMenu extends Mode {
 			} else
 			{
 				mWorld = new World(new FileInputStream(level_name));
+				File level_file = new File(level_name);
+				mWorld.setFilename(level_file.getName());
 			}
 			mWorld.setIdentifier(mLevels[mLevelPackIndex][mLevelIndex]);
 			mLevelName.setText(Integer.toString(mLevelIndex+1)+ "/" + Integer.toString(mLevels[mLevelPackIndex].length) + ": " + mWorld.getLevelName());
