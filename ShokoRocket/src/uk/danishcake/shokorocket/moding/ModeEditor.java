@@ -635,16 +635,16 @@ public class ModeEditor extends Mode {
 						try
 						{
 							mSemaphore.acquire();
-							ByteArrayOutputStream output = new ByteArrayOutputStream();
+							FileOutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory() + "/Share.Level");
 							
 							mWorld.Save(output);
 							
-							Intent intent = new Intent(Intent.ACTION_SENDTO);
-							Bundle extras = new Bundle();
-							extras.putString(Intent.EXTRA_SUBJECT, "ShokoRocket level");
-							extras.putString(Intent.EXTRA_TEXT, output.toString());
-							intent.putExtras(extras);
-							intent.setData(Uri.parse("mailto:danishcake@googlemail.com"));
+							Intent intent = new Intent(Intent.ACTION_SEND);
+							intent.putExtra(Intent.EXTRA_SUBJECT, "ShokoRocket level");
+							intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/Share.Level"));
+							intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"danishcake@googlemail.com"});
+							intent.putExtra(Intent.EXTRA_TEXT, "Please find attached my ShokoRocket level. I submit it to the public domain and request that you include it in future versions");
+							intent.setType("text/csv");
 							
 							mContext.startActivity(intent);
 							
@@ -653,8 +653,10 @@ public class ModeEditor extends Mode {
 						} catch(InterruptedException int_ex)
 						{
 							Log.e("ModeEditor.HandleMenuSelection", "Semphore interupted");
-						}
-						
+						} catch(IOException io_ex)
+						{
+							Toast.makeText(mContext, "Unable to create a temporary file", Toast.LENGTH_SHORT).show();
+						}						
 					}
 				});
 				
