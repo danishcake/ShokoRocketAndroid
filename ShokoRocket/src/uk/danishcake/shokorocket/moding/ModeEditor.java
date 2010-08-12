@@ -12,6 +12,7 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -64,6 +65,12 @@ public class ModeEditor extends Mode {
 			((Spinner)mNewLevelDialog.findViewById(R.id.LevelWidth)).setSelection(9);
 			((Spinner)mNewLevelDialog.findViewById(R.id.LevelHeight)).setSelection(6);
 			
+			//Set the default author
+			TextView level_author = (TextView) mNewLevelDialog.findViewById(R.id.LevelAuthor);
+			SharedPreferences prefs =  mContext.getSharedPreferences("ShokoRocketPreferences", Context.MODE_PRIVATE);
+			String default_author = prefs.getString("DefaultAuthor", mContext.getResources().getString(R.string.level_default_author));
+			level_author.setText(default_author);
+			
 			Button createLevel = (Button) mNewLevelDialog.findViewById(R.id.CreateLevel);
 			createLevel.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
@@ -82,6 +89,12 @@ public class ModeEditor extends Mode {
 					
 					InitialiseDrawing();
 					InitialiseWidgets();
+					
+					//Save the author name so can set default next time
+					SharedPreferences prefs =  mContext.getSharedPreferences("ShokoRocketPreferences", Context.MODE_PRIVATE);
+					SharedPreferences.Editor editor = prefs.edit();
+					editor.putString("DefaultAuthor", level_author.getText().toString());
+					editor.commit();
 					
 					mNewLevelDialog.dismiss();
 					mNewLevelDialog = null;
