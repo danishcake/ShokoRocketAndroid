@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>Octo 25</Name>
+<Author>Edward Woolhouse</Author>
+<Size x="8" y="8"/>
+<H x="3" y="1" />
+<V x="4" y="1" />
+<V x="2" y="2" />
+<H x="6" y="2" />
+<V x="7" y="2" />
+<V x="7" y="6" />
+<H x="6" y="7" />
+<Mouse x="2" y="6" d="North" />
+<Mouse x="1" y="6" d="East" />
+<Mouse x="1" y="5" d="South" />
+<Mouse x="1" y="1" d="South" />
+<Mouse x="2" y="5" d="East" />
+<Mouse x="2" y="1" d="East" />
+<Cat x="2" y="4" d="East" />
+<Cat x="7" y="4" d="West" />
+<Cat x="7" y="3" d="West" />
+<Cat x="5" y="0" d="South" />
+<Hole x="0" y="0" />
+<Arrow x="1" y="0" d="East"/>
+<Arrow x="2" y="0" d="East"/>
+<Rocket x="7" y="0" />
+<Hole x="0" y="1" />
+<Hole x="0" y="2" />
+<Arrow x="3" y="2" d="East"/>
+<Hole x="0" y="3" />
+<Hole x="0" y="4" />
+<Hole x="0" y="5" />
+<Arrow x="6" y="5" d="South"/>
+<Hole x="0" y="6" />
+<Arrow x="1" y="6" d="North"/>
+<Hole x="0" y="7" />
+<Hole x="1" y="7" />
+<Hole x="2" y="7" />
+<Hole x="3" y="7" />
+<Hole x="4" y="7" />
+<Hole x="5" y="7" />
+<Hole x="6" y="7" />
+<Hole x="7" y="7" />
+</Level>
