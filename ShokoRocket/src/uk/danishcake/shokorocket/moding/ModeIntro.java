@@ -90,7 +90,7 @@ public class ModeIntro extends Mode {
 	@Override
 	public void handleTap(int x, int y) {
 		if(mFirstRun)
-			mPendMode = new ModeTutorial(true);
+			mPendMode = new ModeTutorial();
 		else
 			mPendMode = new ModeMenu();
 	}

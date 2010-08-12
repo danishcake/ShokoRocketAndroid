@@ -168,7 +168,7 @@ public class ModeMenu extends Mode {
 				@Override
 				public void OnClick(Widget widget) {
 					if(mPendMode == null)
-						mPendMode = new ModeTutorial(false);
+						mPendMode = new ModeTutorial();
 					SoundManager.PlaySound(mClickSound);
 				}
 			});

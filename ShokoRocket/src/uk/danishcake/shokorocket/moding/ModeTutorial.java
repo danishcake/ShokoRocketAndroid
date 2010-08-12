@@ -19,7 +19,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 public class ModeTutorial extends Mode {
-	private boolean mFirstRun = false;
 	
 	private int mBtnSize = 48;
 	private int mBtnSep = 8;
@@ -185,8 +184,7 @@ public class ModeTutorial extends Mode {
 	},
 	};
 	
-	public ModeTutorial(boolean firstRun) {
-		mFirstRun = firstRun;
+	public ModeTutorial() {
 	}
 	
 	public void Setup(Context context)
