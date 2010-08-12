@@ -159,6 +159,8 @@ public class ModeEditor extends Mode {
 	public ModeEditor(ModeMenu menu, World world)
 	{
 		mWorld = world;
+		if(world != null)
+			world.setArrowStockUnlimited(true);
 		mModeMenu = menu;
 	}
 	
@@ -196,7 +198,8 @@ public class ModeEditor extends Mode {
 													  mScreenHeight - mBtnSize - mBtnBorder, 
 													  mScreenWidth  - mBtnBorder, 
 													  mScreenHeight - mBtnBorder));
-			mEditModeWidget.setText("Wall");
+			mEditModeWidget.setText("Walls");
+			mEditMode = EditMode.Walls;
 			
 			mTryWidget = new Widget(np, new Rect(mScreenWidth  - mBtnSize2 * 4 - mBtnBorder, 
 												 mScreenHeight - mBtnSize - mBtnBorder, 

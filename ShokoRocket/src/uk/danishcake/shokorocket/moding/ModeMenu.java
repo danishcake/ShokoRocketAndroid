@@ -36,6 +36,7 @@ public class ModeMenu extends Mode {
 	private int mLevelPackIndex = 0;
 	private Context mContext;
 	private boolean mSetup = false;
+	private boolean mEditorLoaded = false;
 	private Progress mProgress;
 	private boolean mDrawTick = false;
 	
@@ -51,6 +52,9 @@ public class ModeMenu extends Mode {
 		if(mSetup)
 		{
 			mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
+			if(mEditorLoaded)
+				LoadLevelList();
+			mEditorLoaded = false;
 			ChangeLevel();
 			return;
 		}
@@ -201,6 +205,7 @@ public class ModeMenu extends Mode {
 									{
 										mSemaphore.acquire();
 										mPendMode = new ModeEditor(ModeMenu.this, null);
+										mEditorLoaded = true;
 										mSemaphore.release();
 									} catch(InterruptedException int_ex)
 									{
@@ -211,7 +216,8 @@ public class ModeMenu extends Mode {
 							builder.create().show();
 						} else
 						{
-							mPendMode = new ModeEditor(ModeMenu.this, null);					
+							mPendMode = new ModeEditor(ModeMenu.this, null);
+							mEditorLoaded = true;
 						}
 	
 						SoundManager.PlaySound(mClickSound);
@@ -224,23 +230,45 @@ public class ModeMenu extends Mode {
 			//TODO log
 		}
 		
+		LoadLevelList();
+		
+		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size));
+		ChangeLevel();
+		mSetup = true;
+	}
+	
+	/**
+	 * Loads a list of levels from external storage and assets
+	 */
+	private void LoadLevelList()
+	{
 		try
 		{
-			String[] level_packs = context.getAssets().list("Levels");
+			String[] level_packs = mContext.getAssets().list("Levels");
 			int level_pack_id = 0;
-			File root = new File(Environment.getExternalStorageDirectory(), "ShokoRocket");
-			File[] user_packs = root.listFiles(new FileFilter() {
-				public boolean accept(File pathname) {
-					return pathname.isDirectory();
-				}
-			});
+			int total_length = level_packs.length;
 			
-			mLevels = new String[level_packs.length + user_packs.length][];
-			mLevelPacks = new String[level_packs.length + user_packs.length];
+			//If external storage mounted then search it for levels
+			File[] user_packs = new File[]{};
+			if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+			{
+				File root = new File(Environment.getExternalStorageDirectory(), "ShokoRocket");
+				user_packs = root.listFiles(new FileFilter() {
+					public boolean accept(File pathname) {
+						return pathname.isDirectory();
+					}
+				});
+				total_length += user_packs.length;
+			}
+			
+			
+			
+			mLevels = new String[total_length][];
+			mLevelPacks = new String[total_length];
 			
 			//First list levels in assets
 			for (String level_pack : level_packs) {
-				String[] levels = context.getAssets().list("Levels/" + level_pack);
+				String[] levels = mContext.getAssets().list("Levels/" + level_pack);
 				ArrayList<String> level_list = new ArrayList<String>();
 				for (String level : levels) {
 					level_list.add("assets://Levels/" + level_pack + "/" + level);
@@ -277,10 +305,6 @@ public class ModeMenu extends Mode {
 		{
 			//TODO log
 		}
-		
-		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size));
-		ChangeLevel();
-		mSetup = true;
 	}
 	
 	/**
