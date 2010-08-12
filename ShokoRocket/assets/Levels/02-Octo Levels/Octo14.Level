@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>Octo 14</Name>
+<Author>Edward Woolhouse</Author>
+<Size x="8" y="8"/>
+<Mouse x="4" y="5" d="North" />
+<Mouse x="4" y="2" d="South" />
+<Mouse x="5" y="3" d="West" />
+<Mouse x="3" y="2" d="South" />
+<Mouse x="2" y="3" d="East" />
+<Mouse x="3" y="5" d="North" />
+<Mouse x="2" y="4" d="East" />
+<Mouse x="5" y="4" d="West" />
+<Cat x="6" y="7" d="East" />
+<Cat x="1" y="7" d="West" />
+<Cat x="5" y="6" d="East" />
+<Cat x="2" y="6" d="West" />
+<Cat x="2" y="1" d="West" />
+<Cat x="5" y="1" d="East" />
+<Cat x="6" y="0" d="East" />
+<Cat x="1" y="0" d="West" />
+<Cat x="1" y="2" d="North" />
+<Cat x="1" y="5" d="South" />
+<Cat x="0" y="6" d="South" />
+<Cat x="0" y="1" d="North" />
+<Cat x="7" y="1" d="North" />
+<Cat x="6" y="2" d="North" />
+<Cat x="6" y="5" d="South" />
+<Cat x="7" y="6" d="South" />
+<Rocket x="5" y="2" />
+<Arrow x="3" y="3" d="East"/>
+<Arrow x="4" y="3" d="South"/>
+<Arrow x="3" y="4" d="North"/>
+<Rocket x="2" y="5" />
+<Arrow x="4" y="5" d="West"/>
+</Level>
