@@ -94,5 +94,10 @@ public class ModeIntro extends Mode {
 		else
 			mPendMode = new ModeMenu();
 	}
+	
+	@Override
+	public boolean getBackgroundDrawn() {
+		return false;
+	}
 }
 

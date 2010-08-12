@@ -49,7 +49,6 @@ public class GameThread extends Thread {
 					canvas = mSurfaceHolder.lockCanvas();
 					
 					synchronized (mSurfaceHolder) {
-						canvas.drawRGB(0, 0, 0);
 						//Now draw my sprites
 						mGame.Redraw(canvas);
 					}

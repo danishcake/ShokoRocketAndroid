@@ -770,7 +770,7 @@ public class ModeEditor extends Mode {
 			
 		} else if(mWorld != null){
 			//World has been created, so at next stage
-			mGameDrawer.DrawBackground(canvas, mWorld);
+			mGameDrawer.DrawTilesAndWalls(canvas, mWorld);
 			mGameDrawer.Draw(canvas, mWorld);
 			if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
 			{

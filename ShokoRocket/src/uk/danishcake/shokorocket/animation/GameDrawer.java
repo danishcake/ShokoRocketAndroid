@@ -131,7 +131,7 @@ public class GameDrawer {
 		}		
 	}
 	
-	public void DrawBackground(Canvas canvas, World world)
+	public void DrawTilesAndWalls(Canvas canvas, World world)
 	{
 		int wall_offset = -mWestWall.getFrameByIndex(0).getWidth() / 2;
 		for(int y = 0; y < world.getHeight(); y++)
@@ -247,8 +247,7 @@ public class GameDrawer {
 
 				Map<String, Animation> tick_animations = Animation.GetAnimations(context, uk.danishcake.shokorocket.R.raw.tick); 
 				mTickAnimation = tick_animations.get("All");
-				
-				
+
 				mAnimationsLoaded = true;
 			} catch(IOException ex)
 			{
@@ -435,7 +434,6 @@ public class GameDrawer {
 				}
 			}
 		}
-		
 	}
 	
 	/**

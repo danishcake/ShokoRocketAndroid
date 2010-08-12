@@ -1,9 +1,12 @@
 package uk.danishcake.shokorocket.moding;
 
+import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
 import uk.danishcake.shokorocket.simulation.Direction;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,12 +22,19 @@ public class GameStateMachine {
 	private int mTapStartY = 0;
 	boolean mDragInProgress = false;
 	private Semaphore mSemaphore = null;
+	private Bitmap mBackground = null;
+
 
 	public GameStateMachine(Context context)
 	{
 		mContext = context;
 		mMode = new ModeIntro();
 		mMode.Setup(mContext);
+		try {
+			mBackground = BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/Game/Background.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public boolean Tick(int timespan) {
@@ -49,6 +59,17 @@ public class GameStateMachine {
 	}
 	
 	public void Redraw(Canvas canvas) {
+		if(mMode.getBackgroundDrawn())
+		{
+			//Fill background
+			float x = (canvas.getWidth() - mBackground.getWidth()) / 2;
+			if(x > 0)
+				x = 0;
+			float y = (canvas.getHeight() - mBackground.getHeight()) / 2;
+			if(y > 0)
+				y = 0;
+			canvas.drawBitmap(mBackground, x, y, null);
+		}
 		mMode.Redraw(canvas);
 	}
 	

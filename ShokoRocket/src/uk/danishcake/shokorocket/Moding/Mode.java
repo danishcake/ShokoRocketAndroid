@@ -167,4 +167,11 @@ public class Mode {
 	{
 		mSemaphore = semaphore;
 	}
+	
+	/**
+	 * Override and return false to prevent background from being drawn
+	 */
+	public boolean getBackgroundDrawn() {
+		return true;
+	}
 }
