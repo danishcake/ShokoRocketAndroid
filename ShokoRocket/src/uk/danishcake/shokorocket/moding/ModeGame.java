@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 
+import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.OnClickListener;
@@ -106,7 +107,7 @@ public class ModeGame extends Mode {
 			
 			
 			Widget reset = new Widget(btn_np, new Rect(mScreenWidth - (mBtnSize2 + mBtnBorder), mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
-			reset.setText("Reset");
+			reset.setText(context.getString(R.string.game_reset));
 			reset.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void OnClick(Widget widget) {
@@ -126,7 +127,7 @@ public class ModeGame extends Mode {
 			});
 			
 			Widget go = new Widget(btn_np, new Rect(mScreenWidth - mBtnSize2 - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnBorder));
-			go.setText("Go");
+			go.setText(context.getString(R.string.game_go));
 			go.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void OnClick(Widget widget) {
@@ -140,7 +141,7 @@ public class ModeGame extends Mode {
 			
 			
 			Widget back = new Widget(btn_np, new Rect(mBtnBorder, mScreenHeight - mBtnSize - mBtnBorder, mBtnBorder + mBtnSize2, mScreenHeight - mBtnBorder));
-			back.setText("Back");
+			back.setText(context.getString(R.string.game_back));
 			back.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
@@ -148,6 +149,10 @@ public class ModeGame extends Mode {
 					mPendMode = mModeMenu;
 				}
 			});
+			
+			reset.setFontSize(mFontSize);
+			go.setFontSize(mFontSize);
+			back.setFontSize(mFontSize);
 			
 			Widget west_arrows = new Widget(west_arrow_np, new Rect(16, mScreenHeight - 72 - mBtnBorder - mBtnSize - mBtnSep, mBtnBorder + 48, mScreenHeight - mBtnBorder - mBtnSize - mBtnSep));
 			west_arrows.setText("0");
@@ -160,12 +165,7 @@ public class ModeGame extends Mode {
 						mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.West);
 					updateArrowStock();
 				}
-			});
-			
-			reset.setFontSize(mFontSize);
-			go.setFontSize(mFontSize);
-			back.setFontSize(mFontSize);
-			
+			});			
 			
 			//Given width 480 take 16 from each side and width -> 400 ->100 spacing
 			Widget north_arrows = new Widget(north_arrow_np, new Rect(mBtnBorder + (mScreenWidth - mBtnBorder * 2 - 48) / 3,

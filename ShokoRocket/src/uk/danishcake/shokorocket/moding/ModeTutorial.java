@@ -2,6 +2,7 @@ package uk.danishcake.shokorocket.moding;
 
 import java.io.IOException;
 
+import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.OnClickListener;
@@ -44,7 +45,7 @@ public class ModeTutorial extends Mode {
 	private OnClickListener[] mTutorialStages = {new OnClickListener() {
 		@Override
 		public void OnClick(Widget widget) {
-			mExplanation.setText("You must save the mice from the evil space cats");
+			mExplanation.setText(mContext.getString(R.string.tutorial_1));
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
 			SoundManager.PlaySound(mClickSound);
 		}
@@ -52,7 +53,7 @@ public class ModeTutorial extends Mode {
 	new OnClickListener() {
 		@Override
 		public void OnClick(Widget widget) {
-			mExplanation.setText("The mice are not very clever, so you need to direct them to the rockets");
+			mExplanation.setText(mContext.getString(R.string.tutorial_2));
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
 			SoundManager.PlaySound(mClickSound);
 		}
@@ -60,7 +61,7 @@ public class ModeTutorial extends Mode {
 	new OnClickListener() {
 		@Override
 		public void OnClick(Widget widget) {
-			mExplanation.setText("Do this by placing arrows for them to follow");
+			mExplanation.setText(mContext.getString(R.string.tutorial_3));
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
 			SoundManager.PlaySound(mClickSound);
 		}
@@ -68,7 +69,7 @@ public class ModeTutorial extends Mode {
 	new OnClickListener() {
 		@Override
 		public void OnClick(Widget widget) {
-			mExplanation.setText("Place the cursor by tapping the spot where the arrow should go...");
+			mExplanation.setText(mContext.getString(R.string.tutorial_4));
 			mCursorPosition.x = 1;
 			mCursorPosition.y = 4;
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
@@ -78,7 +79,7 @@ public class ModeTutorial extends Mode {
 	new OnClickListener() {
 		@Override
 		public void OnClick(Widget widget) {
-			mExplanation.setText("Then either tap one of the arrow buttons, or swipe across the screen in the direction you want");
+			mExplanation.setText(mContext.getString(R.string.tutorial_5));
 			
 			mSwipeStart = mAge;
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
@@ -88,7 +89,7 @@ public class ModeTutorial extends Mode {
 	new OnClickListener() {
 		@Override
 		public void OnClick(Widget widget) {
-			mExplanation.setText("You only have a limited stock of arrows, so think carefully before placing them");
+			mExplanation.setText(mContext.getString(R.string.tutorial_6));
 			if(mAge < mSwipeStart + SwipeTime)
 			{
 				mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.East);
@@ -101,7 +102,7 @@ public class ModeTutorial extends Mode {
 	new OnClickListener() {
 		@Override
 		public void OnClick(Widget widget) {
-			mExplanation.setText("You can always remove them the same way they were placed, or use the reset button to clear all the arrows");
+			mExplanation.setText(mContext.getString(R.string.tutorial_7));
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
 			SoundManager.PlaySound(mClickSound);
 		}
@@ -109,7 +110,7 @@ public class ModeTutorial extends Mode {
 	new OnClickListener() {
 		@Override
 		public void OnClick(Widget widget) {
-			mExplanation.setText("Tap start once the arrows are in place. If you don't have the answer then hit reset and try again");
+			mExplanation.setText(mContext.getString(R.string.tutorial_8));
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
 			mRunning = true;
 			SoundManager.PlaySound(mClickSound);
@@ -126,7 +127,7 @@ public class ModeTutorial extends Mode {
 				e.printStackTrace();
 			}
 			mCursorPosition.x = -1;
-			mExplanation.setText("You need to prevent mice from falling into black holes, and stop cats reaching the rocket");
+			mExplanation.setText(mContext.getString(R.string.tutorial_9));
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
 			SoundManager.PlaySound(mClickSound);
 		}
@@ -134,7 +135,7 @@ public class ModeTutorial extends Mode {
 	new OnClickListener() {
 		@Override
 		public void OnClick(Widget widget) {
-			mExplanation.setText("Note that problem points are highlighted with a circle. Just hit reset and try again!");
+			mExplanation.setText(mContext.getString(R.string.tutorial_10));
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
 			SoundManager.PlaySound(mClickSound);
 		}
@@ -150,7 +151,7 @@ public class ModeTutorial extends Mode {
 				e.printStackTrace();
 			}
 			mCursorPosition.x = -1;
-			mExplanation.setText("Don't let cats kill any mice");
+			mExplanation.setText(mContext.getString(R.string.tutorial_11));
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
 			SoundManager.PlaySound(mClickSound);
 		}
@@ -166,7 +167,7 @@ public class ModeTutorial extends Mode {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			mExplanation.setText("Cats will destroy arrows if they hit them head on, but not if they hit them from the side");
+			mExplanation.setText(mContext.getString(R.string.tutorial_12));
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
 			mNextButton.setText("Finish");
 			SoundManager.PlaySound(mClickSound);

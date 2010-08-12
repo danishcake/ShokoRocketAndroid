@@ -5,6 +5,7 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.Widget;
@@ -88,7 +89,7 @@ public class ModeMenu extends Mode {
 			
 
 			mLevelName = new Widget(btn_np, new Rect(mBtnBorder, mBtnSize + mBtnSep + mBtnBorder, mScreenWidth - mBtnBorder, mBtnSize + mBtnSep + mBtnBorder + mBtnSize)); 
-			mLevelName.setText("Level name");
+			mLevelName.setText(context.getString(R.string.menu_level_name));
 			
 			Widget scrollLeft = new Widget(btn_np, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mBtnSize + mBtnBorder, mScreenHeight - mBtnBorder));
 			scrollLeft.setText("<");
@@ -97,13 +98,13 @@ public class ModeMenu extends Mode {
 			scrollRight.setText(">");
 			
 			Widget playMap = new Widget(btn_np, new Rect(mBtnSize + mBtnBorder + mBtnSep, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - (mBtnSize + mBtnBorder + mBtnSep), mScreenHeight - mBtnBorder));
-			playMap.setText("Play");
+			playMap.setText(context.getString(R.string.menu_play));
 			
 			Widget showTutorial = new Widget(btn_np, new Rect(mScreenWidth / 2 + mBtnSep, mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
-			showTutorial.setText("Tutorial");
+			showTutorial.setText(context.getString(R.string.menu_tutorial));
 			
 			Widget loadEditor = new Widget(btn_np, new Rect(mBtnBorder , mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth / 2 - mBtnSep, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
-			loadEditor.setText("Editor");			
+			loadEditor.setText(context.getString(R.string.menu_editor));			
 			
 			
 			mWidgetPage.setFontSize(mFontSize);
@@ -185,8 +186,8 @@ public class ModeMenu extends Mode {
 						if(mLevelPacks[mLevelPackIndex].equals("My Levels"))
 						{
 							AlertDialog.Builder builder = new Builder(mContext);
-							builder.setMessage("Edit this level?");
-							builder.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+							builder.setMessage(R.string.menu_edit_this_level_prompt);
+							builder.setPositiveButton(R.string.menu_edit, new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int which) {
 									try
 									{
@@ -199,7 +200,7 @@ public class ModeMenu extends Mode {
 									}
 								}
 							});
-							builder.setNeutralButton("New", new DialogInterface.OnClickListener() {
+							builder.setNeutralButton(R.string.menu_new, new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int which) {
 									try
 									{
@@ -335,7 +336,11 @@ public class ModeMenu extends Mode {
 		{
 			Log.e("ModeMenu.ChangeLevel", "Error changing level");
 			mDrawTick = false;
-			mLevelName.setText("Error loading");
+			if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+				mLevelName.setText(mContext.getString(R.string.menu_error_loading));
+			else
+				mLevelName.setText(mContext.getString(R.string.menu_external_storage_unmounted));
+			mWorld = null;
 		}	
 	}
 	
@@ -357,7 +362,12 @@ public class ModeMenu extends Mode {
 	
 	@Override
 	public void Redraw(Canvas canvas) {
-		mGameDrawer.Draw(canvas, mWorld);
+		if(mWorld != null)
+			mGameDrawer.Draw(canvas, mWorld);
+		else
+		{
+			//TODO draw a SD card symbol
+		}
 		mWidgetPage.Draw(canvas);
 		if(mDrawTick)
 		{

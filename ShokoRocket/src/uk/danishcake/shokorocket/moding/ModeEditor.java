@@ -59,7 +59,7 @@ public class ModeEditor extends Mode {
 		public void run() {
 			mNewLevelDialog = new Dialog(mContext);
 			mNewLevelDialog.setContentView(uk.danishcake.shokorocket.R.layout.editor_new_level);
-			mNewLevelDialog.setTitle("Create a new level");
+			mNewLevelDialog.setTitle(R.string.editor_create_a_new_level);
 			((Spinner)mNewLevelDialog.findViewById(R.id.LevelWidth)).setSelection(9);
 			((Spinner)mNewLevelDialog.findViewById(R.id.LevelHeight)).setSelection(6);
 			
@@ -198,14 +198,14 @@ public class ModeEditor extends Mode {
 													  mScreenHeight - mBtnSize - mBtnBorder, 
 													  mScreenWidth  - mBtnBorder, 
 													  mScreenHeight - mBtnBorder));
-			mEditModeWidget.setText("Walls");
+			mEditModeWidget.setText(mContext.getString(R.string.editor_mode_walls));
 			mEditMode = EditMode.Walls;
 			
 			mTryWidget = new Widget(np, new Rect(mScreenWidth  - mBtnSize2 * 4 - mBtnBorder, 
 												 mScreenHeight - mBtnSize - mBtnBorder, 
 												 mScreenWidth  - mBtnSize2 * 2 - mBtnBorder - mBtnSep, 
 												 mScreenHeight - mBtnBorder));
-			mTryWidget.setText("Try");
+			mTryWidget.setText(mContext.getString(R.string.editor_run_speed_try));
 			
 			
 			mEditModeWidget.setOnClickListener(new uk.danishcake.shokorocket.gui.OnClickListener() {
@@ -215,27 +215,27 @@ public class ModeEditor extends Mode {
 					{
 					case Walls:
 						mEditMode = EditMode.Arrows;
-						mEditModeWidget.setText("Arrows");
+						mEditModeWidget.setText(mContext.getString(R.string.editor_mode_arrows));
 						break;
 					case Arrows:
 						mEditMode = EditMode.Mice;
-						mEditModeWidget.setText("Mice");
+						mEditModeWidget.setText(mContext.getString(R.string.editor_mode_mice));
 						break;
 					case Mice:
 						mEditMode = EditMode.Cats;
-						mEditModeWidget.setText("Cats");
+						mEditModeWidget.setText(mContext.getString(R.string.editor_mode_cats));
 						break;
 					case Cats:
 						mEditMode = EditMode.Holes;
-						mEditModeWidget.setText("Holes");
+						mEditModeWidget.setText(mContext.getString(R.string.editor_mode_holes));
 						break;
 					case Holes:
 						mEditMode = EditMode.Rockets;
-						mEditModeWidget.setText("Rockets");
+						mEditModeWidget.setText(mContext.getString(R.string.editor_mode_rockets));
 						break;
 					case Rockets:
 						mEditMode = EditMode.Walls;
-						mEditModeWidget.setText("Walls");
+						mEditModeWidget.setText(mContext.getString(R.string.editor_mode_walls));
 						break;
 					}
 				}
@@ -248,16 +248,16 @@ public class ModeEditor extends Mode {
 					{
 					case Stopped:
 						mRunningMode = RunningMode.Running;
-						mTryWidget.setText("Faster");
+						mTryWidget.setText(mContext.getString(R.string.editor_run_speed_faster));
 						break;
 					case Running:
 						mRunningMode = RunningMode.RunningFast;
-						mTryWidget.setText("Reset");
+						mTryWidget.setText(mContext.getString(R.string.editor_run_speed_reset));
 						break;
 					case RunningFast:
 						mRunningMode = RunningMode.Stopped;
 						mWorld.Reset();
-						mTryWidget.setText("Try");
+						mTryWidget.setText(mContext.getString(R.string.editor_run_speed_try));
 						break;
 					}
 				}
@@ -333,7 +333,7 @@ public class ModeEditor extends Mode {
 					{
 						mWorld.Reset();
 						mRunningMode = RunningMode.Stopped;
-						mTryWidget.setText("Try");
+						mTryWidget.setText(mContext.getString(R.string.editor_run_speed_try));
 					}
 				} else
 					mResetTimer = 0;
@@ -449,23 +449,21 @@ public class ModeEditor extends Mode {
 	@Override
 	public boolean getMenu(Menu menu) {
 		menu.clear();
-	//	SubMenu sm = menu.addSubMenu("File");
-		menu.add(0, E_MENU_NEW, 0, "New");
-		menu.add(0, E_MENU_SAVE, 0, "Save");
-		menu.add(0, E_MENU_SHARE, 0, "Share");
+
+		menu.add(0, E_MENU_NEW, 0, R.string.editor_menu_new);
+		menu.add(0, E_MENU_SAVE, 0, R.string.editor_menu_save);
+		menu.add(0, E_MENU_SHARE, 0, R.string.editor_menu_share);
 		
+		menu.add(1, E_MENU_PROPERTIES, 0, R.string.editor_menu_properties);
+		menu.add(1, E_MENU_VERIFY, 0, R.string.editor_menu_verify);
 		
-	//	SubMenu sm2 = menu.addSubMenu("Level");
-		menu.add(1, E_MENU_PROPERTIES, 0, "Properties");
-		menu.add(1, E_MENU_VERIFY, 0, "Verify");
-		
-		SubMenu sm_edit = menu.addSubMenu("Edit mode");
-		MenuItem mi_walls = sm_edit.add(2, E_MENU_WALLMODE, 0, "Walls");
-		MenuItem mi_mice = sm_edit.add(2, E_MENU_MOUSEMODE, 0, "Mice");
-		MenuItem mi_cats = sm_edit.add(2, E_MENU_CATMODE, 0, "Cats");
-		MenuItem mi_arrows = sm_edit.add(2, E_MENU_ARROWMODE, 0, "Arrows");
-		MenuItem mi_rocket = sm_edit.add(2, E_MENU_ROCKETMODE, 0, "Rocket");
-		MenuItem mi_holes = sm_edit.add(2, E_MENU_HOLEMODE, 0, "Hole");
+		SubMenu sm_edit = menu.addSubMenu(R.string.editor_menu_edit_mode);
+		MenuItem mi_walls = sm_edit.add(2, E_MENU_WALLMODE, 0, R.string.editor_mode_walls);
+		MenuItem mi_mice = sm_edit.add(2, E_MENU_MOUSEMODE, 0, R.string.editor_mode_mice);
+		MenuItem mi_cats = sm_edit.add(2, E_MENU_CATMODE, 0, R.string.editor_mode_cats);
+		MenuItem mi_arrows = sm_edit.add(2, E_MENU_ARROWMODE, 0, R.string.editor_mode_arrows);
+		MenuItem mi_rocket = sm_edit.add(2, E_MENU_ROCKETMODE, 0, R.string.editor_mode_rockets);
+		MenuItem mi_holes = sm_edit.add(2, E_MENU_HOLEMODE, 0, R.string.editor_mode_holes);
 		sm_edit.setGroupCheckable(2, true, true);
 		
 		switch(mEditMode)
@@ -504,10 +502,10 @@ public class ModeEditor extends Mode {
 			FileOutputStream fos = new FileOutputStream(file);
 			
 			mWorld.Save(fos);
-			Toast.makeText(mContext, "Saved as " + file.getPath(), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, R.string.editor_saved_as + file.getPath(), Toast.LENGTH_SHORT).show();
 		} catch (FileNotFoundException e) {
 			Log.e("ModeEditor.handleMenuSelection", e.getMessage());
-			Toast.makeText(mContext, "Unable to save " + e.getMessage(), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, R.string.editor_unable_to_save + e.getMessage(), Toast.LENGTH_SHORT).show();
 			mWorld.setLevelName("");
 		}		
 	}
@@ -518,8 +516,8 @@ public class ModeEditor extends Mode {
 		{
 		case E_MENU_NEW:
 			AlertDialog.Builder builder = new Builder(mContext);
-			builder.setMessage("Are you sure you want to create a new level?");
-			builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			builder.setMessage(R.string.editor_new_level_confirmation);
+			builder.setPositiveButton(R.string.editor_yes, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					try
 					{
@@ -534,7 +532,7 @@ public class ModeEditor extends Mode {
 					}
 				}
 			});
-			builder.setNegativeButton("No", null);
+			builder.setNegativeButton(R.string.editor_no, null);
 			AlertDialog ad = builder.create();
 			ad.show();
 			break;
@@ -545,7 +543,7 @@ public class ModeEditor extends Mode {
 				{
 					mPickFilenameDialog = new Dialog(mContext);
 					mPickFilenameDialog.setContentView(uk.danishcake.shokorocket.R.layout.editor_change_filename);
-					mPickFilenameDialog.setTitle("Enter filename");
+					mPickFilenameDialog.setTitle(R.string.editor_enter_filename);
 					
 					Button setFilename = (Button) mPickFilenameDialog.findViewById(R.id.SetFilename);
 					setFilename.setOnClickListener(new OnClickListener() {
@@ -572,8 +570,8 @@ public class ModeEditor extends Mode {
 								if(file.exists())
 								{
 									AlertDialog.Builder builder = new Builder(mContext);
-									builder.setMessage("File already exists. Overwrite?");
-									builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+									builder.setMessage(R.string.editor_overwrite_confirmation);
+									builder.setPositiveButton(R.string.editor_yes, new DialogInterface.OnClickListener() {
 										public void onClick(DialogInterface dialog, int which) {
 											try
 											{
@@ -587,7 +585,7 @@ public class ModeEditor extends Mode {
 										}
 									});
 									
-									builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+									builder.setNegativeButton(R.string.editor_no, new DialogInterface.OnClickListener() {
 										public void onClick(DialogInterface dialog, int which) {
 											try
 											{
@@ -634,7 +632,7 @@ public class ModeEditor extends Mode {
 					SaveLevel();
 			}
 			else
-				Toast.makeText(mContext, "Solution invalid", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, R.string.editor_solution_invalid, Toast.LENGTH_SHORT).show();
 			break;
 		case E_MENU_SHARE:
 			if(Verify())	
@@ -656,8 +654,8 @@ public class ModeEditor extends Mode {
 							Intent intent = new Intent(Intent.ACTION_SEND);
 							intent.putExtra(Intent.EXTRA_SUBJECT, "ShokoRocket level");
 							intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/Share.Level"));
-							intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"danishcake@googlemail.com"});
-							intent.putExtra(Intent.EXTRA_TEXT, "Please find attached my ShokoRocket level. I submit it to the public domain and request that you include it in future versions");
+							intent.putExtra(Intent.EXTRA_EMAIL, new String[]{mContext.getString(R.string.editor_submission_address)});
+							intent.putExtra(Intent.EXTRA_TEXT, mContext.getString(R.string.editor_share_message));
 							intent.setType("text/csv");
 							
 							mContext.startActivity(intent);
@@ -669,7 +667,7 @@ public class ModeEditor extends Mode {
 							Log.e("ModeEditor.HandleMenuSelection", "Semphore interupted");
 						} catch(IOException io_ex)
 						{
-							Toast.makeText(mContext, "Unable to create a temporary file", Toast.LENGTH_SHORT).show();
+							Toast.makeText(mContext, R.string.editor_temp_fail, Toast.LENGTH_SHORT).show();
 						}						
 					}
 				});
@@ -677,18 +675,18 @@ public class ModeEditor extends Mode {
 				mShareDialog.show();
 			}
 			else
-				Toast.makeText(mContext, "Solution invalid", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, R.string.editor_solution_invalid, Toast.LENGTH_SHORT).show();
 			break;
 		case E_MENU_VERIFY:
 			if(Verify())
-				Toast.makeText(mContext, "Solution valid", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, R.string.editor_solution_valid, Toast.LENGTH_SHORT).show();
 			else
-				Toast.makeText(mContext, "Solution invalid", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, R.string.editor_solution_invalid, Toast.LENGTH_SHORT).show();
 			break;
 		case E_MENU_PROPERTIES:
 			mPickPropertiesDialog = new Dialog(mContext);
 			mPickPropertiesDialog.setContentView(uk.danishcake.shokorocket.R.layout.editor_properties);
-			mPickPropertiesDialog.setTitle("Properties");
+			mPickPropertiesDialog.setTitle(R.string.editor_menu_properties);
 			
 			EditText level_author = (EditText) mPickPropertiesDialog.findViewById(R.id.LevelAuthorProperties);
 			EditText level_name = (EditText) mPickPropertiesDialog.findViewById(R.id.LevelNameProperties);
@@ -720,27 +718,27 @@ public class ModeEditor extends Mode {
 			break;
 		case E_MENU_WALLMODE:
 			mEditMode = EditMode.Walls;
-			mEditModeWidget.setText("Walls");
+			mEditModeWidget.setText(mContext.getString(R.string.editor_mode_walls));
 			break;
 		case E_MENU_MOUSEMODE:
 			mEditMode = EditMode.Mice;
-			mEditModeWidget.setText("Mice");
+			mEditModeWidget.setText(mContext.getString(R.string.editor_mode_mice));
 			break;
 		case E_MENU_CATMODE:
 			mEditMode = EditMode.Cats;
-			mEditModeWidget.setText("Cats");
+			mEditModeWidget.setText(mContext.getString(R.string.editor_mode_cats));
 			break;
 		case E_MENU_ARROWMODE:
 			mEditMode = EditMode.Arrows;
-			mEditModeWidget.setText("Arrows");
+			mEditModeWidget.setText(mContext.getString(R.string.editor_mode_arrows));
 			break;
 		case E_MENU_HOLEMODE:
 			mEditMode = EditMode.Holes;
-			mEditModeWidget.setText("Holes");
+			mEditModeWidget.setText(mContext.getString(R.string.editor_mode_holes));
 			break;
 		case E_MENU_ROCKETMODE:
 			mEditMode = EditMode.Rockets;
-			mEditModeWidget.setText("Rockets");
+			mEditModeWidget.setText(mContext.getString(R.string.editor_mode_rockets));
 			break;
 		default:
 			return false;
@@ -755,7 +753,7 @@ public class ModeEditor extends Mode {
 	private boolean Verify()
 	{
 		mRunningMode = RunningMode.Stopped;
-		mTryWidget.setText("Try");
+		mTryWidget.setText(mContext.getString(R.string.editor_run_speed_try));
 		mWorld.Reset();
 		for(int ms = 0; ms < 1000 * 240 && mWorld.getWorldState() == WorldState.OK; ms += 50) //Maximum 240s runtime
 		{
