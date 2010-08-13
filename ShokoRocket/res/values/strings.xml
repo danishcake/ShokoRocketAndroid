@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="menu_editor_requies_storage">External storage not mounted, editor cannot be used</string>
     <string name="tutorial_12">Cats will destroy arrows if they hit them head on, but not if they hit them from the side</string>
     <string name="tutorial_11">Don\'t let cats kill any mice</string>
     <string name="tutorial_10">Note that problem points are highlighted with a circle. Just hit reset and try again!</string>

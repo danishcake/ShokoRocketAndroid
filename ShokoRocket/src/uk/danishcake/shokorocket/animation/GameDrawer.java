@@ -405,33 +405,33 @@ public class GameDrawer {
 		}
 		for(Walker walker : world.getDeadCats())
 		{
+			Vector2i position = walker.getPosition();
+			int x = position.x * mGridSize + mDrawOffsetX;
+			int y = position.y * mGridSize + mDrawOffsetY;
+			switch(walker.getDirection())
+			{
+			case North:
+				y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case South:
+				y += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case East:
+				x += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case West:
+				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			}
 			if(walker.getWalkerState() == WalkerState.Rescued)
 			{
-				Vector2i position = walker.getPosition();
-				int x = position.x * mGridSize + mDrawOffsetX;
-				int y = position.y * mGridSize + mDrawOffsetY;
-				switch(walker.getDirection())
-				{
-				case North:
-					y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
-					break;
-				case South:
-					y += (mGridSize * walker.getFraction() / Walker.FractionReset);
-					break;
-				case East:
-					x += (mGridSize * walker.getFraction() / Walker.FractionReset);
-					break;
-				case West:
-					x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
-					break;
-				}
 				mRingAnimation.DrawCurrentFrame(canvas, x, y);
-				
-				int death_time = walker.getDeathTime();
-				if(death_time < 5000)
-				{
-					mCatDeathAnimation.DrawFrameAtTime(canvas, x, y, death_time / 5);
-				}
+			}
+			
+			int death_time = walker.getDeathTime();
+			if(death_time < 5000)
+			{
+				mCatDeathAnimation.DrawFrameAtTime(canvas, x, y, death_time / 5);
 			}
 		}
 	}

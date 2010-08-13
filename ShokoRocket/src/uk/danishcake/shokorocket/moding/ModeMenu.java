@@ -186,7 +186,7 @@ public class ModeMenu extends Mode {
 					{
 						if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
 						{
-							Toast.makeText(mContext, "External storage not mounted, editor cannot be used", Toast.LENGTH_LONG).show();
+							Toast.makeText(mContext, R.string.menu_editor_requies_storage, Toast.LENGTH_LONG).show();
 							return;
 						}
 						if(mLevelPacks[mLevelPackIndex].equals("My Levels"))
