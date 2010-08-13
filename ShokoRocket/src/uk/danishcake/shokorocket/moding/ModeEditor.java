@@ -502,10 +502,10 @@ public class ModeEditor extends Mode {
 			FileOutputStream fos = new FileOutputStream(file);
 			
 			mWorld.Save(fos);
-			Toast.makeText(mContext, R.string.editor_saved_as + file.getPath(), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, mContext.getString(R.string.editor_saved_as) + file.getPath(), Toast.LENGTH_SHORT).show();
 		} catch (FileNotFoundException e) {
 			Log.e("ModeEditor.handleMenuSelection", e.getMessage());
-			Toast.makeText(mContext, R.string.editor_unable_to_save + e.getMessage(), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, mContext.getString(R.string.editor_unable_to_save) + e.getMessage(), Toast.LENGTH_SHORT).show();
 			mWorld.setLevelName("");
 		}		
 	}
