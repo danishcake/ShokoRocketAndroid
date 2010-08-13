@@ -8,6 +8,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -22,6 +24,7 @@ public class GameStateMachine {
 	private int mTapStartY = 0;
 	boolean mDragInProgress = false;
 	private Semaphore mSemaphore = null;
+	private Bitmap mBackgroundSrc = null;
 	private Bitmap mBackground = null;
 
 
@@ -31,7 +34,7 @@ public class GameStateMachine {
 		mMode = new ModeIntro();
 		mMode.Setup(mContext);
 		try {
-			mBackground = BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/Game/Background.png"));
+			mBackgroundSrc = BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/Game/Background.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -56,10 +59,21 @@ public class GameStateMachine {
 		mMode.ScreenChanged(width, height);
 		mScreenWidth = width;
 		mScreenHeight = height;
+		
+		//Create scaled background image while preserving 800x480 aspect
+		int scaled_height = (int)(800.0f * (float)mScreenWidth / 480.0f);
+		
+		mBackground = Bitmap.createBitmap(mScreenWidth, mScreenHeight, Bitmap.Config.RGB_565);
+		Canvas canvas = new Canvas(mBackground);
+		canvas.drawRGB(255, 255, 255);
+		Paint p = new Paint();
+		p.setDither(true);
+		p.setFilterBitmap(true);
+		canvas.drawBitmap(mBackgroundSrc, new Rect(0, 0, 480, 800), new Rect(0, 0, mScreenWidth, scaled_height), p);
 	}
 	
 	public void Redraw(Canvas canvas) {
-		if(mMode.getBackgroundDrawn())
+		if(mMode.getBackgroundDrawn() && mBackground != null)
 		{
 			//Fill background
 			float x = (canvas.getWidth() - mBackground.getWidth()) / 2;
@@ -68,7 +82,7 @@ public class GameStateMachine {
 			float y = (canvas.getHeight() - mBackground.getHeight()) / 2;
 			if(y > 0)
 				y = 0;
-			canvas.drawBitmap(mBackground, x, y, null);
+			canvas.drawBitmap(mBackground, x, y, null);			
 		}
 		mMode.Redraw(canvas);
 	}

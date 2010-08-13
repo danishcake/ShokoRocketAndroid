@@ -23,6 +23,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 
 public class ModeMenu extends Mode {
@@ -183,6 +184,11 @@ public class ModeMenu extends Mode {
 				public void OnClick(Widget widget) {
 					if(mPendMode == null)
 					{
+						if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+						{
+							Toast.makeText(mContext, "External storage not mounted, editor cannot be used", Toast.LENGTH_LONG).show();
+							return;
+						}
 						if(mLevelPacks[mLevelPackIndex].equals("My Levels"))
 						{
 							AlertDialog.Builder builder = new Builder(mContext);
@@ -259,6 +265,8 @@ public class ModeMenu extends Mode {
 						return pathname.isDirectory();
 					}
 				});
+				if(user_packs == null) //Folder doesn't exist
+					user_packs = new File[]{};
 				total_length += user_packs.length;
 			}
 			
