@@ -2,7 +2,9 @@ package uk.danishcake.shokorocket.moding;
 
 import java.util.concurrent.Semaphore;
 
+import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.simulation.Direction;
+import uk.danishcake.shokorocket.sound.SoundManager;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.view.Menu;
@@ -24,9 +26,11 @@ public class Mode {
 	protected int mFadeR = 255;
 	protected int mFadeB = 255;
 	protected int mFadeG = 255;
-	
+	protected Context mContext;
 	protected int mScreenWidth = 240;
 	protected int mScreenHeight = 320;
+	
+	private final int E_MENU_SOUND = 99;
 
 	/**
 	 * Called before the first Tick to allow creation of state, after the previous 
@@ -34,6 +38,7 @@ public class Mode {
 	 */
 	public void Setup(Context context)
 	{
+		mContext = context;
 	}
 
 	/**
@@ -143,9 +148,17 @@ public class Mode {
 	 * will be available.
 	 * @return Menu to display for the current mode
 	 */
-	public boolean getMenu(Menu menu)
+	public boolean getMenu(Menu menu, boolean clear)
 	{
-		return false;
+		//Only clear if called directly
+		if(clear)
+			menu.clear();
+
+		if(SoundManager.GetEnabled())
+			menu.add(0, E_MENU_SOUND, 0, R.string.menu_sound_on);
+		else
+			menu.add(0, E_MENU_SOUND, 0, R.string.menu_sound_off);
+		return true;
 	}
 
 	/**
@@ -155,8 +168,9 @@ public class Mode {
 	 */
 	public boolean handleMenuSelection(MenuItem item)
 	{
-		
-		return false;
+		if(item.getItemId() == E_MENU_SOUND)
+			SoundManager.SetEnabled(!SoundManager.GetEnabled());
+		return true;
 	}
 	
 	/**

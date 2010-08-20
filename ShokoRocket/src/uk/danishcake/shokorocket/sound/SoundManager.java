@@ -13,6 +13,10 @@ public class SoundManager {
 	private Context mContext = null;
 	private AudioManager mAudioManager = null;
 	private HashMap<String, Integer> mSoundIDs = new HashMap<String, Integer>();
+	private boolean mEnabled = true;
+	
+	private boolean getEnabled() {return mEnabled;}
+	private void setEnabled(boolean enabled) {mEnabled = enabled;}
 	
 	private SoundManager()
 	{
@@ -52,13 +56,16 @@ public class SoundManager {
 	
 	public static void PlaySound(int soundID)
 	{
-		if(soundID == -1)
-			return;
 		SoundManager instance = GetInstance();
+		if(soundID == -1 || !instance.getEnabled())
+			return;
 		
 	    float streamVolume = instance.mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 	    streamVolume = streamVolume / instance.mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 	    
 		instance.mPool.play(soundID, streamVolume, streamVolume, 1, 0, 1.0f);
 	}
+	
+	public static boolean GetEnabled() {return GetInstance().getEnabled();}
+	public static void SetEnabled(boolean enabled) {GetInstance().setEnabled(enabled);}
 }

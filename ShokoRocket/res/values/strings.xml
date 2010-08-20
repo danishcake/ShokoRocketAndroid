@@ -53,6 +53,8 @@
     <string name="menu_level_name">Level name</string>
     <string name="menu_external_storage_unmounted">External storage unmounted</string>
     <string name="menu_error_loading">Error loading</string>
+    <string name="menu_sound_on">Sound on</string>
+    <string name="menu_sound_off">Sound off</string>
     <string name="level_submit">Agree and submit</string>
     <string name="ShareExplanationText">This will email your creation to the author, who will endeavour to include it in future versions. Ensure that you have correctly entered your name and level name. By submitting you enter the level into the public domain. If you have multiple levels to submit then it may be more efficient to send them all from your PC - the levels are stored on the phone external storage</string>
     <string name="level_accept">Accept</string>

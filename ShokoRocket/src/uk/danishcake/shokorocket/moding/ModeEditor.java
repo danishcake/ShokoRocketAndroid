@@ -111,7 +111,6 @@ public class ModeEditor extends Mode {
 	private Dialog mPickFilenameDialog = null;
 	private Dialog mPickPropertiesDialog = null;
 	private Dialog mShareDialog = null;	
-	private Context mContext;
 	private World mWorld = null;
 	private GameDrawer mGameDrawer = null;
 	private ModeMenu mModeMenu;
@@ -447,7 +446,7 @@ public class ModeEditor extends Mode {
 	}
 	
 	@Override
-	public boolean getMenu(Menu menu) {
+	public boolean getMenu(Menu menu, boolean clear) {
 		menu.clear();
 
 		menu.add(0, E_MENU_NEW, 0, R.string.editor_menu_new);

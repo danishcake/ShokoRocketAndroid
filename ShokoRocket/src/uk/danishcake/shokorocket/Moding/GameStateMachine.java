@@ -176,7 +176,7 @@ public class GameStateMachine {
 	}
 	
 	public boolean getMenu(Menu menu) {
-		return mMode.getMenu(menu);
+		return mMode.getMenu(menu, true);
 	}
 	
 	public boolean handleMenuSelection(MenuItem item) {
