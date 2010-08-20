@@ -60,8 +60,8 @@ public class ModeEditor extends Mode {
 			mNewLevelDialog = new Dialog(mContext);
 			mNewLevelDialog.setContentView(uk.danishcake.shokorocket.R.layout.editor_new_level);
 			mNewLevelDialog.setTitle(R.string.editor_create_a_new_level);
-			((Spinner)mNewLevelDialog.findViewById(R.id.LevelWidth)).setSelection(9);
-			((Spinner)mNewLevelDialog.findViewById(R.id.LevelHeight)).setSelection(6);
+			((Spinner)mNewLevelDialog.findViewById(R.id.LevelWidth)).setSelection(6);
+			((Spinner)mNewLevelDialog.findViewById(R.id.LevelHeight)).setSelection(9);
 			
 			//Set the default author
 			TextView level_author = (TextView) mNewLevelDialog.findViewById(R.id.LevelAuthor);
