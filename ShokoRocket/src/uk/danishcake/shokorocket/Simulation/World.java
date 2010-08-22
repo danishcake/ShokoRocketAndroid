@@ -41,7 +41,7 @@ public class World {
 	
 	private final int eWestWall = 1;
 	private final int eNorthWall = 2;
-	private int[] mWalls = new int[12*9];
+	private int[] mWalls = new int[mWidth*mHeight];
 	
 	private ArrayList<Walker> mLiveMice = new ArrayList<Walker>();
 	private ArrayList<Walker> mDeadMice = new ArrayList<Walker>();
@@ -49,7 +49,7 @@ public class World {
 	private ArrayList<Walker> mLiveCats = new ArrayList<Walker>();
 	private ArrayList<Walker> mDeadCats = new ArrayList<Walker>();
 	
-	private SquareType[] mSpecialSquares = new SquareType[12*9];
+	private SquareType[] mSpecialSquares = new SquareType[mWidth*mHeight];
 	private WorldState mWorldState = WorldState.OK;
 	
 	private ArrayList<ArrowRecord> mSolution = new ArrayList<ArrowRecord>();
@@ -521,6 +521,8 @@ public class World {
 	{
 		mWidth = width;
 		mHeight = height;
+		mWalls = new int[mWidth * mHeight];
+		mSpecialSquares = new SquareType[mWidth*mHeight];
 		defaultWalls();
 		defaultSpecialSquares();
 		mUnlimitedArrows = true;
