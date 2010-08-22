@@ -1,16 +1,11 @@
 package uk.danishcake.shokorocket.moding;
 
-import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
 import uk.danishcake.shokorocket.animation.BackgroundDrawer;
 import uk.danishcake.shokorocket.simulation.Direction;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;

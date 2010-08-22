@@ -10,7 +10,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 public class BackgroundDrawer {
-	private Context mContext = null;
 	private Bitmap mBackgroundGradient = null;
 	private Bitmap mCloudTile = null;
 	private Bitmap mCloudA = null;
@@ -33,7 +32,6 @@ public class BackgroundDrawer {
 	
 	public BackgroundDrawer(Context context, int width, int height)
 	{
-		mContext = context;
 		mWidth = width;
 		mHeight = height;
 		mClearPaint.setARGB(255, 255, 255, 255);
