@@ -355,7 +355,8 @@ public class ModeEditor extends Mode {
 	
 	@Override
 	public void handleTap(int x, int y) {
-
+		if(mWorld == null || mGameDrawer == null || mWidgetPage == null)
+			return;
 		mWidgetPage.handleTap(x, y);
 		Vector2i offset = mGameDrawer.getDrawOffset();
 		int grid_x = (x - offset.x) / mGameDrawer.getGridSize();
@@ -370,6 +371,8 @@ public class ModeEditor extends Mode {
 	
 	@Override
 	public void handleDPad(Direction direction) {
+		if(mWorld == null || mGameDrawer == null || mWidgetPage == null)
+			return;
 		if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
 		{
 			switch(direction)
@@ -417,6 +420,8 @@ public class ModeEditor extends Mode {
 	
 	@Override
 	public void handleGesture(Direction direction) {
+		if(mWorld == null || mGameDrawer == null || mWidgetPage == null)
+			return;
 		if(mCursorPosition.x != -1 && mCursorPosition.y != -1 && mRunningMode == RunningMode.Stopped)
 		{
 			switch(mEditMode)
@@ -492,6 +497,8 @@ public class ModeEditor extends Mode {
 	
 	private void SaveLevel() 
 	{
+		if(mWorld == null)
+			return;
 		try {
 			File root = new File(new File(Environment.getExternalStorageDirectory(), "ShokoRocket"), "My Levels");
 			File file = new File(root, mWorld.getFilename());
@@ -536,6 +543,11 @@ public class ModeEditor extends Mode {
 			ad.show();
 			break;
 		case E_MENU_SAVE:
+			if(mWorld == null)
+			{
+				Toast.makeText(mContext, R.string.editor_create_a_level_first, Toast.LENGTH_SHORT).show();
+				return true;
+			}
 			if(Verify())
 			{
 				if(mWorld.getFilename().length() == 0)
@@ -634,6 +646,11 @@ public class ModeEditor extends Mode {
 				Toast.makeText(mContext, R.string.editor_solution_invalid, Toast.LENGTH_SHORT).show();
 			break;
 		case E_MENU_SHARE:
+			if(mWorld == null)
+			{
+				Toast.makeText(mContext, R.string.editor_create_a_level_first, Toast.LENGTH_SHORT).show();
+				return true;
+			}
 			if(Verify())	
 			{
 				mShareDialog = new Dialog(mContext);
@@ -677,12 +694,22 @@ public class ModeEditor extends Mode {
 				Toast.makeText(mContext, R.string.editor_solution_invalid, Toast.LENGTH_SHORT).show();
 			break;
 		case E_MENU_VERIFY:
+			if(mWorld == null)
+			{
+				Toast.makeText(mContext, R.string.editor_create_a_level_first, Toast.LENGTH_SHORT).show();
+				return true;
+			}
 			if(Verify())
 				Toast.makeText(mContext, R.string.editor_solution_valid, Toast.LENGTH_SHORT).show();
 			else
 				Toast.makeText(mContext, R.string.editor_solution_invalid, Toast.LENGTH_SHORT).show();
 			break;
 		case E_MENU_PROPERTIES:
+			if(mWorld == null)
+			{
+				Toast.makeText(mContext, R.string.editor_create_a_level_first, Toast.LENGTH_SHORT).show();
+				return true;
+			}
 			mPickPropertiesDialog = new Dialog(mContext);
 			mPickPropertiesDialog.setContentView(uk.danishcake.shokorocket.R.layout.editor_properties);
 			mPickPropertiesDialog.setTitle(R.string.editor_menu_properties);
