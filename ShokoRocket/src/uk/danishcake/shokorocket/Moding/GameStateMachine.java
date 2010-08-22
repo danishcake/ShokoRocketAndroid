@@ -3,6 +3,7 @@ package uk.danishcake.shokorocket.moding;
 import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
+import uk.danishcake.shokorocket.animation.BackgroundDrawer;
 import uk.danishcake.shokorocket.simulation.Direction;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -24,8 +25,8 @@ public class GameStateMachine {
 	private int mTapStartY = 0;
 	boolean mDragInProgress = false;
 	private Semaphore mSemaphore = null;
-	private Bitmap mBackgroundSrc = null;
-	private Bitmap mBackground = null;
+
+	private BackgroundDrawer mBackground = null;
 
 
 	public GameStateMachine(Context context)
@@ -33,14 +34,12 @@ public class GameStateMachine {
 		mContext = context;
 		mMode = new ModeIntro();
 		mMode.Setup(mContext);
-		try {
-			mBackgroundSrc = BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/Game/Background.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public boolean Tick(int timespan) {
+		if(mBackground != null)
+			mBackground.tick(timespan);
+		
 		ModeAction action = mMode.Tick(timespan);
 		if(action == ModeAction.ChangeMode)
 		{
@@ -59,30 +58,13 @@ public class GameStateMachine {
 		mMode.ScreenChanged(width, height);
 		mScreenWidth = width;
 		mScreenHeight = height;
-		
-		//Create scaled background image while preserving 800x480 aspect
-		int scaled_height = (int)(800.0f * (float)mScreenWidth / 480.0f);
-		
-		mBackground = Bitmap.createBitmap(mScreenWidth, mScreenHeight, Bitmap.Config.RGB_565);
-		Canvas canvas = new Canvas(mBackground);
-		canvas.drawRGB(255, 255, 255);
-		Paint p = new Paint();
-		p.setDither(true);
-		p.setFilterBitmap(true);
-		canvas.drawBitmap(mBackgroundSrc, new Rect(0, 0, 480, 800), new Rect(0, 0, mScreenWidth, scaled_height), p);
+		mBackground = new BackgroundDrawer(mContext, mScreenWidth, mScreenHeight);
 	}
 	
 	public void Redraw(Canvas canvas) {
 		if(mMode.getBackgroundDrawn() && mBackground != null)
 		{
-			//Fill background
-			float x = (canvas.getWidth() - mBackground.getWidth()) / 2;
-			if(x > 0)
-				x = 0;
-			float y = (canvas.getHeight() - mBackground.getHeight()) / 2;
-			if(y > 0)
-				y = 0;
-			canvas.drawBitmap(mBackground, x, y, null);			
+			mBackground.draw(canvas);
 		}
 		mMode.Redraw(canvas);
 	}

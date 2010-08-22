@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="256"
+   height="160"
+   id="svg3327"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   version="1.0"
+   sodipodi:docname="CloudA.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="C:\Documents and Settings\Edward\My Documents\Android\ShokoRocket\ShokoRocket\assets\Bitmaps\Game\CloudA.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs3329">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective3335" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="84.355081"
+     inkscape:cy="175.97382"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1180"
+     inkscape:window-height="742"
+     inkscape:window-x="96"
+     inkscape:window-y="-4" />
+  <metadata
+     id="metadata3332">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-772,-240.93361)">
+    <g
+       style="display:inline"
+       id="g6942"
+       transform="translate(36,80.933611)">
+      <path
+         id="path6926"
+         d="M 848,160 C 827.09038,160 809.29542,173.39333 802.71875,192.0625 C 801.81346,192.02445 800.9146,192 800,192 C 764.672,192 736,220.672 736,256 C 736,291.328 764.672,320 800,320 L 940,320 L 940,319.8125 C 941.32031,319.9217 942.65166,320 944,320 C 970.496,320 992.00002,298.496 992,272 C 992,249.87159 977.00423,231.2336 956.625,225.6875 C 958.79779,220.21357 960,214.24467 960,208 C 960,181.504 938.496,160 912,160 C 899.71516,160 888.49281,164.61907 880,172.21875 C 871.50719,164.61907 860.28484,160 848,160 z"
+         style="opacity:1;fill:#008fe4;fill-opacity:1;stroke:none;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="ccsccssccssscscsscscc"
+         id="path6939"
+         d="M 848,170.53125 C 831.59107,170.53125 817.77817,181.02293 812.65625,195.5625 C 812.27173,196.65463 820,200 824,204 C 824.85291,204.85291 833.65685,212 828,212 C 818.74264,210.4885 811.5266,202.3812 802.28125,202.59375 C 800.75418,202.53082 800.72676,202.53125 800,202.53125 C 770.37463,202.53125 746.53125,226.37463 746.53125,256 C 746.53125,285.62537 770.37463,309.46875 800,309.46875 L 938.0625,309.46875 C 938.98879,309.29107 939.93473,309.23852 940.875,309.3125 C 942.02773,309.40784 943.0597,309.46875 944,309.46875 C 964.79337,309.46875 981.46877,292.79336 981.46875,272 C 981.46875,254.63321 969.71403,240.16276 953.84375,235.84375 C 950.96061,235.04799 941.33521,246.67637 940,244 C 938.6648,241.32362 945.74551,224.59452 946.84375,221.8125 C 948.53909,217.54142 949.46875,212.89195 949.46875,208 C 949.46875,187.20663 932.79337,170.53125 912,170.53125 C 902.35709,170.53125 893.66729,174.12433 887.03125,180.0625 C 885.02999,181.85437 874.51499,192 872,192 C 869.48501,192 874.97001,181.85437 872.96875,180.0625 C 866.33271,174.12433 857.64291,170.53125 848,170.53125 z"
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1" />
+    </g>
+  </g>
+</svg>

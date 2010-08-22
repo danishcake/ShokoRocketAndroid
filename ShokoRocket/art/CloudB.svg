@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="300.37201"
+   height="161.73877"
+   id="svg3360"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   version="1.0"
+   sodipodi:docname="CloudB.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs3362">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective3368" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="-89.285714"
+     inkscape:cy="520"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1180"
+     inkscape:window-height="742"
+     inkscape:window-x="96"
+     inkscape:window-y="-4" />
+  <metadata
+     id="metadata3365">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-224.81399,-451.4928)">
+    <g
+       style="display:inline"
+       id="g6912"
+       transform="translate(109.54283,412.15704)"
+       inkscape:export-filename="C:\Documents and Settings\Edward\My Documents\Android\ShokoRocket\ShokoRocket\assets\Bitmaps\Game\CloudB.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <path
+         id="path6820"
+         d="M 277.00993,39.33576 C 315.27271,39.33576 346.32655,70.389605 346.32655,108.65238 C 346.32655,110.80605 346.22573,112.93425 346.03322,115.03799 C 352.89881,110.99453 360.89311,108.65238 369.43209,108.65238 C 394.9406,108.65238 415.64317,129.35494 415.64317,154.86346 C 415.64317,180.37197 394.9406,201.07453 369.43209,201.07453 L 184.58778,201.07453 C 146.325,201.07453 115.27116,170.02069 115.27116,131.75792 C 115.27116,93.495144 146.325,62.441299 184.58778,62.441299 C 196.94115,62.441299 208.54369,65.682703 218.59173,71.354081 C 230.91303,52.11035 252.47968,39.33576 277.00993,39.33576 z"
+         style="fill:#008fe4;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cssscssccssssscc"
+         id="path6822"
+         d="M 277.00993,50.256738 C 309.36551,50.256738 335.40557,76.296797 335.40557,108.65238 C 335.40557,110.46532 335.32051,112.26238 335.15737,114.04517 C 334.78144,118.12811 316.53592,125.80641 320,128 C 323.46407,130.1936 348.05376,126.5327 351.58396,124.44718 C 356.84479,121.34884 362.88953,119.57336 369.43209,119.57336 C 389.03341,119.57336 404.72219,135.26213 404.72219,154.86346 C 404.72219,174.46478 389.03341,190.15356 369.43209,190.15356 L 184.58778,190.15356 C 152.23222,190.15356 126.19214,164.1135 126.19214,131.75792 C 126.19214,99.402335 152.23222,73.362277 184.58778,73.362277 C 189.80956,73.362277 200.1955,75.159223 211.15307,82.087087 C 222.11061,89.014951 233.6397,101.07374 237.87265,103.46275 C 240.39315,104.88529 242.98537,103.23157 237.87265,98.118837 C 227.18482,87.431003 226.21159,79.678735 227.77528,77.243285 C 238.16012,61.023968 256.2701,50.256738 277.00993,50.256738 z"
+         style="fill:#fffffa;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1" />
+    </g>
+  </g>
+</svg>

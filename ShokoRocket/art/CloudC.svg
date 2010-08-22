@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="224.8329"
+   height="121.06387"
+   id="svg3393"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   version="1.0"
+   sodipodi:docname="CloudC.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="C:\Documents and Settings\Edward\My Documents\Android\ShokoRocket\ShokoRocket\assets\Bitmaps\Game\CloudC.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs3395">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective3401" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="-127.85714"
+     inkscape:cy="2.8571429"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1180"
+     inkscape:window-height="742"
+     inkscape:window-x="96"
+     inkscape:window-y="-4" />
+  <metadata
+     id="metadata3398">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-262.58355,-471.83025)">
+    <g
+       style="display:inline"
+       transform="matrix(0.5404637,0,0,0.5404637,-117.90289,454.53541)"
+       id="g6791">
+      <path
+         style="opacity:1;fill:#008fe4;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 896,32 C 843.008,32 800,75.008 800,128 C 800,130.98272 800.13963,133.93018 800.40625,136.84375 C 790.89776,131.24376 779.82605,128 768,128 C 732.672,128 704,156.672 704,192 C 704,227.328 732.672,256 768,256 L 1024,256 C 1076.992,256 1120,212.992 1120,160 C 1120,107.008 1076.992,64 1024,64 C 1006.8912,64 990.82227,68.48918 976.90625,76.34375 C 959.84187,49.692159 929.97316,32 896,32 z"
+         id="path6793" />
+      <path
+         style="fill:#fffffa;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+         d="M 896,47.125 C 851.18916,47.125 815.125,83.189161 815.125,128 C 815.125,130.51083 815.24281,132.99967 815.46875,135.46875 C 815.98939,141.12341 826.78706,154.77987 821.98949,157.81789 C 817.19192,160.85591 797.6079,152.76334 792.71875,149.875 C 785.43277,145.58395 777.06111,143.125 768,143.125 C 740.85316,143.125 719.125,164.85316 719.125,192 C 719.125,219.14684 740.85316,240.875 768,240.875 L 1024,240.875 C 1068.8108,240.875 1104.875,204.81084 1104.875,160 C 1104.875,115.18916 1068.8108,79.125 1024,79.125 C 1016.7681,79.125 1002.3841,81.613679 987.20841,91.20842 C 972.03278,100.80316 956.06557,117.50397 950.20315,120.81263 C 946.71238,122.78277 943.12229,120.49245 950.20315,113.41158 C 965.00525,98.609472 966.35313,87.872974 964.1875,84.5 C 949.80502,62.037068 924.72362,47.125 896,47.125 z"
+         id="path6795"
+         sodipodi:nodetypes="cssscssccssssscc" />
+    </g>
+  </g>
+</svg>
