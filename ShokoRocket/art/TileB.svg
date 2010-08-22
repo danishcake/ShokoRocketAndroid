@@ -71,9 +71,9 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="25.809952"
-     inkscape:cx="25.576517"
-     inkscape:cy="6.4361034"
+     inkscape:zoom="12.904976"
+     inkscape:cx="34.833683"
+     inkscape:cy="14.653939"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -81,7 +81,7 @@
      inkscape:window-width="1173"
      inkscape:window-height="742"
      inkscape:window-x="22"
-     inkscape:window-y="29">
+     inkscape:window-y="26">
     <inkscape:grid
        type="xygrid"
        id="grid3353"
@@ -106,6 +106,13 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2389"
+       width="32"
+       height="32"
+       x="0"
+       y="0" />
     <g
        id="g3158">
       <g
