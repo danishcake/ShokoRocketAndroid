@@ -42,7 +42,7 @@ public class BackgroundDrawer {
 			mCloudA = BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/Game/CloudA.png"));
 			mCloudB = BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/Game/CloudB.png"));
 			mCloudC = BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/Game/CloudC.png"));
-			mRocket = BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/Game/RocketLaunch.png"));
+			Bitmap rocket = BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/Game/RocketLaunch.png"));
 			
 			//Scale up gradient
 			//Create scaled background image while preserving 800x480 aspect
@@ -54,6 +54,14 @@ public class BackgroundDrawer {
 			p.setDither(true);
 			p.setFilterBitmap(true);
 			canvas.drawBitmap(background_gradient, new Rect(0, 0, 800, 480), new Rect(0, 0, mWidth, mGradientHeight), p);
+			
+			float uniform_scale = (float)mWidth / 480.0f;
+			mRocket = Bitmap.createBitmap((int)(rocket.getWidth() * uniform_scale), (int)(rocket.getHeight() * uniform_scale), Bitmap.Config.ARGB_8888);
+			canvas = new Canvas(mRocket);
+			canvas.drawBitmap(rocket, new Rect(0, 0, rocket.getWidth(), rocket.getHeight()), new Rect(0, 0, mRocket.getWidth(), mRocket.getHeight()), p);
+			
+			
+			
 			
 			mCloudAX = mWidth * 1000 * 2 / 10;
 			mCloudBX = mWidth * 1000 * 3 / 10;
