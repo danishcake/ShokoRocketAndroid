@@ -24,4 +24,36 @@ public enum Direction {
 			return SquareType.Empty;		
 		}
 	}
+	
+	public Direction RotateLeft() {
+		switch(this)
+		{
+		case North:
+			return West;
+		case South:
+			return East;
+		case West:
+			return South;
+		case East:
+			return North;
+		default:
+			return Invalid;
+		}
+	}
+	
+	public Direction RotateRight() {
+		switch(this)
+		{
+		case North:
+			return East;
+		case South:
+			return West;
+		case West:
+			return North;
+		case East:
+			return South;
+		default:
+			return Invalid;
+		}
+	}
 }

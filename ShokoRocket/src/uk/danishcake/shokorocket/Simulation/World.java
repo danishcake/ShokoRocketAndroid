@@ -60,7 +60,8 @@ public class World {
 	private String mFilename = "";
 	
 	private boolean mMouseRescued = false;
-	
+	private int mRotation = 0;
+
 	/* getWidth
 	 * @return width of the level - defaults to 12
 	 */
@@ -170,7 +171,15 @@ public class World {
 	public ArrayList<Walker> getDeadCats() {
 		return mDeadCats;
 	}
-	
+
+	/**
+	 * getRotation
+	 * @return the number of rotations to the right performed
+	 */
+	public int getRotation() {
+		return mRotation;
+	}
+
 	/* addMouse
 	 * @param walker the mouse
 	 */
@@ -212,7 +221,7 @@ public class World {
 			{
 				c_it.remove();
 			}
-		}		
+		}
 	}
 	
 	/**
@@ -1282,6 +1291,100 @@ public class World {
 					break;
 				}
 			}
+		}
+	}
+
+	/**
+	 * RotateRight()
+	 * Changes the level orientation by rotating all members right
+	 */
+	public void RotateRight() {
+		Reset();
+		mRotation = (mRotation + 1) % 4;
+		//Rotate size
+		int temp = mWidth;
+		mWidth = mHeight;
+		mHeight = temp;
+		//Rotate walkers
+		for(Walker mouse : mLiveMice)
+		{
+			Vector2i position = mouse.getPosition();
+			mouse.setPosition(new Vector2i(mWidth - 1 - position.y, position.x));
+			mouse.setDirection(mouse.getDirection().RotateRight());
+		}
+		for(Walker cat : mLiveCats)
+		{
+			Vector2i position = cat.getPosition();
+			cat.setPosition(new Vector2i(mWidth - 1 - position.y, position.x));
+			cat.setDirection(cat.getDirection().RotateRight());
+		}
+		//Rotate walls
+		//Rotate special squares
+		int[] walls = mWalls;
+		mWalls = new int[mWidth*mHeight];
+		SquareType[] special_squares = mSpecialSquares;
+		mSpecialSquares = new SquareType[mWidth*mHeight];
+		for(int x = 0; x < mWidth; x++)
+		{
+			for(int y = 0; y < mHeight; y++)
+			{
+				/*
+				 * 2x3
+				 * 01
+				 * 23
+				 * 45
+				 * 
+				 * to
+				 * 
+				 * 3x2
+				 * 420
+				 * 531
+				 * 
+				 * 
+				 * West from south, north from west
+				 * Only east to read West and north, so set north and east
+				*/
+				int old_index = (mWidth-1) * mHeight + y - x * mHeight; 
+				
+				mSpecialSquares[wallIndex(x, y)] = special_squares[old_index];
+				setNorth(x, y, (walls[old_index] & eWestWall) != 0);
+				setEast(x, y, (walls[old_index] & eNorthWall) != 0);
+				  
+			}
+		}
+		
+		//Rotate saved solution
+		for(ArrowRecord ar : mSolution)
+		{
+			ar.direction = ar.direction.RotateRight();
+		}
+		//Rotate arrow stock
+		for(int i = 0; i < mArrowStock.size(); i++)
+		{
+			mArrowStock.set(i, mArrowStock.get(i).RotateRight());
+		}
+	}
+
+	/**
+	 * RotateLeft()
+	 * Changes the level orientation by rotating all members left
+	 */
+	public void RotateLeft()
+	{
+		RotateRight();
+		RotateRight();
+		RotateRight();
+	}
+
+	/**
+	 * RotateToOriginal()
+	 * Rotates the level to it's original orientation
+	 */
+	public void RotateToOriginal()
+	{
+		for(int i = 0; i < mRotation; i++)
+		{
+			RotateLeft();
 		}
 	}
 }

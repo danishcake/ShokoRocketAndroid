@@ -23,6 +23,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.Paint.Align;
+import android.view.Menu;
+import android.view.MenuItem;
 
 public class ModeGame extends Mode {
 	private Context mContext;
@@ -55,6 +57,8 @@ public class ModeGame extends Mode {
 	private Vector2i mGestureEnd = new Vector2i(0, 0);
 	private Direction mGestureDirection = Direction.Invalid;
 	private boolean mGestureInProgress = false;
+	
+	private final int E_MENU_ROTATE = 1;
 	
 	public ModeGame(World world, ModeMenu menu, Progress progress)
 	{
@@ -456,5 +460,29 @@ public class ModeGame extends Mode {
 				widget.setText(arrow_count.get(direction).toString());
 			}
 		}
+	}
+	
+	@Override
+	public boolean getMenu(Menu menu, boolean clear) {
+		super.getMenu(menu, clear);
+		menu.add(0, E_MENU_ROTATE, 0, R.string.game_rotate);
+		return true;
+	}
+	
+	@Override
+	public boolean handleMenuSelection(MenuItem item) {
+		switch(item.getItemId())
+		{
+		case E_MENU_ROTATE:
+			if(mWorld.getRotation() == 0)
+				mWorld.RotateRight();
+			else
+				mWorld.RotateLeft();
+			mGameDrawer.CreateBackground(mWorld);
+			return true;
+		default:
+			return super.handleMenuSelection(item);
+		}
+		
 	}
 }
