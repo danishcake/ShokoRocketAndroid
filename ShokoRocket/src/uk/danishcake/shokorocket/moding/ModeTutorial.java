@@ -40,6 +40,10 @@ public class ModeTutorial extends Mode {
 	private int mSwipeStart = 0;
 	private static final int SwipeTime = 750;
 	private boolean mRunning = false;
+	private int mRotateStart = 0;
+	private float mRotateAngle = 0;
+	private float mRotateScale = 0;
+	private static final float RotateTime = 400.0f;
 	
 	private int mTutorialStage = 0;
 	private OnClickListener[] mTutorialStages = {new OnClickListener() {
@@ -178,6 +182,21 @@ public class ModeTutorial extends Mode {
 		public void OnClick(Widget widget) {
 			if(mPendMode == null)
 			{
+				mExplanation.setText("If a level doesn't fit your screen well then press menu and select rotate");
+				mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
+				mRotateStart = mAge;
+				mWorld.Reset();
+				mRunning = false;
+				mGameDrawer.CreateCacheBitmap(mWorld);
+				SoundManager.PlaySound(mClickSound);
+			}
+		}
+	},
+	new OnClickListener() {
+		@Override
+		public void OnClick(Widget widget) {
+			if(mPendMode == null)
+			{
 				mPendMode = new ModeMenu();
 				SoundManager.PlaySound(mClickSound);
 			}
@@ -249,12 +268,46 @@ public class ModeTutorial extends Mode {
 			mWorld.Tick(timespan * 5);
 		}
 		
+		if(mRotateStart > 0)
+		{
+			if(mAge > mRotateStart + RotateTime / 2 && mWorld.getRotation() == 0)
+			{
+				mWorld.RotateRight();
+				mGameDrawer.CreateCacheBitmap(mWorld);
+				mGameDrawer.CreateBackground(mWorld);
+			}
+			if(mAge > mRotateStart + RotateTime)
+			{
+				mRotateStart = 0;
+				mRunning = true;
+			}
+			
+			if(mAge <= mRotateStart + RotateTime / 2)
+			{
+				mRotateAngle = 90 * ((float)(mAge - mRotateStart)) / RotateTime;
+				mRotateScale = 1.0f - ((float)(mAge - mRotateStart)) / RotateTime;
+			}
+			if(mAge > mRotateStart + RotateTime / 2)
+			{
+				mRotateAngle = -90 + 90 * ((float)(mAge - mRotateStart)) / RotateTime;
+				mRotateScale = ((float)(mAge - mRotateStart)) / RotateTime;
+			}
+		}
+		
+
+		
 		return super.Tick(timespan);
 	}
 	
 	public void Redraw(Canvas canvas)
 	{
-		mGameDrawer.Draw(canvas, mWorld);
+		if(mRotateStart > 0)
+		{
+			mGameDrawer.DrawCacheBitmap(canvas, mRotateAngle, mRotateScale);
+		} else
+		{
+			mGameDrawer.Draw(canvas, mWorld);
+		}
 		mWidgetPage.Draw(canvas);
 		if(mCursorPosition.x != -1)
 		{
