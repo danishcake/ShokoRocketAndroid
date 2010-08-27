@@ -98,4 +98,36 @@ public enum SquareType {
 			return this;
 		}		
 	}
+	
+	public SquareType RotateRight() {
+		switch(this)
+		{
+		case NorthArrow:
+			return SquareType.EastArrow;
+		case SouthArrow:
+			return SquareType.WestArrow;
+		case EastArrow:
+			return SquareType.SouthArrow;
+		case WestArrow:
+			return SquareType.NorthArrow;
+		case NorthHalfArrow:
+			return SquareType.EastHalfArrow;
+		case SouthHalfArrow:
+			return SquareType.WestHalfArrow;
+		case EastHalfArrow:
+			return SquareType.SouthHalfArrow;
+		case WestHalfArrow:
+			return SquareType.NorthHalfArrow;
+		case NorthDestroyedArrow:
+			return SquareType.EastDestroyedArrow;
+		case SouthDestroyedArrow:
+			return SquareType.WestDestroyedArrow;
+		case EastDestroyedArrow:
+			return SquareType.SouthDestroyedArrow;
+		case WestDestroyedArrow:
+			return SquareType.NorthDestroyedArrow;
+		default:
+			return this;
+		}		
+	}
 }

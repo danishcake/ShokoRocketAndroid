@@ -1346,7 +1346,8 @@ public class World {
 				*/
 				int old_index = (mWidth-1) * mHeight + y - x * mHeight; 
 				
-				mSpecialSquares[wallIndex(x, y)] = special_squares[old_index];
+				mSpecialSquares[wallIndex(x, y)] = special_squares[old_index].RotateRight();
+				
 				setNorth(x, y, (walls[old_index] & eWestWall) != 0);
 				setEast(x, y, (walls[old_index] & eNorthWall) != 0);
 				  
