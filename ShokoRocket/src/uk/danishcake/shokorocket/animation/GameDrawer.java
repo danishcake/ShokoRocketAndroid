@@ -8,6 +8,7 @@ import java.util.Map;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.SquareType;
 import uk.danishcake.shokorocket.simulation.Vector2i;
@@ -41,6 +42,7 @@ public class GameDrawer {
 	private Animation mCursorAnimation = null;
 	private Animation mTransCursorAnimation = null;
 	private Animation mTickAnimation = null;
+	private Bitmap mCacheBitmap = null;
 	
 	private int mGridSize = 32;
 	
@@ -128,7 +130,7 @@ public class GameDrawer {
 		} else //Destroy background if passed null
 		{
 			mWorldBitmap = null;
-		}		
+		}
 	}
 	
 	public void DrawTilesAndWalls(Canvas canvas, World world)
@@ -449,5 +451,31 @@ public class GameDrawer {
 			animation.Tick(timespan);
 		}
 		mMouseDeathAnimation.Tick(timespan);
+	}
+	
+	public void CreateCacheBitmap(World world)
+	{
+		int old_drawoffset_x = mDrawOffsetX;
+		int old_drawoffset_y = mDrawOffsetY;
+		mDrawOffsetX = 0;
+		mDrawOffsetY = 0;
+
+		mCacheBitmap = Bitmap.createBitmap(world.getWidth() * mGridSize, world.getHeight() * mGridSize, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(mCacheBitmap);
+		Draw(canvas, world);
+
+		mDrawOffsetX = old_drawoffset_x;
+		mDrawOffsetY = old_drawoffset_y;
+	}
+   
+	public void DrawCacheBitmap(Canvas canvas, float angle, float scale)
+	{
+		/* Rotate the cached bitmap by the specified angle and draw */
+		Matrix trans = new Matrix();
+
+		trans.postRotate(angle, mCacheBitmap.getWidth()/2, mCacheBitmap.getHeight()/2);
+		trans.postScale(scale, scale, mCacheBitmap.getWidth()/2, mCacheBitmap.getHeight()/2);
+		trans.postTranslate(mDrawOffsetX, mDrawOffsetY);
+		canvas.drawBitmap(mCacheBitmap, trans, null);
 	}
 }

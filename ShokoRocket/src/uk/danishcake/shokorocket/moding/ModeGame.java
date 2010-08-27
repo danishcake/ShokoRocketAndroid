@@ -29,7 +29,9 @@ import android.view.MenuItem;
 public class ModeGame extends Mode {
 	private Context mContext;
 	private WidgetPage mWidgetPage = new WidgetPage();
-	private GameDrawer mGameDrawer = new GameDrawer();
+	private GameDrawer mGameDrawer;
+	private GameDrawer mGameDrawerRot = new GameDrawer();
+	private GameDrawer mGameDrawerNorm = new GameDrawer();
 	private World mWorld;
 	private ModeMenu mModeMenu;
 	private int mResetTimer = 0;
@@ -52,6 +54,11 @@ public class ModeGame extends Mode {
 	
 	
 	private RunningMode mRunningMode = RunningMode.Stopped;
+	private int mRotateTimer = 0;
+	private final static int RotateTime = 400;
+	private boolean mRotatePerformed = false;
+	private float mRotateAngle = 0.0f;
+	private float mRotateScale = 1.0f;
 	
 	private Vector2i mGestureStart = new Vector2i(0, 0);
 	private Vector2i mGestureEnd = new Vector2i(0, 0);
@@ -80,21 +87,36 @@ public class ModeGame extends Mode {
 	@Override
 	public void Setup(Context context) {
 		mContext = context;
-		//Setup autoscaling
+		//Setup autoscaling twice, for portrait and landscape orientations
 		int grid_size = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.grid_size);
-		int required_width = mWorld.getWidth() * grid_size ;
-		int required_height = mWorld.getHeight() * grid_size ;
+		int required_width = mWorld.getWidth() * grid_size;
+		int required_height = mWorld.getHeight() * grid_size;
 		float scaleX = ((float)mScreenWidth - 16) / (float)required_width;
 		float scaleY = ((float)(mScreenHeight - 156 - 8)) / (float)required_height;
+		float scaleX_rot = ((float)mScreenWidth - 16) / (float)required_height;
+		float scaleY_rot = ((float)(mScreenHeight - 156 - 8)) / (float)required_width;
 		float smaller = scaleX < scaleY ? scaleX : scaleY;
-		
+		float smaller_rot = scaleX_rot < scaleY_rot ? scaleX_rot : scaleY_rot;
+
+		mGameDrawer = mGameDrawerNorm;
 		if(smaller < 1)
 			mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller));
 		else
 			mGameDrawer.Setup(mContext, grid_size );
+		if(smaller_rot < 1)
+			mGameDrawerRot.Setup(mContext, (int)(((float)grid_size) * smaller_rot));
+		else
+			mGameDrawerRot.Setup(mContext, grid_size );
+
 		mGameDrawer.CreateBackground(mWorld);
 		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), 16);
-		
+
+		mWorld.RotateRight();
+		mGameDrawerRot.CreateBackground(mWorld);
+		mGameDrawerRot.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawerRot.getGridSize() / 2), 16);
+		mWorld.RotateLeft();
+
+
 		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
 		mBtnSize2 = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_wide_size);
 		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
@@ -173,9 +195,9 @@ public class ModeGame extends Mode {
 			
 			//Given width 480 take 16 from each side and width -> 400 ->100 spacing
 			Widget north_arrows = new Widget(north_arrow_np, new Rect(mBtnBorder + (mScreenWidth - mBtnBorder * 2 - 48) / 3,
-					          										  mScreenHeight - 72 - mBtnBorder - mBtnSize - mBtnSep, 
-					          										  mBtnBorder + (mScreenWidth - mBtnBorder * 2 - 48) / 3 + 48, 
-					          										  mScreenHeight - mBtnBorder - mBtnSize - mBtnSep));
+																	  mScreenHeight - 72 - mBtnBorder - mBtnSize - mBtnSep, 
+																	  mBtnBorder + (mScreenWidth - mBtnBorder * 2 - 48) / 3 + 48, 
+																	  mScreenHeight - mBtnBorder - mBtnSize - mBtnSep));
 			north_arrows.setText("0");
 			north_arrows.setVerticalAlignment(Widget.VerticalAlignment.Top);
 			north_arrows.setOnClickListener(new OnClickListener() {
@@ -189,9 +211,9 @@ public class ModeGame extends Mode {
 			});
 			
 			Widget south_arrows = new Widget(south_arrow_np, new Rect(mBtnBorder + 2 * (mScreenWidth - mBtnBorder * 2 - 48) / 3,
-					  												  mScreenHeight - 72 - mBtnBorder - mBtnSize - mBtnSep, 
-					  												  mBtnBorder + 2 * (mScreenWidth - mBtnBorder * 2 - 48) / 3 + 48, 
-					  												  mScreenHeight - mBtnBorder - mBtnSize - mBtnSep));
+																	  mScreenHeight - 72 - mBtnBorder - mBtnSize - mBtnSep, 
+																	  mBtnBorder + 2 * (mScreenWidth - mBtnBorder * 2 - 48) / 3 + 48, 
+																	  mScreenHeight - mBtnBorder - mBtnSize - mBtnSep));
 			south_arrows.setText("0");
 			south_arrows.setVerticalAlignment(Widget.VerticalAlignment.Top);
 			south_arrows.setOnClickListener(new OnClickListener() {
@@ -205,9 +227,9 @@ public class ModeGame extends Mode {
 			});
 		
 			Widget east_arrows = new Widget(east_arrow_np, new Rect(mScreenWidth - mBtnBorder - 48,
-																  	mScreenHeight - 72 - mBtnBorder - mBtnSize - mBtnSep,
-																  	mScreenWidth - mBtnBorder,
-																  	mScreenHeight - mBtnBorder - mBtnSize - mBtnSep));
+																	mScreenHeight - 72 - mBtnBorder - mBtnSize - mBtnSep,
+																	mScreenWidth - mBtnBorder,
+																	mScreenHeight - mBtnBorder - mBtnSize - mBtnSep));
 			east_arrows.setText("0");
 			east_arrows.setVerticalAlignment(Widget.VerticalAlignment.Top);
 			east_arrows.setOnClickListener(new OnClickListener() {
@@ -258,6 +280,54 @@ public class ModeGame extends Mode {
 		int rate = 1;
 		switch(mRunningMode)
 		{
+		case RotatingCW:
+			mRotateTimer += timespan;
+			if(mRotateTimer <= RotateTime / 2)
+			{
+				mRotateAngle = 90.0f * ((float)mRotateTimer) / ((float)RotateTime);
+				mRotateScale = 1.0f - 2.0f * ((float)mRotateTimer) / ((float)RotateTime);
+			}
+			if(mRotateTimer > RotateTime / 2)
+			{
+				if(!mRotatePerformed)
+				{
+					changeRotation();
+					mRotatePerformed = true;
+				}
+				mRotateAngle = -90.0f + 90.0f * ((float)mRotateTimer) / ((float)RotateTime);
+				mRotateScale = -1.0f + 2.0f * ((float)mRotateTimer) / ((float)RotateTime);
+			}
+			if(mRotateTimer > RotateTime)
+			{
+				mRunningMode = RunningMode.Stopped;
+				mRotateTimer = 0;
+				mRotatePerformed = false;
+			}
+			break;
+		case RotatingCCW:
+			mRotateTimer += timespan;
+			if(mRotateTimer <= RotateTime / 2)
+			{
+				mRotateAngle = -90.0f * ((float)mRotateTimer) / ((float)RotateTime);
+				mRotateScale = 1.0f - 2.0f * ((float)mRotateTimer) / ((float)RotateTime);
+			}
+			if(mRotateTimer > RotateTime / 2)
+			{
+				if(!mRotatePerformed)
+				{
+					changeRotation();
+					mRotatePerformed = true;
+				}
+				mRotateAngle = 90.0f - 90.0f * ((float)mRotateTimer) / ((float)RotateTime);
+				mRotateScale = -1.0f + 2.0f * ((float)mRotateTimer) / ((float)RotateTime);
+			}
+			if(mRotateTimer > RotateTime)
+			{
+				mRunningMode = RunningMode.Stopped;
+				mRotateTimer = 0;
+				mRotatePerformed = false;
+			}
+			break;
 		case Stopped:
 			break;
 		case RunningFast:
@@ -296,11 +366,18 @@ public class ModeGame extends Mode {
 	
 	@Override
 	public void Redraw(Canvas canvas) {
-		mGameDrawer.Draw(canvas, mWorld);
-		if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
+		if(mRunningMode == RunningMode.RotatingCCW || mRunningMode == RunningMode.RotatingCW)
 		{
-			mGameDrawer.DrawCursor(canvas, mCursorPosition.x, mCursorPosition.y, mRunningMode != RunningMode.Stopped);
+			mGameDrawer.DrawCacheBitmap(canvas, mRotateAngle, mRotateScale);
+		} else
+		{
+			mGameDrawer.Draw(canvas, mWorld);
+			if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
+			{
+				mGameDrawer.DrawCursor(canvas, mCursorPosition.x, mCursorPosition.y, mRunningMode != RunningMode.Stopped);
+			}
 		}
+
 		
 		mWidgetPage.Draw(canvas);
 		
@@ -400,7 +477,7 @@ public class ModeGame extends Mode {
 	
 	@Override
 	public void handleGesture(Direction direction) {
-		if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
+		if(mCursorPosition.x != -1 && mCursorPosition.y != -1 && mRunningMode == RunningMode.Stopped)
 		{
 			switch(direction)
 			{
@@ -443,7 +520,7 @@ public class ModeGame extends Mode {
 	}
 	
 	private void updateArrowStock() {
-		ArrayList<Direction> arrows =  mWorld.getArrowStock();
+		ArrayList<Direction> arrows = mWorld.getArrowStock();
 		EnumMap<Direction, Integer> arrow_count = new EnumMap<Direction, Integer>(Direction.class);
 		arrow_count.put(Direction.East, 0);
 		arrow_count.put(Direction.South, 0);
@@ -465,20 +542,49 @@ public class ModeGame extends Mode {
 	@Override
 	public boolean getMenu(Menu menu, boolean clear) {
 		super.getMenu(menu, clear);
-		menu.add(0, E_MENU_ROTATE, 0, R.string.game_rotate);
+		menu.add(0, E_MENU_ROTATE, 0, R.string.game_rotate).setEnabled(mRunningMode != RunningMode.RotatingCW && mRunningMode != RunningMode.RotatingCCW );
 		return true;
 	}
-	
+
+	private void changeRotation() {
+		switch(mRunningMode)
+		{
+		case RotatingCW:
+			mWorld.RotateRight();
+			mGameDrawer = mGameDrawerRot;
+			mGameDrawer.CreateCacheBitmap(mWorld);
+			updateArrowStock();
+			break;
+		case RotatingCCW:
+			mWorld.RotateLeft();
+			mGameDrawer = mGameDrawerNorm;
+			mGameDrawer.CreateCacheBitmap(mWorld);
+			updateArrowStock();
+			break;
+		}
+		mCursorPosition.x = -1;
+		mCursorPosition.y = -1;
+	}
+
 	@Override
 	public boolean handleMenuSelection(MenuItem item) {
 		switch(item.getItemId())
 		{
 		case E_MENU_ROTATE:
 			if(mWorld.getRotation() == 0)
-				mWorld.RotateRight();
+			{
+				mWorld.Reset();
+				mRotateTimer = 0;
+				mRunningMode = RunningMode.RotatingCW;
+				mGameDrawer.CreateCacheBitmap(mWorld);
+			}
 			else
-				mWorld.RotateLeft();
-			mGameDrawer.CreateBackground(mWorld);
+			{
+				mWorld.Reset();
+				mRotateTimer = 0;
+				mRunningMode = RunningMode.RotatingCCW;
+				mGameDrawer.CreateCacheBitmap(mWorld);
+			}
 			return true;
 		default:
 			return super.handleMenuSelection(item);
