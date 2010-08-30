@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="game_complete_level_complete">Level compete</string>
+    <string name="game_complete_100_complete">Pack complete</string>
+    <string name="game_complete_level_complete">Level complete</string>
     <string name="game_complete_menu">Back to menu</string>
     <string name="game_complete_next">Next</string>
     <string name="game_rotate">Rotate</string>

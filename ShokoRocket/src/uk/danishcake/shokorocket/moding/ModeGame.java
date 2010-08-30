@@ -29,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class ModeGame extends Mode {
 	private Context mContext;
@@ -587,9 +588,11 @@ public class ModeGame extends Mode {
 			
 			Button next = (Button)mCompleteDialog.findViewById(R.id.game_complete_next);
 			Button menu = (Button)mCompleteDialog.findViewById(R.id.game_complete_menu);
+			TextView progress_text = (TextView)mCompleteDialog.findViewById(R.id.game_complete_progress);
 			
 			if(mProgress.getCompletedCount() < mProgress.getLevelPackSize())
 			{
+				progress_text.setText(Integer.toString(mProgress.getCompletedCount()) + "/" + Integer.toString(mProgress.getLevelPackSize()));
 				next.setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
 						try
@@ -615,6 +618,7 @@ public class ModeGame extends Mode {
 			} else
 			{
 				next.setEnabled(false);
+				progress_text.setText(R.string.game_complete_100_complete);
 			}
 			
 			menu.setOnClickListener(new View.OnClickListener() {
