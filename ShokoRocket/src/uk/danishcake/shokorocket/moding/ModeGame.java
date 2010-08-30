@@ -15,16 +15,20 @@ import uk.danishcake.shokorocket.simulation.World;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.World.WorldState;
 import uk.danishcake.shokorocket.sound.SoundManager;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.Typeface;
-import android.graphics.Paint.Align;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 public class ModeGame extends Mode {
 	private Context mContext;
@@ -39,6 +43,7 @@ public class ModeGame extends Mode {
 	private Vector2i mCursorPosition = new Vector2i(-1, -1);
 	private EnumMap<Direction, Widget> mArrowWidgets = new EnumMap<Direction, Widget>(Direction.class);
 	boolean mCompleted = false;
+	boolean mCompleteDialogShown = false;
 	int mCompleteAge = 0;
 	private Progress mProgress;
 	
@@ -64,6 +69,8 @@ public class ModeGame extends Mode {
 	private Vector2i mGestureEnd = new Vector2i(0, 0);
 	private Direction mGestureDirection = Direction.Invalid;
 	private boolean mGestureInProgress = false;
+	
+	private Dialog mCompleteDialog = null;
 	
 	private final int E_MENU_ROTATE = 1;
 	
@@ -269,8 +276,6 @@ public class ModeGame extends Mode {
 		mWorld.Reset();
 		mRunningMode = RunningMode.Stopped;
 		mWorld.ClearArrows();
-		if(mCompleted)
-			mProgress.MarkComplete(mWorld.getIdentifier());
 		return super.Teardown();
 	}
 	
@@ -351,10 +356,20 @@ public class ModeGame extends Mode {
 				}
 			} else
 				mResetTimer = 0;
-			if(state == WorldState.Success && !mCompleted)
+			if(state == WorldState.Success)
 			{
-				mCompleted = true;
-				mCompleteAge = mAge;
+				if(!mCompleted)
+				{
+					mCompleted = true;
+					mProgress.MarkComplete(mWorld.getIdentifier());
+					mCompleteAge = mAge;
+				}
+				if(mAge > mCompleteAge + 750 && !mCompleteDialogShown)
+				{
+					Handler handler = new Handler(mContext.getMainLooper());
+					handler.post(mLevelCompleteRunnable);
+					mCompleteDialogShown = true;
+				}
 			}
 			break;
 		}
@@ -377,32 +392,8 @@ public class ModeGame extends Mode {
 				mGameDrawer.DrawCursor(canvas, mCursorPosition.x, mCursorPosition.y, mRunningMode != RunningMode.Stopped);
 			}
 		}
-
-		
+	
 		mWidgetPage.Draw(canvas);
-		
-		if(mCompleted)
-		{
-			float scale = ((float)mAge - (float)mCompleteAge) / 1500.0f;
-			if(scale > 1.0f)
-				scale = 1.0f;
-			scale = (float) Math.pow(scale, 0.5d);
-			
-			Paint text_paint = new Paint();
-			text_paint.setAntiAlias(true);
-			text_paint.setTypeface(Typeface.MONOSPACE);
-			text_paint.setTextAlign(Align.CENTER);
-			text_paint.setTextSize(50);
-			text_paint.setFakeBoldText(true);
-			text_paint.setARGB(255, 255, 255, 255);
-			int y = (int)(-(text_paint.descent() - text_paint.ascent()) + (float)mScreenHeight * scale);
-			
-			
-			canvas.drawText("Success", mScreenWidth/2, y, text_paint);
-			text_paint.setFakeBoldText(false);
-			text_paint.setARGB(255, 0, 166, 0);
-			canvas.drawText("Success", mScreenWidth/2, y, text_paint);
-		}
 		
 		if(mGestureInProgress)
 		{
@@ -433,9 +424,6 @@ public class ModeGame extends Mode {
 				mCursorPosition.y = grid_y;
 				SoundManager.PlaySound(mClickSound);
 			}
-		} else
-		{
-			mPendMode = mModeMenu;
 		}
 	}
 	
@@ -591,4 +579,76 @@ public class ModeGame extends Mode {
 		}
 		
 	}
+	
+	private Runnable mLevelCompleteRunnable = new Runnable() {
+		public void run() {
+			mCompleteDialog = new Dialog(mContext);
+			mCompleteDialog.setContentView(R.layout.game_complete);
+			
+			Button next = (Button)mCompleteDialog.findViewById(R.id.game_complete_next);
+			Button menu = (Button)mCompleteDialog.findViewById(R.id.game_complete_menu);
+			
+			if(mProgress.getCompletedCount() < mProgress.getLevelPackSize())
+			{
+				next.setOnClickListener(new View.OnClickListener() {
+					public void onClick(View v) {
+						try
+						{
+							mSemaphore.acquire();
+							mProgress.nextUnbeaten();
+							World world = mProgress.getWorld();
+							mPendMode = new ModeGame(world, mModeMenu, mProgress);
+							mSemaphore.release();
+						} catch(InterruptedException int_ex)
+						{
+							//Won't happen, has to be handled
+						} catch(Exception other_ex)
+						{
+							mPendMode = mModeMenu;
+							mSemaphore.release();
+						} finally
+						{
+							mCompleteDialog.dismiss();
+						}
+					}
+				});	
+			} else
+			{
+				next.setEnabled(false);
+			}
+			
+			menu.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					try
+					{
+						mSemaphore.acquire();
+						mPendMode = mModeMenu;
+						mCompleteDialog.dismiss();
+						mSemaphore.release();
+					} catch(InterruptedException int_ex)
+					{
+						//Won't happen, has to be handled
+					}
+
+				}
+			});
+			
+			mCompleteDialog.setOnCancelListener(new OnCancelListener() {
+				public void onCancel(DialogInterface dialog) {
+					try
+					{
+						mSemaphore.acquire();
+						mPendMode = mModeMenu;
+						mCompleteDialog.dismiss();
+						mSemaphore.release();
+					} catch(InterruptedException int_ex)
+					{
+						//Won't happen, has to be handled
+					}	
+				}
+			});
+			
+			mCompleteDialog.show();
+		}
+	};
 }

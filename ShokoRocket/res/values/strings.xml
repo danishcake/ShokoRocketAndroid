@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="game_complete_level_complete">Level compete</string>
+    <string name="game_complete_menu">Back to menu</string>
+    <string name="game_complete_next">Next</string>
     <string name="game_rotate">Rotate</string>
     <string name="editor_create_a_level_first">Create a level first</string>
     <string name="menu_editor_requies_storage">External storage not mounted, editor cannot be used</string>

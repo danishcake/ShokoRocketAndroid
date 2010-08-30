@@ -1,10 +1,6 @@
 package uk.danishcake.shokorocket.moding;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.NinePatchData;
@@ -32,10 +28,6 @@ public class ModeMenu extends Mode {
 	private Widget mLevelPackName;
 	private World mWorld = null;
 	private GameDrawer mGameDrawer = new GameDrawer();
-	private String[][] mLevels;
-	private String[] mLevelPacks;
-	private int mLevelIndex = 0;
-	private int mLevelPackIndex = 0;
 	private Context mContext;
 	private boolean mSetup = false;
 	private boolean mEditorLoaded = false;
@@ -123,8 +115,7 @@ public class ModeMenu extends Mode {
 			scrollRight.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
-					mLevelIndex++;
-					mLevelIndex %= mLevels[mLevelPackIndex].length;
+					mProgress.nextLevel();
 					ChangeLevel();
 					SoundManager.PlaySound(mClickSound);
 				}
@@ -132,9 +123,7 @@ public class ModeMenu extends Mode {
 			scrollLeft.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
-					mLevelIndex--;
-					if(mLevelIndex < 0)
-						mLevelIndex += mLevels[mLevelPackIndex].length;
+					mProgress.prevLevel();
 					ChangeLevel();
 					SoundManager.PlaySound(mClickSound);
 				}
@@ -142,10 +131,7 @@ public class ModeMenu extends Mode {
 			levelPackLeft.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
-					mLevelPackIndex--;
-					if(mLevelPackIndex < 0)
-						mLevelPackIndex += mLevels.length;
-					mLevelIndex = 0;
+					mProgress.prevLevelPack();
 					ChangeLevel();
 					SoundManager.PlaySound(mClickSound);
 				}
@@ -153,9 +139,7 @@ public class ModeMenu extends Mode {
 			levelPackRight.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
-					mLevelPackIndex++;
-					mLevelPackIndex %= mLevels.length;
-					mLevelIndex = 0;
+					mProgress.nextLevelPack();
 					ChangeLevel();
 					SoundManager.PlaySound(mClickSound);
 				}
@@ -189,7 +173,7 @@ public class ModeMenu extends Mode {
 							Toast.makeText(mContext, R.string.menu_editor_requies_storage, Toast.LENGTH_LONG).show();
 							return;
 						}
-						if(mLevelPacks[mLevelPackIndex].equals("My Levels"))
+						if(mProgress.getLevelPack().equals("My Levels"))
 						{
 							AlertDialog.Builder builder = new Builder(mContext);
 							builder.setMessage(R.string.menu_edit_this_level_prompt);
@@ -249,71 +233,7 @@ public class ModeMenu extends Mode {
 	 */
 	private void LoadLevelList()
 	{
-		try
-		{
-			String[] level_packs = mContext.getAssets().list("Levels");
-			int level_pack_id = 0;
-			int total_length = level_packs.length;
-			
-			//If external storage mounted then search it for levels
-			File[] user_packs = new File[]{};
-			if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
-			{
-				File root = new File(Environment.getExternalStorageDirectory(), "ShokoRocket");
-				user_packs = root.listFiles(new FileFilter() {
-					public boolean accept(File pathname) {
-						return pathname.isDirectory();
-					}
-				});
-				if(user_packs == null) //Folder doesn't exist
-					user_packs = new File[]{};
-				total_length += user_packs.length;
-			}
-			
-			
-			
-			mLevels = new String[total_length][];
-			mLevelPacks = new String[total_length];
-			
-			//First list levels in assets
-			for (String level_pack : level_packs) {
-				String[] levels = mContext.getAssets().list("Levels/" + level_pack);
-				ArrayList<String> level_list = new ArrayList<String>();
-				for (String level : levels) {
-					level_list.add("assets://Levels/" + level_pack + "/" + level);
-				}
-				
-				mLevels[level_pack_id] = new String[levels.length];
-				level_list.toArray(mLevels[level_pack_id]);	
-				mLevelPacks[level_pack_id] = level_pack;
-				
-				level_pack_id++;
-			}
-			
-			//Now list levels on external storage
-			for (File user_pack : user_packs)
-			{
-				File[] levels = user_pack.listFiles();
-				ArrayList<String> level_list = new ArrayList<String>();
-				for(File level : levels)
-				{
-					String path = level.getPath();
-					if(path.endsWith(".Level"))
-					{
-						level_list.add(level.getAbsolutePath());
-					}
-				}
-
-				mLevels[level_pack_id] = new String[level_list.size()];
-				level_list.toArray(mLevels[level_pack_id]);
-				mLevelPacks[level_pack_id] = user_pack.getName();		
-			
-				level_pack_id++;
-			}
-		} catch(IOException io_ex)
-		{
-			//TODO log
-		}
+		mProgress.Reload();
 	}
 	
 	/**
@@ -323,20 +243,10 @@ public class ModeMenu extends Mode {
 	{
 		try
 		{
-			String level_name = mLevels[mLevelPackIndex][mLevelIndex];
-			mLevelPackName.setText(mLevelPacks[mLevelPackIndex]);
-			
-			if(level_name.startsWith("assets://"))
-			{
-				mWorld = new World(mContext.getAssets().open(level_name.substring(9)));
-			} else
-			{
-				mWorld = new World(new FileInputStream(level_name));
-				File level_file = new File(level_name);
-				mWorld.setFilename(level_file.getName());
-			}
-			mWorld.setIdentifier(mLevels[mLevelPackIndex][mLevelIndex]);
-			mLevelName.setText(Integer.toString(mLevelIndex+1)+ "/" + Integer.toString(mLevels[mLevelPackIndex].length) + ": " + mWorld.getLevelName());
+			mLevelPackName.setText(mProgress.getLevelPack());
+			mWorld = mProgress.getWorld();
+
+			mLevelName.setText(Integer.toString(mProgress.getLevelIndex() + 1) + "/" + Integer.toString(mProgress.getLevelPackSize()) + ": " + mWorld.getLevelName()); 
 			mGameDrawer.CreateBackground(mWorld);
 			mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mBtnBorder + mBtnSize + mBtnSep + mBtnSize + 4);
 			mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());

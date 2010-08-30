@@ -46,7 +46,9 @@ public class Mode {
 	 */
 	public Mode Teardown()
 	{
-		return mPendMode;
+		Mode pend_mode = mPendMode;
+		mPendMode = null; //Allow garbage collection, otherwise could end up with a chain of ModeGames
+		return pend_mode;
 	}
 
 	/**
