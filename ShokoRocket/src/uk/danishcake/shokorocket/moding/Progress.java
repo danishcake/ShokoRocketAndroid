@@ -32,11 +32,19 @@ import android.os.Environment;
  * @author Edward Woolhouse
  */
 public class Progress {
+	/**
+	 * Represents the status of a level, whether beaten or not.
+	 * @author Edward Woolhouse
+	 */
 	private class ProgressRecord
 	{
 		public boolean beaten = false;
 		public String filename = "";
 	}
+	/**
+	 * Represents a directory or asset directory of levels
+	 * @author Edward Woolhouse
+	 */
 	private class LevelPack
 	{
 		public String levelPackName = "";
@@ -48,42 +56,73 @@ public class Progress {
 	private int mLevelPackIndex = 0;
 	private Context mContext;
 	
+	/**
+	 * Advances to next level pack, cycling at end
+	 */
 	public void nextLevelPack() {
 		mLevelPackIndex++;
 		mLevelPackIndex %= mLevels.size();
 	}
+	
+	/**
+	 * Advances to previous level pack, cycling at -1
+	 */
 	public void prevLevelPack() {
 		mLevelPackIndex--;
 		if(mLevelPackIndex < 0)
 			mLevelPackIndex += mLevels.size();
 	}
 	
+	/**
+	 * Advances to next level within pack, cycling at end to first level with same pack
+	 */
 	public void nextLevel() {
 		mLevels.get(mLevelPackIndex).levelIndex++;
 		mLevels.get(mLevelPackIndex).levelIndex %= mLevels.get(mLevelPackIndex).levels.size();
 	}
+	
+	/**
+	 *  Advances to previous level within pack, cycling at -1 within the same pack
+	 */
 	public void prevLevel() {
 		mLevels.get(mLevelPackIndex).levelIndex--;
 		if(mLevels.get(mLevelPackIndex).levelIndex < 0)
 			mLevels.get(mLevelPackIndex).levelIndex += mLevels.get(mLevelPackIndex).levels.size();	
 	}
 	
+	/**
+	 * Obtains the current level pack name
+	 */
 	public String getLevelPack() {
 		return mLevels.get(mLevelPackIndex).levelPackName;
 	}
 	
+	/**
+	 * Obtains the name of the current level
+	 */
 	public String getLevel() {
 		return mLevels.get(mLevelPackIndex).levels.get(mLevels.get(mLevelPackIndex).levelIndex).filename;
 	}
 	
+	/**
+	 * Obtains the size of the current level pack
+	 */
 	public int getLevelPackSize() {
 		return mLevels.get(mLevelPackIndex).levels.size();
 	}
 	
+	/**
+	 * Obtains the index of the current level
+	 * @return
+	 */
 	public int getLevelIndex() {
 		return mLevels.get(mLevelPackIndex).levelIndex;
 	}
 	
+	/**
+	 * Gets the number of completed levels
+	 * @return The number of completed levels within the current pack
+	 */
 	public int getCompletedCount() {
 		int complete = 0;
 		for(int i = 0; i < mLevels.get(mLevelPackIndex).levels.size(); i++)
@@ -94,10 +133,18 @@ public class Progress {
 		return complete;
 	}
 	
+	/**
+	 * Gets the beaten state of the current level
+	 * @return true if the current level is beaten
+	 */
 	public boolean getBeaten() {
 		return mLevels.get(mLevelPackIndex).levels.get(mLevels.get(mLevelPackIndex).levelIndex).beaten;
 	}
 	
+	/**
+	 * Advances to the next unbeaten level within the pack. If all are beaten already then will 
+	 * not move position
+	 */
 	public void nextUnbeaten() {
 		LevelPack lp = mLevels.get(mLevelPackIndex);
 		if(getCompletedCount() < lp.levels.size())
@@ -112,6 +159,10 @@ public class Progress {
 		}
 	}
 	
+	/**
+	 * Create a World from the currently selected level
+	 * @return the currently selected world
+	 */
 	public World getWorld() throws FileNotFoundException, IOException {
 		String level_name = getLevel();
 		if(level_name.startsWith("assets://"))
@@ -135,11 +186,17 @@ public class Progress {
 		Reload();
 	}
 	
+	/**
+	 * Causes the list of levels to be reloaded, and the progress to be reloaded
+	 */
 	public void Reload() {
 		reloadLevels();
 		reloadProgress();
 	}
 	
+	/**
+	 * Reloads the list of levels from assets and external storage
+	 */
 	private void reloadLevels() {
 		try
 		{
@@ -204,6 +261,9 @@ public class Progress {
 		}
 	}
 	
+	/**
+	 * Reloads the completed level list
+	 */
 	private void reloadProgress() {
 		//Load
 		try {
@@ -253,6 +313,9 @@ public class Progress {
 		}		
 	}
 	
+	/**
+	 * Saves the completed level list
+	 */
 	private void saveData() {
 		try {
 			FileOutputStream os = mContext.openFileOutput("ShokoRocketProgress.xml", Context.MODE_PRIVATE);
@@ -282,6 +345,9 @@ public class Progress {
 		}
 	}
 	
+	/**
+	 * Marks a specified level as completed
+	 */
 	public void MarkComplete(String level)
 	{
 		for(int j = 0; j < mLevels.size(); j++)
@@ -306,6 +372,9 @@ public class Progress {
 		
 	}
 	
+	/**
+	 * Gets the completion state of the current level
+	 */
 	public boolean IsComplete(String level)
 	{
 		for(int j = 0; j < mLevels.size(); j++)
@@ -322,7 +391,11 @@ public class Progress {
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Gets if this is the first run
+	 * @return true if the progress list has not been completed (eg no levels beaten)
+	 */
 	public static boolean IsFirstRun(Context context)
 	{
 		List<String> files = (List<String>)Arrays.asList(context.fileList()); 
