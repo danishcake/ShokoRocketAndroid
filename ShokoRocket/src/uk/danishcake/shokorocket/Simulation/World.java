@@ -620,6 +620,7 @@ public class World {
 					mWidth = Integer.parseInt(size_x.getNodeValue());
 					mHeight = Integer.parseInt(size_y.getNodeValue());
 					mWalls = new int[mWidth*mHeight];
+					mSpecialSquares = new SquareType[mWidth*mHeight];
 				} catch(NumberFormatException nfe)
 				{
 					throw new InvalidParameterException("Unable to parse x or y in size");
