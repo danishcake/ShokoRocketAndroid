@@ -58,6 +58,7 @@ public class World {
 	
 	private String mIdentifier = "";
 	private String mFilename = "";
+	private String mSplashMessage = null;
 	
 	private boolean mMouseRescued = false;
 	private int mRotation = 0;
@@ -119,6 +120,22 @@ public class World {
 	 */
 	public String getFilename() {
 		return mFilename;
+	}
+	
+	/**
+	 * Sets the splash message. This will be shown when a level is loaded.
+	 * @param message the splash message
+	 */
+	public void setSplashMessage(String message) {
+		mSplashMessage = message;
+	}
+	
+	/**
+	 * Gets the splash message. If not set or loaded then null
+	 * @return The splash message to be shown when level loaded
+	 */
+	public String getSplashMessage() {
+		return mSplashMessage;
 	}
 	
 	/**
@@ -603,6 +620,13 @@ public class World {
 			if(level_name != null)
 				mLevelName = level_name; 
 		}
+		NodeList splash_nodes = root.getElementsByTagName("Splash");
+		if(splash_nodes.getLength() >= 1)
+		{
+			String splash_text = splash_nodes.item(0).getFirstChild().getNodeValue();
+			if(splash_text != null)
+				mSplashMessage = splash_text; 
+		}
 		NodeList size_nodes = root.getElementsByTagName("Size");
 		if(size_nodes.getLength() >= 1)
 		{
@@ -853,6 +877,10 @@ public class World {
 		//Save properties
 		out.println("<Name>" + mLevelName + "</Name>");
 		out.println("<Author>" + mLevelAuthor + "</Author>");
+		if(mSplashMessage != null)
+		{
+			out.println("<Splash>" + mSplashMessage + "</Splash>");
+		}
 		out.println("<Size x=\"" + Integer.toString(mWidth) + "\" y=\"" + Integer.toString(mHeight) + "\"/>");
 		//Save walls
 		for(int y = 0; y < mHeight; y++)

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="tutorial_14">Finally, if you enjoy this game then give it a good review and tell your friends about it</string>
+    <string name="tutorial_13">If a level doesn\'t fit your screen well then press menu and select rotate</string>
+    <string name="menu_run_training_detail">This appears to be your first time playing ShokoRocket, would you like to play the training levels?</string>
+    <string name="menu_run_training">Run training?</string>
+    <string name="menu_train_me">Train me!</string>
+    <string name="game_ok">OK</string>
     <string name="game_complete_100_complete">Pack complete</string>
     <string name="game_complete_level_complete">Level complete</string>
     <string name="game_complete_menu">Back to menu</string>

@@ -73,6 +73,16 @@ public class Progress {
 			mLevelPackIndex += mLevels.size();
 	}
 	
+	public void gotoTrainingPack() {
+		for(int i = 0; i < mLevels.size(); i++)
+		{
+			if(mLevels.get(i).levelPackName.equals("11-Training"))
+			{
+				mLevelPackIndex = i;
+			}
+		}
+	}
+	
 	/**
 	 * Advances to next level within pack, cycling at end to first level with same pack
 	 */

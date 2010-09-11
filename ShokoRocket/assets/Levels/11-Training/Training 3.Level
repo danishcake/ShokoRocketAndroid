@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Level>
-<Name>Training 3</Name>
+<Name>Lesson 3</Name>
 <Author>Edward Woolhouse</Author>
+<Splash>This cat is much closer to the rocket, and will surely reach it first (resulting in much mouse murder). Thankfully a sneakily placed arrow will keep it walking in circles forever.</Splash>
 <Size x="9" y="12"/>
 <V x="0" y="0" />
 <H x="0" y="0" />
@@ -16,10 +17,13 @@
 <V x="0" y="1" />
 <V x="1" y="1" />
 <H x="1" y="1" />
+<H x="8" y="1" />
 <V x="0" y="2" />
 <V x="0" y="3" />
+<V x="7" y="3" />
 <V x="0" y="4" />
-<V x="8" y="4" />
+<H x="7" y="4" />
+<H x="8" y="4" />
 <V x="0" y="5" />
 <V x="0" y="6" />
 <V x="0" y="7" />
@@ -28,17 +32,7 @@
 <V x="0" y="10" />
 <V x="0" y="11" />
 <Mouse x="1" y="10" d="North" />
-<Cat x="7" y="9" d="North" />
+<Cat x="7" y="3" d="North" />
 <Rocket x="7" y="1" />
-<Rocket x="8" y="1" />
-<Rocket x="8" y="2" />
-<Rocket x="8" y="3" />
-<Arrow x="7" y="4" d="East"/>
-<Rocket x="8" y="4" />
-<Rocket x="8" y="5" />
-<Rocket x="8" y="6" />
-<Rocket x="8" y="7" />
-<Rocket x="8" y="8" />
-<Rocket x="8" y="9" />
-<Rocket x="8" y="10" />
+<Arrow x="7" y="2" d="East"/>
 </Level>

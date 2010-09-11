@@ -18,6 +18,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ public class ModeMenu extends Mode {
 	private boolean mEditorLoaded = false;
 	private Progress mProgress;
 	private boolean mDrawTick = false;
+	private boolean mMakeTrainingOffer = false;
 	
 	private int mBtnSize = 48;
 	private int mBtnSep = 8;
@@ -54,6 +56,7 @@ public class ModeMenu extends Mode {
 		}
 		mContext = context;
 		mProgress = new Progress(context);
+		mMakeTrainingOffer = Progress.IsFirstRun(context);
 		
 		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
 		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
@@ -158,7 +161,7 @@ public class ModeMenu extends Mode {
 				@Override
 				public void OnClick(Widget widget) {
 					if(mPendMode == null)
-						mPendMode = new ModeTutorial();
+						mPendMode = new ModeTutorial(ModeMenu.this);
 					SoundManager.PlaySound(mClickSound);
 				}
 			});
@@ -275,6 +278,12 @@ public class ModeMenu extends Mode {
 	public ModeAction Tick(int timespan) {
 		mWidgetPage.Tick(timespan);
 		mGameDrawer.Tick(timespan);
+		if(mMakeTrainingOffer)
+		{
+			Handler handler = new Handler(mContext.getMainLooper());
+			handler.post(mTrainingOffer);
+			mMakeTrainingOffer = false;
+		}
 		return super.Tick(timespan);
 	}
 	
@@ -299,4 +308,54 @@ public class ModeMenu extends Mode {
 	public void handleTap(int x, int y) {
 		mWidgetPage.handleTap(x, y);
 	}
+	
+	private Runnable mTrainingOffer = new Runnable() {
+		@Override
+		public void run() {
+			try
+			{
+				mSemaphore.acquire();
+				AlertDialog.Builder ad_builder = new Builder(mContext);
+				ad_builder.setMessage(R.string.menu_run_training_detail);
+				ad_builder.setTitle(R.string.menu_run_training);
+				ad_builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						try
+						{
+							mSemaphore.acquire();
+							
+							mSemaphore.release();
+						} catch(InterruptedException int_ex)
+						{
+							Log.e("ModeMenu.mTrainingOffer.negative", "Semaphore interupted");
+						}
+					}
+				});
+				ad_builder.setPositiveButton(R.string.menu_train_me, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						try
+						{
+							mSemaphore.acquire();
+							mProgress.gotoTrainingPack();
+							ChangeLevel();
+							mPendMode = new ModeGame(mWorld, ModeMenu.this, mProgress);
+							mSemaphore.release();
+						} catch(InterruptedException int_ex)
+						{
+							Log.e("ModeMenu.mTrainingOffer.negative", "Semaphore interupted");
+						}
+					}
+				});
+				AlertDialog ad = ad_builder.create();
+				ad.show();
+				
+				mSemaphore.release();
+			} catch(InterruptedException int_ex)
+			{
+				Log.e("ModeMenu.mTrainingOffer", "Semaphore interupted");
+			}
+		}
+	};
 }

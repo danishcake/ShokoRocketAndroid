@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Level>
-<Name>Tutorial 4</Name>
+<Name>Lesson 4</Name>
 <Author>Edward Woolhouse</Author>
+<Splash>Sometimes you don't have the right arrow for a particular task, so make do and mend! You can turn the cat south here if you use the walls.</Splash>
 <Size x="9" y="12"/>
 <V x="0" y="0" />
 <H x="0" y="0" />
@@ -16,15 +17,10 @@
 <V x="0" y="1" />
 <V x="1" y="1" />
 <H x="1" y="1" />
-<H x="2" y="1" />
-<V x="3" y="1" />
-<V x="6" y="1" />
-<H x="6" y="1" />
-<H x="7" y="1" />
-<V x="8" y="1" />
 <V x="0" y="2" />
 <V x="0" y="3" />
 <V x="0" y="4" />
+<V x="8" y="4" />
 <V x="0" y="5" />
 <V x="0" y="6" />
 <V x="0" y="7" />
@@ -33,15 +29,17 @@
 <V x="0" y="10" />
 <V x="0" y="11" />
 <Mouse x="1" y="10" d="North" />
-<Mouse x="7" y="10" d="North" />
-<Mouse x="2" y="10" d="North" />
-<Mouse x="6" y="10" d="North" />
-<Cat x="7" y="3" d="West" />
-<Cat x="1" y="3" d="East" />
-<Rocket x="1" y="1" />
-<Rocket x="2" y="1" />
-<Rocket x="6" y="1" />
+<Cat x="7" y="9" d="North" />
 <Rocket x="7" y="1" />
-<Arrow x="3" y="3" d="East"/>
-<Arrow x="5" y="3" d="West"/>
+<Rocket x="8" y="1" />
+<Rocket x="8" y="2" />
+<Rocket x="8" y="3" />
+<Arrow x="7" y="4" d="East"/>
+<Rocket x="8" y="4" />
+<Rocket x="8" y="5" />
+<Rocket x="8" y="6" />
+<Rocket x="8" y="7" />
+<Rocket x="8" y="8" />
+<Rocket x="8" y="9" />
+<Rocket x="8" y="10" />
 </Level>

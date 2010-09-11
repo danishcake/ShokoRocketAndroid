@@ -72,6 +72,7 @@ public class ModeGame extends Mode {
 	private boolean mGestureInProgress = false;
 	
 	private Dialog mCompleteDialog = null;
+   private Dialog mSplashDialog = null;
 	
 	private final int E_MENU_ROTATE = 1;
 	
@@ -284,6 +285,12 @@ public class ModeGame extends Mode {
 	public ModeAction Tick(int timespan) {
 		final int TimeRate = 5;
 		int rate = 1;
+		if(mSplashDialog == null && mWorld.getSplashMessage() != null)
+		{
+			Handler handler = new Handler(mContext.getMainLooper());
+			handler.post(mShowSplashRunnable);
+		}
+		
 		switch(mRunningMode)
 		{
 		case RotatingCW:
@@ -633,7 +640,6 @@ public class ModeGame extends Mode {
 					{
 						//Won't happen, has to be handled
 					}
-
 				}
 			});
 			
@@ -653,6 +659,33 @@ public class ModeGame extends Mode {
 			});
 			
 			mCompleteDialog.show();
+		}
+	};
+   
+   private Runnable mShowSplashRunnable = new Runnable() {
+		public void run() {
+			mSplashDialog = new Dialog(mContext);
+			mSplashDialog.setTitle(mWorld.getLevelName());
+			mSplashDialog.setContentView(R.layout.game_splash);
+			
+			TextView splash_message = (TextView)mSplashDialog.findViewById(R.id.game_splash_message);
+			Button splash_dismiss_btn = (Button)mSplashDialog.findViewById(R.id.game_splash_button);
+			
+			splash_message.setText(mWorld.getSplashMessage());
+			splash_dismiss_btn.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					try
+					{
+						mSemaphore.acquire();
+						mSplashDialog.dismiss();
+						mSemaphore.release();
+					} catch(InterruptedException int_ex)
+					{
+						//Won't happen, has to be handled
+					}
+				}
+			});
+			mSplashDialog.show();
 		}
 	};
 }

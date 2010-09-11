@@ -32,6 +32,7 @@ public class ModeTutorial extends Mode {
 	private Widget mNextButton = null;
 	private Widget mExplanation = null;
 	
+	private ModeMenu mModeMenu = null;
 	private Context mContext = null;
 	private World mWorld = null;
 	private GameDrawer mGameDrawer = new GameDrawer();
@@ -173,7 +174,6 @@ public class ModeTutorial extends Mode {
 			}
 			mExplanation.setText(mContext.getString(R.string.tutorial_12));
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
-			mNextButton.setText("Finish");
 			SoundManager.PlaySound(mClickSound);
 		}
 	},
@@ -182,7 +182,7 @@ public class ModeTutorial extends Mode {
 		public void OnClick(Widget widget) {
 			if(mPendMode == null)
 			{
-				mExplanation.setText("If a level doesn't fit your screen well then press menu and select rotate");
+				mExplanation.setText(mContext.getString(R.string.tutorial_13));
 				mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
 				mRotateStart = mAge;
 				mWorld.Reset();
@@ -195,16 +195,26 @@ public class ModeTutorial extends Mode {
 	new OnClickListener() {
 		@Override
 		public void OnClick(Widget widget) {
+			mExplanation.setText(mContext.getString(R.string.tutorial_14));
+			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
+			mNextButton.setText("Finish");
+			SoundManager.PlaySound(mClickSound);
+		}
+	},
+	new OnClickListener() {
+		@Override
+		public void OnClick(Widget widget) {
 			if(mPendMode == null)
 			{
-				mPendMode = new ModeMenu();
+				mPendMode = mModeMenu;
 				SoundManager.PlaySound(mClickSound);
 			}
 		}
 	},
 	};
 	
-	public ModeTutorial() {
+	public ModeTutorial(ModeMenu menu) {
+		mModeMenu = menu;
 	}
 	
 	public void Setup(Context context)
