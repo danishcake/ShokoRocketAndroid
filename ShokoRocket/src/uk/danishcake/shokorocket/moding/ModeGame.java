@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 
 import uk.danishcake.shokorocket.R;
+import uk.danishcake.shokorocket.ToastRunnable;
 import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.OnClickListener;
@@ -30,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ModeGame extends Mode {
 	private Context mContext;
@@ -72,7 +74,7 @@ public class ModeGame extends Mode {
 	private boolean mGestureInProgress = false;
 	
 	private Dialog mCompleteDialog = null;
-   private Dialog mSplashDialog = null;
+	private Dialog mSplashDialog = null;
 	
 	private final int E_MENU_ROTATE = 1;
 	
@@ -124,8 +126,13 @@ public class ModeGame extends Mode {
 		mGameDrawerRot.CreateBackground(mWorld);
 		mGameDrawerRot.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawerRot.getGridSize() / 2), 16);
 		mWorld.RotateLeft();
-
-
+		
+		Handler handler = new Handler(mContext.getMainLooper());
+		if(mWorld.getSplashMessage() == null)
+			handler.post(new ToastRunnable(mContext, mWorld.getLevelName() + "\n\nBy " + mWorld.getAuthor(), Toast.LENGTH_SHORT));
+		else
+			handler.post(mShowSplashRunnable);
+		
 		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
 		mBtnSize2 = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_wide_size);
 		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
@@ -285,11 +292,6 @@ public class ModeGame extends Mode {
 	public ModeAction Tick(int timespan) {
 		final int TimeRate = 5;
 		int rate = 1;
-		if(mSplashDialog == null && mWorld.getSplashMessage() != null)
-		{
-			Handler handler = new Handler(mContext.getMainLooper());
-			handler.post(mShowSplashRunnable);
-		}
 		
 		switch(mRunningMode)
 		{
