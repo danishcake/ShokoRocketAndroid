@@ -11,17 +11,10 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.NamedNodeMap;
-import org.xml.sax.SAXException;
-
-
 
 public class World extends WorldBase {
 	public enum WorldState
@@ -482,56 +475,15 @@ public class World extends WorldBase {
 	 */
 	public World(InputStream input) throws IOException
 	{
-		mUnlimitedArrows = false;
-		try
-		{
-			javax.xml.parsers.DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			dbf.setValidating(false);
-			dbf.setCoalescing(false);
-			dbf.setExpandEntityReferences(false);
-			javax.xml.parsers.DocumentBuilder dbuilder = dbf.newDocumentBuilder();
-			Document document = dbuilder.parse(input);
-			Element root = document.getDocumentElement();
-			
-			
-			loadProperties(root);
-			defaultSpecialSquares();
-			loadWalls(root);
-			loadEntities(root);
-			loadSolution(root);
-		}
-		catch(ParserConfigurationException parse_config_error)
-		{
-			throw new IOException("Unable to create parser to read XML: " + parse_config_error.getMessage());
-		}
-		catch(SAXException sax_error)
-		{
-			throw new IOException("Unable to load level due to SAX exception: " + sax_error.getMessage());
-		}
-		catch(InvalidParameterException xml_error)
-		{
-			throw new IOException("Unable to load level due to XML parameter error : " + xml_error.getMessage());
-		}
+		LoadFromXML(input);
+		//loadSpecific is then called with root element to parse
 	}
 	
-	/* Loads size, author and name etc from XML
-	 * @param root the document element in the XML level
-	 */
-	private void loadProperties(Element root) {
-		NodeList author_nodes = root.getElementsByTagName("Author");
-		if(author_nodes.getLength() >= 1)
-		{
-			String author = author_nodes.item(0).getFirstChild().getNodeValue();
-			if(author != null)
-				mLevelAuthor = author;
-		}
-		NodeList levelname_nodes = root.getElementsByTagName("Name");
-		if(levelname_nodes.getLength() >= 1)
-		{
-			String level_name = levelname_nodes.item(0).getFirstChild().getNodeValue();
-			if(level_name != null)
-				mLevelName = level_name; 
-		}
+	@Override
+	protected void loadSpecific(Element root) {
+		mUnlimitedArrows = false;
+		mSpecialSquares = new SquareType[mWidth*mHeight];
+		defaultSpecialSquares();
 		NodeList splash_nodes = root.getElementsByTagName("Splash");
 		if(splash_nodes.getLength() >= 1)
 		{
@@ -539,85 +491,8 @@ public class World extends WorldBase {
 			if(splash_text != null)
 				mSplashMessage = splash_text; 
 		}
-		NodeList size_nodes = root.getElementsByTagName("Size");
-		if(size_nodes.getLength() >= 1)
-		{
-			Node size_node = size_nodes.item(0);
-			NamedNodeMap sizes = size_node.getAttributes();
-			Node size_x = sizes.getNamedItem("x");
-			Node size_y = sizes.getNamedItem("y");
-			if(size_x == null || size_y == null)
-			{
-				throw new InvalidParameterException("Both x and y must be specified in size");			
-			} else
-			{
-				try
-				{
-					mWidth = Integer.parseInt(size_x.getNodeValue());
-					mHeight = Integer.parseInt(size_y.getNodeValue());
-					mWalls = new int[mWidth*mHeight];
-					mSpecialSquares = new SquareType[mWidth*mHeight];
-				} catch(NumberFormatException nfe)
-				{
-					throw new InvalidParameterException("Unable to parse x or y in size");
-				}
-			}
-		}
-	}
-	
-	/* Loads walls from XML
-	 * @param root the document element in the XML level
-	 */	
-	private void loadWalls(Element root) {
-		NodeList h_list = root.getElementsByTagName("H");
-		for(int i = 0; i < h_list.getLength(); i++)
-		{			
-			Node h_node = h_list.item(i);
-			NamedNodeMap wall_position_attr = h_node.getAttributes();
-			
-			Node pos_x = wall_position_attr.getNamedItem("x");
-			Node pos_y = wall_position_attr.getNamedItem("y");
-			if(pos_x == null || pos_y == null)
-			{
-				throw new InvalidParameterException("Both x and y must be specified in wall");			
-			} else
-			{
-				try
-				{
-					int x = Integer.parseInt(pos_x.getNodeValue());
-					int y = Integer.parseInt(pos_y.getNodeValue());
-					setNorth(x, y, true);
-				} catch(NumberFormatException nfe)
-				{
-					throw new InvalidParameterException("Unable to parse x or y in wall");
-				}
-			}
-		}
-		
-		NodeList v_list = root.getElementsByTagName("V");
-		for(int i = 0; i < v_list.getLength(); i++)
-		{			
-			Node v_node = v_list.item(i);
-			NamedNodeMap wall_position_attr = v_node.getAttributes();
-			
-			Node pos_x = wall_position_attr.getNamedItem("x");
-			Node pos_y = wall_position_attr.getNamedItem("y");
-			if(pos_x == null || pos_y == null)
-			{
-				throw new InvalidParameterException("Both x and y must be specified in wall");			
-			} else
-			{
-				try
-				{
-					int x = Integer.parseInt(pos_x.getNodeValue());
-					int y = Integer.parseInt(pos_y.getNodeValue());
-					setWest(x, y, true);
-				} catch(NumberFormatException nfe)
-				{
-					throw new InvalidParameterException("Unable to parse x or y in wall");
-				}
-			}
-		}
+		loadEntities(root);
+		loadSolution(root);
 	}
 	
 	/* Loads entities from XML
