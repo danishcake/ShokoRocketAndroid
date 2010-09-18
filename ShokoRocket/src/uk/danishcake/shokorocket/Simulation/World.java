@@ -460,11 +460,8 @@ public class World extends WorldBase {
 	
 	public World(int width, int height)
 	{
-		mWidth = width;
-		mHeight = height;
-		mWalls = new int[mWidth * mHeight];
+		super(width, height);
 		mSpecialSquares = new SquareType[mWidth*mHeight];
-		defaultWalls();
 		defaultSpecialSquares();
 		mUnlimitedArrows = true;
 	}
@@ -474,7 +471,7 @@ public class World extends WorldBase {
 	 */
 	public World() 
 	{
-		defaultWalls();
+		super();
 		defaultSpecialSquares();
 		mUnlimitedArrows = true;
 	}
@@ -855,21 +852,6 @@ public class World extends WorldBase {
 		out.close();
 	}
 	
-	
-	/* defaultWalls()
-	 * Sets the default walls around the edge
-	 */
-	private void defaultWalls()	{
-		for(int x = 0; x < mWidth; x++)
-		{
-			setNorth(x, 0, true);
-		}
-		for(int y = 0; y < mHeight; y++)
-		{
-			setWest(0, y, true);
-		}
-	}
-	
 	/* defaultSpecialSquares()
 	 * Sets the default special squares
 	 */
@@ -882,123 +864,7 @@ public class World extends WorldBase {
 			}
 		}
 	}
-	
-	/* wallIndex
-	 * @param x x coordinate - must be between 0 and width-1
-	 * @param y y coordinate - must be between 0 and height-1
-	 * @return index into wall array corresponding to (x,y)
-	 */
-	private int wallIndex(int x, int y)	{
-		return y * mWidth + x;
-	}
 
-	/* getNorth
-	 * Gets the north wall state
-	 */
-	public boolean getNorth(int x, int y) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		return (mWalls[wallIndex(x, y)] & eNorthWall) != 0;
-	}
-	/* getWest
-	 * Gets the west wall state
-	 */
-	public boolean getWest(int x, int y) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		return (mWalls[wallIndex(x, y)] & eWestWall) != 0;
-	}
-	/* getEast
-	 * Gets the east wall state
-	 */
-	public boolean getEast(int x, int y) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		return (mWalls[wallIndex((x + 1) % mWidth, y)] & eWestWall) != 0;
-	}
-	/* getSouth
-	 * Gets the south wall state
-	 */
-	public boolean getSouth(int x, int y) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		return (mWalls[wallIndex(x, (y + 1) % mHeight)] & eNorthWall) != 0;
-	}
-	/* getDirection
-	 * Gets the wall state for a particular direction
-	 */
-	public boolean getDirection(int x, int y, Direction direction) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		switch(direction)
-		{
-		case North:
-			return getNorth(x,y);
-		case West:
-			return getWest(x,y);
-		case East:
-			return getEast(x,y);
-		case South:
-			return getSouth(x,y);
-		}
-		return false;
-	}
-	
-	
-	/* setNorth
-	 * Sets the north wall state. Achieves this by bit twiddling.
-	 */
-	public void setNorth(int x, int y, boolean set) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		int wi = wallIndex(x, y);
-		mWalls[wi] = (mWalls[wi] & ~eNorthWall) | (set ? eNorthWall : 0);  
-	}
-	/* setWest
-	 * Sets the west wall state. Achieves this by bit twiddling.
-	 */
-	public void setWest(int x, int y, boolean set) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		int wi = wallIndex(x, y);
-		mWalls[wi] = (mWalls[wi] & ~eWestWall) | (set ? eWestWall : 0);	
-	}
-	/* setEast
-	 * Sets the east wall state. Achieves this by bit twiddling.
-	 */
-	public void setEast(int x, int y, boolean set) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		int wi = wallIndex((x+1) % mWidth, y);
-		mWalls[wi] = (mWalls[wi] & ~eWestWall) | (set ? eWestWall : 0);		
-	}
-	/* setSouth
-	 * Sets the south wall state. Achieves this by bit twiddling
-	 */ 
-	public void setSouth(int x, int y, boolean set) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		int wi = wallIndex(x, (y + 1) % mHeight);
-		mWalls[wi] = (mWalls[wi] & ~eNorthWall) | (set ? eNorthWall : 0);		
-	}
-	
-	public void toggleDirection(int x, int y, Direction direction) {
-		switch(direction)
-		{
-		case North:
-			setNorth(x, y, !getDirection(x, y, direction));
-			break;
-		case South:
-			setSouth(x, y, !getDirection(x, y, direction));
-			break;
-		case East:
-			setEast(x, y, !getDirection(x, y, direction));
-			break;
-		case West:
-			setWest(x, y, !getDirection(x, y, direction));
-			break;
-		}
-	}
 	
 	/* checkCollision
 	 * Checks if the two walkers are close
