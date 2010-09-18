@@ -113,7 +113,7 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 01.Level");			
+			InputStream world_stream = getContext().getAssets().open("Levels/01-Original Easy/Level 01.Level");			
 			World world = new World(world_stream);
 			
 			assertEquals("Edward Woolhouse", world.getAuthor());
@@ -129,7 +129,7 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 01.Level");			
+			InputStream world_stream = getContext().getAssets().open("Levels/01-Original Easy/Level 01.Level");			
 			World world = new World(world_stream);
 
 			assertEquals(12, world.getWidth());
@@ -145,7 +145,7 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 01.Level");			
+			InputStream world_stream = getContext().getAssets().open("Levels/01-Original Easy/Level 01.Level");			
 			World world = new World(world_stream);
 
 			assertTrue(world.getWest(2, 0));
@@ -162,7 +162,7 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 23.Level");			
+			InputStream world_stream = getContext().getAssets().open("Levels/01-Original Easy/Level 23.Level");			
 			World world = new World(world_stream);
 			assertEquals(10, world.getLiveMice().size());
 			assertEquals(7, world.getLiveCats().size());
@@ -179,7 +179,7 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 06.Level");			
+			InputStream world_stream = getContext().getAssets().open("Levels/01-Original Easy/Level 06.Level");			
 			World world = new World(world_stream);
 			assertEquals(1, world.getLiveMice().size());
 			Walker mouse = world.getLiveMice().get(0);
@@ -258,7 +258,7 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 23.Level");			
+			InputStream world_stream = getContext().getAssets().open("Levels/01-Original Easy/Level 23.Level");			
 			World world = new World(world_stream);
 			
 			assertFalse(world.getHole(0, 0));
@@ -305,7 +305,7 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 23.Level");			
+			InputStream world_stream = getContext().getAssets().open("Levels/01-Original Easy/Level 23.Level");			
 			World world = new World(world_stream);
 			
 			assertEquals(SquareType.Empty, world.getSpecialSquare(1, 1));
@@ -355,7 +355,7 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 23.Level");			
+			InputStream world_stream = getContext().getAssets().open("Levels/01-Original Easy/Level 23.Level");			
 			World world = new World(world_stream);
 			world.LoadSolution();
 			
