@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
 
 
 
-public class World {
+public class World extends WorldBase {
 	public enum WorldState
 	{
 		OK, Failed, Success
@@ -34,15 +34,7 @@ public class World {
 		public int y;
 		public Direction direction;
 	}
-	private int mWidth = 12;
-	private int mHeight = 9;
-	private String mLevelName = "Default";
-	private String mLevelAuthor = "Unknown";
-	
-	private final int eWestWall = 1;
-	private final int eNorthWall = 2;
-	private int[] mWalls = new int[mWidth*mHeight];
-	
+		
 	private ArrayList<Walker> mLiveMice = new ArrayList<Walker>();
 	private ArrayList<Walker> mDeadMice = new ArrayList<Walker>();
 	private ArrayList<Walker> mRescuedMice = new ArrayList<Walker>();
@@ -56,72 +48,11 @@ public class World {
 	private ArrayList<Direction> mArrowStock = new ArrayList<Direction>();
 	private boolean mUnlimitedArrows = false;
 	
-	private String mIdentifier = "";
-	private String mFilename = "";
 	private String mSplashMessage = null;
 	
 	private boolean mMouseRescued = false;
 	private int mRotation = 0;
-
-	/* getWidth
-	 * @return width of the level - defaults to 12
-	 */
-	public int getWidth() {
-		return mWidth;
-	}
-	/* getHeight
-	 * @return height of the level - defaults to 9
-	 */	
-	public int getHeight() {
-		return mHeight;
-	}
-	
-	/* getAuthor
-	 * @return the author of the map
-	 */
-	public String getAuthor() {
-		return mLevelAuthor;
-	}
-	
-	/**
-	 * Sets the level author
-	 * @param author The name of the author
-	 */
-	public void setAuthor(String author) {
-		mLevelAuthor = author;
-	}
-	
-	/* getLevelName
-	 * @return the name of the level
-	 */	
-	public String getLevelName() {
-		return mLevelName;
-	}
-	
-	/**
-	 * Sets the level name
-	 * @param name The name of the level
-	 */
-	public void setLevelName(String name) {
-		mLevelName = name;
-	}
-	
-	/**
-	 * Sets the filename. This is used to determine if a file has already been saved
-	 * @param name The filename to store. 
-	 */
-	public void setFilename(String name) {
-		mFilename = name;
-	}
-	
-	/**
-	 * Gets the filename. If it has not been set then it returns ""
-	 * @return The filename set by setFilename
-	 */
-	public String getFilename() {
-		return mFilename;
-	}
-	
+		
 	/**
 	 * Sets the splash message. This will be shown when a level is loaded.
 	 * @param message the splash message
@@ -136,22 +67,6 @@ public class World {
 	 */
 	public String getSplashMessage() {
 		return mSplashMessage;
-	}
-	
-	/**
-	 * Gets an identifier for this level 
-	 * @return
-	 */
-	public String getIdentifier() {
-		return mIdentifier;
-	}
-	
-	/**
-	 * Sets the identifier for this level. Planned use is the filename
-	 * @param id
-	 */
-	public void setIdentifier(String id) {
-		mIdentifier = id;
 	}
 	
 	/* getLiveMice
