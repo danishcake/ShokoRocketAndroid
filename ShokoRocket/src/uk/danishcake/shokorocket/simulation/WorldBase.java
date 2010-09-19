@@ -378,5 +378,106 @@ public abstract class WorldBase {
 			break;
 		}
 	}
+	
+	/* checkCollision
+	 * Checks if the two walkers are close
+	 */
+	protected boolean checkCollision(Walker cat, Walker mouse) {
+		final long FractionScale = 1000;
+		final long CollisionRadius = 333*333;
+		Vector2i cat_pos = cat.getPosition();
+		Vector2i mouse_pos = mouse.getPosition();
+		long cat_pos_x = cat_pos.x * FractionScale;
+		long cat_pos_y = cat_pos.y * FractionScale;
+		long mouse_pos_x = mouse_pos.x * FractionScale;
+		long mouse_pos_y = mouse_pos.y * FractionScale;
+		
+		switch(cat.getDirection())
+		{
+		case East:
+			cat_pos_x += cat.getFraction() * FractionScale / Walker.FractionReset;
+			break;
+		case North:
+			cat_pos_y -= cat.getFraction() * FractionScale / Walker.FractionReset;
+			break;
+		case South:
+			cat_pos_y += cat.getFraction() * FractionScale / Walker.FractionReset;
+			break;
+		case West:
+			cat_pos_x -= cat.getFraction() * FractionScale / Walker.FractionReset;
+			break;	
+		}
+		
+		switch(mouse.getDirection())
+		{
+		case East:
+			mouse_pos_x += mouse.getFraction() * FractionScale / Walker.FractionReset;
+			break;
+		case North:
+			mouse_pos_y -= mouse.getFraction() * FractionScale / Walker.FractionReset;
+			break;
+		case South:
+			mouse_pos_y += mouse.getFraction() * FractionScale / Walker.FractionReset;
+			break;
+		case West:
+			mouse_pos_x -= mouse.getFraction() * FractionScale / Walker.FractionReset;
+			break;	
+		}
+		
+		long dx = mouse_pos_x - cat_pos_x;
+		long dy = mouse_pos_y - cat_pos_y;
+		dx *= dx;
+		dy *= dy;
+		//Collision has occurred if closer than 0.333
+		long range_sqr = dx + dy;
 
+		
+		
+		
+		
+		if(mouse_pos_x > mWidth * FractionScale / 2)
+			mouse_pos_x -= mWidth * FractionScale;
+		if(mouse_pos_y > mHeight * FractionScale / 2)
+			mouse_pos_y -= mHeight * FractionScale;
+		
+		if(cat_pos_x > mWidth * FractionScale / 2)
+			cat_pos_x -= mWidth * FractionScale;
+		if(cat_pos_y > mHeight * FractionScale / 2)
+			cat_pos_y -= mHeight * FractionScale;
+		
+		long dx2 = mouse_pos_x - cat_pos_x;
+		long dy2 = mouse_pos_y - cat_pos_y;
+		dx2 *= dx2;
+		dy2 *= dy2;
+		//Collision has occurred if closer than 0.333
+		long range_sqr2 = dx2 + dy2;
+
+
+		if(range_sqr <= CollisionRadius)
+			return true;
+		if(range_sqr2 <= CollisionRadius) 
+			return true;
+		return false;
+	}
+
+	public void walkerReachNewSquare(Walker walker, int x, int y, Direction d)
+	{
+		//Now interact with walls
+		if(!getDirection(x, y, d))
+		{
+			//mDirection = mDirection; //Carry straight on!
+		} 
+		else if(getDirection(x, y, d) && 
+				!getDirection(x, y, Turns.TurnRight(d)))
+			walker.setDirection2(Turns.TurnRight(d));
+		else if(getDirection(x, y, d) &&
+				getDirection(x, y, Turns.TurnRight(d)) &&
+				!getDirection(x, y, Turns.TurnLeft(d)))
+			walker.setDirection2(Turns.TurnLeft(d));
+		else if(!getDirection(x, y, Turns.TurnAround(d)))
+			walker.setDirection2(Turns.TurnAround(d));
+		else
+			walker.setDirection2(Direction.Invalid);		
+
+	}
 }

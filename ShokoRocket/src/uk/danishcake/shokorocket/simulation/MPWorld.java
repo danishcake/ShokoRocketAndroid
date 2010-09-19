@@ -10,7 +10,6 @@ import uk.danishcake.shokorocket.simulation.Walker.WalkerType;
  * Walkers are not preserved past death, but rather thrown away (or recycled?)
  */
 public class MPWorld extends WorldBase {
-
 	protected ArrayList<Walker> mMice = new ArrayList<Walker>();
 	protected ArrayList<Walker> mCats = new ArrayList<Walker>();
 	
@@ -43,6 +42,7 @@ public class MPWorld extends WorldBase {
 			break;
 		}
 	}
+	
 	/**
 	 * Loads XML specific to the multiplayer modes - eg player locations, spawners etc
 	 */
@@ -52,5 +52,16 @@ public class MPWorld extends WorldBase {
 
 	}
 	
-	
+	public void Tick(int timespan) {
+		final int max_timespan = 100; //No more than 100ms movement, longer periods should be broken up
+		while(timespan > 0)
+		{
+			int sub_timespan = timespan;
+			if(sub_timespan > max_timespan)
+				sub_timespan = max_timespan;
+			timespan -= sub_timespan;
+			
+			
+		}
+	}
 }
