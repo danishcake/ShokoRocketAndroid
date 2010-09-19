@@ -6,7 +6,7 @@ import java.security.InvalidParameterException;
 public class Walker {
 	public enum WalkerType
 	{
-		Unknown, Cat, Mouse
+		Unknown, Cat, Mouse, MouseGold, MouseSpecial
 	}
 	public enum WalkerState
 	{
