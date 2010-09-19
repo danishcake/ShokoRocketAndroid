@@ -12,9 +12,9 @@ import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.simulation.Vector2i;
-import uk.danishcake.shokorocket.simulation.World;
+import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.simulation.Direction;
-import uk.danishcake.shokorocket.simulation.World.WorldState;
+import uk.danishcake.shokorocket.simulation.SPWorld.WorldState;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.app.Dialog;
 import android.content.Context;
@@ -40,7 +40,7 @@ public class ModeGame extends Mode {
 	private GameDrawer mGameDrawer;
 	private GameDrawer mGameDrawerRot = new GameDrawer();
 	private GameDrawer mGameDrawerNorm = new GameDrawer();
-	private World mWorld;
+	private SPWorld mWorld;
 	private ModeMenu mModeMenu;
 	private int mResetTimer = 0;
 	private static final int ResetTime = 1500;
@@ -81,7 +81,7 @@ public class ModeGame extends Mode {
 	private final int E_MENU_ROTATE = 1;
 	private final int E_MENU_BACK = 2;
 	
-	public ModeGame(World world, ModeMenu menu, Progress progress, SkinProgress skin)
+	public ModeGame(SPWorld world, ModeMenu menu, Progress progress, SkinProgress skin)
 	{
 		mWorld = world;
 		mModeMenu = menu;
@@ -593,9 +593,11 @@ public class ModeGame extends Mode {
 						try
 						{
 							mSemaphore.acquire();
+
 							mProgress.nextUnbeaten();
-							World world = mProgress.getWorld();
+							SPWorld world = mProgress.getWorld();
 							mPendMode = new ModeGame(world, mModeMenu, mProgress, mSkin);
+							
 							mSemaphore.release();
 						} catch(InterruptedException int_ex)
 						{

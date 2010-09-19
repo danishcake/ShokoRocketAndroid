@@ -7,7 +7,7 @@ import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.gui.OnClickListener;
-import uk.danishcake.shokorocket.simulation.World;
+import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.sound.SoundManager;
 
 import android.app.AlertDialog;
@@ -27,7 +27,7 @@ public class ModeMenu extends Mode {
 	private WidgetPage mWidgetPage = new WidgetPage();
 	private Widget mLevelName;
 	private Widget mLevelPackName;
-	private World mWorld = null;
+	private SPWorld mWorld = null;
 	private GameDrawer mGameDrawer;
 	private boolean mSetup = false;
 	private boolean mEditorLoaded = false;

@@ -15,7 +15,7 @@ import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.SquareType;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.Walker;
-import uk.danishcake.shokorocket.simulation.World;
+import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.simulation.Walker.WalkerState;
 
 /**
@@ -105,7 +105,7 @@ public class GameDrawer {
 	 * Creates the background texture
 	 * @param world The world to create the background texture from
 	 */
-	public void CreateBackground(World world)
+	public void CreateBackground(SPWorld world)
 	{
 		//Create background image
 		if(world != null)
@@ -151,7 +151,7 @@ public class GameDrawer {
 		}
 	}
 	
-	public void DrawTilesAndWalls(Canvas canvas, World world)
+	public void DrawTilesAndWalls(Canvas canvas, SPWorld world)
 	{
 		int wall_offset = -mWestWall.getFrameByIndex(0).getWidth() / 2;
 		for(int y = 0; y < world.getHeight(); y++)
@@ -276,7 +276,7 @@ public class GameDrawer {
 	 * @param canvas
 	 * @param world
 	 */
-	public void Draw(Canvas canvas, World world)
+	public void Draw(Canvas canvas, SPWorld world)
 	{
 		int sprite_count = 0;
 		for(int i = 0; i < mRenderItems.size(); i++)
@@ -497,7 +497,7 @@ public class GameDrawer {
 		mMouseDeathAnimation.Tick(timespan);
 	}
 	
-	public void CreateCacheBitmap(World world)
+	public void CreateCacheBitmap(SPWorld world)
 	{
 		int old_drawoffset_x = mDrawOffsetX;
 		int old_drawoffset_y = mDrawOffsetY;

@@ -41,8 +41,8 @@ import uk.danishcake.shokorocket.moding.Mode;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.SquareType;
 import uk.danishcake.shokorocket.simulation.Vector2i;
-import uk.danishcake.shokorocket.simulation.World;
-import uk.danishcake.shokorocket.simulation.World.WorldState;
+import uk.danishcake.shokorocket.simulation.SPWorld;
+import uk.danishcake.shokorocket.simulation.SPWorld.WorldState;
 import uk.danishcake.shokorocket.sound.SoundManager;
 
 public class ModeEditor extends Mode {
@@ -83,7 +83,7 @@ public class ModeEditor extends Mode {
 					TextView level_author = (TextView) mNewLevelDialog.findViewById(R.id.LevelAuthor);
 					TextView level_name = (TextView) mNewLevelDialog.findViewById(R.id.LevelName);
 					
-					mWorld = new World(Integer.parseInt((String)width_spinner.getSelectedItem()),
+					mWorld = new SPWorld(Integer.parseInt((String)width_spinner.getSelectedItem()),
 									   Integer.parseInt((String)height_spinner.getSelectedItem()));
 					mWorld.setAuthor(level_author.getText().toString());
 					mWorld.setLevelName(level_name.getText().toString());
@@ -114,7 +114,7 @@ public class ModeEditor extends Mode {
 	private Dialog mPickFilenameDialog = null;
 	private Dialog mPickPropertiesDialog = null;
 	private Dialog mShareDialog = null;	
-	private World mWorld = null;
+	private SPWorld mWorld = null;
 	private GameDrawer mGameDrawer = null;
 	private ModeMenu mModeMenu;
 	private RunningMode mRunningMode = RunningMode.Stopped;
@@ -157,7 +157,7 @@ public class ModeEditor extends Mode {
 	private final int E_MENU_ARROWMODE = 11;
 	
 	
-	public ModeEditor(ModeMenu menu, World world, SkinProgress skin)
+	public ModeEditor(ModeMenu menu, SPWorld world, SkinProgress skin)
 	{
 		mWorld = world;
 		if(world != null)
@@ -796,7 +796,7 @@ public class ModeEditor extends Mode {
 		if(mNewLevelDialog != null) {
 			
 		} else if(mWorld != null){
-			//World has been created, so at next stage
+			//SPWorld has been created, so at next stage
 			mGameDrawer.DrawTilesAndWalls(canvas, mWorld);
 			mGameDrawer.Draw(canvas, mWorld);
 			if(mCursorPosition.x != -1 && mCursorPosition.y != -1)

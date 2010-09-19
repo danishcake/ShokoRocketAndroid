@@ -16,7 +16,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.NamedNodeMap;
 
-public class World extends WorldBase {
+public class SPWorld extends WorldBase {
 	public enum WorldState
 	{
 		OK, Failed, Success
@@ -451,7 +451,7 @@ public class World extends WorldBase {
 		return mouse_rescued;
 	}
 	
-	public World(int width, int height)
+	public SPWorld(int width, int height)
 	{
 		super(width, height);
 		mSpecialSquares = new SquareType[mWidth*mHeight];
@@ -459,21 +459,21 @@ public class World extends WorldBase {
 		mUnlimitedArrows = true;
 	}
 	
-	/* World()
+	/* SPWorld()
 	 * Creates a empty world 12x9 with walls around the edge
 	 */
-	public World() 
+	public SPWorld() 
 	{
 		super();
 		defaultSpecialSquares();
 		mUnlimitedArrows = true;
 	}
 	
-	/* World(input)
+	/* SPWorld(input)
 	 * Loads a world from specified XML file
 	 * @param input an InputStream representing the level  
 	 */
-	public World(InputStream input) throws IOException
+	public SPWorld(InputStream input) throws IOException
 	{
 		LoadFromXML(input);
 		//loadSpecific is then called with root element to parse

@@ -10,7 +10,7 @@ import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.Vector2i;
-import uk.danishcake.shokorocket.simulation.World;
+import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -33,7 +33,8 @@ public class ModeTutorial extends Mode {
 	private Widget mExplanation = null;
 	
 	private ModeMenu mModeMenu = null;
-	private World mWorld = null;
+	private Context mContext = null;
+	private SPWorld mWorld = null;
 	private GameDrawer mGameDrawer = new GameDrawer();
 	
 	private Vector2i mCursorPosition = new Vector2i(-1, -1);
@@ -124,7 +125,7 @@ public class ModeTutorial extends Mode {
 		@Override
 		public void OnClick(Widget widget) {
 			try {
-				mWorld = new World(mContext.getAssets().open("TutorialLevels/Tut2.Level"));
+				mWorld = new SPWorld(mContext.getAssets().open("TutorialLevels/Tut2.Level"));
 				mGameDrawer.CreateBackground(mWorld);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -148,7 +149,7 @@ public class ModeTutorial extends Mode {
 		@Override
 		public void OnClick(Widget widget) {
 			try {
-				mWorld = new World(mContext.getAssets().open("TutorialLevels/Tut3.Level"));
+				mWorld = new SPWorld(mContext.getAssets().open("TutorialLevels/Tut3.Level"));
 				mGameDrawer.CreateBackground(mWorld);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -164,7 +165,7 @@ public class ModeTutorial extends Mode {
 		@Override
 		public void OnClick(Widget widget) {
 			try {
-				mWorld = new World(mContext.getAssets().open("TutorialLevels/Tut4.Level"));
+				mWorld = new SPWorld(mContext.getAssets().open("TutorialLevels/Tut4.Level"));
 				mWorld.LoadSolution();
 				mGameDrawer.CreateBackground(mWorld);
 			} catch (IOException e) {
@@ -265,8 +266,8 @@ public class ModeTutorial extends Mode {
 			mWidgetPage.addWidget(mNextButton);
 			mWidgetPage.addWidget(mExplanation);
 			
-			mWorld = new World(mContext.getAssets().open("TutorialLevels/Tut1.Level"));
 			mGameDrawer.Setup(mContext, mContext.getResources().getInteger(uk.danishcake.shokorocket.R.integer.tutorial_grid_size), new SkinProgress(mContext));
+			mWorld = new SPWorld(mContext.getAssets().open("TutorialLevels/Tut1.Level"));
 			mGameDrawer.setDrawOffset((mScreenWidth - mWorld.getWidth() * mGameDrawer.getGridSize()) / 2, mBtnBorder + mBtnSize * 2 + mBtnSep * 2);
 			mGameDrawer.CreateBackground(mWorld);
 		} catch(IOException io_ex) {

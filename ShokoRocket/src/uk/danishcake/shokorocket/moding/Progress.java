@@ -23,7 +23,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import uk.danishcake.shokorocket.simulation.World;
+import uk.danishcake.shokorocket.simulation.SPWorld;
 
 
 import android.content.Context;
@@ -172,19 +172,19 @@ public class Progress {
 	}
 	
 	/**
-	 * Create a World from the currently selected level
+	 * Create a SPWorld from the currently selected level
 	 * @return the currently selected world
 	 */
-	public World getWorld() throws FileNotFoundException, IOException {
+	public SPWorld getWorld() throws FileNotFoundException, IOException {
 		String level_name = getLevel();
 		if(level_name.startsWith("assets://"))
 		{
-			World world = new World(mContext.getAssets().open(level_name.substring(9)));
+			SPWorld world = new SPWorld(mContext.getAssets().open(level_name.substring(9)));
 			world.setIdentifier(level_name);
 			return world;
 		} else
 		{
-			World world = new World(new FileInputStream(level_name));
+			SPWorld world = new SPWorld(new FileInputStream(level_name));
 			File level_file = new File(level_name);
 			world.setFilename(level_file.getName());
 			

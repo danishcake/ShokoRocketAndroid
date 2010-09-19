@@ -25,7 +25,7 @@ public class Walker {
 	private int mSpeed = MouseSpeed;
 	private Direction mDirection = Direction.North;
 	private Direction mStartingDirection = Direction.North;
-	private World mWorld = null;
+	private SPWorld mWorld = null;
 	private WalkerType mWalkerType = WalkerType.Unknown;
 	private WalkerState mWalkerState = WalkerState.Alive;
 	private boolean mFirstAdvance = true;
@@ -104,7 +104,7 @@ public class Walker {
 	}
 	
 	/* setWalkerType
-	 * Sets the type of walker, called by World from addCat and addMouse
+	 * Sets the type of walker, called by SPWorld from addCat and addMouse
 	 */
 	public void setWalkerType(WalkerType walker_type) {
 		mWalkerType = walker_type;
@@ -135,7 +135,7 @@ public class Walker {
 	/* Sets the world in which the walker will turn and interact
 	 * @param world the world the walker will be active in
 	 */
-	public void setWorld(World world) {
+	public void setWorld(SPWorld world) {
 		if(world.getWidth() <= mX || world.getHeight() <= mY)
 			throw new InvalidParameterException("Unable to set world as walker outside range. Walker at (" + Integer.toString(mX) + "," + Integer.toString(mY) + "), world size is (" + Integer.toString(world.getWidth()) + "," + Integer.toString(world.getHeight()) + ")");
 		mWorld = world;
@@ -143,7 +143,7 @@ public class Walker {
 	/* Gets the world the walker is moving in
 	 * @return the world the walker is moving through
 	 */
-	public World getWorld() {
+	public SPWorld getWorld() {
 		return mWorld;
 	}
 	/**
