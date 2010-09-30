@@ -113,7 +113,32 @@ public class Progress {
 	public String getLevel() {
 		return mLevels.get(mLevelPackIndex).levels.get(mLevels.get(mLevelPackIndex).levelIndex).filename;
 	}
-	
+
+	/**
+	 * getLevelGrid
+	 * @return 3x3 array of level filenames
+	 */
+	public String[][] getLevelGrid() {
+		int lv_index;
+		int lp_index;
+		String[][] result = new String[3][3];
+		int[] offset = {-1, 0, 1};
+		for(int y = 0; y < 3; y++)
+		{
+			lp_index = mLevelPackIndex + offset[y];
+			if(lp_index < 0) lp_index += mLevels.size();
+			lp_index %= mLevels.size();
+			for(int x = 0; x < 3; x++)
+			{
+				lv_index = mLevels.get(lp_index).levelIndex + offset[x];
+				if(lv_index < 0) lv_index += mLevels.get(lp_index).levels.size();
+				lv_index %= mLevels.get(lp_index).levels.size();
+				result[x][y] = mLevels.get(lp_index).levels.get(lv_index).filename;
+			}
+		}
+		return result;
+	}
+
 	/**
 	 * Obtains the size of the current level pack
 	 */
@@ -170,11 +195,10 @@ public class Progress {
 	}
 	
 	/**
-	 * Create a World from the currently selected level
+	 * Create a World from a level filename. Able to cope with assets://
 	 * @return the currently selected world
 	 */
-	public World getWorld() throws FileNotFoundException, IOException {
-		String level_name = getLevel();
+	public World getWorld(String level_name)  throws FileNotFoundException, IOException {
 		if(level_name.startsWith("assets://"))
 		{
 			World world = new World(mContext.getAssets().open(level_name.substring(9)));
@@ -188,6 +212,15 @@ public class Progress {
 			
 			return world;
 		}
+	}
+	
+	/**
+	 * Create a World from the currently selected level
+	 * @return the currently selected world
+	 */
+	public World getWorld() throws FileNotFoundException, IOException {
+		String level_name = getLevel();
+		return getWorld(level_name);
 	}
 	
 	public Progress(Context context)

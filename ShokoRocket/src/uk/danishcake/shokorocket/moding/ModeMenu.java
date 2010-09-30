@@ -1,13 +1,14 @@
 package uk.danishcake.shokorocket.moding;
 
 import java.io.IOException;
+
 import uk.danishcake.shokorocket.R;
-import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.gui.OnClickListener;
-import uk.danishcake.shokorocket.simulation.World;
+import uk.danishcake.shokorocket.gui.WorldSelector;
+import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.sound.SoundManager;
 
 import android.app.AlertDialog;
@@ -27,14 +28,13 @@ public class ModeMenu extends Mode {
 	private WidgetPage mWidgetPage = new WidgetPage();
 	private Widget mLevelName;
 	private Widget mLevelPackName;
-	private World mWorld = null;
-	private GameDrawer mGameDrawer = new GameDrawer();
 	private Context mContext;
 	private boolean mSetup = false;
 	private boolean mEditorLoaded = false;
 	private Progress mProgress;
 	private boolean mDrawTick = false;
 	private boolean mMakeTrainingOffer = false;
+	private WorldSelector mSelector = null;
 	
 	private int mBtnSize = 48;
 	private int mBtnSep = 8;
@@ -47,7 +47,8 @@ public class ModeMenu extends Mode {
 	public void Setup(Context context) {
 		if(mSetup)
 		{
-			mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
+			//mSelector. //TODO restore tick
+			//mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
 			if(mEditorLoaded)
 				LoadLevelList();
 			mEditorLoaded = false;
@@ -73,25 +74,14 @@ public class ModeMenu extends Mode {
 		
 		try
 		{
+			mSelector = new WorldSelector(mProgress, mContext);
+			
 			NinePatchData btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/GUI/Blank64x64.png")), 24, 24, 24, 24);
 		
 			mLevelPackName = new Widget(btn_np, new Rect(mBtnSize + mBtnSep + mBtnBorder, mBtnBorder, mScreenWidth - (mBtnSize + mBtnBorder + mBtnSep), mBtnBorder + mBtnSize));
-			
-			Widget levelPackLeft = new Widget(btn_np, new Rect(mBtnBorder, mBtnBorder, mBtnBorder + mBtnSize, mBtnBorder + mBtnSize));
-			levelPackLeft.setText("<");
-
-			Widget levelPackRight = new Widget(btn_np, new Rect(mScreenWidth - (mBtnBorder + mBtnSize), mBtnBorder, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize));
-			levelPackRight.setText(">");
-			
-
+						
 			mLevelName = new Widget(btn_np, new Rect(mBtnBorder, mBtnSize + mBtnSep + mBtnBorder, mScreenWidth - mBtnBorder, mBtnSize + mBtnSep + mBtnBorder + mBtnSize)); 
 			mLevelName.setText(context.getString(R.string.menu_level_name));
-			
-			Widget scrollLeft = new Widget(btn_np, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mBtnSize + mBtnBorder, mScreenHeight - mBtnBorder));
-			scrollLeft.setText("<");
-			
-			Widget scrollRight = new Widget(btn_np, new Rect(mScreenWidth - (mBtnSize + mBtnBorder), mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
-			scrollRight.setText(">");
 			
 			Widget playMap = new Widget(btn_np, new Rect(mBtnSize + mBtnBorder + mBtnSep, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - (mBtnSize + mBtnBorder + mBtnSep), mScreenHeight - mBtnBorder));
 			playMap.setText(context.getString(R.string.menu_play));
@@ -104,55 +94,23 @@ public class ModeMenu extends Mode {
 			
 			
 			mWidgetPage.setFontSize(mFontSize);
-			mWidgetPage.addWidget(levelPackLeft);
-			mWidgetPage.addWidget(levelPackRight);
 			mWidgetPage.addWidget(mLevelPackName);
 			mWidgetPage.addWidget(mLevelName);
-			mWidgetPage.addWidget(scrollRight);
-			mWidgetPage.addWidget(scrollLeft);
 			mWidgetPage.addWidget(playMap);
 			mWidgetPage.addWidget(showTutorial);
 			mWidgetPage.addWidget(loadEditor);
-			
-		
-			scrollRight.setOnClickListener(new OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					mProgress.nextLevel();
-					ChangeLevel();
-					SoundManager.PlaySound(mClickSound);
-				}
-			});
-			scrollLeft.setOnClickListener(new OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					mProgress.prevLevel();
-					ChangeLevel();
-					SoundManager.PlaySound(mClickSound);
-				}
-			});
-			levelPackLeft.setOnClickListener(new OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					mProgress.prevLevelPack();
-					ChangeLevel();
-					SoundManager.PlaySound(mClickSound);
-				}
-			});
-			levelPackRight.setOnClickListener(new OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					mProgress.nextLevelPack();
-					ChangeLevel();
-					SoundManager.PlaySound(mClickSound);
-				}
-			});
-			
+					
 			playMap.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
-					if(mPendMode == null)
-						mPendMode = new ModeGame(mWorld, ModeMenu.this, mProgress);
+					try
+					{
+						if(mPendMode == null)
+							mPendMode = new ModeGame(mProgress.getWorld(), ModeMenu.this, mProgress);
+					} catch(IOException io_ex)
+					{
+						Log.e("playMap.onClick", "File not found, not loading level");
+					}
 					SoundManager.PlaySound(mClickSound);
 				}
 			});
@@ -185,11 +143,14 @@ public class ModeMenu extends Mode {
 									try
 									{
 										mSemaphore.acquire();
-										mPendMode = new ModeEditor(ModeMenu.this, mWorld);
+										mPendMode = new ModeEditor(ModeMenu.this, mProgress.getWorld(mSelector.getSelectedWorld()));
 										mSemaphore.release();
 									} catch(InterruptedException int_ex)
 									{
 										Log.e("ModeMenu.Setup", "Semaphore interupted");
+									} catch(IOException io_ex)
+									{
+										Log.e("ModeMenu.Setup", "IOException, not loading level");
 									}
 								}
 							});
@@ -225,8 +186,6 @@ public class ModeMenu extends Mode {
 		}
 		
 		LoadLevelList();
-		
-		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size));
 		ChangeLevel();
 		mSetup = true;
 	}
@@ -247,13 +206,17 @@ public class ModeMenu extends Mode {
 		try
 		{
 			mLevelPackName.setText(mProgress.getLevelPack());
-			mWorld = mProgress.getWorld();
 
-			mLevelName.setText(Integer.toString(mProgress.getLevelIndex() + 1) + "/" + Integer.toString(mProgress.getLevelPackSize()) + ": " + mWorld.getLevelName()); 
-			mGameDrawer.CreateBackground(mWorld);
-			mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mBtnBorder + mBtnSize + mBtnSep + mBtnSize + 4);
-			mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
-		} catch(IOException io_ex)
+//			mLevelName.setText(Integer.toString(mProgress.getLevelIndex() + 1) + "/" + Integer.toString(mProgress.getLevelPackSize()) + ": " + mWorld.getLevelName());
+			//TODO restore mLevelName
+			//mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
+			//TODO restore drawTick
+		} finally 
+		{
+			
+		}
+		/*catch(IOException io_ex)
+		{
 		{
 			Log.e("ModeMenu.ChangeLevel", "Error changing level");
 			mDrawTick = false;
@@ -261,8 +224,7 @@ public class ModeMenu extends Mode {
 				mLevelName.setText(mContext.getString(R.string.menu_error_loading));
 			else
 				mLevelName.setText(mContext.getString(R.string.menu_external_storage_unmounted));
-			mWorld = null;
-		}	
+		}*/	
 	}
 	
 	@Override
@@ -277,7 +239,7 @@ public class ModeMenu extends Mode {
 	@Override
 	public ModeAction Tick(int timespan) {
 		mWidgetPage.Tick(timespan);
-		mGameDrawer.Tick(timespan);
+		mSelector.Tick(timespan);
 		if(mMakeTrainingOffer)
 		{
 			Handler handler = new Handler(mContext.getMainLooper());
@@ -289,16 +251,12 @@ public class ModeMenu extends Mode {
 	
 	@Override
 	public void Redraw(Canvas canvas) {
-		if(mWorld != null)
-			mGameDrawer.Draw(canvas, mWorld);
-		else
-		{
-			//TODO draw a SD card symbol
-		}
+		mSelector.Draw(canvas, new Rect(0, 0, 480, 800));
 		mWidgetPage.Draw(canvas);
 		if(mDrawTick)
 		{
-			mGameDrawer.GetTick().DrawCurrentFrame(canvas, mScreenWidth - mBtnBorder - mBtnSize + mBtnBorder - mBtnSep,  mBtnBorder + mBtnSep + mBtnSize + mBtnSep);
+			//TODO restore tick
+			//mGameDrawer.GetTick().DrawCurrentFrame(canvas, mScreenWidth - mBtnBorder - mBtnSize + mBtnBorder - mBtnSep,  mBtnBorder + mBtnSep + mBtnSize + mBtnSep);
 		}
 		
 		super.Redraw(canvas);
@@ -340,11 +298,14 @@ public class ModeMenu extends Mode {
 							mSemaphore.acquire();
 							mProgress.gotoTrainingPack();
 							ChangeLevel();
-							mPendMode = new ModeGame(mWorld, ModeMenu.this, mProgress);
+							mPendMode = new ModeGame(mProgress.getWorld(), ModeMenu.this, mProgress);
 							mSemaphore.release();
 						} catch(InterruptedException int_ex)
 						{
 							Log.e("ModeMenu.mTrainingOffer.negative", "Semaphore interupted");
+						} catch(IOException io_ex)
+						{
+							Log.e("ModeMenu.mTrainingOffer.negative", "IOException, not loading level");
 						}
 					}
 				});
@@ -358,4 +319,15 @@ public class ModeMenu extends Mode {
 			}
 		}
 	};
+	
+	@Override
+	public void previewGesture(int x1, int y1, int x2, int y2,
+			Direction direction) {
+		mSelector.updateGesture(x2, y2);
+	}
+	
+	@Override
+	public void clearPreviewGesture() {
+		mSelector.finishGesture();
+	}
 }
