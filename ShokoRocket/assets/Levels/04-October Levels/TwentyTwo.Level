@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>Twenty squares 2</Name>
+<Author>Edward Woolhouse</Author>
+<Size x="5" y="4"/>
+<V x="0" y="0" />
+<H x="0" y="0" />
+<H x="1" y="0" />
+<H x="3" y="0" />
+<H x="4" y="0" />
+<V x="0" y="2" />
+<V x="0" y="3" />
+<Mouse x="3" y="2" d="North" />
+<Cat x="2" y="0" d="North" />
+<Cat x="2" y="1" d="North" />
+<Cat x="2" y="2" d="North" />
+<Cat x="3" y="1" d="East" />
+<Rocket x="1" y="0" />
+<Arrow x="1" y="2" d="North"/>
+<Arrow x="4" y="2" d="West"/>
+</Level>
