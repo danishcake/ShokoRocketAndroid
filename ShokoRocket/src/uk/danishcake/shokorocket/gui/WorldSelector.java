@@ -16,8 +16,12 @@ public class WorldSelector {
 	private Progress mProgress;
 	private GameDrawer mGameDrawer = new GameDrawer();
 	private boolean mGestureInProgress = false;
-	private int m_ltv_x;
-	private int m_ltv_y;
+	private int m_ltv_x = 0;
+	private int m_ltv_y = 0;
+	private int mStartX = 0;
+	private int mStartY = 0;
+	private boolean mLockX = true;
+	private boolean mLockY = true;
 
 	private float mRateX = 0;
 	private float mRateY = 0;
@@ -32,8 +36,8 @@ public class WorldSelector {
 	private float mRowHeight = 0;
 	private WorldItem[][] mItems = new WorldItem[3][3];
 
-	private final float MINIMUM_RATE = 0.2f; //0.2 screens/second
-	private final float DECAY_RATE = 0.2f; //0.2 screens/second^2
+	private final float MINIMUM_RATE = 0.5f; //0.4 screens/second
+	private final float DECAY_RATE = 1.0f; //0.2 screens/second^2
 
 	public WorldSelector(Progress progress, Context context)
 	{
@@ -148,22 +152,16 @@ public class WorldSelector {
 				mRateY = MINIMUM_RATE;
 			}
 			
+			float decay_x = mRateX * DECAY_RATE * dt;
 			/* Decay speed */
-			if(mRateX > MINIMUM_RATE)
+			if(Math.abs(mRateX) > MINIMUM_RATE + Math.abs(decay_x))
 			{
-				mRateX -= DECAY_RATE * dt;
+				mRateX -= decay_x;
 			}
-			if(mRateX < -MINIMUM_RATE)
+			float decay_y = mRateY * DECAY_RATE * dt;
+			if(Math.abs(mRateY) > MINIMUM_RATE + Math.abs(decay_y))
 			{
-				mRateX += DECAY_RATE * dt;
-			}
-			if(mRateY > MINIMUM_RATE)
-			{
-				mRateY -= DECAY_RATE * dt;
-			}
-			if(mRateY < -MINIMUM_RATE)
-			{
-				mRateY += DECAY_RATE * dt;
+				mRateY -= decay_y;
 			}
 			mFracX += mRateX * dt;
 			mFracY += mRateY * dt;
@@ -277,19 +275,27 @@ public class WorldSelector {
 		{
 			m_ltv_x = x;
 			m_ltv_y = y;
+			mStartX = x;
+			mStartY = y;
+			mLockX = true;
+			mLockY = true;
 			mRateFrames = 0;
 		}
 		mRateFrames++;
-		if(mRateFrames > 3)
-			mRateFrames = 3;
 		mGestureInProgress = true;
 
 		float instantaneous_rate_x = ((float)(x - m_ltv_x)) / (mColumnWidth * mLtvDt);
 		float instantaneous_rate_y = ((float)(y - m_ltv_y)) / (mRowHeight * mLtvDt);
-		float instantaneous_weight = 1.0f / (float)mRateFrames;
+		float instantaneous_weight = 1.0f / (float)((mRateFrames < 4 ? mRateFrames : 4) + 5);
 
 		mRateX = mRateX * (1.0f - instantaneous_weight) + instantaneous_rate_x * instantaneous_weight;
 		mRateY = mRateY * (1.0f - instantaneous_weight) + instantaneous_rate_y * instantaneous_weight;
+		
+		if(Math.abs(x - mStartX) > 100) mLockX = false;
+		if(Math.abs(y - mStartY) > 100) mLockY = false;
+		
+		if(mLockX) mRateX = 0;
+		if(mLockY) mRateY = 0;
 		
 		mFracX += ((float)(x - m_ltv_x)) / 480.0f;
 		mFracY += ((float)(y - m_ltv_y)) / 800.0f;
@@ -304,6 +310,10 @@ public class WorldSelector {
 	 */
 	public void finishGesture()
 	{
+		if(Math.abs(mRateX) > Math.abs(mRateY) * 5)
+			mRateY = 0;
+		else if(Math.abs(mRateY) > Math.abs(mRateX) * 5)
+			mRateX = 0;
 		mGestureInProgress = false;
 	}
 
