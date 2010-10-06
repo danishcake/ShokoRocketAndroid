@@ -75,6 +75,19 @@ public class ModeMenu extends Mode {
 		try
 		{
 			mSelector = new WorldSelector(mProgress, mContext);
+			mSelector.setWorldChangeListener(new  WorldSelector.WorldChangeListener() {
+				
+				@Override
+				public void world_changed(String world) {
+					mLevelName.setText(world);
+				}
+				
+				@Override
+				public void pack_changed(String world, String pack) {
+					mLevelName.setText(world);
+					mLevelPackName.setText(pack);
+				}
+			});
 			
 			NinePatchData btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/GUI/Blank64x64.png")), 24, 24, 24, 24);
 		

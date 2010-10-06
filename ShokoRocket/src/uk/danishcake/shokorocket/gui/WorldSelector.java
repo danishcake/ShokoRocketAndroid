@@ -13,6 +13,12 @@ import uk.danishcake.shokorocket.moding.Progress;
  * Represents a swipable widget that flicks between levels 
  */
 public class WorldSelector {
+	public static abstract class WorldChangeListener
+	{
+		public abstract void world_changed(String world);
+		public abstract void pack_changed(String world, String pack);
+	}
+	
 	private Progress mProgress;
 	private GameDrawer mGameDrawer = new GameDrawer();
 	private boolean mGestureInProgress = false;
@@ -35,6 +41,8 @@ public class WorldSelector {
 	private float mColumnWidth = 0;
 	private float mRowHeight = 0;
 	private WorldItem[][] mItems = new WorldItem[3][3];
+	
+	private WorldChangeListener mWorldChangeListener = null; 
 
 	private final float MINIMUM_RATE = 0.5f; //0.4 screens/second
 	private final float DECAY_RATE = 1.0f; //0.2 screens/second^2
@@ -191,18 +199,19 @@ public class WorldSelector {
 			mItems[2][2].set(mItems[1][2]);
 			mItems[1][2].set(mItems[0][2]);
 			
-			mProgress.nextLevel();
+			mProgress.prevLevel();
 			mProgress.nextLevelPack();
-			mProgress.nextLevel();
+			mProgress.prevLevel();
 			mProgress.prevLevelPack();
 			mProgress.prevLevelPack();
-			mProgress.nextLevel();
+			mProgress.prevLevel();
 			mProgress.nextLevelPack();
 			
 			String[][] levels = mProgress.getLevelGrid();
 			mItems[0][0].load(levels[0][0]);
 			mItems[0][1].load(levels[0][1]);
 			mItems[0][2].load(levels[0][2]);
+			mWorldChangeListener.world_changed(mProgress.getLevelDisplayName());
 		}
 		if(mFracX < -0.5) //Moving items to left
 		{
@@ -214,18 +223,19 @@ public class WorldSelector {
 			mItems[0][2].set(mItems[1][2]);
 			mItems[1][2].set(mItems[2][2]);
 			
-			mProgress.prevLevel();
+			mProgress.nextLevel();
 			mProgress.nextLevelPack();
-			mProgress.prevLevel();
+			mProgress.nextLevel();
 			mProgress.prevLevelPack();
 			mProgress.prevLevelPack();
-			mProgress.prevLevel();
+			mProgress.nextLevel();
 			mProgress.nextLevelPack();
 			
 			String[][] levels = mProgress.getLevelGrid();
 			mItems[2][0].load(levels[2][0]);
 			mItems[2][1].load(levels[2][1]);
 			mItems[2][2].load(levels[2][2]);
+			mWorldChangeListener.world_changed(mProgress.getLevelDisplayName());
 		}
 		if(mFracY > 0.5)
 		{
@@ -243,6 +253,7 @@ public class WorldSelector {
 			mItems[0][0].load(levels[0][0]);
 			mItems[1][0].load(levels[1][0]);
 			mItems[2][0].load(levels[2][0]);
+			mWorldChangeListener.pack_changed(mProgress.getLevelDisplayName(), mProgress.getLevelPack());
 		}
 		if(mFracY < -0.5)
 		{
@@ -257,9 +268,10 @@ public class WorldSelector {
 			mProgress.nextLevelPack();
 			
 			String[][] levels = mProgress.getLevelGrid();
-			mItems[0][0].load(levels[0][0]);
-			mItems[1][0].load(levels[1][0]);
-			mItems[2][0].load(levels[2][0]);
+			mItems[0][2].load(levels[0][2]);
+			mItems[1][2].load(levels[1][2]);
+			mItems[2][2].load(levels[2][2]);
+			mWorldChangeListener.pack_changed(mProgress.getLevelDisplayName(), mProgress.getLevelPack());
 		}
 		mLtvFracX = mFracX;
 		mLtvFracY = mFracY;
@@ -314,10 +326,22 @@ public class WorldSelector {
 			mRateY = 0;
 		else if(Math.abs(mRateY) > Math.abs(mRateX) * 5)
 			mRateX = 0;
+		if(Math.abs(mRateX) < MINIMUM_RATE * 1.1)
+			mRateX = 0;
+		if(Math.abs(mRateY) < MINIMUM_RATE * 1.1)
+			mRateY = 0;
 		mGestureInProgress = false;
 	}
 
 	public String getSelectedWorld() {
 		return mItems[1][1].getFilename();
+	}
+	
+	/*
+	 * Sets a 'runnable' that is notified when scrolling recenters
+	 */
+	public void setWorldChangeListener(WorldChangeListener wcl)
+	{
+		mWorldChangeListener = wcl;	
 	}
 }

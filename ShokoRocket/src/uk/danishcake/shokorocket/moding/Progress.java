@@ -26,6 +26,7 @@ import uk.danishcake.shokorocket.simulation.World;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 /**
  * Represents the progress made, allows levels to be marked as completed
@@ -40,6 +41,7 @@ public class Progress {
 	{
 		public boolean beaten = false;
 		public String filename = "";
+		public String display_name = "";
 	}
 	/**
 	 * Represents a directory or asset directory of levels
@@ -112,6 +114,13 @@ public class Progress {
 	 */
 	public String getLevel() {
 		return mLevels.get(mLevelPackIndex).levels.get(mLevels.get(mLevelPackIndex).levelIndex).filename;
+	}
+	
+	/**
+	 * Obtains the display name of the current level
+	 */
+	public String getLevelDisplayName() {
+		return mLevels.get(mLevelPackIndex).levels.get(mLevels.get(mLevelPackIndex).levelIndex).display_name;
 	}
 
 	/**
@@ -273,6 +282,16 @@ public class Progress {
 					ProgressRecord pr = new ProgressRecord();
 					pr.beaten = false;
 					pr.filename = "assets://Levels/" + level_pack + "/" + level;
+						
+					try
+					{
+						World world = getWorld(pr.filename);
+						pr.display_name = world.getLevelName();
+					} catch (IOException io_ex) {
+						Log.e("Progress.Reload", "Unable to load " + pr.filename);
+						pr.display_name = "Error loading";
+					}
+
 					lp.levels.add(pr);
 				}
 				mLevels.add(lp);
@@ -293,6 +312,14 @@ public class Progress {
 						ProgressRecord pr = new ProgressRecord();
 						pr.beaten = false;
 						pr.filename = level.getAbsolutePath();
+						try
+						{
+							World world = getWorld(pr.filename);
+							pr.display_name = world.getLevelName();
+						} catch (IOException io_ex) {
+							Log.e("Progress.Reload", "Unable to load " + pr.filename);
+							pr.display_name = "Error loading";
+						}
 						lp.levels.add(pr);
 					}
 				}
