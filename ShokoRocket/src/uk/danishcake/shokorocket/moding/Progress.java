@@ -11,7 +11,6 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +30,6 @@ import uk.danishcake.shokorocket.simulation.World;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
-import android.util.Pair;
 
 /**
  * Represents the progress made, allows levels to be marked as completed
