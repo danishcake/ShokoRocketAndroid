@@ -53,7 +53,7 @@ public class BackgroundDrawer {
 			Paint p = new Paint();
 			p.setDither(true);
 			p.setFilterBitmap(true);
-			canvas.drawBitmap(background_gradient, new Rect(0, 0, 800, 480), new Rect(0, 0, mWidth, mGradientHeight), p);
+			canvas.drawBitmap(background_gradient, new Rect(0, 0, 480, 800), new Rect(0, 0, mWidth, mGradientHeight), p);
 			
 			float uniform_scale = (float)mWidth / 480.0f;
 			mRocket = Bitmap.createBitmap((int)(rocket.getWidth() * uniform_scale), (int)(rocket.getHeight() * uniform_scale), Bitmap.Config.ARGB_8888);
