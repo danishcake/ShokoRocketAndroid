@@ -10,13 +10,17 @@ import java.io.OutputStreamWriter;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -27,6 +31,7 @@ import uk.danishcake.shokorocket.simulation.World;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
+import android.util.Pair;
 
 /**
  * Represents the progress made, allows levels to be marked as completed
@@ -54,6 +59,7 @@ public class Progress {
 		public int levelIndex;
 	}
 
+	private Map<String, String> mNameCache = new HashMap<String, String>();
 	private ArrayList<LevelPack> mLevels = new ArrayList<LevelPack>();
 	private int mLevelPackIndex = 0;
 	private Context mContext;
@@ -147,6 +153,64 @@ public class Progress {
 		}
 		return result;
 	}
+	
+	private void loadNameCache()
+	{
+		//Load
+		try {
+			FileInputStream is = mContext.openFileInput("ShokoRocketLevelCache.xml");
+			javax.xml.parsers.DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			dbf.setValidating(false);
+			dbf.setCoalescing(false);
+			dbf.setExpandEntityReferences(false);
+			javax.xml.parsers.DocumentBuilder dbuilder = dbf.newDocumentBuilder();
+			Document document = dbuilder.parse(is);
+			Element root = document.getDocumentElement();
+						
+			NodeList levels = root.getElementsByTagName("Level");
+			for(int i = 0; i < levels.getLength(); i++)
+			{
+				Node level = levels.item(i);
+				NamedNodeMap attrs = level.getAttributes();
+				
+				Node filename = attrs.getNamedItem("filename");
+				Node display_name = attrs.getNamedItem("display_name");
+				mNameCache.put(filename.getNodeValue(), display_name.getNodeValue());
+			}
+		} catch(IOException io_ex) {
+			//Do nothing
+		} catch(ParserConfigurationException parse_config_error)
+		{
+			//Do nothing
+		} catch(InvalidParameterException xml_error)
+		{
+			//Do nothing
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	
+	private void saveNameCache()
+	{
+		try {
+			FileOutputStream os = mContext.openFileOutput("ShokoRocketLevelCache.xml", Context.MODE_PRIVATE);
+			//javax.xml.Transform.* is not present until SDK 8, so write out XML by hand
+			OutputStreamWriter osw = new OutputStreamWriter(os);
+			osw.write("<NameCache>\n");
+			
+			for (Map.Entry<String, String> entry : mNameCache.entrySet()) {
+				osw.write("  <Level filename=\"" + entry.getKey() + "\" display_name = \"" + entry.getValue() + "\"/>\n");
+			}
+			osw.write("</NameCache>");
+			
+			osw.close();
+		} catch (FileNotFoundException e) {
+			//Shouldn't occur
+		} catch(IOException io_ex) {
+			//TODO log or something
+		}		
+	}
 
 	/**
 	 * Obtains the size of the current level pack
@@ -235,6 +299,7 @@ public class Progress {
 	public Progress(Context context)
 	{
 		mContext = context;
+		loadNameCache();
 		Reload();
 	}
 	
@@ -244,6 +309,7 @@ public class Progress {
 	public void Reload() {
 		reloadLevels();
 		reloadProgress();
+		saveNameCache();
 	}
 	
 	/**
@@ -282,14 +348,20 @@ public class Progress {
 					ProgressRecord pr = new ProgressRecord();
 					pr.beaten = false;
 					pr.filename = "assets://Levels/" + level_pack + "/" + level;
-						
-					try
+					if(mNameCache.containsKey(pr.filename))	
 					{
-						World world = getWorld(pr.filename);
-						pr.display_name = world.getLevelName();
-					} catch (IOException io_ex) {
-						Log.e("Progress.Reload", "Unable to load " + pr.filename);
-						pr.display_name = "Error loading";
+						pr.display_name = mNameCache.get(pr.filename);
+					} else
+					{
+						try
+						{
+							World world = getWorld(pr.filename);
+							pr.display_name = world.getLevelName();
+							mNameCache.put(pr.filename, pr.display_name);
+						} catch (IOException io_ex) {
+							Log.e("Progress.Reload", "Unable to load " + pr.filename);
+							pr.display_name = "Error loading";
+						}
 					}
 
 					lp.levels.add(pr);
