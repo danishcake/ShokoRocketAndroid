@@ -1,7 +1,10 @@
 package uk.danishcake.shokorocket.gui;
 
+import java.io.IOException;
+
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import uk.danishcake.shokorocket.animation.GameDrawer;
@@ -52,12 +55,21 @@ public class WorldSelector {
 		mProgress = progress;
 		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size));
 
+		Bitmap loading_bitmap = null;
+		try
+		{
+			loading_bitmap = BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/GUI/Loading.png"));
+		} catch(IOException io_ex)
+		{
+			//Nothing, shouldn't happen
+		}
+		
 		String[][] levels = mProgress.getLevelGrid();
 		for(int x = 0; x < 3; x++)
 		{
 			for(int y = 0; y < 3; y++)
 			{
-				mItems[x][y] = new WorldItem(mGameDrawer, mProgress);
+				mItems[x][y] = new WorldItem(mGameDrawer, mProgress, loading_bitmap);
 				mItems[x][y].load(levels[x][y]);
 			}
 		}

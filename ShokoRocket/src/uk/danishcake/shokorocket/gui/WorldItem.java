@@ -19,17 +19,19 @@ import uk.danishcake.shokorocket.simulation.World;
 public class WorldItem {
 	private GameDrawer mGameDrawer = null;
 	private Bitmap mWorldBitmap = null;
-	private static Bitmap mLoadingBitmap = null; //Possible memory leak?
+	private Bitmap mLoadingBitmap;
 	private String mWorldName = null;
 	private Progress mProgress = null;
 	private Thread mRenderThread = null;
 	private Semaphore mSemaphore = null;
+	private int mFrameCount = 0;
 
-	public WorldItem(GameDrawer game_drawer, Progress progress)
+	public WorldItem(GameDrawer game_drawer, Progress progress, Bitmap loading_bitmap)
 	{
 		mGameDrawer = game_drawer;
 		mSemaphore = new Semaphore(1);
 		mProgress = progress;
+		mLoadingBitmap = loading_bitmap;
 		if(mLoadingBitmap == null)
 		{
 			//TODO load it!
