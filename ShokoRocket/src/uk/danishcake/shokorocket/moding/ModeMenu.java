@@ -29,7 +29,6 @@ public class ModeMenu extends Mode {
 	private Widget mLevelPackName;
 	private World mWorld = null;
 	private GameDrawer mGameDrawer = new GameDrawer();
-	private Context mContext;
 	private boolean mSetup = false;
 	private boolean mEditorLoaded = false;
 	private Progress mProgress;

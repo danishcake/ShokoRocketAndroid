@@ -33,7 +33,6 @@ public class ModeTutorial extends Mode {
 	private Widget mExplanation = null;
 	
 	private ModeMenu mModeMenu = null;
-	private Context mContext = null;
 	private World mWorld = null;
 	private GameDrawer mGameDrawer = new GameDrawer();
 	

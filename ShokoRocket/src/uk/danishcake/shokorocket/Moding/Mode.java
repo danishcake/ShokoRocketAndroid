@@ -6,6 +6,7 @@ import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -171,7 +172,13 @@ public class Mode {
 	public boolean handleMenuSelection(MenuItem item)
 	{
 		if(item.getItemId() == E_MENU_SOUND)
-			SoundManager.SetEnabled(!SoundManager.GetEnabled());
+		{
+			SharedPreferences sp = mContext.getSharedPreferences("Settings", Context.MODE_PRIVATE);
+			boolean sound_enabled = !sp.getBoolean("sound_enable", true);
+			sp.edit().putBoolean("sound_enable", sound_enabled).commit();
+			SoundManager.SetEnabled(sound_enabled);
+		}
+		
 		return true;
 	}
 	

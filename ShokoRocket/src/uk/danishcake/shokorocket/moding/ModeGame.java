@@ -34,7 +34,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ModeGame extends Mode {
-	private Context mContext;
 	private WidgetPage mWidgetPage = new WidgetPage();
 	private GameDrawer mGameDrawer;
 	private GameDrawer mGameDrawerRot = new GameDrawer();

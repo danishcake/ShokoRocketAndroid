@@ -3,6 +3,8 @@ package uk.danishcake.shokorocket;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -25,6 +27,10 @@ public class ShokoRocketActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);  
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   
         					 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        
+		SharedPreferences sp = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+		boolean sound_enabled = sp.getBoolean("sound_enable", true);
+		SoundManager.SetEnabled(sound_enabled);
 
         mGameView = new GameView(this);
         setContentView(mGameView);
