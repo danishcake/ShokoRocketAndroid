@@ -32,6 +32,7 @@ public class Mode {
 	protected int mScreenHeight = 320;
 	
 	private final int E_MENU_SOUND = 99;
+	private final int E_MENU_AUTOROTATE = 98;
 
 	/**
 	 * Called before the first Tick to allow creation of state, after the previous 
@@ -161,6 +162,13 @@ public class Mode {
 			menu.add(0, E_MENU_SOUND, 0, R.string.menu_sound_on);
 		else
 			menu.add(0, E_MENU_SOUND, 0, R.string.menu_sound_off);
+
+
+		SharedPreferences sp = mContext.getSharedPreferences("Settings", Context.MODE_PRIVATE);
+		if(sp.getBoolean("auto_rotate", true))
+			menu.add(0, E_MENU_AUTOROTATE, 0, R.string.menu_autorotate_on);
+		else
+			menu.add(0, E_MENU_AUTOROTATE, 0, R.string.menu_autorotate_off);
 		return true;
 	}
 
@@ -171,12 +179,18 @@ public class Mode {
 	 */
 	public boolean handleMenuSelection(MenuItem item)
 	{
+		SharedPreferences sp = mContext.getSharedPreferences("Settings", Context.MODE_PRIVATE);
 		if(item.getItemId() == E_MENU_SOUND)
 		{
-			SharedPreferences sp = mContext.getSharedPreferences("Settings", Context.MODE_PRIVATE);
 			boolean sound_enabled = !sp.getBoolean("sound_enable", true);
 			sp.edit().putBoolean("sound_enable", sound_enabled).commit();
 			SoundManager.SetEnabled(sound_enabled);
+		}
+		
+		if(item.getItemId() == E_MENU_AUTOROTATE)
+		{
+			boolean auto_rotate_enabled = !sp.getBoolean("auto_rotate", true);
+			sp.edit().putBoolean("auto_rotate", auto_rotate_enabled).commit();
 		}
 		
 		return true;

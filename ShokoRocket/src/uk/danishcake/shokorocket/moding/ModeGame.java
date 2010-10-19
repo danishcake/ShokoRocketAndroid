@@ -19,6 +19,7 @@ import uk.danishcake.shokorocket.sound.SoundManager;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -126,9 +127,20 @@ public class ModeGame extends Mode {
 		mGameDrawerRot.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawerRot.getGridSize() / 2), 16);
 		mWorld.RotateLeft();
 		
+		SharedPreferences sp = mContext.getSharedPreferences("Settings", Context.MODE_PRIVATE);
+		boolean auto_rotate = sp.getBoolean("auto_rotate", true);
+		if(smaller_rot > smaller && auto_rotate)
+		{
+			mRunningMode = RunningMode.AutoRotating;
+			mRotateTimer = 0;
+			mGameDrawer.CreateCacheBitmap(mWorld);
+		}
+		
 		Handler handler = new Handler(mContext.getMainLooper());
 		if(mWorld.getSplashMessage() == null)
+		{
 			handler.post(new ToastRunnable(mContext, mWorld.getLevelName() + "\n\nBy " + mWorld.getAuthor(), Toast.LENGTH_SHORT));
+		}
 		else
 			handler.post(mShowSplashRunnable);
 		
@@ -294,6 +306,15 @@ public class ModeGame extends Mode {
 		
 		switch(mRunningMode)
 		{
+		case AutoRotating:
+			mRotateTimer += timespan;
+			if(mRotateTimer > 250)
+			{
+				mWorld.Reset();
+				mRotateTimer = 0;
+				mRunningMode = RunningMode.RotatingCW;
+			}
+			break;
 		case RotatingCW:
 			mRotateTimer += timespan;
 			if(mRotateTimer <= RotateTime / 2)
