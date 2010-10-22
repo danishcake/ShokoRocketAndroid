@@ -259,7 +259,7 @@ public class ModeTutorial extends Mode {
 			mExplanation = new Widget(btn_np, new Rect(mBtnBorder,
 													   mBtnBorder,
 													   mScreenWidth - mBtnBorder,
-													   mBtnBorder + mBtnSize * 2)); 
+													   mBtnBorder + mBtnSize * 2 + mBtnSep)); 
 			mExplanation.setText("How to play ShokoRocket!");
 			
 			mWidgetPage.setFontSize(mFontSize);
@@ -268,7 +268,7 @@ public class ModeTutorial extends Mode {
 			
 			mWorld = new World(mContext.getAssets().open("TutorialLevels/Tut1.Level"));
 			mGameDrawer.Setup(mContext, mContext.getResources().getInteger(uk.danishcake.shokorocket.R.integer.grid_size));
-			mGameDrawer.setDrawOffset((mScreenWidth - mWorld.getWidth() * mGameDrawer.getGridSize()) / 2, mBtnBorder + mBtnSize * 2 + mBtnSep);
+			mGameDrawer.setDrawOffset((mScreenWidth - mWorld.getWidth() * mGameDrawer.getGridSize()) / 2, mBtnBorder + mBtnSize * 2 + mBtnSep * 2);
 			mGameDrawer.CreateBackground(mWorld);
 		} catch(IOException io_ex) {
 			//TODO log

@@ -4,8 +4,8 @@
     <integer name="preview_grid_size">16</integer>
     <integer name="btn_size">32</integer>
     <integer name="btn_wide_size">64</integer>
-    <integer name="btn_sep">8</integer>
-    <integer name="btn_border">8</integer>
+    <integer name="btn_sep">4</integer>
+    <integer name="btn_border">4</integer>
     <integer name="btn_font_size">14</integer>
     <integer name="level_border">4</integer>
     <integer name="np_border">12</integer>
