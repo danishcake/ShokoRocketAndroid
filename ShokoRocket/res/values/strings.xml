@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="tutorial_14">Finally, if you enjoy this game then give it a good review and tell your friends about it</string>
-    <string name="tutorial_13">If a level doesn\'t fit your screen well then press menu and select rotate</string>
+	<string name="tutorial_15">Finally, if you enjoy this game then give it a good review and tell your friends about it</string>
+    <string name="tutorial_14">Press menu to see rotation options</string>
+    <string name="tutorial_13">The rotation will find the best fit by default. You can also manually rotate</string>
     <string name="menu_run_training_detail">This appears to be your first time playing ShokoRocket, would you like to play the training levels?</string>
     <string name="menu_run_training">Run training?</string>
     <string name="menu_train_me">Train me!</string>
@@ -84,6 +85,6 @@
     <string name="level_width_label">Level width</string>
     <string name="level_height_label">Level height</string>
     <string name="app_description">A clone of Chu Chu Rocket, save the mice from the evil cats!</string>
-    
+    <string name="nine_patch_file">Bitmaps/GUI/Blank32x32.png</string>
     <string name="app_name">Shoko Rocket</string>
 </resources>

@@ -44,7 +44,6 @@ public class ModeGame extends Mode {
 	private int mResetTimer = 0;
 	private static final int ResetTime = 1500;
 	private Vector2i mCursorPosition = new Vector2i(-1, -1);
-	private EnumMap<Direction, Widget> mArrowWidgets = new EnumMap<Direction, Widget>(Direction.class);
 	boolean mCompleted = false;
 	boolean mCompleteDialogShown = false;
 	int mCompleteAge = 0;
@@ -55,6 +54,7 @@ public class ModeGame extends Mode {
 	private int mBtnSep = 8;
 	private int mBtnBorder = 16;
 	private int mFontSize = 16;
+	private int mLevelBorder = 8;
 	
 	private int mCatSound = -1;
 	private int mClickSound = -1;
@@ -77,6 +77,7 @@ public class ModeGame extends Mode {
 	private Dialog mSplashDialog = null;
 	
 	private final int E_MENU_ROTATE = 1;
+	private final int E_MENU_BACK = 2;
 	
 	public ModeGame(World world, ModeMenu menu, Progress progress)
 	{
@@ -98,16 +99,25 @@ public class ModeGame extends Mode {
 	@Override
 	public void Setup(Context context) {
 		mContext = context;
+		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
+		mBtnSize2 = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_wide_size);
+		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
+		mBtnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
+		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
+		mLevelBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.level_border);
+		
 		//Setup autoscaling twice, for portrait and landscape orientations
 		int grid_size = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.grid_size);
 		int required_width = mWorld.getWidth() * grid_size;
 		int required_height = mWorld.getHeight() * grid_size;
-		float scaleX = ((float)mScreenWidth - 16) / (float)required_width;
-		float scaleY = ((float)(mScreenHeight - 156 - 8)) / (float)required_height;
-		float scaleX_rot = ((float)mScreenWidth - 16) / (float)required_height;
-		float scaleY_rot = ((float)(mScreenHeight - 156 - 8)) / (float)required_width;
+		float scaleX = ((float)mScreenWidth - mLevelBorder * 2) / (float)required_width;
+		float scaleY = ((float)(mScreenHeight - mBtnSize - mBtnBorder - mLevelBorder * 2)) / (float)required_height;
+		float scaleX_rot = ((float)mScreenWidth - mLevelBorder * 2) / (float)required_height;
+		float scaleY_rot = ((float)(mScreenHeight - mBtnSize - mBtnBorder - mLevelBorder * 2)) / (float)required_width;
 		float smaller = scaleX < scaleY ? scaleX : scaleY;
 		float smaller_rot = scaleX_rot < scaleY_rot ? scaleX_rot : scaleY_rot;
+		
+		
 
 		mGameDrawer = mGameDrawerNorm;
 		if(smaller < 1)
@@ -144,20 +154,11 @@ public class ModeGame extends Mode {
 		else
 			handler.post(mShowSplashRunnable);
 		
-		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
-		mBtnSize2 = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_wide_size);
-		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
-		mBtnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
-		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
-
 		NinePatchData btn_np;
 		try {
-			btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/GUI/Blank64x64.png")), 24, 24, 24, 24);
-			NinePatchData west_arrow_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/GUI/WestArrowBox.png")), 8, 8, 22, 42);
-			NinePatchData north_arrow_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/GUI/NorthArrowBox.png")), 8, 8, 22, 42);
-			NinePatchData south_arrow_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/GUI/SouthArrowBox.png")), 8, 8, 22, 42);
-			NinePatchData east_arrow_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/GUI/EastArrowBox.png")), 8, 8, 22, 42);
-			
+			int np_border = context.getResources().getInteger(R.integer.np_border);
+			String np_file = context.getResources().getString(R.string.nine_patch_file); 
+			btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open(np_file)), np_border, np_border, np_border, np_border);			
 			
 			Widget reset = new Widget(btn_np, new Rect(mScreenWidth - (mBtnSize2 + mBtnBorder), mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
 			reset.setText(context.getString(R.string.game_reset));
@@ -192,97 +193,11 @@ public class ModeGame extends Mode {
 				}
 			});
 			
-			
-			Widget back = new Widget(btn_np, new Rect(mBtnBorder, mScreenHeight - mBtnSize - mBtnBorder, mBtnBorder + mBtnSize2, mScreenHeight - mBtnBorder));
-			back.setText(context.getString(R.string.game_back));
-			back.setOnClickListener(new OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					SoundManager.PlaySound(mClickSound);
-					mPendMode = mModeMenu;
-				}
-			});
-			
 			reset.setFontSize(mFontSize);
 			go.setFontSize(mFontSize);
-			back.setFontSize(mFontSize);
-			
-			Widget west_arrows = new Widget(west_arrow_np, new Rect(16, mScreenHeight - 72 - mBtnBorder - mBtnSize - mBtnSep, mBtnBorder + 48, mScreenHeight - mBtnBorder - mBtnSize - mBtnSep));
-			west_arrows.setText("0");
-			west_arrows.setVerticalAlignment(Widget.VerticalAlignment.Top);
-			west_arrows.setOnClickListener(new OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					SoundManager.PlaySound(mClickSound);
-					if(mCursorPosition.x != -1 && mCursorPosition.y != -1 && mRunningMode == RunningMode.Stopped)
-						mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.West);
-					updateArrowStock();
-				}
-			});			
-			
-			//Given width 480 take 16 from each side and width -> 400 ->100 spacing
-			Widget north_arrows = new Widget(north_arrow_np, new Rect(mBtnBorder + (mScreenWidth - mBtnBorder * 2 - 48) / 3,
-																	  mScreenHeight - 72 - mBtnBorder - mBtnSize - mBtnSep, 
-																	  mBtnBorder + (mScreenWidth - mBtnBorder * 2 - 48) / 3 + 48, 
-																	  mScreenHeight - mBtnBorder - mBtnSize - mBtnSep));
-			north_arrows.setText("0");
-			north_arrows.setVerticalAlignment(Widget.VerticalAlignment.Top);
-			north_arrows.setOnClickListener(new OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					SoundManager.PlaySound(mClickSound);
-					if(mCursorPosition.x != -1 && mCursorPosition.y != -1 && mRunningMode == RunningMode.Stopped)
-						mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.North);
-					updateArrowStock();
-				}
-			});
-			
-			Widget south_arrows = new Widget(south_arrow_np, new Rect(mBtnBorder + 2 * (mScreenWidth - mBtnBorder * 2 - 48) / 3,
-																	  mScreenHeight - 72 - mBtnBorder - mBtnSize - mBtnSep, 
-																	  mBtnBorder + 2 * (mScreenWidth - mBtnBorder * 2 - 48) / 3 + 48, 
-																	  mScreenHeight - mBtnBorder - mBtnSize - mBtnSep));
-			south_arrows.setText("0");
-			south_arrows.setVerticalAlignment(Widget.VerticalAlignment.Top);
-			south_arrows.setOnClickListener(new OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					SoundManager.PlaySound(mClickSound);
-					if(mCursorPosition.x != -1 && mCursorPosition.y != -1 && mRunningMode == RunningMode.Stopped)
-						mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.South);
-					updateArrowStock();
-				}
-			});
-		
-			Widget east_arrows = new Widget(east_arrow_np, new Rect(mScreenWidth - mBtnBorder - 48,
-																	mScreenHeight - 72 - mBtnBorder - mBtnSize - mBtnSep,
-																	mScreenWidth - mBtnBorder,
-																	mScreenHeight - mBtnBorder - mBtnSize - mBtnSep));
-			east_arrows.setText("0");
-			east_arrows.setVerticalAlignment(Widget.VerticalAlignment.Top);
-			east_arrows.setOnClickListener(new OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					SoundManager.PlaySound(mClickSound);
-					if(mCursorPosition.x != -1 && mCursorPosition.y != -1 && mRunningMode == RunningMode.Stopped)
-						mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, Direction.East);
-					updateArrowStock();
-				}
-			});
-			
-			mArrowWidgets.put(Direction.West, west_arrows);
-			mArrowWidgets.put(Direction.North, north_arrows);
-			mArrowWidgets.put(Direction.South, south_arrows);
-			mArrowWidgets.put(Direction.East, east_arrows);
-		
-			
+						
 			mWidgetPage.addWidget(reset);
-			mWidgetPage.addWidget(go);
-			mWidgetPage.addWidget(back);
-			mWidgetPage.addWidget(west_arrows);
-			mWidgetPage.addWidget(north_arrows);
-			mWidgetPage.addWidget(south_arrows);
-			mWidgetPage.addWidget(east_arrows);
-			
+			mWidgetPage.addWidget(go);			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -547,20 +462,15 @@ public class ModeGame extends Mode {
 		for (Direction arrow : arrows) {
 			arrow_count.put(arrow, arrow_count.get(arrow) + 1); 
 		}
-		for(Direction direction : Direction.values())
-		{
-			Widget widget = mArrowWidgets.get(direction);
-			if(widget != null)
-			{
-				widget.setText(arrow_count.get(direction).toString());
-			}
-		}
+
+		//TODO refresh gui
 	}
 	
 	@Override
 	public boolean getMenu(Menu menu, boolean clear) {
 		super.getMenu(menu, clear);
 		menu.add(0, E_MENU_ROTATE, 0, R.string.game_rotate).setEnabled(mRunningMode != RunningMode.RotatingCW && mRunningMode != RunningMode.RotatingCCW );
+		menu.add(0, E_MENU_BACK, 0, R.string.game_back);
 		return true;
 	}
 
@@ -604,6 +514,8 @@ public class ModeGame extends Mode {
 				mGameDrawer.CreateCacheBitmap(mWorld);
 			}
 			return true;
+		case E_MENU_BACK:
+			mPendMode = mModeMenu;
 		default:
 			return super.handleMenuSelection(item);
 		}

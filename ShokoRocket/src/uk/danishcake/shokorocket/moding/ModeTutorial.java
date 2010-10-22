@@ -194,7 +194,18 @@ public class ModeTutorial extends Mode {
 	new OnClickListener() {
 		@Override
 		public void OnClick(Widget widget) {
-			mExplanation.setText(mContext.getString(R.string.tutorial_14));
+			if(mPendMode == null)
+			{
+				mExplanation.setText(mContext.getString(R.string.tutorial_14));
+				mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
+				SoundManager.PlaySound(mClickSound);
+			}
+		}
+	},
+	new OnClickListener() {
+		@Override
+		public void OnClick(Widget widget) {
+			mExplanation.setText(mContext.getString(R.string.tutorial_15));
 			mNextButton.setOnClickListener(mTutorialStages[++mTutorialStage]);
 			mNextButton.setText("Finish");
 			SoundManager.PlaySound(mClickSound);
@@ -234,7 +245,9 @@ public class ModeTutorial extends Mode {
 		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
 		
 		try {
-			NinePatchData btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/GUI/Blank64x64.png")), 24, 24, 24, 24);
+			int np_border = context.getResources().getInteger(R.integer.np_border);
+			String np_file = context.getResources().getString(R.string.nine_patch_file);  
+			NinePatchData btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open(np_file)), np_border, np_border, np_border, np_border);
 			
 			mNextButton = new Widget(btn_np, new Rect(mBtnBorder, 
 													  mScreenHeight - mBtnBorder - mBtnSize,

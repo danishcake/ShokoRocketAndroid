@@ -7,4 +7,6 @@
     <integer name="btn_sep">8</integer>
     <integer name="btn_border">16</integer>
     <integer name="btn_font_size">28</integer>
+    <integer name="level_border">8</integer>
+    <integer name="np_border">24</integer>
 </resources>

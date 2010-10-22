@@ -72,7 +72,9 @@ public class ModeMenu extends Mode {
 		
 		try
 		{
-			NinePatchData btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open("Bitmaps/GUI/Blank64x64.png")), 24, 24, 24, 24);
+			int np_border = context.getResources().getInteger(R.integer.np_border);
+			String np_file = context.getResources().getString(R.string.nine_patch_file); 
+			NinePatchData btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open(np_file)), np_border, np_border, np_border, np_border);
 		
 			mLevelPackName = new Widget(btn_np, new Rect(mBtnSize + mBtnSep + mBtnBorder, mBtnBorder, mScreenWidth - (mBtnSize + mBtnBorder + mBtnSep), mBtnBorder + mBtnSize));
 			

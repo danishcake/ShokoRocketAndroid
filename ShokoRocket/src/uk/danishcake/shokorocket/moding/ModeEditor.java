@@ -192,7 +192,9 @@ public class ModeEditor extends Mode {
 		mWidgetPage.setFontSize(mFontSize);
 		try
 		{
-			NinePatchData np = new NinePatchData(BitmapFactory.decodeStream(mContext.getAssets().open("Bitmaps/GUI/Blank64x64.png")), 24, 24, 24, 24);
+			int np_border = mContext.getResources().getInteger(R.integer.np_border);
+			String np_file = mContext.getResources().getString(R.string.nine_patch_file); 
+			NinePatchData np = new NinePatchData(BitmapFactory.decodeStream(mContext.getAssets().open(np_file)), np_border, np_border, np_border, np_border);
 			mEditModeWidget = new Widget(np, new Rect(mScreenWidth  - mBtnSize2 * 2 - mBtnBorder + mBtnSep, 
 													  mScreenHeight - mBtnSize - mBtnBorder, 
 													  mScreenWidth  - mBtnBorder, 
