@@ -130,11 +130,11 @@ public class ModeGame extends Mode {
 			mGameDrawerRot.Setup(mContext, grid_size );
 
 		mGameDrawer.CreateBackground(mWorld);
-		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), 16);
+		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mLevelBorder);
 
 		mWorld.RotateRight();
 		mGameDrawerRot.CreateBackground(mWorld);
-		mGameDrawerRot.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawerRot.getGridSize() / 2), 16);
+		mGameDrawerRot.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawerRot.getGridSize() / 2), mLevelBorder);
 		mWorld.RotateLeft();
 		
 		SharedPreferences sp = mContext.getSharedPreferences("Settings", Context.MODE_PRIVATE);

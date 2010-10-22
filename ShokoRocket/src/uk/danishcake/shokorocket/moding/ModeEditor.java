@@ -170,17 +170,19 @@ public class ModeEditor extends Mode {
 		mGameDrawer = new GameDrawer();
 
 		int grid_size = mContext.getResources().getInteger(R.integer.grid_size);
+		int level_border = mContext.getResources().getInteger(uk.danishcake.shokorocket.R.integer.level_border);
 		int required_width = mWorld.getWidth() * grid_size ;
 		int required_height = mWorld.getHeight() * grid_size ;
-		float scaleX = ((float)mScreenWidth - 16) / (float)required_width;
-		float scaleY = ((float)(mScreenHeight - 156 - 8)) / (float)required_height;
+		float scaleX = ((float)mScreenWidth - level_border  * 2) / (float)required_width;
+		float scaleY = ((float)(mScreenHeight - mBtnSize - mBtnBorder - level_border  * 2)) / (float)required_height;
+
 		float smaller = scaleX < scaleY ? scaleX : scaleY;
 		
 		if(smaller < 1)
 			mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller));
 		else
 			mGameDrawer.Setup(mContext, grid_size );
-		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), 16);
+		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), level_border);
 		
 	}
 	
@@ -195,17 +197,17 @@ public class ModeEditor extends Mode {
 			int np_border = mContext.getResources().getInteger(R.integer.np_border);
 			String np_file = mContext.getResources().getString(R.string.nine_patch_file); 
 			NinePatchData np = new NinePatchData(BitmapFactory.decodeStream(mContext.getAssets().open(np_file)), np_border, np_border, np_border, np_border);
-			mEditModeWidget = new Widget(np, new Rect(mScreenWidth  - mBtnSize2 * 2 - mBtnBorder + mBtnSep, 
-													  mScreenHeight - mBtnSize - mBtnBorder, 
-													  mScreenWidth  - mBtnBorder, 
-													  mScreenHeight - mBtnBorder));
+			mEditModeWidget = new Widget(np, new Rect(mScreenWidth / 2  + mBtnBorder, 
+													  mScreenHeight     - mBtnSize - mBtnBorder, 
+													  mScreenWidth      - mBtnBorder, 
+													  mScreenHeight     - mBtnBorder));
 			mEditModeWidget.setText(mContext.getString(R.string.editor_mode_walls));
 			mEditMode = EditMode.Walls;
 			
-			mTryWidget = new Widget(np, new Rect(mScreenWidth  - mBtnSize2 * 4 - mBtnBorder, 
-												 mScreenHeight - mBtnSize - mBtnBorder, 
-												 mScreenWidth  - mBtnSize2 * 2 - mBtnBorder - mBtnSep, 
-												 mScreenHeight - mBtnBorder));
+			mTryWidget = new Widget(np, new Rect(mBtnBorder, 
+												 mScreenHeight     - mBtnSize - mBtnBorder, 
+												 mScreenWidth / 2  - mBtnSep, 
+												 mScreenHeight     - mBtnBorder));
 			mTryWidget.setText(mContext.getString(R.string.editor_run_speed_try));
 			
 			
