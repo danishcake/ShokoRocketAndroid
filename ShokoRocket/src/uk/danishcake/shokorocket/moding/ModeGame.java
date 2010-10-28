@@ -193,11 +193,61 @@ public class ModeGame extends Mode {
 				}
 			});
 			
+			//Load arrow buttons
+			
+			NinePatchData np_left_arrows = new NinePatchData(BitmapFactory.decodeStream(mContext.getResources().openRawResource(R.raw.arrow_button_left)),
+															 mContext.getResources().getInteger(R.integer.arrow_btn_left),
+															 mContext.getResources().getInteger(R.integer.arrow_btn_right),
+															 mContext.getResources().getInteger(R.integer.arrow_btn_top),
+															 mContext.getResources().getInteger(R.integer.arrow_btn_bottom));
+			NinePatchData np_right_arrows = new NinePatchData(BitmapFactory.decodeStream(mContext.getResources().openRawResource(R.raw.arrow_button_right)),
+													 		  mContext.getResources().getInteger(R.integer.arrow_btn_left),
+															  mContext.getResources().getInteger(R.integer.arrow_btn_right),
+															  mContext.getResources().getInteger(R.integer.arrow_btn_top),
+															  mContext.getResources().getInteger(R.integer.arrow_btn_bottom));
+			NinePatchData np_top_arrows = new NinePatchData(BitmapFactory.decodeStream(mContext.getResources().openRawResource(R.raw.arrow_button_up)),
+															mContext.getResources().getInteger(R.integer.arrow_btn_left),
+															mContext.getResources().getInteger(R.integer.arrow_btn_right),
+															mContext.getResources().getInteger(R.integer.arrow_btn_top),
+															mContext.getResources().getInteger(R.integer.arrow_btn_bottom));
+			NinePatchData np_bottom_arrows = new NinePatchData(BitmapFactory.decodeStream(mContext.getResources().openRawResource(R.raw.arrow_button_down)),
+														   	   mContext.getResources().getInteger(R.integer.arrow_btn_left),
+															   mContext.getResources().getInteger(R.integer.arrow_btn_right),
+															   mContext.getResources().getInteger(R.integer.arrow_btn_top),
+															   mContext.getResources().getInteger(R.integer.arrow_btn_bottom));
+			
+			int arrow_btn_height = np_left_arrows.bottomBorder + np_left_arrows.topBorder;
+			int arrow_btn_width  = np_left_arrows.leftBorder + np_left_arrows.rightBorder;
+			Widget left_arrow_count = new Widget(np_left_arrows,   new Rect(mBtnBorder + 0 * (mBtnSep + arrow_btn_width), 
+																			mScreenHeight - arrow_btn_height, 
+																			mBtnBorder + 0 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
+																			mScreenHeight));
+			Widget right_arrow_count = new Widget(np_right_arrows, new Rect(mBtnBorder + 1 * (mBtnSep + arrow_btn_width), 
+																			mScreenHeight - arrow_btn_height, 
+																			mBtnBorder + 1 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
+																			mScreenHeight));
+			Widget up_arrow_count = new Widget(np_top_arrows, 	   new Rect(mBtnBorder + 2 * (mBtnSep + arrow_btn_width), 
+																			mScreenHeight - arrow_btn_height, 
+																			mBtnBorder + 2 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
+																			mScreenHeight));
+			Widget down_arrow_count = new Widget(np_bottom_arrows, new Rect(mBtnBorder + 3 * (mBtnSep + arrow_btn_width), 
+																			mScreenHeight - arrow_btn_height, 
+																			mBtnBorder + 3 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
+																			mScreenHeight));
+			
 			reset.setFontSize(mFontSize);
 			go.setFontSize(mFontSize);
+			left_arrow_count.setFontSize(mFontSize);
+			right_arrow_count.setFontSize(mFontSize);
+			up_arrow_count.setFontSize(mFontSize);
+			down_arrow_count.setFontSize(mFontSize);
 						
 			mWidgetPage.addWidget(reset);
-			mWidgetPage.addWidget(go);			
+			mWidgetPage.addWidget(go);
+			mWidgetPage.addWidget(left_arrow_count);
+			mWidgetPage.addWidget(right_arrow_count);
+			mWidgetPage.addWidget(up_arrow_count);
+			mWidgetPage.addWidget(down_arrow_count);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

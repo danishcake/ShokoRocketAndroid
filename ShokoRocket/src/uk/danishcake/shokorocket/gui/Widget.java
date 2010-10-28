@@ -75,7 +75,11 @@ public class Widget {
 		
 		
 		//Top & bottom
-		int h_tiles = (mBounds.width() - ninePatchData.leftBorder - ninePatchData.rightBorder) / src_middle_w;
+		int h_tiles;
+		if(src_middle_w > 0)
+			h_tiles = (mBounds.width() - ninePatchData.leftBorder - ninePatchData.rightBorder) / src_middle_w;
+		else
+			h_tiles = 0;
 		int h_remainder = (mBounds.width() - ninePatchData.leftBorder - ninePatchData.rightBorder) - h_tiles * src_middle_w;
 		for(int x = 0; x < h_tiles; x++)
 		{
@@ -105,7 +109,11 @@ public class Widget {
 		}
 
 		//Left & right
-		int v_tiles = (mBounds.height() - ninePatchData.topBorder- ninePatchData.bottomBorder) / src_middle_h;
+		int v_tiles;
+		if(src_middle_h > 0)
+			v_tiles = (mBounds.height() - ninePatchData.topBorder- ninePatchData.bottomBorder) / src_middle_h;
+		else
+			v_tiles = 0;
 		int v_remainder = (mBounds.height() - ninePatchData.topBorder - ninePatchData.bottomBorder) - v_tiles * src_middle_h;
 		for(int y = 0; y < v_tiles; y++)
 		{

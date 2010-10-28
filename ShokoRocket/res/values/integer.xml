@@ -9,4 +9,8 @@
     <integer name="btn_font_size">14</integer>
     <integer name="level_border">4</integer>
     <integer name="np_border">12</integer>
+    <integer name="arrow_btn_left">10</integer>
+	<integer name="arrow_btn_right">11</integer>
+	<integer name="arrow_btn_top">18</integer>
+	<integer name="arrow_btn_bottom">18</integer>
 </resources>
