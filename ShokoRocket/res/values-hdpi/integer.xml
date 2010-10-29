@@ -11,6 +11,6 @@
     <integer name="np_border">24</integer>
 	<integer name="arrow_btn_left">21</integer>
 	<integer name="arrow_btn_right">21</integer>
-	<integer name="arrow_btn_top">36</integer>
-	<integer name="arrow_btn_bottom">36</integer>
+	<integer name="arrow_btn_top">44</integer>
+	<integer name="arrow_btn_bottom">44</integer>
 </resources>

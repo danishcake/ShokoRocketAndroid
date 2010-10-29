@@ -11,6 +11,7 @@ import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.WidgetPage;
+import uk.danishcake.shokorocket.gui.Widget.VerticalAlignment;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.World;
 import uk.danishcake.shokorocket.simulation.Direction;
@@ -241,6 +242,11 @@ public class ModeGame extends Mode {
 			right_arrow_count.setFontSize(mFontSize);
 			up_arrow_count.setFontSize(mFontSize);
 			down_arrow_count.setFontSize(mFontSize);
+			
+			left_arrow_count.setText("0");
+			right_arrow_count.setText("0");
+			up_arrow_count.setText("0");
+			down_arrow_count.setText("0");
 						
 			mWidgetPage.addWidget(reset);
 			mWidgetPage.addWidget(go);
