@@ -24,6 +24,7 @@ public class Widget {
 	private Rect mBounds;
 	private String mText = "";
 	private int mFontSize = 16;
+	private int mFontBorder = 8;
 	private OnClickListener mOnClick = null;
 	public enum VerticalAlignment {
 		Top, Middle, Bottom
@@ -43,6 +44,9 @@ public class Widget {
 	public Widget(NinePatchData ninePatchData, Rect sizeAndPosition)
 	{
 		mBounds = sizeAndPosition;
+		if(mBounds.width() < mFontBorder)
+			mFontBorder = 4;
+		
 		mBackbuffer = Bitmap.createBitmap(mBounds.width(), mBounds.height(), Bitmap.Config.ARGB_8888);
 		mFrontbuffer = Bitmap.createBitmap(mBounds.width(), mBounds.height(), Bitmap.Config.ARGB_8888);
 		
@@ -262,7 +266,9 @@ public class Widget {
 			while(char_read < line.length())
 			{
 				int char_start = char_read;
-				char_read += text_paint.breakText(line.substring(char_read), true, mBounds.width() - 16, null);
+				char_read += text_paint.breakText(line.substring(char_read), true, mBounds.width() - 2 * mFontBorder, null);
+				if(char_read == char_start)
+					char_read++; //Must read at least one character
 				if(line.length() > char_read)
 				{
 					//Work backwards from this point to find best point to split at
