@@ -21,7 +21,7 @@
     <string name="tutorial_8">Tap start once the arrows are in place. If you don\'t have the answer then hit reset and try again</string>
     <string name="tutorial_7">You can always remove them the same way they were placed, or use the reset button to clear all the arrows</string>
     <string name="tutorial_6">You only have a limited stock of arrows, so think carefully before placing them</string>
-    <string name="tutorial_5">Then either tap one of the arrow buttons, or swipe across the screen in the direction you want</string>
+    <string name="tutorial_5">then swipe across the screen in the direction you want</string>
     <string name="tutorial_4">Place the cursor by tapping the spot where the arrow should go...</string>
     <string name="tutorial_3">Do this by placing arrows for them to follow</string>
     <string name="tutorial_2">The mice are not very clever, so you need to direct them to the rockets</string>
