@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 public class ModeGame extends Mode {
 	private WidgetPage mWidgetPage = new WidgetPage();
+	private Widget mLeftArrowCount, mRightArrowCount, mUpArrowCount, mDownArrowCount;
 	private GameDrawer mGameDrawer;
 	private GameDrawer mGameDrawerRot = new GameDrawer();
 	private GameDrawer mGameDrawerNorm = new GameDrawer();
@@ -219,41 +220,41 @@ public class ModeGame extends Mode {
 			
 			int arrow_btn_height = np_left_arrows.bottomBorder + np_left_arrows.topBorder;
 			int arrow_btn_width  = np_left_arrows.leftBorder + np_left_arrows.rightBorder;
-			Widget left_arrow_count = new Widget(np_left_arrows,   new Rect(mBtnBorder + 0 * (mBtnSep + arrow_btn_width), 
-																			mScreenHeight - arrow_btn_height, 
-																			mBtnBorder + 0 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
-																			mScreenHeight));
-			Widget right_arrow_count = new Widget(np_right_arrows, new Rect(mBtnBorder + 1 * (mBtnSep + arrow_btn_width), 
-																			mScreenHeight - arrow_btn_height, 
-																			mBtnBorder + 1 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
-																			mScreenHeight));
-			Widget up_arrow_count = new Widget(np_top_arrows, 	   new Rect(mBtnBorder + 2 * (mBtnSep + arrow_btn_width), 
-																			mScreenHeight - arrow_btn_height, 
-																			mBtnBorder + 2 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
-																			mScreenHeight));
-			Widget down_arrow_count = new Widget(np_bottom_arrows, new Rect(mBtnBorder + 3 * (mBtnSep + arrow_btn_width), 
-																			mScreenHeight - arrow_btn_height, 
-																			mBtnBorder + 3 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
-																			mScreenHeight));
+			mLeftArrowCount = new Widget(np_left_arrows,   new Rect(mBtnBorder + 0 * (mBtnSep + arrow_btn_width), 
+																	mScreenHeight - arrow_btn_height, 
+																	mBtnBorder + 0 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
+																	mScreenHeight));
+			mRightArrowCount = new Widget(np_right_arrows, new Rect(mBtnBorder + 1 * (mBtnSep + arrow_btn_width), 
+																	mScreenHeight - arrow_btn_height, 
+																	mBtnBorder + 1 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
+																	mScreenHeight));
+			mUpArrowCount = new Widget(np_top_arrows, 	   new Rect(mBtnBorder + 2 * (mBtnSep + arrow_btn_width), 
+																	mScreenHeight - arrow_btn_height, 
+																	mBtnBorder + 2 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
+																	mScreenHeight));
+			mDownArrowCount = new Widget(np_bottom_arrows, new Rect(mBtnBorder + 3 * (mBtnSep + arrow_btn_width), 
+																	mScreenHeight - arrow_btn_height, 
+																	mBtnBorder + 3 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
+																	mScreenHeight));
 			
 			reset.setFontSize(mFontSize);
 			go.setFontSize(mFontSize);
-			left_arrow_count.setFontSize(mFontSize);
-			right_arrow_count.setFontSize(mFontSize);
-			up_arrow_count.setFontSize(mFontSize);
-			down_arrow_count.setFontSize(mFontSize);
+			mLeftArrowCount.setFontSize(mFontSize);
+			mRightArrowCount.setFontSize(mFontSize);
+			mUpArrowCount.setFontSize(mFontSize);
+			mDownArrowCount.setFontSize(mFontSize);
 			
-			left_arrow_count.setText("0");
-			right_arrow_count.setText("0");
-			up_arrow_count.setText("0");
-			down_arrow_count.setText("0");
+			mLeftArrowCount.setText("0");
+			mRightArrowCount.setText("0");
+			mUpArrowCount.setText("0");
+			mDownArrowCount.setText("0");
 						
 			mWidgetPage.addWidget(reset);
 			mWidgetPage.addWidget(go);
-			mWidgetPage.addWidget(left_arrow_count);
-			mWidgetPage.addWidget(right_arrow_count);
-			mWidgetPage.addWidget(up_arrow_count);
-			mWidgetPage.addWidget(down_arrow_count);
+			mWidgetPage.addWidget(mLeftArrowCount);
+			mWidgetPage.addWidget(mRightArrowCount);
+			mWidgetPage.addWidget(mUpArrowCount);
+			mWidgetPage.addWidget(mDownArrowCount);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -519,7 +520,10 @@ public class ModeGame extends Mode {
 			arrow_count.put(arrow, arrow_count.get(arrow) + 1); 
 		}
 
-		//TODO refresh gui
+		mLeftArrowCount.setText(Integer.toString(arrow_count.get(Direction.West)));
+		mRightArrowCount.setText(Integer.toString(arrow_count.get(Direction.East)));
+		mUpArrowCount.setText(Integer.toString(arrow_count.get(Direction.North)));
+		mDownArrowCount.setText(Integer.toString(arrow_count.get(Direction.South)));
 	}
 	
 	@Override
