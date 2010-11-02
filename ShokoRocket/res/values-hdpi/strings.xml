@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nine_patch_file">Bitmaps/GUI/Blank64x64.png</string>
+    <string name="nine_patch_file">Bitmaps/GUI/Blank48x48.png</string>
 </resources>
