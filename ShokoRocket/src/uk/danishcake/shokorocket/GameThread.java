@@ -50,7 +50,7 @@ public class GameThread extends Thread {
 					
 					synchronized (mSurfaceHolder) {
 						//Now draw my sprites
-						mGame.Redraw(canvas);
+						if(canvas != null) mGame.Redraw(canvas);
 					}
 				} finally
 				{
