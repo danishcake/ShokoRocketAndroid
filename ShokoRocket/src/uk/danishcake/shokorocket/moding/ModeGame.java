@@ -11,7 +11,6 @@ import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.WidgetPage;
-import uk.danishcake.shokorocket.gui.Widget.VerticalAlignment;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.World;
 import uk.danishcake.shokorocket.simulation.Direction;
@@ -156,109 +155,102 @@ public class ModeGame extends Mode {
 		else
 			handler.post(mShowSplashRunnable);
 		
-		NinePatchData btn_np;
-		try {
-			int np_border = context.getResources().getInteger(R.integer.np_border);
-			String np_file = context.getResources().getString(R.string.nine_patch_file); 
-			btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open(np_file)), np_border, np_border, np_border, np_border);			
-			
-			Widget reset = new Widget(btn_np, new Rect(mScreenWidth - (mBtnSize2 + mBtnBorder), mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
-			reset.setText(context.getString(R.string.game_reset));
-			reset.setOnClickListener(new OnClickListener() {				
-				@Override
-				public void OnClick(Widget widget) {
-					SoundManager.PlaySound(mClickSound);
-					if(mRunningMode == RunningMode.Stopped)
-					{
-						mWorld.Reset();
-						mWorld.ClearArrows();
-						updateArrowStock();
-					}
-					else if(mRunningMode == RunningMode.Running || mRunningMode == RunningMode.RunningFast)
-					{
-						mWorld.Reset();
-						mRunningMode = RunningMode.Stopped;
-					}
+		int np_border = context.getResources().getInteger(R.integer.np_border);
+		NinePatchData btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_button)), np_border, np_border, np_border, np_border);			
+		
+		Widget reset = new Widget(btn_np, new Rect(mScreenWidth - (mBtnSize2 + mBtnBorder), mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
+		reset.setText(context.getString(R.string.game_reset));
+		reset.setOnClickListener(new OnClickListener() {				
+			@Override
+			public void OnClick(Widget widget) {
+				SoundManager.PlaySound(mClickSound);
+				if(mRunningMode == RunningMode.Stopped)
+				{
+					mWorld.Reset();
+					mWorld.ClearArrows();
+					updateArrowStock();
 				}
-			});
-			
-			Widget go = new Widget(btn_np, new Rect(mScreenWidth - mBtnSize2 - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnBorder));
-			go.setText(context.getString(R.string.game_go));
-			go.setOnClickListener(new OnClickListener() {				
-				@Override
-				public void OnClick(Widget widget) {
-					SoundManager.PlaySound(mClickSound);
-					if(mRunningMode == RunningMode.Stopped)
-						mRunningMode = RunningMode.Running;
-					else if(mRunningMode == RunningMode.Running)
-						mRunningMode = RunningMode.RunningFast;
+				else if(mRunningMode == RunningMode.Running || mRunningMode == RunningMode.RunningFast)
+				{
+					mWorld.Reset();
+					mRunningMode = RunningMode.Stopped;
 				}
-			});
-			
-			//Load arrow buttons
-			
-			NinePatchData np_left_arrows = new NinePatchData(BitmapFactory.decodeStream(mContext.getResources().openRawResource(R.raw.arrow_button_left)),
-															 mContext.getResources().getInteger(R.integer.arrow_btn_left),
-															 mContext.getResources().getInteger(R.integer.arrow_btn_right),
-															 mContext.getResources().getInteger(R.integer.arrow_btn_top),
-															 mContext.getResources().getInteger(R.integer.arrow_btn_bottom));
-			NinePatchData np_right_arrows = new NinePatchData(BitmapFactory.decodeStream(mContext.getResources().openRawResource(R.raw.arrow_button_right)),
-													 		  mContext.getResources().getInteger(R.integer.arrow_btn_left),
-															  mContext.getResources().getInteger(R.integer.arrow_btn_right),
-															  mContext.getResources().getInteger(R.integer.arrow_btn_top),
-															  mContext.getResources().getInteger(R.integer.arrow_btn_bottom));
-			NinePatchData np_top_arrows = new NinePatchData(BitmapFactory.decodeStream(mContext.getResources().openRawResource(R.raw.arrow_button_up)),
-															mContext.getResources().getInteger(R.integer.arrow_btn_left),
-															mContext.getResources().getInteger(R.integer.arrow_btn_right),
-															mContext.getResources().getInteger(R.integer.arrow_btn_top),
-															mContext.getResources().getInteger(R.integer.arrow_btn_bottom));
-			NinePatchData np_bottom_arrows = new NinePatchData(BitmapFactory.decodeStream(mContext.getResources().openRawResource(R.raw.arrow_button_down)),
-														   	   mContext.getResources().getInteger(R.integer.arrow_btn_left),
-															   mContext.getResources().getInteger(R.integer.arrow_btn_right),
-															   mContext.getResources().getInteger(R.integer.arrow_btn_top),
-															   mContext.getResources().getInteger(R.integer.arrow_btn_bottom));
-			
-			int arrow_btn_height = np_left_arrows.bottomBorder + np_left_arrows.topBorder;
-			int arrow_btn_width  = np_left_arrows.leftBorder + np_left_arrows.rightBorder;
-			mLeftArrowCount = new Widget(np_left_arrows,   new Rect(mBtnBorder + 0 * (mBtnSep + arrow_btn_width), 
-																	mScreenHeight - arrow_btn_height, 
-																	mBtnBorder + 0 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
-																	mScreenHeight));
-			mRightArrowCount = new Widget(np_right_arrows, new Rect(mBtnBorder + 1 * (mBtnSep + arrow_btn_width), 
-																	mScreenHeight - arrow_btn_height, 
-																	mBtnBorder + 1 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
-																	mScreenHeight));
-			mUpArrowCount = new Widget(np_top_arrows, 	   new Rect(mBtnBorder + 2 * (mBtnSep + arrow_btn_width), 
-																	mScreenHeight - arrow_btn_height, 
-																	mBtnBorder + 2 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
-																	mScreenHeight));
-			mDownArrowCount = new Widget(np_bottom_arrows, new Rect(mBtnBorder + 3 * (mBtnSep + arrow_btn_width), 
-																	mScreenHeight - arrow_btn_height, 
-																	mBtnBorder + 3 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
-																	mScreenHeight));
-			
-			reset.setFontSize(mFontSize);
-			go.setFontSize(mFontSize);
-			mLeftArrowCount.setFontSize(mFontSize);
-			mRightArrowCount.setFontSize(mFontSize);
-			mUpArrowCount.setFontSize(mFontSize);
-			mDownArrowCount.setFontSize(mFontSize);
-			
-			mLeftArrowCount.setText("0");
-			mRightArrowCount.setText("0");
-			mUpArrowCount.setText("0");
-			mDownArrowCount.setText("0");
-						
-			mWidgetPage.addWidget(reset);
-			mWidgetPage.addWidget(go);
-			mWidgetPage.addWidget(mLeftArrowCount);
-			mWidgetPage.addWidget(mRightArrowCount);
-			mWidgetPage.addWidget(mUpArrowCount);
-			mWidgetPage.addWidget(mDownArrowCount);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			}
+		});
+		
+		Widget go = new Widget(btn_np, new Rect(mScreenWidth - mBtnSize2 - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnBorder));
+		go.setText(context.getString(R.string.game_go));
+		go.setOnClickListener(new OnClickListener() {				
+			@Override
+			public void OnClick(Widget widget) {
+				SoundManager.PlaySound(mClickSound);
+				if(mRunningMode == RunningMode.Stopped)
+					mRunningMode = RunningMode.Running;
+				else if(mRunningMode == RunningMode.Running)
+					mRunningMode = RunningMode.RunningFast;
+			}
+		});
+		
+		//Load arrow buttons
+		
+		NinePatchData np_left_arrows = new NinePatchData(BitmapFactory.decodeStream(mContext.getResources().openRawResource(R.raw.arrow_button_left)),
+														 mContext.getResources().getInteger(R.integer.arrow_btn_left),
+														 mContext.getResources().getInteger(R.integer.arrow_btn_right),
+														 mContext.getResources().getInteger(R.integer.arrow_btn_top),
+														 mContext.getResources().getInteger(R.integer.arrow_btn_bottom));
+		NinePatchData np_right_arrows = new NinePatchData(BitmapFactory.decodeStream(mContext.getResources().openRawResource(R.raw.arrow_button_right)),
+												 		  mContext.getResources().getInteger(R.integer.arrow_btn_left),
+														  mContext.getResources().getInteger(R.integer.arrow_btn_right),
+														  mContext.getResources().getInteger(R.integer.arrow_btn_top),
+														  mContext.getResources().getInteger(R.integer.arrow_btn_bottom));
+		NinePatchData np_top_arrows = new NinePatchData(BitmapFactory.decodeStream(mContext.getResources().openRawResource(R.raw.arrow_button_up)),
+														mContext.getResources().getInteger(R.integer.arrow_btn_left),
+														mContext.getResources().getInteger(R.integer.arrow_btn_right),
+														mContext.getResources().getInteger(R.integer.arrow_btn_top),
+														mContext.getResources().getInteger(R.integer.arrow_btn_bottom));
+		NinePatchData np_bottom_arrows = new NinePatchData(BitmapFactory.decodeStream(mContext.getResources().openRawResource(R.raw.arrow_button_down)),
+													   	   mContext.getResources().getInteger(R.integer.arrow_btn_left),
+														   mContext.getResources().getInteger(R.integer.arrow_btn_right),
+														   mContext.getResources().getInteger(R.integer.arrow_btn_top),
+														   mContext.getResources().getInteger(R.integer.arrow_btn_bottom));
+		
+		int arrow_btn_height = np_left_arrows.bottomBorder + np_left_arrows.topBorder;
+		int arrow_btn_width  = np_left_arrows.leftBorder + np_left_arrows.rightBorder;
+		mLeftArrowCount = new Widget(np_left_arrows,   new Rect(mBtnBorder + 0 * (mBtnSep + arrow_btn_width), 
+																mScreenHeight - arrow_btn_height, 
+																mBtnBorder + 0 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
+																mScreenHeight));
+		mRightArrowCount = new Widget(np_right_arrows, new Rect(mBtnBorder + 1 * (mBtnSep + arrow_btn_width), 
+																mScreenHeight - arrow_btn_height, 
+																mBtnBorder + 1 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
+																mScreenHeight));
+		mUpArrowCount = new Widget(np_top_arrows, 	   new Rect(mBtnBorder + 2 * (mBtnSep + arrow_btn_width), 
+																mScreenHeight - arrow_btn_height, 
+																mBtnBorder + 2 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
+																mScreenHeight));
+		mDownArrowCount = new Widget(np_bottom_arrows, new Rect(mBtnBorder + 3 * (mBtnSep + arrow_btn_width), 
+																mScreenHeight - arrow_btn_height, 
+																mBtnBorder + 3 * (mBtnSep + arrow_btn_width) + arrow_btn_width, 
+																mScreenHeight));
+		
+		reset.setFontSize(mFontSize);
+		go.setFontSize(mFontSize);
+		mLeftArrowCount.setFontSize(mFontSize);
+		mRightArrowCount.setFontSize(mFontSize);
+		mUpArrowCount.setFontSize(mFontSize);
+		mDownArrowCount.setFontSize(mFontSize);
+		
+		mLeftArrowCount.setText("0");
+		mRightArrowCount.setText("0");
+		mUpArrowCount.setText("0");
+		mDownArrowCount.setText("0");
+					
+		mWidgetPage.addWidget(reset);
+		mWidgetPage.addWidget(go);
+		mWidgetPage.addWidget(mLeftArrowCount);
+		mWidgetPage.addWidget(mRightArrowCount);
+		mWidgetPage.addWidget(mUpArrowCount);
+		mWidgetPage.addWidget(mDownArrowCount);
 		
 		updateArrowStock();
 	}

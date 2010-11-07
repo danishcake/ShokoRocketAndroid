@@ -245,9 +245,8 @@ public class ModeTutorial extends Mode {
 		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
 		
 		try {
-			int np_border = context.getResources().getInteger(R.integer.np_border);
-			String np_file = context.getResources().getString(R.string.nine_patch_file);  
-			NinePatchData btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getAssets().open(np_file)), np_border, np_border, np_border, np_border);
+			int np_border = context.getResources().getInteger(R.integer.np_border);  
+			NinePatchData btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_button)), np_border, np_border, np_border, np_border);
 			
 			mNextButton = new Widget(btn_np, new Rect(mBtnBorder, 
 													  mScreenHeight - mBtnBorder - mBtnSize,

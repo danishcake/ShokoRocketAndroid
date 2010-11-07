@@ -136,7 +136,6 @@ public class ModeEditor extends Mode {
 	private boolean mGestureInProgress = false;
 	
 	private int mBtnSize = 48;
-	private int mBtnSize2 = 64;
 	private int mBtnSep = 8;
 	private int mBtnBorder = 16;
 	private int mFontSize = 16;
@@ -192,86 +191,80 @@ public class ModeEditor extends Mode {
 	private void InitialiseWidgets() {
 		mWidgetPage = new WidgetPage();
 		mWidgetPage.setFontSize(mFontSize);
-		try
-		{
-			int np_border = mContext.getResources().getInteger(R.integer.np_border);
-			String np_file = mContext.getResources().getString(R.string.nine_patch_file); 
-			NinePatchData np = new NinePatchData(BitmapFactory.decodeStream(mContext.getAssets().open(np_file)), np_border, np_border, np_border, np_border);
-			mEditModeWidget = new Widget(np, new Rect(mScreenWidth / 2  + mBtnBorder, 
-													  mScreenHeight     - mBtnSize - mBtnBorder, 
-													  mScreenWidth      - mBtnBorder, 
-													  mScreenHeight     - mBtnBorder));
-			mEditModeWidget.setText(mContext.getString(R.string.editor_mode_walls));
-			mEditMode = EditMode.Walls;
-			
-			mTryWidget = new Widget(np, new Rect(mBtnBorder, 
-												 mScreenHeight     - mBtnSize - mBtnBorder, 
-												 mScreenWidth / 2  - mBtnSep, 
-												 mScreenHeight     - mBtnBorder));
-			mTryWidget.setText(mContext.getString(R.string.editor_run_speed_try));
-			
-			
-			mEditModeWidget.setOnClickListener(new uk.danishcake.shokorocket.gui.OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					switch(mEditMode)
-					{
-					case Walls:
-						mEditMode = EditMode.Arrows;
-						mEditModeWidget.setText(mContext.getString(R.string.editor_mode_arrows));
-						break;
-					case Arrows:
-						mEditMode = EditMode.Mice;
-						mEditModeWidget.setText(mContext.getString(R.string.editor_mode_mice));
-						break;
-					case Mice:
-						mEditMode = EditMode.Cats;
-						mEditModeWidget.setText(mContext.getString(R.string.editor_mode_cats));
-						break;
-					case Cats:
-						mEditMode = EditMode.Holes;
-						mEditModeWidget.setText(mContext.getString(R.string.editor_mode_holes));
-						break;
-					case Holes:
-						mEditMode = EditMode.Rockets;
-						mEditModeWidget.setText(mContext.getString(R.string.editor_mode_rockets));
-						break;
-					case Rockets:
-						mEditMode = EditMode.Walls;
-						mEditModeWidget.setText(mContext.getString(R.string.editor_mode_walls));
-						break;
-					}
+	
+		int np_border = mContext.getResources().getInteger(R.integer.np_border); 
+		NinePatchData np = new NinePatchData(BitmapFactory.decodeStream(mContext.getResources().openRawResource(R.raw.blank_button)), np_border, np_border, np_border, np_border);
+		mEditModeWidget = new Widget(np, new Rect(mScreenWidth / 2  + mBtnBorder, 
+												  mScreenHeight     - mBtnSize - mBtnBorder, 
+												  mScreenWidth      - mBtnBorder, 
+												  mScreenHeight     - mBtnBorder));
+		mEditModeWidget.setText(mContext.getString(R.string.editor_mode_walls));
+		mEditMode = EditMode.Walls;
+		
+		mTryWidget = new Widget(np, new Rect(mBtnBorder, 
+											 mScreenHeight     - mBtnSize - mBtnBorder, 
+											 mScreenWidth / 2  - mBtnSep, 
+											 mScreenHeight     - mBtnBorder));
+		mTryWidget.setText(mContext.getString(R.string.editor_run_speed_try));
+		
+		
+		mEditModeWidget.setOnClickListener(new uk.danishcake.shokorocket.gui.OnClickListener() {
+			@Override
+			public void OnClick(Widget widget) {
+				switch(mEditMode)
+				{
+				case Walls:
+					mEditMode = EditMode.Arrows;
+					mEditModeWidget.setText(mContext.getString(R.string.editor_mode_arrows));
+					break;
+				case Arrows:
+					mEditMode = EditMode.Mice;
+					mEditModeWidget.setText(mContext.getString(R.string.editor_mode_mice));
+					break;
+				case Mice:
+					mEditMode = EditMode.Cats;
+					mEditModeWidget.setText(mContext.getString(R.string.editor_mode_cats));
+					break;
+				case Cats:
+					mEditMode = EditMode.Holes;
+					mEditModeWidget.setText(mContext.getString(R.string.editor_mode_holes));
+					break;
+				case Holes:
+					mEditMode = EditMode.Rockets;
+					mEditModeWidget.setText(mContext.getString(R.string.editor_mode_rockets));
+					break;
+				case Rockets:
+					mEditMode = EditMode.Walls;
+					mEditModeWidget.setText(mContext.getString(R.string.editor_mode_walls));
+					break;
 				}
-			});
-			
-			mTryWidget.setOnClickListener(new uk.danishcake.shokorocket.gui.OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					switch(mRunningMode)
-					{
-					case Stopped:
-						mRunningMode = RunningMode.Running;
-						mTryWidget.setText(mContext.getString(R.string.editor_run_speed_faster));
-						break;
-					case Running:
-						mRunningMode = RunningMode.RunningFast;
-						mTryWidget.setText(mContext.getString(R.string.editor_run_speed_reset));
-						break;
-					case RunningFast:
-						mRunningMode = RunningMode.Stopped;
-						mWorld.Reset();
-						mTryWidget.setText(mContext.getString(R.string.editor_run_speed_try));
-						break;
-					}
+			}
+		});
+		
+		mTryWidget.setOnClickListener(new uk.danishcake.shokorocket.gui.OnClickListener() {
+			@Override
+			public void OnClick(Widget widget) {
+				switch(mRunningMode)
+				{
+				case Stopped:
+					mRunningMode = RunningMode.Running;
+					mTryWidget.setText(mContext.getString(R.string.editor_run_speed_faster));
+					break;
+				case Running:
+					mRunningMode = RunningMode.RunningFast;
+					mTryWidget.setText(mContext.getString(R.string.editor_run_speed_reset));
+					break;
+				case RunningFast:
+					mRunningMode = RunningMode.Stopped;
+					mWorld.Reset();
+					mTryWidget.setText(mContext.getString(R.string.editor_run_speed_try));
+					break;
 				}
-			});
-			
-			mWidgetPage.addWidget(mEditModeWidget);
-			mWidgetPage.addWidget(mTryWidget);
-		} catch(IOException io_ex)
-		{
-			Log.e("ModeEditor.InitialiseWidget", "Unable to open Blank64x64.png");
-		}
+			}
+		});
+		
+		mWidgetPage.addWidget(mEditModeWidget);
+		mWidgetPage.addWidget(mTryWidget);
 	}
 
 	@Override
@@ -279,7 +272,6 @@ public class ModeEditor extends Mode {
 		mContext = context;
 		
 		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
-		mBtnSize2 = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_wide_size);
 		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
 		mBtnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
 		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);

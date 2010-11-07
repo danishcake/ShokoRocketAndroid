@@ -85,6 +85,5 @@
     <string name="level_width_label">Level width</string>
     <string name="level_height_label">Level height</string>
     <string name="app_description">A clone of Chu Chu Rocket, save the mice from the evil cats!</string>
-    <string name="nine_patch_file">Bitmaps/GUI/Blank32x32.png</string>
     <string name="app_name">Shoko Rocket</string>
 </resources>
