@@ -33,20 +33,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		
 		mSemaphore = new Semaphore(1);
 		
-		setOnTouchListener(new OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent event)
-			{
-				try {
-					mSemaphore.acquire();
-					mGame.HandleTouch(event);
-					mSemaphore.release();
-				} catch (InterruptedException e) {
-					Log.e("GameView.GameView", "Semaphore interupted");
-				}
-				return true;
+		setOnTouchListener(mTouchListener);
+	}
+	
+	private OnTouchListener mTouchListener = new OnTouchListener() {
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			try {
+				mSemaphore.acquire();
+				mGame.HandleTouch(event);
+				mSemaphore.release();
+			} catch (InterruptedException e) {
+				Log.e("GameView.GameView", "Semaphore interupted");
 			}
-		});
-	} 
+			return true;
+		}
+	};
 	
 	public boolean OverrideBack()
 	{
@@ -84,11 +86,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
+		setOnTouchListener(mTouchListener);
 		mThread = new GameThread(getHolder(), new Handler(), mContext, mGame, mSemaphore);
 		mThread.start();
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
+		setOnTouchListener(null);
 		mThread.StopRunning();
 		boolean retry = true;
 		while(retry)
