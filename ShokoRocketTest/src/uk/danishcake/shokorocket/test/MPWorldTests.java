@@ -35,16 +35,4 @@ public class MPWorldTests extends AndroidTestCase {
 		assertEquals(3, world.getMice().size());
 		assertEquals(1, world.getCats().size());		
 	}
-	
-	public void testMPWalkerCollisions()
-	{
-		MPWorld world  = new MPWorld();
-		world.addWalker(0, 0, Direction.East, WalkerType.Mouse);
-		world.addWalker(10, 0, Direction.West, WalkerType.Cat);
-		assertEquals(1, world.getMice().size());
-		assertEquals(1, world.getCats().size());
-		world.Tick(10000);
-		assertEquals(0, world.getMice().size());
-		assertEquals(1, world.getCats().size());
-	}
 }
