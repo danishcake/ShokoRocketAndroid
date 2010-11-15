@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>Easy buddy</Name>
+<Author>Bob</Author>
+<Size x="6" y="6"/>
+<V x="0" y="0" />
+<H x="0" y="0" />
+<H x="1" y="0" />
+<H x="2" y="0" />
+<H x="3" y="0" />
+<H x="4" y="0" />
+<V x="5" y="0" />
+<H x="5" y="0" />
+<V x="0" y="1" />
+<V x="0" y="2" />
+<H x="2" y="2" />
+<H x="3" y="2" />
+<H x="4" y="2" />
+<V x="5" y="2" />
+<H x="5" y="2" />
+<V x="0" y="3" />
+<H x="0" y="3" />
+<V x="0" y="4" />
+<V x="1" y="4" />
+<V x="0" y="5" />
+<V x="1" y="5" />
+<V x="5" y="5" />
+<Mouse x="0" y="5" d="North" />
+<Cat x="4" y="0" d="West" />
+<Rocket x="5" y="0" />
+<Arrow x="1" y="1" d="East"/>
+<Hole x="5" y="2" />
+<Arrow x="1" y="3" d="North"/>
+<Arrow x="5" y="3" d="West"/>
+</Level>
