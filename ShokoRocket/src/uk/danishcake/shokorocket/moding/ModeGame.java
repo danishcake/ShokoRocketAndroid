@@ -122,13 +122,13 @@ public class ModeGame extends Mode {
 
 		mGameDrawer = mGameDrawerNorm;
 		if(smaller < 1)
-			mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller));
+			mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller), null);
 		else
-			mGameDrawer.Setup(mContext, grid_size );
+			mGameDrawer.Setup(mContext, grid_size, null);
 		if(smaller_rot < 1)
-			mGameDrawerRot.Setup(mContext, (int)(((float)grid_size) * smaller_rot));
+			mGameDrawerRot.Setup(mContext, (int)(((float)grid_size) * smaller_rot), null);
 		else
-			mGameDrawerRot.Setup(mContext, grid_size );
+			mGameDrawerRot.Setup(mContext, grid_size, null);
 
 		mGameDrawer.CreateBackground(mWorld);
 		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mLevelBorder);

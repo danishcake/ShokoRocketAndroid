@@ -1,8 +1,0 @@
-<AnimationSet>
-  <Animation Name="Normal">
-    <Frame Width="32" Height="32" Top="0" Left="0" File="Bitmaps/Game/Rocket.png" Time="0.5"/>
-  </Animation>
-  <Animation Name="Blastoff">
-    <Frame Width="32" Height="32" Top="0" Left="0" File="Bitmaps/Game/Rocket.png" Time="0.5"/>
-  </Animation>
-</AnimationSet>

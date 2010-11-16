@@ -219,7 +219,7 @@ public class ModeMenu extends Mode {
 		
 		LoadLevelList();
 		
-		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size));
+		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size), null);
 		ChangeLevel();
 		mSetup = true;
 	}

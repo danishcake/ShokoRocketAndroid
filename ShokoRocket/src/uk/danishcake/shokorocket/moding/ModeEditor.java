@@ -178,9 +178,9 @@ public class ModeEditor extends Mode {
 		float smaller = scaleX < scaleY ? scaleX : scaleY;
 		
 		if(smaller < 1)
-			mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller));
+			mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller), null);
 		else
-			mGameDrawer.Setup(mContext, grid_size );
+			mGameDrawer.Setup(mContext, grid_size, null);
 		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), level_border);
 		
 	}

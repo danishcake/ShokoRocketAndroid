@@ -126,7 +126,7 @@ public class Animation {
 	/* loadAnimation
 	 * Takes an animation element from XML and loads the frames associated
 	 */
-	private static Animation loadAnimation(Context context, Element animation, float scale) throws IOException
+	public static Animation loadAnimation(Context context, Element animation, float scale) throws IOException
 	{
 		Animation an = new Animation();
 		String animation_name = animation.getAttribute("Name");
@@ -241,7 +241,7 @@ public class Animation {
 		return GetAnimations(context, context.getAssets().open(file), scale);
 	}
 	
-	private static Map<String, Animation> GetAnimations(Context context, InputStream input, float scale) throws IOException
+	public static Map<String, Animation> GetAnimations(Context context, InputStream input, float scale) throws IOException
 	{
 		try
 		{

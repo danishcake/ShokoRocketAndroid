@@ -1,8 +1,0 @@
-<AnimationSet>
-  <Animation Name="TileA">
-    <Frame Width="32" Height="32" Top="0" Left="0" File="Bitmaps/Game/TileA.png" Time="0.5"/>
-  </Animation>
-  <Animation Name="TileB">
-    <Frame Width="32" Height="32" Top="0" Left="0" File="Bitmaps/Game/TileB.png" Time="0.5"/>
-  </Animation>
-</AnimationSet>

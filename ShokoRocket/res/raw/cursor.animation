@@ -1,8 +1,0 @@
-<AnimationSet>
-  <Animation Name="Normal">
-    <Frame Width="32" Height="32" Top="0" Left="0" File="Bitmaps/Game/Cursor.png" Time="0.5"/>
-  </Animation>
-  <Animation Name="Faded">
-    <Frame Width="32" Height="32" Top="0" Left="0" File="Bitmaps/Game/Cursor-trans.png" Time="0.5"/>
-  </Animation>
-</AnimationSet>
