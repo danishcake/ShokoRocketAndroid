@@ -16,8 +16,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import uk.danishcake.shokorocket.R;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -39,7 +37,7 @@ public class SkinProgress {
 		}
 		mContext = context;
 		try {
-			loadSkins("DefaultAnimationFiles.xml", mDefaults);
+			loadSkins("Animations/DefaultAnimationFiles.xml", mDefaults);
 		} catch (IOException io_ex) {
 			Log.e("SkinProgress", "Unable to load default animation files");
 		}
@@ -57,8 +55,8 @@ public class SkinProgress {
 			javax.xml.parsers.DocumentBuilder dbuilder = dbf
 					.newDocumentBuilder();
 
-			Document document = dbuilder.parse(mContext.getResources()
-					.openRawResource(R.raw.animation_files));
+			
+			Document document = dbuilder.parse(mContext.getAssets().open(skin));
 			Element root = document.getDocumentElement();
 
 			NodeList animations = root.getElementsByTagName("AnimationFiles");
