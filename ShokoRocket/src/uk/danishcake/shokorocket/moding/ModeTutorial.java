@@ -266,7 +266,7 @@ public class ModeTutorial extends Mode {
 			mWidgetPage.addWidget(mExplanation);
 			
 			mWorld = new World(mContext.getAssets().open("TutorialLevels/Tut1.Level"));
-			mGameDrawer.Setup(mContext, mContext.getResources().getInteger(uk.danishcake.shokorocket.R.integer.grid_size), null);
+			mGameDrawer.Setup(mContext, mContext.getResources().getInteger(uk.danishcake.shokorocket.R.integer.tutorial_grid_size), null);
 			mGameDrawer.setDrawOffset((mScreenWidth - mWorld.getWidth() * mGameDrawer.getGridSize()) / 2, mBtnBorder + mBtnSize * 2 + mBtnSep * 2);
 			mGameDrawer.CreateBackground(mWorld);
 		} catch(IOException io_ex) {

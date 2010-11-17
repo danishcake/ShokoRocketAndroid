@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<integer name="tutorial_grid_size">32</integer>
     <integer name="preview_grid_size">32</integer>
     <integer name="btn_size">72</integer>
     <integer name="btn_wide_size">96</integer>
