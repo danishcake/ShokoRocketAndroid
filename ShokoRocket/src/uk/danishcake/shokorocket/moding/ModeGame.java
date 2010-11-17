@@ -128,9 +128,9 @@ public class ModeGame extends Mode {
 		else
 			mGameDrawer.Setup(mContext, grid_size, mSkin);
 		if(smaller_rot < 1)
-			mGameDrawerRot.Setup(mContext, (int)(((float)grid_size) * smaller_rot), null);
+			mGameDrawerRot.Setup(mContext, (int)(((float)grid_size) * smaller_rot), mSkin);
 		else
-			mGameDrawerRot.Setup(mContext, grid_size, null);
+			mGameDrawerRot.Setup(mContext, grid_size, mSkin);
 
 		mGameDrawer.CreateBackground(mWorld);
 		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mLevelBorder);

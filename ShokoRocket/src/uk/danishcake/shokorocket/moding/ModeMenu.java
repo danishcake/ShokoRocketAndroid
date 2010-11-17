@@ -159,7 +159,7 @@ public class ModeMenu extends Mode {
 			@Override
 			public void OnClick(Widget widget) {
 				if(mPendMode == null)
-					mPendMode = new ModeUnlocks(ModeMenu.this);
+					mPendMode = new ModeUnlocks(ModeMenu.this, mSkin);
 				SoundManager.PlaySound(mClickSound);
 			}
 		});

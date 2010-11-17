@@ -107,7 +107,10 @@ public class SkinProgress {
 
 	public void setSkin(String skin) {
 		try {
-			loadSkins(skin, mSkin);
+			if(skin.equals(""))
+				mSkin.clear();
+			else
+				loadSkins(skin, mSkin);
 		} catch (IOException io_ex) {
 			Log.e("SkinProgress", "Unable to load default animation files");
 		}
@@ -118,6 +121,7 @@ public class SkinProgress {
 		{
 			if(mSkin.containsKey(name))
 			{
+				Log.d("SkinProgress", "Skin override " + mSkin.get(name));
 				return mContext.getAssets().open(mSkin.get(name));
 			} else if(mDefaults.containsKey(name))
 			{
@@ -126,6 +130,7 @@ public class SkinProgress {
 		} catch(IOException io_ex)
 		{
 			//Do nothing, logging will occur next
+			Log.d("SkinProgress", "Skin load error: " + io_ex.getMessage());
 		}
 		
 		Log.e("SkinProgress", "Failed loading animation \"" + name + "\"");

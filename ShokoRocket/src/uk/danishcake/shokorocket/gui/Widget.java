@@ -17,11 +17,11 @@ import android.graphics.PorterDuff.Mode;
  * @author Edward Woolhouse
  */
 public class Widget {
-	private Bitmap mBackbuffer;
-	private Bitmap mFrontbuffer;
-	private boolean mInvalidated = true;
+	protected Bitmap mBackbuffer;
+	protected Bitmap mFrontbuffer;
+	protected boolean mInvalidated = true;
 	private int mDepressedTime = 0;
-	private Rect mBounds;
+	protected Rect mBounds;
 	private String mText = "";
 	private int mFontSize = 16;
 	private int mFontBorder = 8;
@@ -50,8 +50,13 @@ public class Widget {
 		mBackbuffer = Bitmap.createBitmap(mBounds.width(), mBounds.height(), Bitmap.Config.ARGB_8888);
 		mFrontbuffer = Bitmap.createBitmap(mBounds.width(), mBounds.height(), Bitmap.Config.ARGB_8888);
 		
+		drawNP(mBackbuffer, ninePatchData);
+	}
+	
+	protected void drawNP(Bitmap dest, NinePatchData ninePatchData)
+	{
 		//Copy bitmap into position
-		Canvas canvas = new Canvas(mBackbuffer);
+		Canvas canvas = new Canvas(dest);
 		canvas.drawARGB(0,0,0,0);
 
 
@@ -185,7 +190,7 @@ public class Widget {
 			Rect dest_rect = new Rect(src_rect);
 			dest_rect.offsetTo(ninePatchData.leftBorder + h_tiles * src_middle_w, ninePatchData.topBorder + v_tiles * src_middle_h);
 			canvas.drawBitmap(source, src_rect, dest_rect, null);
-		}
+		}	
 	}
 	
 	/**
