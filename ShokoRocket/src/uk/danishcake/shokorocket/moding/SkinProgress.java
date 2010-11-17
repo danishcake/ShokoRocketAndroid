@@ -121,14 +121,12 @@ public class SkinProgress {
 				return mContext.getAssets().open(mSkin.get(name));
 			} else if(mDefaults.containsKey(name))
 			{
-				Log.d("SkinProgress", "Loading " + mDefaults.get(name));
 				return mContext.getAssets().open(mDefaults.get(name));
 			}
 		} catch(IOException io_ex)
 		{
 			//Do nothing, logging will occur next
 		}
-		
 		
 		Log.e("SkinProgress", "Failed loading animation \"" + name + "\"");
 		return null;

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="menu_unlocks">Unlocks</string>
 	<string name="tutorial_15">Finally, if you enjoy this game then give it a good review and tell your friends about it</string>
     <string name="tutorial_14">Press menu to see rotation options</string>
     <string name="tutorial_13">The rotation will find the best fit by default. You can also manually rotate</string>

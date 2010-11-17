@@ -39,7 +39,7 @@ public class ModeMenu extends Mode {
 	private int mBtnSep = 8;
 	private int mBtnBorder = 16;
 	private int mFontSize = 16;
-	
+	private SkinProgress mSkin;
 	private int mClickSound = -1;
 	
 	@Override
@@ -56,6 +56,7 @@ public class ModeMenu extends Mode {
 		mContext = context;
 		mProgress = new Progress(context);
 		mMakeTrainingOffer = Progress.IsFirstRun(context);
+		mSkin = new SkinProgress(context);
 		
 		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
 		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
@@ -94,12 +95,11 @@ public class ModeMenu extends Mode {
 		Widget playMap = new Widget(btn_np, new Rect(mBtnSize + mBtnBorder + mBtnSep, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - (mBtnSize + mBtnBorder + mBtnSep), mScreenHeight - mBtnBorder));
 		playMap.setText(context.getString(R.string.menu_play));
 		
-		Widget showTutorial = new Widget(btn_np, new Rect(mScreenWidth / 2 + mBtnSep, mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
-		showTutorial.setText(context.getString(R.string.menu_tutorial));
+		Widget unlocks = new Widget(btn_np, new Rect(mScreenWidth / 2 + mBtnSep, mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
+		unlocks.setText(context.getString(R.string.menu_unlocks));
 		
 		Widget loadEditor = new Widget(btn_np, new Rect(mBtnBorder , mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth / 2 - mBtnSep, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
-		loadEditor.setText(context.getString(R.string.menu_editor));			
-		
+		loadEditor.setText(context.getString(R.string.menu_editor));		
 		
 		mWidgetPage.setFontSize(mFontSize);
 		mWidgetPage.addWidget(levelPackLeft);
@@ -109,7 +109,7 @@ public class ModeMenu extends Mode {
 		mWidgetPage.addWidget(scrollRight);
 		mWidgetPage.addWidget(scrollLeft);
 		mWidgetPage.addWidget(playMap);
-		mWidgetPage.addWidget(showTutorial);
+		mWidgetPage.addWidget(unlocks);
 		mWidgetPage.addWidget(loadEditor);
 		
 	
@@ -150,16 +150,16 @@ public class ModeMenu extends Mode {
 			@Override
 			public void OnClick(Widget widget) {
 				if(mPendMode == null)
-					mPendMode = new ModeGame(mWorld, ModeMenu.this, mProgress);
+					mPendMode = new ModeGame(mWorld, ModeMenu.this, mProgress, mSkin);
 				SoundManager.PlaySound(mClickSound);
 			}
 		});
 		
-		showTutorial.setOnClickListener(new OnClickListener() {
+		unlocks.setOnClickListener(new OnClickListener() {
 			@Override
 			public void OnClick(Widget widget) {
 				if(mPendMode == null)
-					mPendMode = new ModeTutorial(ModeMenu.this);
+					mPendMode = new ModeUnlocks(ModeMenu.this);
 				SoundManager.PlaySound(mClickSound);
 			}
 		});
@@ -183,7 +183,7 @@ public class ModeMenu extends Mode {
 								try
 								{
 									mSemaphore.acquire();
-									mPendMode = new ModeEditor(ModeMenu.this, mWorld);
+									mPendMode = new ModeEditor(ModeMenu.this, mWorld, mSkin);
 									mSemaphore.release();
 								} catch(InterruptedException int_ex)
 								{
@@ -196,7 +196,7 @@ public class ModeMenu extends Mode {
 								try
 								{
 									mSemaphore.acquire();
-									mPendMode = new ModeEditor(ModeMenu.this, null);
+									mPendMode = new ModeEditor(ModeMenu.this, null, mSkin);
 									mEditorLoaded = true;
 									mSemaphore.release();
 								} catch(InterruptedException int_ex)
@@ -208,7 +208,7 @@ public class ModeMenu extends Mode {
 						builder.create().show();
 					} else
 					{
-						mPendMode = new ModeEditor(ModeMenu.this, null);
+						mPendMode = new ModeEditor(ModeMenu.this, null, mSkin);
 						mEditorLoaded = true;
 					}
 
@@ -219,7 +219,7 @@ public class ModeMenu extends Mode {
 		
 		LoadLevelList();
 		
-		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size), null);
+		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size), mSkin);
 		ChangeLevel();
 		mSetup = true;
 	}
@@ -333,7 +333,7 @@ public class ModeMenu extends Mode {
 							mSemaphore.acquire();
 							mProgress.gotoTrainingPack();
 							ChangeLevel();
-							mPendMode = new ModeGame(mWorld, ModeMenu.this, mProgress);
+							mPendMode = new ModeGame(mWorld, ModeMenu.this, mProgress, mSkin);
 							mSemaphore.release();
 						} catch(InterruptedException int_ex)
 						{

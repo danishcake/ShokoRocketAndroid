@@ -49,6 +49,7 @@ public class ModeGame extends Mode {
 	boolean mCompleteDialogShown = false;
 	int mCompleteAge = 0;
 	private Progress mProgress;
+	private SkinProgress mSkin;
 	
 	private int mBtnSize = 48;
 	private int mBtnSize2 = 64;
@@ -80,11 +81,12 @@ public class ModeGame extends Mode {
 	private final int E_MENU_ROTATE = 1;
 	private final int E_MENU_BACK = 2;
 	
-	public ModeGame(World world, ModeMenu menu, Progress progress)
+	public ModeGame(World world, ModeMenu menu, Progress progress, SkinProgress skin)
 	{
 		mWorld = world;
 		mModeMenu = menu;
 		mProgress = progress;
+		mSkin = skin;
 		
 		try
 		{
@@ -122,9 +124,9 @@ public class ModeGame extends Mode {
 
 		mGameDrawer = mGameDrawerNorm;
 		if(smaller < 1)
-			mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller), null);
+			mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller), mSkin);
 		else
-			mGameDrawer.Setup(mContext, grid_size, null);
+			mGameDrawer.Setup(mContext, grid_size, mSkin);
 		if(smaller_rot < 1)
 			mGameDrawerRot.Setup(mContext, (int)(((float)grid_size) * smaller_rot), null);
 		else
@@ -593,7 +595,7 @@ public class ModeGame extends Mode {
 							mSemaphore.acquire();
 							mProgress.nextUnbeaten();
 							World world = mProgress.getWorld();
-							mPendMode = new ModeGame(world, mModeMenu, mProgress);
+							mPendMode = new ModeGame(world, mModeMenu, mProgress, mSkin);
 							mSemaphore.release();
 						} catch(InterruptedException int_ex)
 						{

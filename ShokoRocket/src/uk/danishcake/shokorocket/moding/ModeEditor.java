@@ -51,6 +51,7 @@ public class ModeEditor extends Mode {
 		Walls, Mice, Cats, Arrows, Holes, Rockets
 	}
 	private EditMode mEditMode = EditMode.Walls;
+	private SkinProgress mSkin;
 	private Widget mEditModeWidget = null;
 	private Widget mTryWidget = null;
 
@@ -154,12 +155,13 @@ public class ModeEditor extends Mode {
 	private final int E_MENU_ARROWMODE = 11;
 	
 	
-	public ModeEditor(ModeMenu menu, World world)
+	public ModeEditor(ModeMenu menu, World world, SkinProgress skin)
 	{
 		mWorld = world;
 		if(world != null)
 			world.setArrowStockUnlimited(true);
 		mModeMenu = menu;
+		mSkin = skin;
 	}
 	
 	/**
@@ -178,9 +180,9 @@ public class ModeEditor extends Mode {
 		float smaller = scaleX < scaleY ? scaleX : scaleY;
 		
 		if(smaller < 1)
-			mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller), null);
+			mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller), mSkin);
 		else
-			mGameDrawer.Setup(mContext, grid_size, null);
+			mGameDrawer.Setup(mContext, grid_size, mSkin);
 		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), level_border);
 		
 	}

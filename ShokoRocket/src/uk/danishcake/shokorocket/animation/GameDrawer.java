@@ -176,8 +176,6 @@ public class GameDrawer {
 	public void Setup(Context context, int gridSize, SkinProgress skin)
 	{
 		mGridSize = gridSize;
-		if(skin == null)
-			skin = new SkinProgress(context);
 		float referenceGridSize = (float)context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.grid_size);
 		float scale = ((float)mGridSize) / referenceGridSize; 
 
