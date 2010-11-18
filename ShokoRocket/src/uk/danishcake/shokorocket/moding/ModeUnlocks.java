@@ -13,6 +13,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.widget.Toast;
 
 public class ModeUnlocks extends Mode {
 	private ModeMenu mModeMenu;
@@ -48,9 +49,17 @@ public class ModeUnlocks extends Mode {
 		
 		RadioWidget skin_pink = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 1 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 1 * (btnSize + btnSep) + btnSize), skins);
 		skin_pink.setText("Pink mice");
+		skin_pink.setEnabled(mSkin.getSkinUnlocked("Animations/PinkMice.xml"));
 		
 		RadioWidget skin_xmas = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 2 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 2 * (btnSize + btnSep) + btnSize), skins);
 		skin_xmas.setText("Christmas!");
+		skin_xmas.setEnabled(mSkin.getSkinUnlocked("Animations/Christmas.xml"));
+		
+		//Read current set state
+		if(mSkin.getSkin().equals("Animations/PinkMice.xml"))
+		{
+			skin_pink.setValue(true);
+		}
 		
 		back.setOnClickListener(new OnClickListener() {
 			@Override
@@ -70,11 +79,21 @@ public class ModeUnlocks extends Mode {
 			@Override
 			public void OnClick(Widget widget) {
 				if(((RadioWidget)widget).getValue())
-					mSkin.setSkin("Animations/PinkMice.xml");
+					mSkin.setSkin("");
 				else
 					mSkin.setSkin("Animations/PinkMice.xml");
 			}
 		});
+		
+		skin_pink.setOnDisabledClickListener(new OnClickListener() {
+			public void OnClick(Widget widget) {
+				Toast.makeText(mContext, "Beat 5 levels to unlock", Toast.LENGTH_SHORT).show();
+			}});
+		
+		skin_xmas.setOnDisabledClickListener(new OnClickListener() {
+			public void OnClick(Widget widget) {
+				Toast.makeText(mContext, "Play during December to unlock", Toast.LENGTH_SHORT).show();
+			}});
 		
 		mWidgetPage.setFontSize(context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size));
 		mWidgetPage.addWidget(back);

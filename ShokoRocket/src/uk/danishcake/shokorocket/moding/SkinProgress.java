@@ -24,6 +24,7 @@ public class SkinProgress {
 	private Set<String> mUnlockedSkins = new HashSet<String>();
 	private HashMap<String, String> mDefaults = new HashMap<String, String>();
 	private HashMap<String, String> mSkin = new HashMap<String, String>();
+	private String mSkinName = "";
 	private Context mContext = null;
 
 	public SkinProgress(Context context) {
@@ -101,8 +102,8 @@ public class SkinProgress {
 		sp.edit().putString("UnlockedSkins", unlocked_skins);
 	}
 
-	public Set<String> getUnlockedSkins() {
-		return mUnlockedSkins;
+	public boolean getSkinUnlocked(String skin) {
+		return mUnlockedSkins.contains(skin);
 	}
 
 	public void setSkin(String skin) {
@@ -114,7 +115,10 @@ public class SkinProgress {
 		} catch (IOException io_ex) {
 			Log.e("SkinProgress", "Unable to load default animation files");
 		}
+		mSkinName = skin;
 	}
+	
+	public String getSkin() {return mSkinName;}
 
 	public InputStream getAnimation(String name) {
 		try

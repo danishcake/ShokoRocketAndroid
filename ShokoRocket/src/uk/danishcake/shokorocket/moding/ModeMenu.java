@@ -28,7 +28,7 @@ public class ModeMenu extends Mode {
 	private Widget mLevelName;
 	private Widget mLevelPackName;
 	private World mWorld = null;
-	private GameDrawer mGameDrawer = new GameDrawer();
+	private GameDrawer mGameDrawer;
 	private boolean mSetup = false;
 	private boolean mEditorLoaded = false;
 	private Progress mProgress;
@@ -44,8 +44,11 @@ public class ModeMenu extends Mode {
 	
 	@Override
 	public void Setup(Context context) {
+		mGameDrawer = new GameDrawer();
 		if(mSetup)
 		{
+			mProgress.AssessUnlockable(mSkin);
+			mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size), mSkin);
 			mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
 			if(mEditorLoaded)
 				LoadLevelList();
@@ -55,8 +58,10 @@ public class ModeMenu extends Mode {
 		}
 		mContext = context;
 		mProgress = new Progress(context);
+		mProgress.AssessUnlockable(mSkin);
 		mMakeTrainingOffer = Progress.IsFirstRun(context);
 		mSkin = new SkinProgress(context);
+		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size), mSkin);
 		
 		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
 		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
@@ -218,8 +223,7 @@ public class ModeMenu extends Mode {
 		});
 		
 		LoadLevelList();
-		
-		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size), mSkin);
+
 		ChangeLevel();
 		mSetup = true;
 	}

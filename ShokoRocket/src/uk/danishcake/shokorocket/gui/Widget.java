@@ -26,6 +26,9 @@ public class Widget {
 	private int mFontSize = 16;
 	private int mFontBorder = 8;
 	private OnClickListener mOnClick = null;
+	private OnClickListener mOnDisabledClick = null;
+	private boolean mEnabled = true;
+	
 	public enum VerticalAlignment {
 		Top, Middle, Bottom
 	}
@@ -218,11 +221,29 @@ public class Widget {
 	}
 	
 	/**
-	 * Sets the callback to fire when tapped
+	 * Sets the callback to fire when tapped and enabled
 	 * @param callback
 	 */
 	public void setOnClickListener(OnClickListener callback) {
 		mOnClick = callback;
+	}
+	
+	/**
+	 * Sets the callback to fire when tapped and disabled
+	 * @param callback
+	 */
+	public void setOnDisabledClickListener(OnClickListener callback) {
+		mOnDisabledClick = callback;
+	}
+
+	/**
+	 * Enables/disables the button
+	 * @param enabled Enabled state
+	 */
+	public void setEnabled(boolean enabled)	{
+		if(enabled != mEnabled)
+			mInvalidated = true;
+		mEnabled = enabled;
 	}
 	
 	/**
@@ -336,6 +357,13 @@ public class Widget {
 			fade_paint.setARGB(100, 255, 255, 255);
 			canvas.drawPaint(fade_paint);
 		}
+		if(!mEnabled)
+		{
+			Paint fade_paint = new Paint();
+			fade_paint.setXfermode(new PorterDuffXfermode(Mode.SRC_ATOP));
+			fade_paint.setARGB(127, 0, 0, 0);
+			canvas.drawPaint(fade_paint);			
+		}
 		mInvalidated = false;
 	}
 	
@@ -358,11 +386,18 @@ public class Widget {
 	 * @param y
 	 */
 	public void handleTap(int x, int y) {
-		if(mBounds.contains(x, y) && mOnClick != null)
+		if(mBounds.contains(x, y))
 		{
-			mDepressedTime = DepressedTime;
-			mInvalidated = true;
-			mOnClick.OnClick(this);
+			if(mEnabled && mOnClick != null)
+			{
+				mDepressedTime = DepressedTime;
+				mInvalidated = true;
+				mOnClick.OnClick(this);
+			}
+			if(!mEnabled && mOnDisabledClick != null)
+			{
+				mOnDisabledClick.OnClick(this);
+			}
 		}
 	}
 }

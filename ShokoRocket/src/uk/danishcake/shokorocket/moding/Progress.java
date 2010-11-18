@@ -10,6 +10,9 @@ import java.io.OutputStreamWriter;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -379,7 +382,32 @@ public class Progress {
 				}
 			}
 		}
+	}
+	
+	public void AssessUnlockable(SkinProgress skin) {
+		int beatenCount = 0;
+		for(int j = 0; j < mLevels.size(); j++)
+		{
+			LevelPack lp = mLevels.get(j);
+			for(int k = 0; k < lp.levels.size(); k++)
+			{
+				ProgressRecord pr = lp.levels.get(k); 
+				if(pr.beaten) beatenCount++;
+			}
+		}
 		
+		//Pink mice unlocks at 5 beaten levels 
+		if(beatenCount >= 5)
+		{
+			skin.unlockSkin("Animations/PinkMice.xml");
+		}
+		//Christmas theme unlocks if played during December
+		Calendar cal = new GregorianCalendar();
+		if(cal.get(Calendar.MONTH) == Calendar.DECEMBER)
+		{
+			skin.unlockSkin("Animations/Christmas.xml");
+		}
+		//Developer theme unlocks if a level submitted (do in editor)
 	}
 	
 	/**
