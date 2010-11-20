@@ -58,9 +58,10 @@ public class ModeMenu extends Mode {
 		}
 		mContext = context;
 		mProgress = new Progress(context);
+		mSkin = new SkinProgress(context);
 		mProgress.AssessUnlockable(mSkin);
 		mMakeTrainingOffer = Progress.IsFirstRun(context);
-		mSkin = new SkinProgress(context);
+		
 		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size), mSkin);
 		
 		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
