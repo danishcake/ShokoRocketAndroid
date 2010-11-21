@@ -37,13 +37,13 @@ public class RadioWidget extends Widget {
 	{
 		if(value)
 		{
+			dominate_group(); //Fires negative callbacks first
 			if(!mValue) {
 				if(mOnChangeListener != null)
 					mOnChangeListener.OnClick(this);
 				mInvalidated = true;
 			}
 			mValue = true;
-			dominate_group();
 		} else
 		{
 			if(mValue) {

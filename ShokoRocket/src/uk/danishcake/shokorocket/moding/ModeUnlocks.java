@@ -51,16 +51,22 @@ public class ModeUnlocks extends Mode {
 		skin_pink.setText("Pink mice");
 		skin_pink.setEnabled(mSkin.getSkinUnlocked("Animations/PinkMice.xml"));
 		
-		RadioWidget skin_xmas = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 2 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 2 * (btnSize + btnSep) + btnSize), skins);
-		skin_xmas.setText("Christmas!");
+		RadioWidget skin_cont = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 2 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 2 * (btnSize + btnSep) + btnSize), skins);
+		skin_cont.setText("Elite mice");
+		skin_cont.setEnabled(mSkin.getSkinUnlocked("Animations/Contributor.xml"));
+		
+		RadioWidget skin_xmas = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 3 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 3 * (btnSize + btnSep) + btnSize), skins);
+		skin_xmas.setText("Christmas");
 		skin_xmas.setEnabled(mSkin.getSkinUnlocked("Animations/Christmas.xml"));
 		
 		//Read current set state
 		if(mSkin.getSkin().equals("Animations/PinkMice.xml"))
-		{
 			skin_pink.setValue(true);
-		}
-		
+		if(mSkin.getSkin().equals("Animations/Contributor.xml"))
+			skin_cont.setValue(true);
+		if(mSkin.getSkin().equals("Animations/Christmas.xml"))
+			skin_xmas.setValue(true);
+
 		back.setOnClickListener(new OnClickListener() {
 			@Override
 			public void OnClick(Widget widget) {
@@ -85,11 +91,36 @@ public class ModeUnlocks extends Mode {
 			}
 		});
 		
+		skin_cont.setOnValueChangedCallback(new OnClickListener() {
+			@Override
+			public void OnClick(Widget widget) {
+				if(((RadioWidget)widget).getValue())
+					mSkin.setSkin("");
+				else
+					mSkin.setSkin("Animations/Contributor.xml");
+			}
+		});
+		
+		skin_xmas.setOnValueChangedCallback(new OnClickListener() {
+			@Override
+			public void OnClick(Widget widget) {
+				if(((RadioWidget)widget).getValue())
+					mSkin.setSkin("");
+				else
+					mSkin.setSkin("Animations/Christmas.xml");
+			}
+		});
+		
 		skin_pink.setOnDisabledClickListener(new OnClickListener() {
 			public void OnClick(Widget widget) {
 				Toast.makeText(mContext, "Beat 5 levels to unlock", Toast.LENGTH_SHORT).show();
 			}});
 		
+		skin_cont.setOnDisabledClickListener(new OnClickListener() {
+			public void OnClick(Widget widget) {
+				Toast.makeText(mContext, "Submit a level with the editor to unlock", Toast.LENGTH_SHORT).show();
+			}});
+
 		skin_xmas.setOnDisabledClickListener(new OnClickListener() {
 			public void OnClick(Widget widget) {
 				Toast.makeText(mContext, "Play during December to unlock", Toast.LENGTH_SHORT).show();
@@ -99,6 +130,7 @@ public class ModeUnlocks extends Mode {
 		mWidgetPage.addWidget(back);
 		mWidgetPage.addWidget(tutorial);
 		mWidgetPage.addWidget(skin_pink);
+		mWidgetPage.addWidget(skin_cont);
 		mWidgetPage.addWidget(skin_xmas);
 	}
 	

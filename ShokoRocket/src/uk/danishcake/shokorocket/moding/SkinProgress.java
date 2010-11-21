@@ -31,7 +31,7 @@ public class SkinProgress {
 		SharedPreferences sp = context.getSharedPreferences("Unlocks",
 				Context.MODE_PRIVATE);
 		String unlocked_skins = sp.getString("UnlockedSkins", "");
-		String[] unlocked_skins_list = unlocked_skins.split(",");
+		String[] unlocked_skins_list = unlocked_skins.split(";");
 		for (int i = 0; i < unlocked_skins_list.length; i++) {
 			if (unlocked_skins_list[i].length() > 0)
 				mUnlockedSkins.add(unlocked_skins_list[i]);
@@ -86,20 +86,18 @@ public class SkinProgress {
 	public void unlockSkin(String skin) {
 		mUnlockedSkins.add(skin);
 
-		SharedPreferences sp = mContext.getSharedPreferences("Unlocks",
-				Context.MODE_PRIVATE);
-
 		String unlocked_skins = "";
 		Iterator<String> it = mUnlockedSkins.iterator();
 		while (it.hasNext()) {
 			String skin_it = (String) it.next();
 			if (unlocked_skins.length() > 0)
-				unlocked_skins = unlocked_skins + "," + skin_it;
+				unlocked_skins = unlocked_skins + ";" + skin_it;
 			else
-				unlocked_skins = skin;
+				unlocked_skins = skin_it;
 		}
-
-		sp.edit().putString("UnlockedSkins", unlocked_skins);
+		SharedPreferences sp = mContext.getSharedPreferences("Unlocks",
+				Context.MODE_PRIVATE);
+		sp.edit().putString("UnlockedSkins", unlocked_skins).commit();
 	}
 
 	public boolean getSkinUnlocked(String skin) {

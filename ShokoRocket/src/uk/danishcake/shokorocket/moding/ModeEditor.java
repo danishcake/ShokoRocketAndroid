@@ -75,6 +75,8 @@ public class ModeEditor extends Mode {
 				public void onClick(View v) {
 					try
 					{
+					if(mNewLevelDialog == null)
+						return; //Have seen this crash due to null here - perhaps two clicks are called sometimes?
 					mSemaphore.acquire();
 					Spinner width_spinner = (Spinner) mNewLevelDialog.findViewById(R.id.LevelWidth);
 					Spinner height_spinner = (Spinner) mNewLevelDialog.findViewById(R.id.LevelHeight);
@@ -676,6 +678,7 @@ public class ModeEditor extends Mode {
 							
 							mShareDialog.dismiss();
 							mSemaphore.release();
+							mSkin.unlockSkin("Animations/Contributor.xml");
 						} catch(InterruptedException int_ex)
 						{
 							Log.e("ModeEditor.HandleMenuSelection", "Semphore interupted");
