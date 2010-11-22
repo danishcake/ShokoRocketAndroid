@@ -36,9 +36,12 @@ public class SkinProgress {
 			if (unlocked_skins_list[i].length() > 0)
 				mUnlockedSkins.add(unlocked_skins_list[i]);
 		}
+		mSkinName = sp.getString("SelectedSkin", "");
 		mContext = context;
 		try {
 			loadSkins("Animations/DefaultAnimationFiles.xml", mDefaults);
+			if(mSkinName.length() > 0)
+				loadSkins(mSkinName, mSkin);
 		} catch (IOException io_ex) {
 			Log.e("SkinProgress", "Unable to load default animation files");
 		}
@@ -109,11 +112,16 @@ public class SkinProgress {
 			if(skin.equals(""))
 				mSkin.clear();
 			else
+			{
 				loadSkins(skin, mSkin);
+			}
 		} catch (IOException io_ex) {
 			Log.e("SkinProgress", "Unable to load default animation files");
 		}
 		mSkinName = skin;
+		SharedPreferences sp = mContext.getSharedPreferences("Unlocks",
+				Context.MODE_PRIVATE);
+		sp.edit().putString("SelectedSkin", mSkinName).commit();
 	}
 	
 	public String getSkin() {return mSkinName;}
