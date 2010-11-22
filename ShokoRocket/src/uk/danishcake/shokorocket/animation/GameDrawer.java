@@ -3,6 +3,7 @@ package uk.danishcake.shokorocket.animation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
@@ -23,6 +24,21 @@ import uk.danishcake.shokorocket.simulation.Walker.WalkerState;
  *
  */
 public class GameDrawer {
+	private class RenderItem implements Comparable<RenderItem>{
+		public int x;
+		public int y;
+		Animation animation;
+		@Override
+		public int compareTo(RenderItem another) {
+			// return negative if this < another
+			if(animation == null && another.animation != null)
+				return 1;
+			if(animation != null && another.animation == null)
+				return -1;
+			return y - another.y;
+		}
+	}
+	
 	private Bitmap mWorldBitmap = null;
 	private boolean mAnimationsLoaded = false;
 	private EnumMap<Direction, Animation> mMouseAnimations = new EnumMap<Direction, Animation>(Direction.class);
@@ -44,6 +60,7 @@ public class GameDrawer {
 	private Animation mTransCursorAnimation = null;
 	private Animation mTickAnimation = null;
 	private Bitmap mCacheBitmap = null;
+	private List<RenderItem> mRenderItems = new ArrayList<RenderItem>();
 	
 	private int mGridSize = 32;
 	
@@ -261,6 +278,11 @@ public class GameDrawer {
 	 */
 	public void Draw(Canvas canvas, World world)
 	{
+		int sprite_count = 0;
+		for(int i = 0; i < mRenderItems.size(); i++)
+		{
+			mRenderItems.get(i).animation = null;
+		}
 		if(mWorldBitmap != null)
 			canvas.drawBitmap(mWorldBitmap, mDrawOffsetX, mDrawOffsetY, null);
 		//Draw rockets, arrows & holes		
@@ -319,8 +341,17 @@ public class GameDrawer {
 				break;
 			}
 			Animation animation = mMouseAnimations.get(walker.getDirection());
-			if(animation != null) 
-				animation.DrawCurrentFrame(canvas, x, y);
+			if(animation != null)
+			{
+				if(++sprite_count > mRenderItems.size())
+				{
+					mRenderItems.add(new RenderItem());
+				}
+				RenderItem ri = mRenderItems.get(sprite_count-1);
+				ri.x = x;
+				ri.y = y;
+				ri.animation = animation;
+			}
 		}
 		for (Walker walker : cats) {
 			Vector2i position = walker.getPosition();
@@ -342,8 +373,24 @@ public class GameDrawer {
 				break;
 			}
 			Animation animation = mCatAnimations.get(walker.getDirection());
-			if(animation != null) 
-				animation.DrawCurrentFrame(canvas, x, y);		
+			if(animation != null)
+			{
+				if(++sprite_count > mRenderItems.size())
+				{
+					mRenderItems.add(new RenderItem());
+				}
+				RenderItem ri = mRenderItems.get(sprite_count-1);
+				ri.x = x;
+				ri.y = y;
+				ri.animation = animation;
+			}
+		}
+		//Sort cats & mice by depth
+		java.util.Collections.sort(mRenderItems);
+		for(int i = 0; i < sprite_count; i++)
+		{
+			RenderItem ri = mRenderItems.get(i);
+			ri.animation.DrawCurrentFrame(canvas, ri.x, ri.y);
 		}
 		for(Walker walker : world.getDeadMice())
 		{
