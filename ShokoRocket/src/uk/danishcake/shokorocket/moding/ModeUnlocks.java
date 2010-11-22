@@ -19,10 +19,12 @@ public class ModeUnlocks extends Mode {
 	private ModeMenu mModeMenu;
 	private WidgetPage mWidgetPage;
 	private SkinProgress mSkin;
+	private Progress mProgress;
 	
-	public ModeUnlocks(ModeMenu menu, SkinProgress skin) {
+	public ModeUnlocks(ModeMenu menu, SkinProgress skin, Progress progress) {
 		mModeMenu = menu;
 		mSkin = skin;
+		mProgress = progress;
 	}
 	
 	@Override
@@ -39,6 +41,9 @@ public class ModeUnlocks extends Mode {
 		
 		Widget back = new Widget(btn_np, new Rect(btnBorder, mScreenHeight - btnBorder - btnSize, mScreenWidth - btnBorder, mScreenHeight - btnBorder));
 		back.setText("Back");
+		
+		Widget complete_count = new Widget(btn_np, new Rect(btnBorder, mScreenHeight - btnBorder - 2 * btnSize - btnSep, mScreenWidth - btnBorder, mScreenHeight - btnBorder - 1 * btnSize - btnSep));
+		complete_count.setText("Complete: " + (new Integer(mProgress.getBeatenLevelCount())).toString() + "/" + (new Integer(mProgress.getTotalLevelCount())).toString());
 		
 		Widget tutorial = new Widget(btn_np, new Rect(btnBorder, btnBorder, mScreenWidth - btnBorder, btnBorder + btnSize));
 		tutorial.setText("Tutorial");
@@ -60,8 +65,16 @@ public class ModeUnlocks extends Mode {
 		skin_xmas.setEnabled(mSkin.getSkinUnlocked("Animations/Christmas.xml"));
 		
 		RadioWidget skin_obs = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 4 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 4 * (btnSize + btnSep) + btnSize), skins);
-		skin_obs.setText("Obsidian");
+		skin_obs.setText("Obsidian mice");
 		skin_obs.setEnabled(mSkin.getSkinUnlocked("Animations/ObsidianMice.xml"));
+		
+		RadioWidget skin_ghost = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 5 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 5 * (btnSize + btnSep) + btnSize), skins);
+		skin_ghost.setText("Ghost mice");
+		skin_ghost.setEnabled(mSkin.getSkinUnlocked("Animations/GhostMice.xml"));
+		
+		RadioWidget skin_line = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 6 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 6 * (btnSize + btnSep) + btnSize), skins);
+		skin_line.setText("Line art");
+		skin_line.setEnabled(mSkin.getSkinUnlocked("Animations/Line.xml"));
 		
 		//Read current set state
 		if(mSkin.getSkin().equals("Animations/PinkMice.xml"))
@@ -72,6 +85,11 @@ public class ModeUnlocks extends Mode {
 			skin_xmas.setValue(true);
 		if(mSkin.getSkin().equals("Animations/ObsidianMice.xml"))
 			skin_obs.setValue(true);
+		if(mSkin.getSkin().equals("Animations/GhostMice.xml"))
+			skin_ghost.setValue(true);
+		if(mSkin.getSkin().equals("Animations/Line.xml"))
+			skin_line.setValue(true);
+		
 
 		back.setOnClickListener(new OnClickListener() {
 			@Override
@@ -127,6 +145,26 @@ public class ModeUnlocks extends Mode {
 			}
 		});
 		
+		skin_ghost.setOnValueChangedCallback(new OnClickListener() {
+			@Override
+			public void OnClick(Widget widget) {
+				if(((RadioWidget)widget).getValue())
+					mSkin.setSkin("");
+				else
+					mSkin.setSkin("Animations/GhostMice.xml");
+			}
+		});
+		
+		skin_line.setOnValueChangedCallback(new OnClickListener() {
+			@Override
+			public void OnClick(Widget widget) {
+				if(((RadioWidget)widget).getValue())
+					mSkin.setSkin("");
+				else
+					mSkin.setSkin("Animations/Line.xml");
+			}
+		});
+		
 		skin_pink.setOnDisabledClickListener(new OnClickListener() {
 			public void OnClick(Widget widget) {
 				Toast.makeText(mContext, "Beat 5 levels to unlock", Toast.LENGTH_SHORT).show();
@@ -147,13 +185,26 @@ public class ModeUnlocks extends Mode {
 				Toast.makeText(mContext, "Beat 30 levels to unlock", Toast.LENGTH_SHORT).show();
 			}});
 		
+		skin_ghost.setOnDisabledClickListener(new OnClickListener() {
+			public void OnClick(Widget widget) {
+				Toast.makeText(mContext, "Beat 60 levels to unlock", Toast.LENGTH_SHORT).show();
+			}});
+		
+		skin_line.setOnDisabledClickListener(new OnClickListener() {
+			public void OnClick(Widget widget) {
+				Toast.makeText(mContext, "Beat 100 levels to unlock", Toast.LENGTH_SHORT).show();
+			}});
+		
 		mWidgetPage.setFontSize(context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size));
 		mWidgetPage.addWidget(back);
+		mWidgetPage.addWidget(complete_count);
 		mWidgetPage.addWidget(tutorial);
 		mWidgetPage.addWidget(skin_pink);
 		mWidgetPage.addWidget(skin_cont);
 		mWidgetPage.addWidget(skin_xmas);
 		mWidgetPage.addWidget(skin_obs);
+		mWidgetPage.addWidget(skin_ghost);
+		mWidgetPage.addWidget(skin_line);
 	}
 	
 	@Override

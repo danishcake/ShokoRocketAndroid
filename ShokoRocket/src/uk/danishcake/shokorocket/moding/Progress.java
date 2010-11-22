@@ -383,6 +383,42 @@ public class Progress {
 		}
 	}
 	
+	/**
+	 * Gets the total number of levels in all packs 
+	 */
+	public int getTotalLevelCount()
+	{
+		int total = 0;
+		for(int j = 0; j < mLevels.size(); j++)
+		{
+			LevelPack lp = mLevels.get(j);
+			for(int k = 0; k < lp.levels.size(); k++)
+			{
+				ProgressRecord pr = lp.levels.get(k); 
+				total++;
+			}
+		}
+		return total;
+	}
+	
+	/**
+	 * Gets the number of levels beaten in all packs
+	 */
+	public int getBeatenLevelCount()
+	{
+		int beatenCount = 0;
+		for(int j = 0; j < mLevels.size(); j++)
+		{
+			LevelPack lp = mLevels.get(j);
+			for(int k = 0; k < lp.levels.size(); k++)
+			{
+				ProgressRecord pr = lp.levels.get(k); 
+				if(pr.beaten) beatenCount++;
+			}
+		}
+		return beatenCount;
+	}
+	
 	public void AssessUnlockable(SkinProgress skin) {
 		int beatenCount = 0;
 		for(int j = 0; j < mLevels.size(); j++)
@@ -404,6 +440,16 @@ public class Progress {
 		if(beatenCount >= 30)
 		{
 			skin.unlockSkin("Animations/ObsidianMice.xml");
+		}
+		//Ghost mice unlocks at 60 beaten levels
+		if(beatenCount >= 60)
+		{
+			skin.unlockSkin("Animations/GhostMice.xml");
+		}
+		//Line mice unlocks at 100 beaten levels
+		if(beatenCount >= 100)
+		{
+			skin.unlockSkin("Animations/Line.xml");
 		}
 		//Christmas theme unlocks if played during December
 		Calendar cal = new GregorianCalendar();

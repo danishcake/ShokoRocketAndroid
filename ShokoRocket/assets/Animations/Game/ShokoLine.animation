@@ -1,0 +1,47 @@
+<AnimationSet>
+  <Animation Name="North">
+    <Frame Width="64" Height="64" Top="192" Left="0" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+    <Frame Width="64" Height="64" Top="192" Left="64" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+    <Frame Width="64" Height="64" Top="192" Left="128" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+    <Frame Width="64" Height="64" Top="192" Left="192" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+  </Animation>
+  <Animation Name="South">
+    <Frame Width="64" Height="64" Top="128" Left="0" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+    <Frame Width="64" Height="64" Top="128" Left="64" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+    <Frame Width="64" Height="64" Top="128" Left="128" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+    <Frame Width="64" Height="64" Top="128" Left="192" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+  </Animation>
+  <Animation Name="East">
+    <Frame Width="64" Height="64" Top="0" Left="0" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+    <Frame Width="64" Height="64" Top="0" Left="64" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+    <Frame Width="64" Height="64" Top="0" Left="128" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+    <Frame Width="64" Height="64" Top="0" Left="192" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+  </Animation>
+  <Animation Name="West">
+    <Frame Width="64" Height="64" Top="64" Left="0" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+    <Frame Width="64" Height="64" Top="64" Left="64" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+    <Frame Width="64" Height="64" Top="64" Left="128" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+    <Frame Width="64" Height="64" Top="64" Left="192" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+  </Animation>
+  <Animation Name="Stopped">
+    <Frame Width="64" Height="64" Top="0" Left="0" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+  </Animation>
+  <Animation Name="Death" FPS="2">
+    <Frame Width="64" Height="64" Top="256" Left="0" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+    <Frame Width="64" Height="64" Top="256" Left="64" File="Bitmaps/Game/Line/Mouse.png" Time="0.3"/>
+  </Animation>
+  <Animation Name="Rescue" FPS="8">
+    <Frame Width="64" Height="64" Top="320" Left="0" File="Bitmaps/Game/Line/Mouse.png" Time="0.08333"/>
+    <Frame Width="64" Height="64" Top="320" Left="64" File="Bitmaps/Game/Line/Mouse.png" Time="0.08333"/>
+    <Frame Width="64" Height="64" Top="320" Left="128" File="Bitmaps/Game/Line/Mouse.png" Time="0.08333"/>
+    <Frame Width="64" Height="64" Top="320" Left="192" File="Bitmaps/Game/Line/Mouse.png" Time="0.08333"/>
+    <Frame Width="64" Height="64" Top="384" Left="0" File="Bitmaps/Game/Line/Mouse.png" Time="0.08333"/>
+    <Frame Width="64" Height="64" Top="384" Left="64" File="Bitmaps/Game/Line/Mouse.png" Time="0.08333"/>
+    <Frame Width="64" Height="64" Top="384" Left="128" File="Bitmaps/Game/Line/Mouse.png" Time="0.08333"/>
+    <Frame Width="64" Height="64" Top="384" Left="192" File="Bitmaps/Game/Line/Mouse.png" Time="0.08333"/>
+    <Frame Width="64" Height="64" Top="448" Left="0" File="Bitmaps/Game/Line/Mouse.png" Time="0.08333"/>
+    <Frame Width="64" Height="64" Top="448" Left="64" File="Bitmaps/Game/Line/Mouse.png" Time="0.08333"/>
+    <Frame Width="64" Height="64" Top="448" Left="128" File="Bitmaps/Game/Line/Mouse.png" Time="0.08333"/>
+    <Frame Width="64" Height="64" Top="448" Left="192" File="Bitmaps/Game/Line/Mouse.png" Time="0.08333"/>
+  </Animation>
+</AnimationSet>
