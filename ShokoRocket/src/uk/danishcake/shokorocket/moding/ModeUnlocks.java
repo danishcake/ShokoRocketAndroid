@@ -59,6 +59,10 @@ public class ModeUnlocks extends Mode {
 		skin_xmas.setText("Christmas");
 		skin_xmas.setEnabled(mSkin.getSkinUnlocked("Animations/Christmas.xml"));
 		
+		RadioWidget skin_obs = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 4 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 4 * (btnSize + btnSep) + btnSize), skins);
+		skin_obs.setText("Obsidian");
+		skin_obs.setEnabled(mSkin.getSkinUnlocked("Animations/ObsidianMice.xml"));
+		
 		//Read current set state
 		if(mSkin.getSkin().equals("Animations/PinkMice.xml"))
 			skin_pink.setValue(true);
@@ -66,6 +70,8 @@ public class ModeUnlocks extends Mode {
 			skin_cont.setValue(true);
 		if(mSkin.getSkin().equals("Animations/Christmas.xml"))
 			skin_xmas.setValue(true);
+		if(mSkin.getSkin().equals("Animations/ObsidianMice.xml"))
+			skin_obs.setValue(true);
 
 		back.setOnClickListener(new OnClickListener() {
 			@Override
@@ -111,6 +117,16 @@ public class ModeUnlocks extends Mode {
 			}
 		});
 		
+		skin_obs.setOnValueChangedCallback(new OnClickListener() {
+			@Override
+			public void OnClick(Widget widget) {
+				if(((RadioWidget)widget).getValue())
+					mSkin.setSkin("");
+				else
+					mSkin.setSkin("Animations/ObsidianMice.xml");
+			}
+		});
+		
 		skin_pink.setOnDisabledClickListener(new OnClickListener() {
 			public void OnClick(Widget widget) {
 				Toast.makeText(mContext, "Beat 5 levels to unlock", Toast.LENGTH_SHORT).show();
@@ -126,12 +142,18 @@ public class ModeUnlocks extends Mode {
 				Toast.makeText(mContext, "Play during December to unlock", Toast.LENGTH_SHORT).show();
 			}});
 		
+		skin_obs.setOnDisabledClickListener(new OnClickListener() {
+			public void OnClick(Widget widget) {
+				Toast.makeText(mContext, "Beat 30 levels to unlock", Toast.LENGTH_SHORT).show();
+			}});
+		
 		mWidgetPage.setFontSize(context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size));
 		mWidgetPage.addWidget(back);
 		mWidgetPage.addWidget(tutorial);
 		mWidgetPage.addWidget(skin_pink);
 		mWidgetPage.addWidget(skin_cont);
 		mWidgetPage.addWidget(skin_xmas);
+		mWidgetPage.addWidget(skin_obs);
 	}
 	
 	@Override

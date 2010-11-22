@@ -400,6 +400,11 @@ public class Progress {
 		{
 			skin.unlockSkin("Animations/PinkMice.xml");
 		}
+		//Black mice unlocks at 30 beaten levels
+		if(beatenCount >= 30)
+		{
+			skin.unlockSkin("Animations/ObsidianMice.xml");
+		}
 		//Christmas theme unlocks if played during December
 		Calendar cal = new GregorianCalendar();
 		if(cal.get(Calendar.MONTH) == Calendar.DECEMBER)
