@@ -394,7 +394,6 @@ public class Progress {
 			LevelPack lp = mLevels.get(j);
 			for(int k = 0; k < lp.levels.size(); k++)
 			{
-				ProgressRecord pr = lp.levels.get(k); 
 				total++;
 			}
 		}
