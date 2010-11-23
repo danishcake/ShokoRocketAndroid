@@ -847,7 +847,7 @@ public class SPWorld extends WorldBase {
 			walker.setDirection2(arrow_direction);
 		}
 		/* Now interact with walls */
-		super.walkerReachNewSquare(walker, x, y, d);
+		super.walkerReachNewSquare(walker, x, y, walker.getDirection());
 	}
 	
 	/* Reset
