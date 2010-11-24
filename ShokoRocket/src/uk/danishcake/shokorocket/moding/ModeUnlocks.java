@@ -39,40 +39,43 @@ public class ModeUnlocks extends Mode {
 		int btnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
 		int btnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
 		
-		Widget back = new Widget(btn_np, new Rect(btnBorder, mScreenHeight - btnBorder - btnSize, mScreenWidth - btnBorder, mScreenHeight - btnBorder));
+		Widget back = new Widget(btn_np, new Rect(btnBorder, mScreenHeight - btnBorder - btnSize, 
+												  mScreenWidth / 2 - btnSep / 2, mScreenHeight - btnBorder));
 		back.setText("Back");
-		
-		Widget complete_count = new Widget(btn_np, new Rect(btnBorder, mScreenHeight - btnBorder - 2 * btnSize - btnSep, mScreenWidth - btnBorder, mScreenHeight - btnBorder - 1 * btnSize - btnSep));
-		complete_count.setText("Complete: " + (new Integer(mProgress.getBeatenLevelCount())).toString() + "/" + (new Integer(mProgress.getTotalLevelCount())).toString());
-		
-		Widget tutorial = new Widget(btn_np, new Rect(btnBorder, btnBorder, mScreenWidth - btnBorder, btnBorder + btnSize));
+
+		Widget tutorial = new Widget(btn_np, new Rect(mScreenWidth / 2 + btnSep / 2, mScreenHeight - btnBorder - btnSize, 
+													  mScreenWidth - btnBorder, mScreenHeight - btnBorder));
 		tutorial.setText("Tutorial");
 		
+		Widget complete_count = new Widget(btn_np, new Rect(btnBorder, mScreenHeight - btnBorder - btnSep - 2 * btnSize,
+															mScreenWidth - btnBorder, mScreenHeight - btnBorder - btnSep - btnSize));
+		complete_count.setText("Complete: " + (new Integer(mProgress.getBeatenLevelCount())).toString() + "/" + (new Integer(mProgress.getTotalLevelCount())).toString());
+
 		List<RadioWidget> skins = new ArrayList<RadioWidget>();
 		NinePatchData set_np = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_radio_set)), np_border, np_border, np_border, np_border);
 		NinePatchData unset_np = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_radio_unset)), np_border, np_border, np_border, np_border);
 		
-		RadioWidget skin_pink = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 1 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 1 * (btnSize + btnSep) + btnSize), skins);
+		RadioWidget skin_pink = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 0 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 0 * (btnSize + btnSep) + btnSize), skins);
 		skin_pink.setText("Pink mice");
 		skin_pink.setEnabled(mSkin.getSkinUnlocked("Animations/PinkMice.xml"));
 		
-		RadioWidget skin_cont = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 2 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 2 * (btnSize + btnSep) + btnSize), skins);
+		RadioWidget skin_cont = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 1 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 1 * (btnSize + btnSep) + btnSize), skins);
 		skin_cont.setText("Elite mice");
 		skin_cont.setEnabled(mSkin.getSkinUnlocked("Animations/Contributor.xml"));
 		
-		RadioWidget skin_xmas = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 3 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 3 * (btnSize + btnSep) + btnSize), skins);
+		RadioWidget skin_xmas = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 2 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 2 * (btnSize + btnSep) + btnSize), skins);
 		skin_xmas.setText("Christmas");
 		skin_xmas.setEnabled(mSkin.getSkinUnlocked("Animations/Christmas.xml"));
 		
-		RadioWidget skin_obs = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 4 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 4 * (btnSize + btnSep) + btnSize), skins);
+		RadioWidget skin_obs = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 3 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 3 * (btnSize + btnSep) + btnSize), skins);
 		skin_obs.setText("Obsidian mice");
 		skin_obs.setEnabled(mSkin.getSkinUnlocked("Animations/ObsidianMice.xml"));
 		
-		RadioWidget skin_ghost = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 5 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 5 * (btnSize + btnSep) + btnSize), skins);
+		RadioWidget skin_ghost = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 4 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 4 * (btnSize + btnSep) + btnSize), skins);
 		skin_ghost.setText("Ghost mice");
 		skin_ghost.setEnabled(mSkin.getSkinUnlocked("Animations/GhostMice.xml"));
 		
-		RadioWidget skin_line = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 6 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 6 * (btnSize + btnSep) + btnSize), skins);
+		RadioWidget skin_line = new RadioWidget(set_np, unset_np, new Rect(btnBorder, btnBorder + 5 * (btnSize + btnSep), mScreenWidth - btnBorder, btnBorder + 5 * (btnSize + btnSep) + btnSize), skins);
 		skin_line.setText("Line art");
 		skin_line.setEnabled(mSkin.getSkinUnlocked("Animations/Line.xml"));
 		
