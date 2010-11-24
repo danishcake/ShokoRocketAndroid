@@ -265,7 +265,8 @@ public class Progress {
 						lp.levels.add(pr);
 					}
 				}
-				mLevels.add(lp);
+				if(lp.levels.size() > 0)
+					mLevels.add(lp);
 			}
 		} catch(IOException io_ex)
 		{
