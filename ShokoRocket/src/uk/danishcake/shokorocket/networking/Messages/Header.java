@@ -1,4 +1,4 @@
-package uk.danishcake.shokorocket.networking.Messages;
+package uk.danishcake.shokorocket.networking.messages;
 
 public class Header {
 	private int message_id;

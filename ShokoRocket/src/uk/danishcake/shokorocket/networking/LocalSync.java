@@ -1,38 +1,21 @@
 package uk.danishcake.shokorocket.networking;
 
-import java.util.ArrayList;
+/**
+ * LocalSync is a simplistic multiplayer connection that is all local
+ * It provides indications of several local clients
+ * @author Edward Woolhouse
+ */
+public class LocalSync extends GameSync {
 
-public class LocalSync implements IGameSync {
-
-	private static ArrayList<LocalSync> mSyncs = new ArrayList<LocalSync>();
-	
 	@Override
 	public void Connect(String dest) {
-		// TODO Auto-generated method stub
-		mSyncs.add(this);
-	}
-	
-	@Override
-	public void Setup() {
-		// TODO Auto-generated method stub
-		mSyncs = new ArrayList<LocalSync>();	
-	}
-	
-	@Override
-	public void Shutdown() {
-		// TODO Auto-generated method stub
-		mSyncs = new ArrayList<LocalSync>();	
-	}
-
-	@Override
-	public boolean HasNewFrameData() {
-		// TODO Auto-generated method stub
-		return false;
+		// TODO parse dest for client count/difficulty etc 
+		
 	}
 
 	@Override
 	public void SendFrameEnd() {
-		// TODO Auto-generated method stub
-
+		mLocalFrame++;
+		mSyncedFrame = mLocalFrame - 1;
 	}
 }
