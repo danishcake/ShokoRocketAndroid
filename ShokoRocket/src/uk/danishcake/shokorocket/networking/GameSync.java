@@ -1,4 +1,10 @@
 package uk.danishcake.shokorocket.networking;
+import uk.danishcake.shokorocket.networking.messages.Message;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * GameSync
@@ -11,6 +17,15 @@ package uk.danishcake.shokorocket.networking;
 public abstract class GameSync {
 	protected int mLocalFrame = 0;
 	protected int mSyncedFrame = 0;
+	private Comparator<Message> mMessageSorter = new Comparator<Message>() {
+		@Override
+		public int compare(Message object1, Message object2) {
+			return object1.sub_frame_id - object2.sub_frame_id;
+		}
+	};
+	
+	
+	protected LinkedList<ArrayList<Message>> mMessageStack = new LinkedList<ArrayList<Message>>();
 	/**
 	 * Connects to a destination
 	 * @param dest A string describing the destination - could be an IP address
@@ -39,4 +54,11 @@ public abstract class GameSync {
 	public abstract void SendFrameEnd();
 	
 	// TODO some sort of pop messages
+	public List<Message> popMessages() {
+		ArrayList<Message> frame_messages = mMessageStack.removeFirst();
+		
+		java.util.Collections.sort(frame_messages, mMessageSorter);
+		return frame_messages;
+	}
+	
 }

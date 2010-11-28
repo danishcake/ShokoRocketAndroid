@@ -305,13 +305,13 @@ public class GameDrawer {
 				case SouthArrow:
 				case EastArrow:
 				case WestArrow:
-					mFullArrowAnimations.get(square.GetDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+					mFullArrowAnimations.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
 					break;
 				case NorthHalfArrow:
 				case SouthHalfArrow:
 				case EastHalfArrow:
 				case WestHalfArrow:
-					mHalfArrowAnimations.get(square.GetDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+					mHalfArrowAnimations.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
 					break;
 				}
 			}

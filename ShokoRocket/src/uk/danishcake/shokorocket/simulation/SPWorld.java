@@ -321,7 +321,7 @@ public class SPWorld extends WorldBase {
 	 */
 	public void setArrow(int x, int y, Direction direction) {
 		SquareType square_type = mSpecialSquares[wallIndex(x, y)];
-		Direction square_dir = square_type.GetDirectionality();
+		Direction square_dir = square_type.getArrowDirectionality();
 		//Can't set arrow in rocket or hole
 		if(square_type == SquareType.Hole || square_type == SquareType.Rocket)
 			return;
@@ -333,17 +333,17 @@ public class SPWorld extends WorldBase {
 		case West:
 		case East:
 			if(mUnlimitedArrows)
-				mSpecialSquares[wallIndex(x, y)] = direction.ToArrow();
+				mSpecialSquares[wallIndex(x, y)] = direction.toArrow();
 			else if(stockHasArrow(direction))
 			{
 				if(square_dir == Direction.Invalid)
 				{
-					mSpecialSquares[wallIndex(x, y)] = direction.ToArrow();
+					mSpecialSquares[wallIndex(x, y)] = direction.toArrow();
 					removeArrowFromStock(direction);
 				} else
 				{
 					mArrowStock.add(square_dir);
-					mSpecialSquares[wallIndex(x, y)] = direction.ToArrow();
+					mSpecialSquares[wallIndex(x, y)] = direction.toArrow();
 					removeArrowFromStock(direction);	
 				}
 			}
@@ -716,7 +716,7 @@ public class SPWorld extends WorldBase {
 				case SouthArrow:
 				case SouthHalfArrow:
 				case SouthDestroyedArrow:
-					Direction d = square.GetDirectionality();
+					Direction d = square.getArrowDirectionality();
 					out.println("<Arrow x=\"" + Integer.toString(x) + "\" y=\"" + Integer.toString(y) + "\" d=\"" + d.toString() + "\"/>");
 					break;
 				}
@@ -836,7 +836,7 @@ public class SPWorld extends WorldBase {
 			walker.setWalkerState(WalkerState.Rescued);
 		}
 		//Arrows
-		Direction arrow_direction = square.ToDirection(); 
+		Direction arrow_direction = square.toArrowDirection(); 
 		if(arrow_direction != Direction.Invalid)
 		{
 			if(arrow_direction == Turns.TurnAround(d) && walker.getWalkerType() == WalkerType.Cat)

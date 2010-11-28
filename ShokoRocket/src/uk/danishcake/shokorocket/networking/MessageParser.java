@@ -1,4 +1,4 @@
-package uk.danishcake.shokorocket.networking.messages;
+package uk.danishcake.shokorocket.networking;
 
 /**
  * Class a container for a single static method that parses a byte array and 

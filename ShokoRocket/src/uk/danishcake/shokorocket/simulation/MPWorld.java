@@ -1,10 +1,14 @@
 package uk.danishcake.shokorocket.simulation;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.w3c.dom.Element;
 
 import uk.danishcake.shokorocket.networking.GameSync;
 import uk.danishcake.shokorocket.networking.LocalSync;
+import uk.danishcake.shokorocket.networking.messages.ArrowPlacementMessage;
+import uk.danishcake.shokorocket.networking.messages.Message;
 import uk.danishcake.shokorocket.simulation.Walker.WalkerState;
 import uk.danishcake.shokorocket.simulation.Walker.WalkerType;
 
@@ -22,6 +26,9 @@ public class MPWorld extends WorldBase {
 	private int mFixedTimestep = 20;
 	private int mCommunicationTimestep = 100;
 	private int mCommunicationFrameTime = 0;
+	private int mSubFrame = 0;
+	private List<Message> mMessages;
+	private MPSquareType[] mSpecialSquares = new MPSquareType[mWidth*mHeight];
 	
 	
 	public ArrayList<Walker> getMice() {
@@ -59,14 +66,19 @@ public class MPWorld extends WorldBase {
 	 */
 	@Override
 	protected void loadSpecific(Element root) {
-		// TODO Auto-generated method stub
+		mSpecialSquares = new MPSquareType[mWidth * mHeight];
+		for(int i = 0; i < mWidth * mHeight; i++){
+			mSpecialSquares[i] = new MPSquareType();
+			mSpecialSquares[i].square_type = SquareType.Empty;
+			mSpecialSquares[i].player_id = 0;
+		}
 
 	}
 	
 	public void Tick(int timespan) {
 		//Initialise as a temporary measure
 		if(mSync == null){
-			mSync = new LocalSync();
+			mSync = new LocalSync(this);
 			mSync.Connect("3");
 		}
 		
@@ -86,8 +98,8 @@ public class MPWorld extends WorldBase {
 				if(mSync.getReadyFrame() >= mSync.getSentFrame() - 2)
 				{
 					mCommunicationFrameTime = 0;
-					
-					//Now action the received messages
+					mSubFrame = 0;
+					mMessages = mSync.popMessages();
 				}
 			}	
 		}
@@ -95,6 +107,37 @@ public class MPWorld extends WorldBase {
 		//If mCommunicationFrameTime has been reset then simulation is synced and can continue
 		if(mCommunicationFrameTime < mCommunicationTimestep)
 		{
+			//Action any messages this frame
+			if(mMessages.size() > 0)
+			{
+				Message next = mMessages.get(0); 
+				while(next != null && next.sub_frame_id <= mSubFrame)
+				{
+					//Action message
+					switch(next.message_type)
+					{
+					case Message.MESSAGE_CURSOR_POSITION:
+						{
+							
+						}
+						break;
+					case Message.MESSAGE_ARROW_PLACEMENT:
+						{
+							ArrowPlacementMessage message = (ArrowPlacementMessage)next;
+							
+						}
+						break;
+					}
+					
+					
+					mMessages.remove(0);
+					if(mMessages.size() == 0)
+						next = null;
+					else
+						next = mMessages.get(0);
+				}
+			}
+			
 			ArrayList<Walker> justDeadMice = new ArrayList<Walker>();
 			ArrayList<Walker> justRescuedMice = new ArrayList<Walker>();
 			ArrayList<Walker> justDeadCats = new ArrayList<Walker>();
@@ -149,9 +192,54 @@ public class MPWorld extends WorldBase {
 			{
 				cat.DeathTick(timespan);
 			}
+			mSubFrame++;
 		}
 	}
 	
 	//TODO provide level loading
 	//TODO override walkerReachNewGridSquare
+	//TODO send input messages
+	//TODO toggles for holes, rockets, spawners, arrows
+	
+	/**
+	 * Toggles the hole at (x,y)
+	 */
+	void toggleHole(int x, int y) {
+		mSpecialSquares[wallIndex(x, y)].square_type = getHole(x, y) ? SquareType.Hole : SquareType.Empty;
+	}
+	
+	/**
+	 * Sets the hole at (x,y)
+	 */
+	void setHole(int x, int y, boolean hole) {
+		mSpecialSquares[wallIndex(x, y)].square_type = hole ? SquareType.Hole : SquareType.Empty; 
+	}
+	
+	/**
+	 * @return true if a hole is at (x,y)
+	 */
+	boolean getHole(int x, int y) {
+		return mSpecialSquares[wallIndex(x, y)].square_type == SquareType.Hole;
+	}
+	
+	/**
+	 * Toggles spawner at (x,y). If already one present with same direction then clears.
+	 */
+	void toggleSpawner(int x, int y, Direction direction) {
+		mSpecialSquares[wallIndex(x, y)].square_type = getSpawner(x, y) != direction ? direction.toSpawner() : SquareType.Empty;
+	}
+	
+	/**
+	 * Sets the spawner at (x,y)
+	 */
+	void setSpawner(int x, int y, Direction direction) {
+		mSpecialSquares[wallIndex(x, y)].square_type = direction.toSpawner(); 
+	}
+	
+	/**
+	 * @return Direction of spawner at (x,y). Direction.Invalid if empty
+	 */
+	Direction getSpawner(int x, int y) {
+		return mSpecialSquares[wallIndex(x, y)].square_type.toSpawnerDirection();
+	}	
 }

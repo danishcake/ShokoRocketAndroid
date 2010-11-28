@@ -339,16 +339,16 @@ public class WorldTests extends AndroidTestCase {
 		world.setArrow(0, 0, Direction.East);
 		world.setArrow(1, 1, Direction.East);
 		
-		assertEquals(Direction.East, world.getSpecialSquare(0, 0).ToDirection());
-		assertEquals(Direction.East, world.getSpecialSquare(1, 1).ToDirection());
+		assertEquals(Direction.East, world.getSpecialSquare(0, 0).toArrowDirection());
+		assertEquals(Direction.East, world.getSpecialSquare(1, 1).toArrowDirection());
 		
 		SPWorld world2 = new SPWorld();
 		world2.setArrowStockUnlimited(false);
 		
 		world2.setArrow(0, 0, Direction.East);
 		world2.setArrow(1, 1, Direction.East);
-		assertEquals(Direction.Invalid, world2.getSpecialSquare(0, 0).ToDirection());
-		assertEquals(Direction.Invalid, world2.getSpecialSquare(1, 1).ToDirection());
+		assertEquals(Direction.Invalid, world2.getSpecialSquare(0, 0).toArrowDirection());
+		assertEquals(Direction.Invalid, world2.getSpecialSquare(1, 1).toArrowDirection());
 	}
 	
 	public void testResetArrows()

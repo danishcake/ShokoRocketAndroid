@@ -430,7 +430,7 @@ public class ModeEditor extends Mode {
 				mWorld.toggleDirection(mCursorPosition.x, mCursorPosition.y, direction);
 				break;
 			case Arrows:
-				if(mWorld.getSpecialSquare(mCursorPosition.x, mCursorPosition.y).GetDirectionality() == Direction.Invalid)
+				if(mWorld.getSpecialSquare(mCursorPosition.x, mCursorPosition.y).getArrowDirectionality() == Direction.Invalid)
 					mWorld.setSpecialSquare(mCursorPosition.x, mCursorPosition.y, SquareType.Empty);
 				mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, direction);
 				break;

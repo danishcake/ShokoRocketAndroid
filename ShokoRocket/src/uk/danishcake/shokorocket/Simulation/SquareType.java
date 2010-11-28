@@ -3,9 +3,9 @@ package uk.danishcake.shokorocket.simulation;
 
 
 public enum SquareType {
-	Empty, Rocket, Hole, NorthArrow, SouthArrow, EastArrow, WestArrow, NorthHalfArrow, SouthHalfArrow, WestHalfArrow, EastHalfArrow, NorthDestroyedArrow, SouthDestroyedArrow, WestDestroyedArrow, EastDestroyedArrow;
+	Empty, Rocket, Hole, NorthArrow, SouthArrow, EastArrow, WestArrow, NorthHalfArrow, SouthHalfArrow, WestHalfArrow, EastHalfArrow, NorthDestroyedArrow, SouthDestroyedArrow, WestDestroyedArrow, EastDestroyedArrow, Rocket1, Rocket2, Rocket3, Rocket4, NorthSpawner, SouthSpawner, WestSpawner, EastSpawner;
 	
-	public Direction ToDirection() {
+	public Direction toArrowDirection() {
 		switch(this)
 		{
 		case NorthArrow:
@@ -25,7 +25,7 @@ public enum SquareType {
 		}
 	}
 	
-	public Direction GetDirectionality() {
+	public Direction getArrowDirectionality() {
 		switch(this)
 		{
 		case NorthArrow:
@@ -47,6 +47,23 @@ public enum SquareType {
 		default:
 			return Direction.Invalid;
 		}		
+	}
+	
+	public Direction toSpawnerDirection()
+	{
+		switch(this)
+		{
+		case NorthSpawner:
+			return Direction.North;
+		case SouthSpawner:
+			return Direction.South;
+		case EastSpawner:
+			return Direction.East;
+		case WestSpawner:
+			return Direction.West;
+		default:
+			return Direction.Invalid;
+		}
 	}
 	
 	public SquareType Diminish()
