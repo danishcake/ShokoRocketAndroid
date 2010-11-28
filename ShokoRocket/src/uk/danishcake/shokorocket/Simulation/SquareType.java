@@ -3,7 +3,7 @@ package uk.danishcake.shokorocket.simulation;
 
 
 public enum SquareType {
-	Empty, Rocket, Hole, NorthArrow, SouthArrow, EastArrow, WestArrow, NorthHalfArrow, SouthHalfArrow, WestHalfArrow, EastHalfArrow, NorthDestroyedArrow, SouthDestroyedArrow, WestDestroyedArrow, EastDestroyedArrow, Rocket1, Rocket2, Rocket3, Rocket4, NorthSpawner, SouthSpawner, WestSpawner, EastSpawner;
+	Empty, Rocket, Hole, NorthArrow, SouthArrow, EastArrow, WestArrow, NorthHalfArrow, SouthHalfArrow, WestHalfArrow, EastHalfArrow, NorthDestroyedArrow, SouthDestroyedArrow, WestDestroyedArrow, EastDestroyedArrow, NorthSpawner, SouthSpawner, WestSpawner, EastSpawner;
 	
 	public Direction toArrowDirection() {
 		switch(this)

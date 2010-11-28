@@ -199,7 +199,6 @@ public class MPWorld extends WorldBase {
 	//TODO provide level loading
 	//TODO override walkerReachNewGridSquare
 	//TODO send input messages
-	//TODO toggles for holes, rockets, spawners, arrows
 	
 	/**
 	 * Toggles the hole at (x,y)
@@ -274,6 +273,22 @@ public class MPWorld extends WorldBase {
 	 */
 	int getPlayer(int x, int y) {
 		return mSpecialSquares[wallIndex(x, y)].player_id;
+	}
+	
+	
+	/**
+	 * Sets a rocket at (x,y)
+	 */
+	void setRocket(int x, int y, int player) {
+		mSpecialSquares[wallIndex(x, y)].square_type = SquareType.Rocket;
+		mSpecialSquares[wallIndex(x, y)].player_id = player;
+	}
+	
+	/**
+	 * @return true if a rocket is at (x,y)
+	 */
+	boolean getRocket(int x, int y) {
+		return mSpecialSquares[wallIndex(x, y)].square_type == SquareType.Rocket;
 	}
 	
 	
