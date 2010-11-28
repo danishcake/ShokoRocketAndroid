@@ -241,5 +241,40 @@ public class MPWorld extends WorldBase {
 	 */
 	Direction getSpawner(int x, int y) {
 		return mSpecialSquares[wallIndex(x, y)].square_type.toSpawnerDirection();
-	}	
+	}
+	
+	/**
+	 * Toggles arrow at (x,y) for player p. If already one present with same direction  
+	 * and player then clears. Different players do not overwrite existing arrows
+	 */
+	void toggleArrow(int x, int y, Direction direction, int player) {
+		if(getArrow(x, y) == Direction.Invalid || getPlayer(x, y) == player)
+			setArrow(x, y, direction, player);
+	}
+	
+	/**
+	 * Sets the arrow at (x,y) for player p. Different players do not overwrite existing
+	 * arrows
+	 */
+	void setArrow(int x, int y, Direction direction, int player) {
+		mSpecialSquares[wallIndex(x, y)].square_type = direction.toArrow();
+		mSpecialSquares[wallIndex(x, y)].player_id = player;
+	}
+	
+	/**
+	 * @return Direction of arrow at (x,y). Direction.Invalid if empty
+	 */
+	Direction getArrow(int x, int y) {
+		return mSpecialSquares[wallIndex(x, y)].square_type.toArrowDirection();
+	}
+	
+	/**
+	 * @return ID of player square at (x,y). If not a spawner or arrow square
+	 * behaviour undefined
+	 */
+	int getPlayer(int x, int y) {
+		return mSpecialSquares[wallIndex(x, y)].player_id;
+	}
+	
+	
 }
