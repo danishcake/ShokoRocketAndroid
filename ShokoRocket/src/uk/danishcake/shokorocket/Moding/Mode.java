@@ -1,5 +1,6 @@
 package uk.danishcake.shokorocket.moding;
 
+import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
 import uk.danishcake.shokorocket.R;
@@ -33,6 +34,17 @@ public class Mode {
 	
 	private final int E_MENU_SOUND = 99;
 	private final int E_MENU_AUTOROTATE = 98;
+	
+	protected int mBtnSize = 48;
+	protected int mBtnSep = 8;
+	protected int mBtnBorder = 16;
+	protected int mFontSize = 16;
+	protected int mBtnSize2 = 64;
+	protected int mLevelBorder = 8;
+	protected int mGridSize = 64;
+	protected int mCatSound = -1;
+	protected int mClickSound = -1;
+	protected int mMouseSound = -1;
 
 	/**
 	 * Called before the first Tick to allow creation of state, after the previous 
@@ -41,6 +53,23 @@ public class Mode {
 	public void Setup(Context context)
 	{
 		mContext = context;
+		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
+		mBtnSize2 = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_wide_size);
+		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
+		mBtnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
+		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
+		mLevelBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.level_border);
+		mGridSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.grid_size);
+		
+		try
+		{
+			mCatSound = SoundManager.LoadSound("Sounds/Cat.ogg");
+			mClickSound = SoundManager.LoadSound("Sounds/Click.ogg");
+			mMouseSound = SoundManager.LoadSound("Sounds/Mouse.ogg");
+		} catch(IOException io_ex)
+		{
+			//TODO log
+		}
 	}
 
 	/**

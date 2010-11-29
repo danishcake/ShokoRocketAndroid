@@ -20,20 +20,11 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 public class ModeTutorial extends Mode {
-	
-	private int mBtnSize = 48;
-	private int mBtnSep = 8;
-	private int mBtnBorder = 16;
-	private int mFontSize = 16;
-	
-	private int mClickSound = -1;
-	
 	private WidgetPage mWidgetPage = new WidgetPage();
 	private Widget mNextButton = null;
 	private Widget mExplanation = null;
 	
 	private ModeMenu mModeMenu = null;
-	private Context mContext = null;
 	private SPWorld mWorld = null;
 	private GameDrawer mGameDrawer = new GameDrawer();
 	
@@ -230,21 +221,8 @@ public class ModeTutorial extends Mode {
 	
 	public void Setup(Context context)
 	{
-		mContext = context;
-		
-		try
-		{
-			mClickSound = SoundManager.LoadSound("Sounds/Click.ogg");
-		} catch(IOException io_ex)
-		{
-			//TODO log
-		}
-		
-		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
-		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
-		mBtnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
-		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
-		
+		super.Setup(context);
+
 		try {
 			int np_border = context.getResources().getInteger(R.integer.np_border);  
 			NinePatchData btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_button)), np_border, np_border, np_border, np_border);
@@ -266,7 +244,7 @@ public class ModeTutorial extends Mode {
 			mWidgetPage.addWidget(mNextButton);
 			mWidgetPage.addWidget(mExplanation);
 			
-			mGameDrawer.Setup(mContext, mContext.getResources().getInteger(uk.danishcake.shokorocket.R.integer.tutorial_grid_size), new SkinProgress(mContext));
+			mGameDrawer.Setup(mContext, mGridSize, new SkinProgress(mContext));
 			mWorld = new SPWorld(mContext.getAssets().open("TutorialLevels/Tut1.Level"));
 			mGameDrawer.setDrawOffset((mScreenWidth - mWorld.getWidth() * mGameDrawer.getGridSize()) / 2, mBtnBorder + mBtnSize * 2 + mBtnSep * 2);
 			mGameDrawer.CreateBackground(mWorld);

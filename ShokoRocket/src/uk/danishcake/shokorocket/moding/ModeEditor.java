@@ -121,11 +121,6 @@ public class ModeEditor extends Mode {
 	
 	private int mResetTimer = 0;
 	private static final int ResetTime = 1500;
-
-	
-	private int mCatSound = -1;
-	private int mClickSound = -1;
-	private int mMouseSound = -1;
 	
 	boolean mSaveNeeded = false;
 	boolean mValidated = false;
@@ -137,11 +132,6 @@ public class ModeEditor extends Mode {
 	private Vector2i mGestureEnd = new Vector2i(0, 0);
 	private Direction mGestureDirection = Direction.Invalid;
 	private boolean mGestureInProgress = false;
-	
-	private int mBtnSize = 48;
-	private int mBtnSep = 8;
-	private int mBtnBorder = 16;
-	private int mFontSize = 16;
 	
 	private final int E_MENU_NEW = 1;
 	private final int E_MENU_SAVE = 2;
@@ -172,20 +162,18 @@ public class ModeEditor extends Mode {
 	private void InitialiseDrawing() {
 		mGameDrawer = new GameDrawer();
 
-		int grid_size = mContext.getResources().getInteger(R.integer.grid_size);
-		int level_border = mContext.getResources().getInteger(uk.danishcake.shokorocket.R.integer.level_border);
-		int required_width = mWorld.getWidth() * grid_size ;
-		int required_height = mWorld.getHeight() * grid_size ;
-		float scaleX = ((float)mScreenWidth - level_border  * 2) / (float)required_width;
-		float scaleY = ((float)(mScreenHeight - mBtnSize - mBtnBorder - level_border  * 2)) / (float)required_height;
+		int required_width = mWorld.getWidth() * mGridSize ;
+		int required_height = mWorld.getHeight() * mGridSize ;
+		float scaleX = ((float)mScreenWidth - mLevelBorder  * 2) / (float)required_width;
+		float scaleY = ((float)(mScreenHeight - mBtnSize - mBtnBorder - mLevelBorder * 2)) / (float)required_height;
 
 		float smaller = scaleX < scaleY ? scaleX : scaleY;
 		
 		if(smaller < 1)
-			mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller), mSkin);
+			mGameDrawer.Setup(mContext, (int)(((float)mGridSize) * smaller), mSkin);
 		else
-			mGameDrawer.Setup(mContext, grid_size, mSkin);
-		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), level_border);
+			mGameDrawer.Setup(mContext, mGridSize, mSkin);
+		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mLevelBorder);
 		
 	}
 	
@@ -273,7 +261,7 @@ public class ModeEditor extends Mode {
 
 	@Override
 	public void Setup(final Context context) {
-		mContext = context;
+		super.Setup(context);
 		
 		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
 		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);

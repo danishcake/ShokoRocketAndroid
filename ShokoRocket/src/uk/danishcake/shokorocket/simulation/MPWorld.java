@@ -124,7 +124,7 @@ public class MPWorld extends WorldBase {
 					case Message.MESSAGE_ARROW_PLACEMENT:
 						{
 							ArrowPlacementMessage message = (ArrowPlacementMessage)next;
-							
+							toggleArrow(message.x, message.y, message.direction, message.user_id);
 						}
 						break;
 					}

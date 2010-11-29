@@ -34,13 +34,7 @@ public class ModeMenu extends Mode {
 	private Progress mProgress;
 	private boolean mDrawTick = false;
 	private boolean mMakeTrainingOffer = false;
-	
-	private int mBtnSize = 48;
-	private int mBtnSep = 8;
-	private int mBtnBorder = 16;
-	private int mFontSize = 16;
 	private SkinProgress mSkin;
-	private int mClickSound = -1;
 	
 	@Override
 	public void Setup(Context context) {
@@ -56,27 +50,14 @@ public class ModeMenu extends Mode {
 			ChangeLevel();
 			return;
 		}
-		mContext = context;
+		super.Setup(context);
 		mProgress = new Progress(context);
 		mSkin = new SkinProgress(context);
 		mProgress.AssessUnlockable(mSkin);
 		mMakeTrainingOffer = Progress.IsFirstRun(context);
 		
 		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size), mSkin);
-		
-		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
-		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
-		mBtnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
-		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
-	
-		try
-		{
-			mClickSound = SoundManager.LoadSound("Sounds/Click.ogg");
-		} catch(IOException io_ex)
-		{
-			//TODO log
-		}
-		
+				
 		int np_border = context.getResources().getInteger(R.integer.np_border); 
 		NinePatchData btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_button)), np_border, np_border, np_border, np_border);
 	
@@ -92,14 +73,17 @@ public class ModeMenu extends Mode {
 		mLevelName = new Widget(btn_np, new Rect(mBtnBorder, mBtnSize + mBtnSep + mBtnBorder, mScreenWidth - mBtnBorder, mBtnSize + mBtnSep + mBtnBorder + mBtnSize)); 
 		mLevelName.setText(context.getString(R.string.menu_level_name));
 		
-		Widget scrollLeft = new Widget(btn_np, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mBtnSize + mBtnBorder, mScreenHeight - mBtnBorder));
+		Widget scrollLeft = new Widget(btn_np, new Rect(mBtnSize + mBtnBorder + mBtnSep, mScreenHeight - (mBtnSize + mBtnBorder), mBtnSize * 2 + mBtnBorder + mBtnSep, mScreenHeight - mBtnBorder));
 		scrollLeft.setText("<");
 		
 		Widget scrollRight = new Widget(btn_np, new Rect(mScreenWidth - (mBtnSize + mBtnBorder), mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
 		scrollRight.setText(">");
 		
-		Widget playMap = new Widget(btn_np, new Rect(mBtnSize + mBtnBorder + mBtnSep, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - (mBtnSize + mBtnBorder + mBtnSep), mScreenHeight - mBtnBorder));
+		Widget playMap = new Widget(btn_np, new Rect(mBtnBorder + (mBtnSize+ mBtnSep) * 2, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - (mBtnSize + mBtnBorder + mBtnSep), mScreenHeight - mBtnBorder));
 		playMap.setText(context.getString(R.string.menu_play));
+		
+		Widget toggleMP = new Widget(btn_np, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mBtnSize + mBtnBorder, mScreenHeight - mBtnBorder));
+		toggleMP.setText("MP");
 		
 		Widget unlocks = new Widget(btn_np, new Rect(mScreenWidth / 2 + mBtnSep, mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
 		unlocks.setText(context.getString(R.string.menu_unlocks));
@@ -117,6 +101,7 @@ public class ModeMenu extends Mode {
 		mWidgetPage.addWidget(playMap);
 		mWidgetPage.addWidget(unlocks);
 		mWidgetPage.addWidget(loadEditor);
+		mWidgetPage.addWidget(toggleMP);
 		
 	
 		scrollRight.setOnClickListener(new OnClickListener() {
@@ -219,6 +204,16 @@ public class ModeMenu extends Mode {
 					}
 
 					SoundManager.PlaySound(mClickSound);
+				}
+			}
+		});
+		
+		toggleMP.setOnClickListener(new OnClickListener() {
+			@Override
+			public void OnClick(Widget widget) {
+				if(mPendMode == null)
+				{
+					mPendMode = new ModeMPMenu(ModeMenu.this, mSkin); 
 				}
 			}
 		});

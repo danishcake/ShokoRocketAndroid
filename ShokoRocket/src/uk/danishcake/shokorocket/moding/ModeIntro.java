@@ -23,8 +23,8 @@ public class ModeIntro extends Mode {
 	
 	@Override
 	public void Setup(Context context) {
+		super.Setup(context);
 		mFirstRun = Progress.IsFirstRun(context);
-		mContext = context;
 		try
 		{
 			Map<String, Animation> animations = Animation.GetAnimations(context, "Animations/Intro/Splash.animation"); 

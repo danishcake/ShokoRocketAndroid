@@ -49,19 +49,7 @@ public class ModeGame extends Mode {
 	boolean mCompleteDialogShown = false;
 	int mCompleteAge = 0;
 	private Progress mProgress;
-	private SkinProgress mSkin;
-	
-	private int mBtnSize = 48;
-	private int mBtnSize2 = 64;
-	private int mBtnSep = 8;
-	private int mBtnBorder = 16;
-	private int mFontSize = 16;
-	private int mLevelBorder = 8;
-	
-	private int mCatSound = -1;
-	private int mClickSound = -1;
-	private int mMouseSound = -1; 
-	
+	private SkinProgress mSkin;	
 	
 	private RunningMode mRunningMode = RunningMode.Stopped;
 	private int mRotateTimer = 0;
@@ -87,32 +75,15 @@ public class ModeGame extends Mode {
 		mModeMenu = menu;
 		mProgress = progress;
 		mSkin = skin;
-		
-		try
-		{
-			mCatSound = SoundManager.LoadSound("Sounds/Cat.ogg");
-			mClickSound = SoundManager.LoadSound("Sounds/Click.ogg");
-			mMouseSound = SoundManager.LoadSound("Sounds/Mouse.ogg");
-		} catch(IOException io_ex)
-		{
-			//TODO log
-		}
 	}
 	
 	@Override
 	public void Setup(Context context) {
-		mContext = context;
-		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
-		mBtnSize2 = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_wide_size);
-		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
-		mBtnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
-		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
-		mLevelBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.level_border);
+		super.Setup(context);
 		
 		//Setup autoscaling twice, for portrait and landscape orientations
-		int grid_size = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.grid_size);
-		int required_width = mWorld.getWidth() * grid_size;
-		int required_height = mWorld.getHeight() * grid_size;
+		int required_width = mWorld.getWidth() * mGridSize;
+		int required_height = mWorld.getHeight() * mGridSize;
 		float scaleX = ((float)mScreenWidth - mLevelBorder * 2) / (float)required_width;
 		float scaleY = ((float)(mScreenHeight - mBtnSize - mBtnBorder - mLevelBorder * 2)) / (float)required_height;
 		float scaleX_rot = ((float)mScreenWidth - mLevelBorder * 2) / (float)required_height;
@@ -124,13 +95,13 @@ public class ModeGame extends Mode {
 
 		mGameDrawer = mGameDrawerNorm;
 		if(smaller < 1)
-			mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller), mSkin);
+			mGameDrawer.Setup(mContext, (int)(((float)mGridSize) * smaller), mSkin);
 		else
-			mGameDrawer.Setup(mContext, grid_size, mSkin);
+			mGameDrawer.Setup(mContext, mGridSize, mSkin);
 		if(smaller_rot < 1)
-			mGameDrawerRot.Setup(mContext, (int)(((float)grid_size) * smaller_rot), mSkin);
+			mGameDrawerRot.Setup(mContext, (int)(((float)mGridSize) * smaller_rot), mSkin);
 		else
-			mGameDrawerRot.Setup(mContext, grid_size, mSkin);
+			mGameDrawerRot.Setup(mContext, mGridSize, mSkin);
 
 		mGameDrawer.CreateBackground(mWorld);
 		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mLevelBorder);
