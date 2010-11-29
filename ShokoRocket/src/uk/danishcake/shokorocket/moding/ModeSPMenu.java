@@ -134,7 +134,7 @@ public class ModeSPMenu extends Mode {
 			@Override
 			public void OnClick(Widget widget) {
 				if(mPendMode == null)
-					mPendMode = new ModeGame(mWorld, ModeSPMenu.this, mProgress, mSkin);
+					mPendMode = new ModeSPGame(mWorld, ModeSPMenu.this, mProgress, mSkin);
 				SoundManager.PlaySound(mClickSound);
 			}
 		});
@@ -320,7 +320,7 @@ public class ModeSPMenu extends Mode {
 							mSemaphore.acquire();
 							mProgress.gotoTrainingPack();
 							ChangeLevel();
-							mPendMode = new ModeGame(mWorld, ModeSPMenu.this, mProgress, mSkin);
+							mPendMode = new ModeSPGame(mWorld, ModeSPMenu.this, mProgress, mSkin);
 							mSemaphore.release();
 						} catch(InterruptedException int_ex)
 						{

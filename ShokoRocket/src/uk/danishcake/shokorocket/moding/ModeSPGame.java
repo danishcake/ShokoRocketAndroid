@@ -32,7 +32,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ModeGame extends Mode {
+public class ModeSPGame extends Mode {
 	private Widget mLeftArrowCount, mRightArrowCount, mUpArrowCount, mDownArrowCount;
 	private GameDrawer mGameDrawer;
 	private GameDrawer mGameDrawerRot = new GameDrawer();
@@ -66,7 +66,7 @@ public class ModeGame extends Mode {
 	private final int E_MENU_ROTATE = 1;
 	private final int E_MENU_BACK = 2;
 	
-	public ModeGame(SPWorld world, ModeSPMenu menu, Progress progress, SkinProgress skin)
+	public ModeSPGame(SPWorld world, ModeSPMenu menu, Progress progress, SkinProgress skin)
 	{
 		mWorld = world;
 		mModeMenu = menu;
@@ -560,7 +560,7 @@ public class ModeGame extends Mode {
 
 							mProgress.nextUnbeaten();
 							SPWorld world = mProgress.getWorld();
-							mPendMode = new ModeGame(world, mModeMenu, mProgress, mSkin);
+							mPendMode = new ModeSPGame(world, mModeMenu, mProgress, mSkin);
 							
 							mSemaphore.release();
 						} catch(InterruptedException int_ex)
