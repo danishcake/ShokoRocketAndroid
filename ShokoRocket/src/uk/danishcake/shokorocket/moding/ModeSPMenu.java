@@ -20,7 +20,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 
-public class ModeMenu extends Mode {
+public class ModeSPMenu extends Mode {
 	private Widget mLevelName;
 	private Widget mLevelPackName;
 	private SPWorld mWorld = null;
@@ -134,7 +134,7 @@ public class ModeMenu extends Mode {
 			@Override
 			public void OnClick(Widget widget) {
 				if(mPendMode == null)
-					mPendMode = new ModeGame(mWorld, ModeMenu.this, mProgress, mSkin);
+					mPendMode = new ModeGame(mWorld, ModeSPMenu.this, mProgress, mSkin);
 				SoundManager.PlaySound(mClickSound);
 			}
 		});
@@ -143,7 +143,7 @@ public class ModeMenu extends Mode {
 			@Override
 			public void OnClick(Widget widget) {
 				if(mPendMode == null)
-					mPendMode = new ModeUnlocks(ModeMenu.this, mSkin, mProgress);
+					mPendMode = new ModeUnlocks(ModeSPMenu.this, mSkin, mProgress);
 				SoundManager.PlaySound(mClickSound);
 			}
 		});
@@ -167,11 +167,11 @@ public class ModeMenu extends Mode {
 								try
 								{
 									mSemaphore.acquire();
-									mPendMode = new ModeEditor(ModeMenu.this, mWorld, mSkin);
+									mPendMode = new ModeEditor(ModeSPMenu.this, mWorld, mSkin);
 									mSemaphore.release();
 								} catch(InterruptedException int_ex)
 								{
-									Log.e("ModeMenu.Setup", "Semaphore interupted");
+									Log.e("ModeSPMenu.Setup", "Semaphore interupted");
 								}
 							}
 						});
@@ -180,19 +180,19 @@ public class ModeMenu extends Mode {
 								try
 								{
 									mSemaphore.acquire();
-									mPendMode = new ModeEditor(ModeMenu.this, null, mSkin);
+									mPendMode = new ModeEditor(ModeSPMenu.this, null, mSkin);
 									mEditorLoaded = true;
 									mSemaphore.release();
 								} catch(InterruptedException int_ex)
 								{
-									Log.e("ModeMenu.Setup", "Semaphore interupted");
+									Log.e("ModeSPMenu.Setup", "Semaphore interupted");
 								}
 							}
 						});
 						builder.create().show();
 					} else
 					{
-						mPendMode = new ModeEditor(ModeMenu.this, null, mSkin);
+						mPendMode = new ModeEditor(ModeSPMenu.this, null, mSkin);
 						mEditorLoaded = true;
 					}
 
@@ -206,7 +206,7 @@ public class ModeMenu extends Mode {
 			public void OnClick(Widget widget) {
 				if(mPendMode == null)
 				{
-					mPendMode = new ModeMPMenu(ModeMenu.this, mSkin); 
+					mPendMode = new ModeMPMenu(ModeSPMenu.this, mSkin); 
 				}
 			}
 		});
@@ -241,7 +241,7 @@ public class ModeMenu extends Mode {
 			mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
 		} catch(IOException io_ex)
 		{
-			Log.e("ModeMenu.ChangeLevel", "Error changing level");
+			Log.e("ModeSPMenu.ChangeLevel", "Error changing level");
 			mDrawTick = false;
 			if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
 				mLevelName.setText(mContext.getString(R.string.menu_error_loading));
@@ -308,7 +308,7 @@ public class ModeMenu extends Mode {
 							mSemaphore.release();
 						} catch(InterruptedException int_ex)
 						{
-							Log.e("ModeMenu.mTrainingOffer.negative", "Semaphore interupted");
+							Log.e("ModeSPMenu.mTrainingOffer.negative", "Semaphore interupted");
 						}
 					}
 				});
@@ -320,11 +320,11 @@ public class ModeMenu extends Mode {
 							mSemaphore.acquire();
 							mProgress.gotoTrainingPack();
 							ChangeLevel();
-							mPendMode = new ModeGame(mWorld, ModeMenu.this, mProgress, mSkin);
+							mPendMode = new ModeGame(mWorld, ModeSPMenu.this, mProgress, mSkin);
 							mSemaphore.release();
 						} catch(InterruptedException int_ex)
 						{
-							Log.e("ModeMenu.mTrainingOffer.negative", "Semaphore interupted");
+							Log.e("ModeSPMenu.mTrainingOffer.negative", "Semaphore interupted");
 						}
 					}
 				});
@@ -334,7 +334,7 @@ public class ModeMenu extends Mode {
 				mSemaphore.release();
 			} catch(InterruptedException int_ex)
 			{
-				Log.e("ModeMenu.mTrainingOffer", "Semaphore interupted");
+				Log.e("ModeSPMenu.mTrainingOffer", "Semaphore interupted");
 			}
 		}
 	};

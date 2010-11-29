@@ -38,7 +38,7 @@ public class ModeGame extends Mode {
 	private GameDrawer mGameDrawerRot = new GameDrawer();
 	private GameDrawer mGameDrawerNorm = new GameDrawer();
 	private SPWorld mWorld;
-	private ModeMenu mModeMenu;
+	private ModeSPMenu mModeMenu;
 	private int mResetTimer = 0;
 	private static final int ResetTime = 1500;
 	private Vector2i mCursorPosition = new Vector2i(-1, -1);
@@ -66,7 +66,7 @@ public class ModeGame extends Mode {
 	private final int E_MENU_ROTATE = 1;
 	private final int E_MENU_BACK = 2;
 	
-	public ModeGame(SPWorld world, ModeMenu menu, Progress progress, SkinProgress skin)
+	public ModeGame(SPWorld world, ModeSPMenu menu, Progress progress, SkinProgress skin)
 	{
 		mWorld = world;
 		mModeMenu = menu;

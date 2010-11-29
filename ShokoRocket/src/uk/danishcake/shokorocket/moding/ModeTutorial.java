@@ -20,7 +20,7 @@ public class ModeTutorial extends Mode {
 	private Widget mNextButton = null;
 	private Widget mExplanation = null;
 	
-	private ModeMenu mModeMenu = null;
+	private ModeSPMenu mModeMenu = null;
 	private SPWorld mWorld = null;
 	private GameDrawer mGameDrawer = new GameDrawer();
 	
@@ -211,7 +211,7 @@ public class ModeTutorial extends Mode {
 	},
 	};
 	
-	public ModeTutorial(ModeMenu menu) {
+	public ModeTutorial(ModeSPMenu menu) {
 		mModeMenu = menu;
 	}
 	

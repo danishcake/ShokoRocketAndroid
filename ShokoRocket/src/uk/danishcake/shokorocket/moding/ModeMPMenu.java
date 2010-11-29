@@ -8,9 +8,9 @@ import uk.danishcake.shokorocket.gui.Widget;
 
 public class ModeMPMenu extends Mode {
 	private SkinProgress mSkin;
-	private ModeMenu mMenu;
+	private ModeSPMenu mMenu;
 	
-	public ModeMPMenu(ModeMenu menu, SkinProgress skin) {
+	public ModeMPMenu(ModeSPMenu menu, SkinProgress skin) {
 		mSkin = skin;
 		mMenu = menu;
 	}
@@ -29,8 +29,18 @@ public class ModeMPMenu extends Mode {
 			}
 		});
 		
+		Widget testAI = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize));
+		testAI.setText("Test AI");
+		testAI.setOnClickListener(new OnClickListener() {
+			@Override
+			public void OnClick(Widget widget) {
+			}
+		});
+		
+		
 		mWidgetPage.setFontSize(mFontSize);
 		mWidgetPage.addWidget(toggleSP);
+		mWidgetPage.addWidget(testAI);
 	}
 	
 	@Override
@@ -42,5 +52,11 @@ public class ModeMPMenu extends Mode {
 	public void Redraw(Canvas canvas) {
 		mWidgetPage.Draw(canvas);
 		super.Redraw(canvas);
+	}
+	
+	@Override
+	public boolean handleBack() {
+		mPendMode = mMenu;
+		return true;
 	}
 }

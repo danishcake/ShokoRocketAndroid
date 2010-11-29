@@ -114,7 +114,7 @@ public class ModeEditor extends Mode {
 	private Dialog mShareDialog = null;	
 	private SPWorld mWorld = null;
 	private GameDrawer mGameDrawer = null;
-	private ModeMenu mModeMenu;
+	private ModeSPMenu mModeMenu;
 	private RunningMode mRunningMode = RunningMode.Stopped;
 	
 	private int mResetTimer = 0;
@@ -143,7 +143,7 @@ public class ModeEditor extends Mode {
 	private final int E_MENU_ARROWMODE = 11;
 	
 	
-	public ModeEditor(ModeMenu menu, SPWorld world, SkinProgress skin)
+	public ModeEditor(ModeSPMenu menu, SPWorld world, SkinProgress skin)
 	{
 		mWorld = world;
 		if(world != null)
