@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
-import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.WidgetPage;
@@ -14,7 +13,6 @@ import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -224,17 +222,14 @@ public class ModeTutorial extends Mode {
 		super.Setup(context);
 
 		try {
-			int np_border = context.getResources().getInteger(R.integer.np_border);  
-			NinePatchData btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_button)), np_border, np_border, np_border, np_border);
-			
-			mNextButton = new Widget(btn_np, new Rect(mBtnBorder, 
+			mNextButton = new Widget(mBtnNP, new Rect(mBtnBorder, 
 													  mScreenHeight - mBtnBorder - mBtnSize,
 													  mScreenWidth - mBtnBorder, 
 													  mScreenHeight - mBtnBorder));
 			mNextButton.setText("Next");
 			mNextButton.setOnClickListener(mTutorialStages[0]);
 			
-			mExplanation = new Widget(btn_np, new Rect(mBtnBorder,
+			mExplanation = new Widget(mBtnNP, new Rect(mBtnBorder,
 													   mBtnBorder,
 													   mScreenWidth - mBtnBorder,
 													   mBtnBorder + mBtnSize * 2 + mBtnSep)); 

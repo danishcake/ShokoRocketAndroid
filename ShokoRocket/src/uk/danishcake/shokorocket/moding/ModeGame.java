@@ -1,6 +1,5 @@
 package uk.danishcake.shokorocket.moding;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 
@@ -126,12 +125,9 @@ public class ModeGame extends Mode {
 			handler.post(new ToastRunnable(mContext, mWorld.getLevelName() + "\n\nBy " + mWorld.getAuthor(), Toast.LENGTH_SHORT));
 		}
 		else
-			handler.post(mShowSplashRunnable);
+			handler.post(mShowSplashRunnable);			
 		
-		int np_border = context.getResources().getInteger(R.integer.np_border);
-		NinePatchData btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_button)), np_border, np_border, np_border, np_border);			
-		
-		Widget reset = new Widget(btn_np, new Rect(mScreenWidth - (mBtnSize2 + mBtnBorder), mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
+		Widget reset = new Widget(mBtnNP, new Rect(mScreenWidth - (mBtnSize2 + mBtnBorder), mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
 		reset.setText(context.getString(R.string.game_reset));
 		reset.setOnClickListener(new OnClickListener() {				
 			@Override
@@ -151,7 +147,7 @@ public class ModeGame extends Mode {
 			}
 		});
 		
-		Widget go = new Widget(btn_np, new Rect(mScreenWidth - mBtnSize2 - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnBorder));
+		Widget go = new Widget(mBtnNP, new Rect(mScreenWidth - mBtnSize2 - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnBorder));
 		go.setText(context.getString(R.string.game_go));
 		go.setOnClickListener(new OnClickListener() {				
 			@Override

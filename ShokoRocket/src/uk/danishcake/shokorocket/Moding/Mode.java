@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
 import uk.danishcake.shokorocket.R;
+import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +47,8 @@ public class Mode {
 	protected int mCatSound = -1;
 	protected int mClickSound = -1;
 	protected int mMouseSound = -1;
+	
+	protected NinePatchData mBtnNP;
 
 	/**
 	 * Called before the first Tick to allow creation of state, after the previous 
@@ -70,6 +74,9 @@ public class Mode {
 		{
 			//TODO log
 		}
+		
+		int np_border = context.getResources().getInteger(R.integer.np_border);
+		mBtnNP = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_button)), np_border, np_border, np_border, np_border);
 	}
 
 	/**

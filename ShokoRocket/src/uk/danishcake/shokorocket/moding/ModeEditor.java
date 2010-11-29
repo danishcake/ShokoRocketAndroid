@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -34,7 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
-import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.moding.Mode;
@@ -184,16 +182,14 @@ public class ModeEditor extends Mode {
 		mWidgetPage = new WidgetPage();
 		mWidgetPage.setFontSize(mFontSize);
 	
-		int np_border = mContext.getResources().getInteger(R.integer.np_border); 
-		NinePatchData np = new NinePatchData(BitmapFactory.decodeStream(mContext.getResources().openRawResource(R.raw.blank_button)), np_border, np_border, np_border, np_border);
-		mEditModeWidget = new Widget(np, new Rect(mScreenWidth / 2  + mBtnBorder, 
+		mEditModeWidget = new Widget(mBtnNP, new Rect(mScreenWidth / 2  + mBtnBorder, 
 												  mScreenHeight     - mBtnSize - mBtnBorder, 
 												  mScreenWidth      - mBtnBorder, 
 												  mScreenHeight     - mBtnBorder));
 		mEditModeWidget.setText(mContext.getString(R.string.editor_mode_walls));
 		mEditMode = EditMode.Walls;
 		
-		mTryWidget = new Widget(np, new Rect(mBtnBorder, 
+		mTryWidget = new Widget(mBtnNP, new Rect(mBtnBorder, 
 											 mScreenHeight     - mBtnSize - mBtnBorder, 
 											 mScreenWidth / 2  - mBtnSep, 
 											 mScreenHeight     - mBtnBorder));
