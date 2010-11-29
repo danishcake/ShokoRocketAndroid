@@ -9,7 +9,6 @@ import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.gui.Widget;
-import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.simulation.Direction;
@@ -34,7 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ModeGame extends Mode {
-	private WidgetPage mWidgetPage = new WidgetPage();
 	private Widget mLeftArrowCount, mRightArrowCount, mUpArrowCount, mDownArrowCount;
 	private GameDrawer mGameDrawer;
 	private GameDrawer mGameDrawerRot = new GameDrawer();
@@ -337,7 +335,6 @@ public class ModeGame extends Mode {
 			break;
 		}
 		
-		mWidgetPage.Tick(timespan);
 		mGameDrawer.Tick(timespan);
 		return super.Tick(timespan);
 	}

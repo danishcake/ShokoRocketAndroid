@@ -5,6 +5,7 @@ import java.util.concurrent.Semaphore;
 
 import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.gui.NinePatchData;
+import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.content.Context;
@@ -49,6 +50,7 @@ public class Mode {
 	protected int mMouseSound = -1;
 	
 	protected NinePatchData mBtnNP;
+	protected WidgetPage mWidgetPage = new WidgetPage();
 
 	/**
 	 * Called before the first Tick to allow creation of state, after the previous 
@@ -94,6 +96,7 @@ public class Mode {
 	 */
 	public ModeAction Tick(int timespan)
 	{
+		mWidgetPage.Tick(timespan);
 		mAge += timespan;
 		if(mPendMode != null)
 		{
@@ -126,8 +129,8 @@ public class Mode {
 	 * @param x the x position of the event
 	 * @param y the y position of the event
 	 */
-	public void handleTap(int x, int y)	{
-	
+	public void handleTap(int x, int y) {
+		mWidgetPage.handleTap(x, y);
 	}
 	
 	/**

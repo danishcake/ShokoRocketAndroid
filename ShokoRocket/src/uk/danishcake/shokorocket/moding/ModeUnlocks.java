@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 public class ModeUnlocks extends Mode {
 	private ModeMenu mModeMenu;
-	private WidgetPage mWidgetPage;
 	private SkinProgress mSkin;
 	private Progress mProgress;
 	
@@ -203,7 +202,6 @@ public class ModeUnlocks extends Mode {
 	
 	@Override
 	public ModeAction Tick(int timespan) {
-		mWidgetPage.Tick(timespan);
 		return super.Tick(timespan);
 	}
 	
@@ -217,10 +215,5 @@ public class ModeUnlocks extends Mode {
 	public void Redraw(Canvas canvas) {
 		mWidgetPage.Draw(canvas);
 		super.Redraw(canvas);
-	}
-	
-	@Override
-	public void handleTap(int x, int y) {
-		mWidgetPage.handleTap(x, y);
 	}
 }

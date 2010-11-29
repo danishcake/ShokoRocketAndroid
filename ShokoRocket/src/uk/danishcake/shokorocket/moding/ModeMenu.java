@@ -4,7 +4,6 @@ import java.io.IOException;
 import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.Widget;
-import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.sound.SoundManager;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 
 
 public class ModeMenu extends Mode {
-	private WidgetPage mWidgetPage = new WidgetPage();
 	private Widget mLevelName;
 	private Widget mLevelPackName;
 	private SPWorld mWorld = null;
@@ -264,7 +262,6 @@ public class ModeMenu extends Mode {
 	
 	@Override
 	public ModeAction Tick(int timespan) {
-		mWidgetPage.Tick(timespan);
 		mGameDrawer.Tick(timespan);
 		if(mMakeTrainingOffer)
 		{
@@ -290,11 +287,6 @@ public class ModeMenu extends Mode {
 		}
 		
 		super.Redraw(canvas);
-	}
-	
-	@Override
-	public void handleTap(int x, int y) {
-		mWidgetPage.handleTap(x, y);
 	}
 	
 	private Runnable mTrainingOffer = new Runnable() {

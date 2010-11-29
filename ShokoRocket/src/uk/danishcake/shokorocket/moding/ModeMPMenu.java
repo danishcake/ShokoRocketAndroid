@@ -5,10 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.gui.Widget;
-import uk.danishcake.shokorocket.gui.WidgetPage;
 
 public class ModeMPMenu extends Mode {
-	private WidgetPage mWidgetPage = new WidgetPage();
 	private SkinProgress mSkin;
 	private ModeMenu mMenu;
 	
@@ -37,7 +35,6 @@ public class ModeMPMenu extends Mode {
 	
 	@Override
 	public ModeAction Tick(int timespan) {
-		mWidgetPage.Tick(timespan);
 		return super.Tick(timespan);
 	}
 	
@@ -45,10 +42,5 @@ public class ModeMPMenu extends Mode {
 	public void Redraw(Canvas canvas) {
 		mWidgetPage.Draw(canvas);
 		super.Redraw(canvas);
-	}
-	
-	@Override
-	public void handleTap(int x, int y) {
-		mWidgetPage.handleTap(x, y);
 	}
 }

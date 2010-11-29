@@ -6,7 +6,6 @@ import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.gui.Widget;
-import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.SPWorld;
@@ -18,7 +17,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 public class ModeTutorial extends Mode {
-	private WidgetPage mWidgetPage = new WidgetPage();
 	private Widget mNextButton = null;
 	private Widget mExplanation = null;
 	
@@ -257,7 +255,6 @@ public class ModeTutorial extends Mode {
 	public ModeAction Tick(int timespan)
 	{
 		mGameDrawer.Tick(timespan);
-		mWidgetPage.Tick(timespan);
 		if(mRunning)
 		{
 			mWorld.Tick(timespan * 5);
@@ -328,10 +325,5 @@ public class ModeTutorial extends Mode {
 		}
 
 		super.Redraw(canvas);
-	}
-	
-	@Override
-	public void handleTap(int x, int y) {
-		mWidgetPage.handleTap(x, y);
 	}
 }

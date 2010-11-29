@@ -122,8 +122,6 @@ public class ModeEditor extends Mode {
 	
 	boolean mSaveNeeded = false;
 	boolean mValidated = false;
-
-	private WidgetPage mWidgetPage = null;
 	
 	private Vector2i mCursorPosition = new Vector2i(-1, -1);
 	private Vector2i mGestureStart = new Vector2i(0, 0);
@@ -324,7 +322,6 @@ public class ModeEditor extends Mode {
 				break;
 			}
 			mGameDrawer.Tick(timespan);
-			mWidgetPage.Tick(timespan);
 		}
 		
 		return super.Tick(timespan);
