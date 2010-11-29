@@ -8,15 +8,20 @@ import uk.danishcake.shokorocket.gui.Widget;
 
 public class ModeMPMenu extends Mode {
 	private SkinProgress mSkin;
-	private ModeSPMenu mMenu;
+	private ModeSPMenu mModeMenu;
+	private boolean mSetup = false;
 	
 	public ModeMPMenu(ModeSPMenu menu, SkinProgress skin) {
 		mSkin = skin;
-		mMenu = menu;
+		mModeMenu = menu;
 	}
 	
 	@Override
 	public void Setup(Context context) {
+		if(mSetup)
+		{
+			return;
+		}
 		super.Setup(context);
 		
 		Widget toggleSP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mBtnSize + mBtnBorder, mScreenHeight - mBtnBorder));
@@ -25,7 +30,7 @@ public class ModeMPMenu extends Mode {
 			@Override
 			public void OnClick(Widget widget) {
 				if(mPendMode == null)
-					mPendMode = mMenu;
+					mPendMode = mModeMenu;
 			}
 		});
 		
@@ -34,6 +39,8 @@ public class ModeMPMenu extends Mode {
 		testAI.setOnClickListener(new OnClickListener() {
 			@Override
 			public void OnClick(Widget widget) {
+				if(mPendMode == null)
+					mPendMode = new ModeMPGame(ModeMPMenu.this, mSkin);
 			}
 		});
 		
@@ -41,11 +48,17 @@ public class ModeMPMenu extends Mode {
 		mWidgetPage.setFontSize(mFontSize);
 		mWidgetPage.addWidget(toggleSP);
 		mWidgetPage.addWidget(testAI);
+		
+		mSetup = true;
 	}
 	
 	@Override
-	public ModeAction Tick(int timespan) {
-		return super.Tick(timespan);
+	public Mode Teardown() {
+		Mode next_mode = super.Teardown();
+		mPendMode = null;
+		mPendTimer = 0;
+		mAge = 0;
+		return next_mode;
 	}
 	
 	@Override
@@ -56,7 +69,7 @@ public class ModeMPMenu extends Mode {
 	
 	@Override
 	public boolean handleBack() {
-		mPendMode = mMenu;
+		mPendMode = mModeMenu;
 		return true;
 	}
 }
