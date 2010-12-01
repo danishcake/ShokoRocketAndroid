@@ -49,6 +49,7 @@ public class GameDrawer {
 	private EnumMap<Direction, Animation> mCatAnimations = new EnumMap<Direction, Animation>(Direction.class);
 	private Animation mCatDeathAnimation = null;
 	private Animation mRocketAnimation = null;
+	private Animation[] mMPRocketAnimation = new Animation[4];
 	private Animation mHoleAnimation = null;
 	private Animation mRingAnimation = null;
 	private EnumMap<Direction, Animation> mFullArrowAnimations = new EnumMap<Direction, Animation>(Direction.class);
@@ -265,7 +266,17 @@ public class GameDrawer {
 
 				Map<String, Animation> tick_animations = Animation.GetAnimations(context, skin.getAnimation("tick"), scale); 
 				mTickAnimation = tick_animations.get("All");
-
+				
+				//Multiplayer 
+				Map<String, Animation> mp_rocket_animations = Animation.GetAnimations(context, skin.getAnimation("mp_rockets"), scale);
+				mMPRocketAnimation[0] = mp_rocket_animations.get("Normal0");
+				mMPRocketAnimation[1] = mp_rocket_animations.get("Normal1");
+				mMPRocketAnimation[2] = mp_rocket_animations.get("Normal2");
+				mMPRocketAnimation[3] = mp_rocket_animations.get("Normal3");
+				
+				
+				
+				
 				mAnimationsLoaded = true;
 			} catch(IOException ex)
 			{
@@ -301,8 +312,11 @@ public class GameDrawer {
 					mHoleAnimation.DrawCurrentFrame(canvas, drawX, drawY);
 					break;
 				case Rocket:
-					//TODO player IDs
-					mRocketAnimation.DrawCurrentFrame(canvas, drawX, drawY);
+				{
+					int player_id = world.getPlayer(x, y); // Limit to 0-3
+					if(player_id < 0 || player_id > 3) player_id = 0;
+					mMPRocketAnimation[player_id].DrawCurrentFrame(canvas, drawX, drawY);
+				}
 					break;
 				case NorthSpawner:
 				case SouthSpawner:

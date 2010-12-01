@@ -358,42 +358,42 @@ public class MPWorld extends WorldBase {
 	/**
 	 * Toggles the hole at (x,y)
 	 */
-	void toggleHole(int x, int y) {
+	public void toggleHole(int x, int y) {
 		mSpecialSquares[wallIndex(x, y)].square_type = getHole(x, y) ? SquareType.Hole : SquareType.Empty;
 	}
 	
 	/**
 	 * Sets the hole at (x,y)
 	 */
-	void setHole(int x, int y, boolean hole) {
+	public void setHole(int x, int y, boolean hole) {
 		mSpecialSquares[wallIndex(x, y)].square_type = hole ? SquareType.Hole : SquareType.Empty; 
 	}
 	
 	/**
 	 * @return true if a hole is at (x,y)
 	 */
-	boolean getHole(int x, int y) {
+	public boolean getHole(int x, int y) {
 		return mSpecialSquares[wallIndex(x, y)].square_type == SquareType.Hole;
 	}
 	
 	/**
 	 * Toggles spawner at (x,y). If already one present with same direction then clears.
 	 */
-	void toggleSpawner(int x, int y, Direction direction) {
+	public void toggleSpawner(int x, int y, Direction direction) {
 		mSpecialSquares[wallIndex(x, y)].square_type = getSpawner(x, y) != direction ? direction.toSpawner() : SquareType.Empty;
 	}
 	
 	/**
 	 * Sets the spawner at (x,y)
 	 */
-	void setSpawner(int x, int y, Direction direction) {
+	public void setSpawner(int x, int y, Direction direction) {
 		mSpecialSquares[wallIndex(x, y)].square_type = direction.toSpawner(); 
 	}
 	
 	/**
 	 * @return Direction of spawner at (x,y). Direction.Invalid if empty
 	 */
-	Direction getSpawner(int x, int y) {
+	public Direction getSpawner(int x, int y) {
 		return mSpecialSquares[wallIndex(x, y)].square_type.toSpawnerDirection();
 	}
 	
@@ -401,7 +401,7 @@ public class MPWorld extends WorldBase {
 	 * Toggles arrow at (x,y) for player p. If already one present with same direction  
 	 * and player then clears. Different players do not overwrite existing arrows
 	 */
-	void toggleArrow(int x, int y, Direction direction, int player) {
+	public void toggleArrow(int x, int y, Direction direction, int player) {
 		if(getArrow(x, y) == Direction.Invalid || getPlayer(x, y) == player)
 			setArrow(x, y, direction, player);
 	}
@@ -410,7 +410,7 @@ public class MPWorld extends WorldBase {
 	 * Sets the arrow at (x,y) for player p. Different players do not overwrite existing
 	 * arrows
 	 */
-	void setArrow(int x, int y, Direction direction, int player) {
+	public void setArrow(int x, int y, Direction direction, int player) {
 		mSpecialSquares[wallIndex(x, y)].square_type = direction.toArrow();
 		mSpecialSquares[wallIndex(x, y)].player_id = player;
 	}
@@ -418,7 +418,7 @@ public class MPWorld extends WorldBase {
 	/**
 	 * @return Direction of arrow at (x,y). Direction.Invalid if empty
 	 */
-	Direction getArrow(int x, int y) {
+	public Direction getArrow(int x, int y) {
 		return mSpecialSquares[wallIndex(x, y)].square_type.toArrowDirection();
 	}
 	
@@ -426,7 +426,7 @@ public class MPWorld extends WorldBase {
 	 * @return ID of player square at (x,y). If not a spawner or arrow square
 	 * behaviour undefined
 	 */
-	int getPlayer(int x, int y) {
+	public int getPlayer(int x, int y) {
 		return mSpecialSquares[wallIndex(x, y)].player_id;
 	}
 	
@@ -434,7 +434,7 @@ public class MPWorld extends WorldBase {
 	/**
 	 * Sets a rocket at (x,y)
 	 */
-	void setRocket(int x, int y, int player) {
+	public void setRocket(int x, int y, int player) {
 		mSpecialSquares[wallIndex(x, y)].square_type = SquareType.Rocket;
 		mSpecialSquares[wallIndex(x, y)].player_id = player;
 	}
@@ -442,7 +442,7 @@ public class MPWorld extends WorldBase {
 	/**
 	 * @return true if a rocket is at (x,y)
 	 */
-	boolean getRocket(int x, int y) {
+	public boolean getRocket(int x, int y) {
 		return mSpecialSquares[wallIndex(x, y)].square_type == SquareType.Rocket;
 	}
 	

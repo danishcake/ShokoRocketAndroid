@@ -9,6 +9,7 @@
    <Animation id="mouse" val="Animations/Game/mouse_shokowhite.animation" />
    <Animation id="ring" val="Animations/Game/ring.animation" />
    <Animation id="rocket" val="Animations/Game/rocket.animation" />
+   <Animation id="mp_rockets" val="Animations/Game/rocket_mp.animation" />
    <Animation id="tick" val="Animations/Game/tick.animation" />
    <Animation id="tiles" val="Animations/Game/tiles.animation" />
    <Animation id="walls" val="Animations/Game/walls.animation" />
