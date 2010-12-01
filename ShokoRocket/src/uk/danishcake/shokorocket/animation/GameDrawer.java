@@ -71,6 +71,7 @@ public class GameDrawer {
 	private Animation mNorthWall = null;
 	private Animation mWestWall = null;
 	private Animation mCursorAnimation = null;
+	private Animation[] mMPCursorAnimations = new Animation[4];
 	private Animation mTransCursorAnimation = null;
 	private Animation mTickAnimation = null;
 	private Bitmap mCacheBitmap = null;
@@ -105,6 +106,10 @@ public class GameDrawer {
 			mTransCursorAnimation.DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY);
 		else
 			mCursorAnimation.DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY);
+	}
+	
+	public void drawMPCursor(Canvas canvas, int x, int y, int id) {
+		mMPCursorAnimations[id].DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY);
 	}
 	
 	public Animation GetTick() {
@@ -286,8 +291,6 @@ public class GameDrawer {
 				mMPRocketAnimation[3] = mp_rocket_animations.get("Normal3");
 				
 				Map<String, Animation> mp_arrow_animations = Animation.GetAnimations(context, skin.getAnimation("mp_arrows"), scale);
-				
-				
 				mMPFullArrowAnimations0.put(Direction.North, mp_arrow_animations.get("North0"));
 				mMPFullArrowAnimations0.put(Direction.South, mp_arrow_animations.get("South0"));
 				mMPFullArrowAnimations0.put(Direction.East, mp_arrow_animations.get("East0"));
@@ -323,6 +326,12 @@ public class GameDrawer {
 				mMPHalfArrowAnimations3.put(Direction.East, mp_arrow_animations.get("East3"));
 				mMPHalfArrowAnimations3.put(Direction.West, mp_arrow_animations.get("West3"));
 				mMPHalfArrowAnimations3.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+				
+				Map<String, Animation> mp_cursor_animations = Animation.GetAnimations(context, skin.getAnimation("mp_cursors"), scale);
+				mMPCursorAnimations[0] = mp_cursor_animations.get("Normal0");
+				mMPCursorAnimations[1] = mp_cursor_animations.get("Normal1");
+				mMPCursorAnimations[2] = mp_cursor_animations.get("Normal2");
+				mMPCursorAnimations[3] = mp_cursor_animations.get("Normal3");
 
 				mAnimationsLoaded = true;
 			} catch(IOException ex)

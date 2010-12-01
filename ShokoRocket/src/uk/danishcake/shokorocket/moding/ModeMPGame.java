@@ -21,6 +21,7 @@ public class ModeMPGame extends Mode {
 	private Vector2i mGestureEnd = new Vector2i(0, 0);
 	private Direction mGestureDirection = Direction.Invalid;
 	private boolean mGestureInProgress = false;
+	private int mPlayerID = -1;
 
 	public ModeMPGame(ModeMPMenu menu, SkinProgress skin, MPWorld world) {
 		mSkin = skin;
@@ -51,6 +52,7 @@ public class ModeMPGame extends Mode {
 	@Override
 	public ModeAction Tick(int timespan) {
 		mWorld.Tick(timespan);
+		if(mPlayerID == -1) mPlayerID = mWorld.getPlayerID();
 		return super.Tick(timespan);
 	}
 	
@@ -58,6 +60,24 @@ public class ModeMPGame extends Mode {
 	public void Redraw(Canvas canvas) {
 		//TODO DrawMP
 		mGameDrawer.DrawMP(canvas, mWorld);
+		Vector2i[] cursors = mWorld.getCursorPositions();
+		for(int i = 0; i < 4; i++)
+		{
+			int x;
+			int y;
+			if(i == mPlayerID)
+			{
+				x = mCursorPosition.x;
+				y = mCursorPosition.y;
+			}
+			else
+			{
+				x = cursors[i].x;
+				y = cursors[i].y;
+			}
+			if(x != -1 && y != -1)
+				mGameDrawer.drawMPCursor(canvas, x, y, i);
+		}
 		if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
 		{
 			mGameDrawer.DrawCursor(canvas, mCursorPosition.x, mCursorPosition.y, true);

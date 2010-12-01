@@ -3,6 +3,7 @@
    <Animation id="arrows" val="Animations/Game/arrows.animation" />
    <Animation id="mp_arrows" val="Animations/Game/arrows_mp.animation" />
    <Animation id="cursor" val="Animations/Game/cursor.animation" />
+   <Animation id="mp_cursors" val="Animations/Game/cursors_mp.animation" />
    <Animation id="gesture_arrows" val="Animations/Game/gesture_arrows.animation" />
    <Animation id="halfarrows" val="Animations/Game/halfarrows.animation" />
    <Animation id="hole" val="Animations/Game/hole.animation" />

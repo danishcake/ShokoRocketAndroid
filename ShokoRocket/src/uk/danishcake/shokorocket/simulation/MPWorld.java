@@ -14,6 +14,7 @@ import org.w3c.dom.NodeList;
 import uk.danishcake.shokorocket.networking.GameSync;
 import uk.danishcake.shokorocket.networking.LocalSync;
 import uk.danishcake.shokorocket.networking.messages.ArrowPlacementMessage;
+import uk.danishcake.shokorocket.networking.messages.CursorPositioningMessage;
 import uk.danishcake.shokorocket.networking.messages.Message;
 import uk.danishcake.shokorocket.simulation.Walker.WalkerState;
 import uk.danishcake.shokorocket.simulation.Walker.WalkerType;
@@ -35,6 +36,8 @@ public class MPWorld extends WorldBase {
 	private int mSubFrame = 0;
 	private List<Message> mMessages = new ArrayList<Message>();
 	private MPSquareType[] mSpecialSquares = new MPSquareType[mWidth*mHeight];
+	private Vector2i[] mCursorPositions = new Vector2i[4];
+	private int mPlayerID = 0;
 	
 	/* MPWorld(input)
 	 * Loads a world from specified XML file
@@ -43,6 +46,8 @@ public class MPWorld extends WorldBase {
 	public MPWorld(InputStream input) throws IOException {
 		LoadFromXML(input);
 		//loadSpecific is then called with root element to parse
+		for(int i = 0; i < 4; i++)
+			mCursorPositions[i] = new Vector2i(-1, -1);
 	}
 	
 	public MPWorld() {
@@ -53,6 +58,12 @@ public class MPWorld extends WorldBase {
 			mSpecialSquares[i].square_type = SquareType.Empty;
 			mSpecialSquares[i].player_id = -1;
 		}
+		for(int i = 0; i < 4; i++)
+			mCursorPositions[i] = new Vector2i(-1, -1);
+	}
+	
+	public final Vector2i[] getCursorPositions() {
+		return mCursorPositions;
 	}
 	
 	public ArrayList<Walker> getLiveMice() {
@@ -205,9 +216,8 @@ public class MPWorld extends WorldBase {
 		if(mSync == null){
 			mSync = new LocalSync(this);
 			mSync.Connect("3");
+			mPlayerID = mSync.getClientID();
 		}
-		
-
 		
 		//Ignore timespan, all frames are mFixedTimestep long
 		timespan = mFixedTimestep;
@@ -345,7 +355,9 @@ public class MPWorld extends WorldBase {
 		{
 		case Message.MESSAGE_CURSOR_POSITION:
 			{
-				
+				CursorPositioningMessage message = (CursorPositioningMessage)next_message;
+				mCursorPositions[message.user_id].x = message.x;
+				mCursorPositions[message.user_id].y = message.y;
 			}
 			break;
 		case Message.MESSAGE_ARROW_PLACEMENT:
@@ -504,8 +516,16 @@ public class MPWorld extends WorldBase {
 		}
 	}
 	
+	public int getPlayerID() {
+		return mPlayerID;
+	}
+	
 	public void arrowPlacement(int x, int y, Direction d)
 	{
 		mSync.sendMessage(new ArrowPlacementMessage(x, y, d));
+	}
+	
+	public void cursorPlacement(int x, int y) {
+		mSync.sendMessage(new CursorPositioningMessage(x, y));
 	}
 }

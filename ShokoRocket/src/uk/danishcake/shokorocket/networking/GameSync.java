@@ -17,6 +17,7 @@ import java.util.List;
 public abstract class GameSync {
 	protected int mLocalFrame = 0;
 	protected int mSyncedFrame = 0;
+	protected int mClientID = 0;
 	private Comparator<Message> mMessageSorter = new Comparator<Message>() {
 		@Override
 		public int compare(Message object1, Message object2) {
@@ -66,4 +67,7 @@ public abstract class GameSync {
 		return frame_messages;
 	}
 	
+	public int getClientID() {
+		return mClientID;
+	}
 }
