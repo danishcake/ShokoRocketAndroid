@@ -408,6 +408,11 @@ public class MPWorld extends WorldBase {
 	 * and player then clears. Different players do not overwrite existing arrows
 	 */
 	public void toggleArrow(int x, int y, Direction direction, int player, boolean allow_new) {
+		SquareType square_type = getSpecialSquare(x, y);
+		if(square_type == SquareType.Hole || square_type == SquareType.Rocket || 
+		   square_type == SquareType.SouthSpawner || square_type == SquareType.NorthSpawner ||
+		   square_type== SquareType.WestSpawner || square_type == SquareType.EastSpawner)
+			return;
 		Direction cur_dir = getArrow(x, y);
 		if(cur_dir == direction && getPlayer(x, y) == player) //Allow clear
 			setArrow(x, y, Direction.Invalid, player);
