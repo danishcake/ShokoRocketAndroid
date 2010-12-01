@@ -50,6 +50,7 @@ public class ModeMPGame extends Mode {
 	
 	@Override
 	public ModeAction Tick(int timespan) {
+		mWorld.Tick(timespan);
 		return super.Tick(timespan);
 	}
 	
@@ -127,16 +128,11 @@ public class ModeMPGame extends Mode {
 			switch(direction)
 			{
 			case North:
-				SoundManager.PlaySound(mClickSound);
-				break;
 			case South:
-				SoundManager.PlaySound(mClickSound);
-				break;
 			case West:
-				SoundManager.PlaySound(mClickSound);
-				break;
 			case East:
 				SoundManager.PlaySound(mClickSound);
+				mWorld.arrowPlacement(mCursorPosition.x, mCursorPosition.y, direction);
 				break;
 			}
 		}

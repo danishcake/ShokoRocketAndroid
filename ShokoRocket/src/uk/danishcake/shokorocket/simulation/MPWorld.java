@@ -33,7 +33,7 @@ public class MPWorld extends WorldBase {
 	private int mCommunicationTimestep = 100;
 	private int mCommunicationFrameTime = 0;
 	private int mSubFrame = 0;
-	private List<Message> mMessages;
+	private List<Message> mMessages = new ArrayList<Message>();
 	private MPSquareType[] mSpecialSquares = new MPSquareType[mWidth*mHeight];
 	
 	/* MPWorld(input)
@@ -238,22 +238,7 @@ public class MPWorld extends WorldBase {
 				Message next = mMessages.get(0); 
 				while(next != null && next.sub_frame_id <= mSubFrame)
 				{
-					//Action message
-					switch(next.message_type)
-					{
-					case Message.MESSAGE_CURSOR_POSITION:
-						{
-							
-						}
-						break;
-					case Message.MESSAGE_ARROW_PLACEMENT:
-						{
-							ArrowPlacementMessage message = (ArrowPlacementMessage)next;
-							toggleArrow(message.x, message.y, message.direction, message.user_id);
-						}
-						break;
-					}
-					
+					handleMessage(next);
 					
 					mMessages.remove(0);
 					if(mMessages.size() == 0)
@@ -353,7 +338,28 @@ public class MPWorld extends WorldBase {
 		/* Now interact with walls */
 		super.walkerReachNewSquare(walker, x, y, walker.getDirection());
 	}
-	//TODO send input messages
+	
+	private void handleMessage(Message next_message) {
+		//Action message
+		switch(next_message.message_type)
+		{
+		case Message.MESSAGE_CURSOR_POSITION:
+			{
+				
+			}
+			break;
+		case Message.MESSAGE_ARROW_PLACEMENT:
+			{
+				ArrowPlacementMessage message = (ArrowPlacementMessage)next_message;
+				if(getArrowCount(message.user_id) < 3)
+					toggleArrow(message.x, message.y, message.direction, message.user_id, true);
+				else
+					toggleArrow(message.x, message.y, message.direction, message.user_id, false);
+			}
+			break;
+		}
+	}
+
 	
 	/**
 	 * Toggles the hole at (x,y)
@@ -401,8 +407,13 @@ public class MPWorld extends WorldBase {
 	 * Toggles arrow at (x,y) for player p. If already one present with same direction  
 	 * and player then clears. Different players do not overwrite existing arrows
 	 */
-	public void toggleArrow(int x, int y, Direction direction, int player) {
-		if(getArrow(x, y) == Direction.Invalid || getPlayer(x, y) == player)
+	public void toggleArrow(int x, int y, Direction direction, int player, boolean allow_new) {
+		Direction cur_dir = getArrow(x, y);
+		if(cur_dir == direction && getPlayer(x, y) == player) //Allow clear
+			setArrow(x, y, Direction.Invalid, player);
+		else if(getPlayer(x, y) == player) //Allow change
+			setArrow(x, y, direction, player);
+		else if(direction == Direction.Invalid || allow_new) //Allow new
 			setArrow(x, y, direction, player);
 	}
 	
@@ -412,7 +423,7 @@ public class MPWorld extends WorldBase {
 	 */
 	public void setArrow(int x, int y, Direction direction, int player) {
 		mSpecialSquares[wallIndex(x, y)].square_type = direction.toArrow();
-		mSpecialSquares[wallIndex(x, y)].player_id = player;
+		mSpecialSquares[wallIndex(x, y)].player_id = direction == Direction.Invalid ? -1 : player;
 	}
 	
 	/**
@@ -420,6 +431,19 @@ public class MPWorld extends WorldBase {
 	 */
 	public Direction getArrow(int x, int y) {
 		return mSpecialSquares[wallIndex(x, y)].square_type.toArrowDirection();
+	}
+	
+	public int getArrowCount(int id) {
+		int count = 0;
+		for(int y = 0; y < mHeight; y++)
+		{
+			for(int x = 0; x < mWidth; x++)	
+			{
+				if(getArrow(x, y) != Direction.Invalid && getPlayer(x, y) == id)
+					count++;
+			}
+		}
+		return count;
 	}
 	
 	/**
@@ -473,6 +497,10 @@ public class MPWorld extends WorldBase {
 			mSpecialSquares[wallIndex(x, y)].player_id = -1;
 			break;
 		}
-		
+	}
+	
+	public void arrowPlacement(int x, int y, Direction d)
+	{
+		mSync.sendMessage(new ArrowPlacementMessage(x, y, d));
 	}
 }

@@ -53,6 +53,11 @@ public abstract class GameSync {
 	 */
 	public abstract void SendFrameEnd();
 	
+	/**
+	 * Sends a message to all other clients
+	 */
+	public abstract void sendMessage(Message message);
+	
 	// TODO some sort of pop messages
 	public List<Message> popMessages() {
 		ArrayList<Message> frame_messages = mMessageStack.removeFirst();

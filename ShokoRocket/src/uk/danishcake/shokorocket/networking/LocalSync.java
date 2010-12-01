@@ -15,6 +15,7 @@ import uk.danishcake.shokorocket.simulation.MPWorld;
 public class LocalSync extends GameSync {
 	
 	private MPWorld mWorld;
+	ArrayList<Message> mPendMessages = new ArrayList<Message>();
 
 	public LocalSync(MPWorld world) {
 		mWorld = world;
@@ -33,12 +34,19 @@ public class LocalSync extends GameSync {
 		generateMessages();
 	}
 	
+	@Override
+	public void sendMessage(Message message) {
+		mPendMessages.add(message);
+	}
+	
 	private void generateMessages()	{
 		ArrayList<Message> messages = new ArrayList<Message>();
-		Message m = new ArrowPlacementMessage(1, 1, Direction.East);
-		m.setCommon(1, 1);
-		messages.add(m);
+		messages.addAll(mPendMessages);
+		//Message m = new ArrowPlacementMessage(1, 1, Direction.East);
+		//m.setCommon(1, 1);
+		//messages.add(m);
 
 		mMessageStack.add(messages);
+		mPendMessages.clear();
 	}
 }
