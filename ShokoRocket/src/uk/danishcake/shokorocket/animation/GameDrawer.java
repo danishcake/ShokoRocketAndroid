@@ -12,6 +12,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import uk.danishcake.shokorocket.moding.SkinProgress;
 import uk.danishcake.shokorocket.simulation.Direction;
+import uk.danishcake.shokorocket.simulation.MPWorld;
 import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.simulation.SquareType;
 import uk.danishcake.shokorocket.simulation.Vector2i;
@@ -277,6 +278,218 @@ public class GameDrawer {
 	 * @param canvas
 	 * @param world
 	 */
+	public void DrawMP(Canvas canvas, MPWorld world)
+	{
+		int sprite_count = 0;
+		for(int i = 0; i < mRenderItems.size(); i++)
+		{
+			mRenderItems.get(i).animation = null;
+		}
+		if(mWorldBitmap != null)
+			canvas.drawBitmap(mWorldBitmap, mDrawOffsetX, mDrawOffsetY, null);
+		//Draw rockets, arrows & holes		
+		for(int x = 0; x < world.getWidth(); x++)
+		{
+			for(int y = 0; y < world.getHeight(); y++)
+			{
+				SquareType square = world.getSpecialSquare(x, y);
+				int drawX = x * mGridSize + mDrawOffsetX;
+				int drawY = y * mGridSize + mDrawOffsetY;
+				switch(square)
+				{
+				case Hole:
+					mHoleAnimation.DrawCurrentFrame(canvas, drawX, drawY);
+					break;
+				case Rocket:
+					//TODO player IDs
+					mRocketAnimation.DrawCurrentFrame(canvas, drawX, drawY);
+					break;
+				case NorthSpawner:
+				case SouthSpawner:
+				case EastSpawner:
+				case WestSpawner:
+					break;
+				case NorthArrow:
+				case SouthArrow:
+				case EastArrow:
+				case WestArrow:
+					mFullArrowAnimations.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+					break;
+				case NorthHalfArrow:
+				case SouthHalfArrow:
+				case EastHalfArrow:
+				case WestHalfArrow:
+					mHalfArrowAnimations.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+					break;
+				}
+			}
+		}
+		
+		
+		//Draw cats & mice
+		ArrayList<Walker> mice = world.getLiveMice();
+		ArrayList<Walker> cats = world.getLiveCats();
+		for (Walker walker : mice) {
+			Vector2i position = walker.getPosition();
+			int x = position.x * mGridSize + mDrawOffsetX;
+			int y = position.y * mGridSize + mDrawOffsetY;
+			switch(walker.getDirection())
+			{
+			case North:
+				y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case South:
+				y += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case East:
+				x += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case West:
+				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			}
+			Animation animation = mMouseAnimations.get(walker.getDirection());
+			if(animation != null)
+			{
+				if(++sprite_count > mRenderItems.size())
+				{
+					mRenderItems.add(new RenderItem());
+				}
+				RenderItem ri = mRenderItems.get(sprite_count-1);
+				ri.x = x;
+				ri.y = y;
+				ri.animation = animation;
+			}
+		}
+		for (Walker walker : cats) {
+			Vector2i position = walker.getPosition();
+			int x = position.x * mGridSize + mDrawOffsetX;
+			int y = position.y * mGridSize + mDrawOffsetY;
+			switch(walker.getDirection())
+			{
+			case North:
+				y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case South:
+				y += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case East:
+				x += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case West:
+				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			}
+			Animation animation = mCatAnimations.get(walker.getDirection());
+			if(animation != null)
+			{
+				if(++sprite_count > mRenderItems.size())
+				{
+					mRenderItems.add(new RenderItem());
+				}
+				RenderItem ri = mRenderItems.get(sprite_count-1);
+				ri.x = x;
+				ri.y = y;
+				ri.animation = animation;
+			}
+		}
+		//Sort cats & mice by depth
+		java.util.Collections.sort(mRenderItems);
+		for(int i = 0; i < sprite_count; i++)
+		{
+			RenderItem ri = mRenderItems.get(i);
+			ri.animation.DrawCurrentFrame(canvas, ri.x, ri.y);
+		}
+		for(Walker walker : world.getDeadMice())
+		{
+			Vector2i position = walker.getPosition();
+			int x = position.x * mGridSize + mDrawOffsetX;
+			int y = position.y * mGridSize + mDrawOffsetY;
+			switch(walker.getDirection())
+			{
+			case North:
+				y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case South:
+				y += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case East:
+				x += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case West:
+				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			}
+			
+			mRingAnimation.DrawCurrentFrame(canvas, x, y);
+			
+			int death_time = walker.getDeathTime();
+			if(death_time < 5000)
+			{
+				y -= walker.getDeathTime() * 20 / 5000;
+				mMouseDeathAnimation.DrawFrameAtTime(canvas, x, y, death_time / 5);
+			}
+		}
+		for(Walker walker : world.getRescuedMice())
+		{
+			Vector2i position = walker.getPosition();
+			int x = position.x * mGridSize + mDrawOffsetX;
+			int y = position.y * mGridSize + mDrawOffsetY;
+			switch(walker.getDirection())
+			{
+			case North:
+				y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case South:
+				y += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case East:
+				x += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case West:
+				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			}
+			
+			int death_time = walker.getDeathTime();
+			if(death_time < 5000)
+			{
+				mMouseRescueAnimation.DrawFrameAtTime(canvas, x, y, death_time / 5);
+			}
+		}
+		for(Walker walker : world.getDeadCats())
+		{
+			Vector2i position = walker.getPosition();
+			int x = position.x * mGridSize + mDrawOffsetX;
+			int y = position.y * mGridSize + mDrawOffsetY;
+			switch(walker.getDirection())
+			{
+			case North:
+				y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case South:
+				y += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case East:
+				x += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case West:
+				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			}
+			if(walker.getWalkerState() == WalkerState.Rescued)
+			{
+				mRingAnimation.DrawCurrentFrame(canvas, x, y);
+			}
+			
+			int death_time = walker.getDeathTime();
+			if(death_time < 5000)
+			{
+				mCatDeathAnimation.DrawFrameAtTime(canvas, x, y, death_time / 5);
+			}
+		}
+	}
+	
 	public void DrawSP(Canvas canvas, SPWorld world)
 	{
 		int sprite_count = 0;

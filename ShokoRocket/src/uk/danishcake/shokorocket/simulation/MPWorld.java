@@ -55,12 +55,24 @@ public class MPWorld extends WorldBase {
 		}
 	}
 	
-	public ArrayList<Walker> getMice() {
+	public ArrayList<Walker> getLiveMice() {
 		return mLiveMice;
 	}
 	
-	public ArrayList<Walker> getCats() {
+	public ArrayList<Walker> getLiveCats() {
 		return mLiveCats;
+	}
+	
+	public ArrayList<Walker> getDeadMice() {
+		return mDeadMice;
+	}
+	
+	public ArrayList<Walker> getDeadCats() {
+		return mDeadCats;
+	}
+	
+	public ArrayList<Walker> getRescuedMice() {
+		return mRescuedMice;
 	}
 	
 	/* addWalker
@@ -137,7 +149,7 @@ public class MPWorld extends WorldBase {
 		NodeList spawner_list = root.getElementsByTagName("Spawner");
 		for(int i = 0; i < spawner_list.getLength(); i++)
 		{
-			Node spawner = player_list.item(i);
+			Node spawner = spawner_list.item(i);
 			NamedNodeMap spawner_attr = spawner.getAttributes();
 			Node pos_x = spawner_attr.getNamedItem("x");
 			Node pos_y = spawner_attr.getNamedItem("y");
@@ -156,7 +168,7 @@ public class MPWorld extends WorldBase {
 					setSpawner(x, y, direction);
 				} catch(NullPointerException nfe)
 				{
-					throw new InvalidParameterException("Both x, y and id must be specified in PlayerRocket");
+					throw new InvalidParameterException("Both x, y and id must be specified in Spawner");
 				}
 			}
 		}
@@ -305,6 +317,7 @@ public class MPWorld extends WorldBase {
 			{
 				cat.DeathTick(timespan);
 			}
+			//TODO remove dead walkers once animation complete
 			mSubFrame++;
 		}
 	}

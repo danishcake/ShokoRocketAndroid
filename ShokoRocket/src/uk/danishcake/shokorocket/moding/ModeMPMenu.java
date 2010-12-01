@@ -1,5 +1,7 @@
 package uk.danishcake.shokorocket.moding;
 
+import java.io.IOException;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -42,8 +44,13 @@ public class ModeMPMenu extends Mode {
 			public void OnClick(Widget widget) {
 				if(mPendMode == null)
 				{
-					MPWorld world = new MPWorld();
-					mPendMode = new ModeMPGame(ModeMPMenu.this, mSkin, world);
+					try {
+						MPWorld world = new MPWorld(mContext.getAssets().open("MultiplayerLevels/MP001.Level"));
+						mPendMode = new ModeMPGame(ModeMPMenu.this, mSkin, world);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		});

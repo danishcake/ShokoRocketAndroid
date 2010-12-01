@@ -17,22 +17,22 @@ public class MPWorldTests extends AndroidTestCase {
 	public void testMPWalkers()
 	{
 		MPWorld world = new MPWorld();
-		assertEquals(0, world.getMice().size());
+		assertEquals(0, world.getLiveMice().size());
 		
 		world.addWalker(0, 0, Direction.East, WalkerType.Mouse);
-		assertEquals(1, world.getMice().size());
-		assertEquals(0, world.getCats().size());
+		assertEquals(1, world.getLiveMice().size());
+		assertEquals(0, world.getLiveCats().size());
 		
 		world.addWalker(0, 0, Direction.East, WalkerType.MouseGold);
-		assertEquals(2, world.getMice().size());
-		assertEquals(0, world.getCats().size());
+		assertEquals(2, world.getLiveMice().size());
+		assertEquals(0, world.getLiveCats().size());
 		
 		world.addWalker(0, 0, Direction.East, WalkerType.MouseSpecial);
-		assertEquals(3, world.getMice().size());
-		assertEquals(0, world.getCats().size());
+		assertEquals(3, world.getLiveMice().size());
+		assertEquals(0, world.getLiveCats().size());
 		
 		world.addWalker(0, 0, Direction.East, WalkerType.Cat);
-		assertEquals(3, world.getMice().size());
-		assertEquals(1, world.getCats().size());		
+		assertEquals(3, world.getLiveMice().size());
+		assertEquals(1, world.getLiveCats().size());		
 	}
 }
