@@ -275,7 +275,7 @@ public class ModeSPMenu extends Mode {
 	@Override
 	public void Redraw(Canvas canvas) {
 		if(mWorld != null)
-			mGameDrawer.Draw(canvas, mWorld);
+			mGameDrawer.DrawSP(canvas, mWorld);
 		else
 		{
 			//TODO draw a SD card symbol

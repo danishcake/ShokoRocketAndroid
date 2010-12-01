@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.gui.Widget;
+import uk.danishcake.shokorocket.simulation.MPWorld;
 
 public class ModeMPMenu extends Mode {
 	private SkinProgress mSkin;
@@ -40,7 +41,10 @@ public class ModeMPMenu extends Mode {
 			@Override
 			public void OnClick(Widget widget) {
 				if(mPendMode == null)
-					mPendMode = new ModeMPGame(ModeMPMenu.this, mSkin);
+				{
+					MPWorld world = new MPWorld();
+					mPendMode = new ModeMPGame(ModeMPMenu.this, mSkin, world);
+				}
 			}
 		});
 		

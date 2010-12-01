@@ -1,9 +1,15 @@
 package uk.danishcake.shokorocket.simulation;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import uk.danishcake.shokorocket.networking.GameSync;
 import uk.danishcake.shokorocket.networking.LocalSync;
@@ -30,6 +36,24 @@ public class MPWorld extends WorldBase {
 	private List<Message> mMessages;
 	private MPSquareType[] mSpecialSquares = new MPSquareType[mWidth*mHeight];
 	
+	/* MPWorld(input)
+	 * Loads a world from specified XML file
+	 * @param input an InputStream representing the level  
+	 */
+	public MPWorld(InputStream input) throws IOException {
+		LoadFromXML(input);
+		//loadSpecific is then called with root element to parse
+	}
+	
+	public MPWorld() {
+		super();
+		mSpecialSquares = new MPSquareType[mWidth * mHeight];
+		for(int i = 0; i < mWidth * mHeight; i++){
+			mSpecialSquares[i] = new MPSquareType();
+			mSpecialSquares[i].square_type = SquareType.Empty;
+			mSpecialSquares[i].player_id = 0;
+		}
+	}
 	
 	public ArrayList<Walker> getMice() {
 		return mLiveMice;
@@ -72,7 +96,40 @@ public class MPWorld extends WorldBase {
 			mSpecialSquares[i].square_type = SquareType.Empty;
 			mSpecialSquares[i].player_id = 0;
 		}
-
+		loadEntities(root);
+	}
+	
+	/**
+	 * Loads entities from XML
+	 * @param root the document element of the XML
+	 */
+	private void loadEntities(Element root) {
+		NodeList player_list = root.getElementsByTagName("PlayerRocket");
+		for(int i = 0; i < player_list.getLength(); i++)
+		{
+			Node player_rocket = player_list.item(i);
+			NamedNodeMap rocket_attr = player_rocket.getAttributes();
+			Node pos_x = rocket_attr.getNamedItem("x");
+			Node pos_y = rocket_attr.getNamedItem("y");
+			Node player_id = rocket_attr.getNamedItem("id");
+			if(pos_x == null || pos_y == null || player_id == null)
+			{
+				throw new InvalidParameterException("Both x, y & id must be specified in PlayerRocket");
+			} else
+			{
+				try
+				{
+					int x = Integer.parseInt(pos_x.getNodeValue());
+					int y = Integer.parseInt(pos_y.getNodeValue());
+					int id = Integer.parseInt(player_id.getNodeValue());
+					
+					setRocket(x, y, id);
+				} catch(NullPointerException nfe)
+				{
+					throw new InvalidParameterException("Both x, y and id must be specified in PlayerRocket");
+				}			
+			}
+		}
 	}
 	
 	public void Tick(int timespan) {

@@ -12,10 +12,11 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import uk.danishcake.shokorocket.moding.SkinProgress;
 import uk.danishcake.shokorocket.simulation.Direction;
+import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.simulation.SquareType;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.Walker;
-import uk.danishcake.shokorocket.simulation.SPWorld;
+import uk.danishcake.shokorocket.simulation.WorldBase;
 import uk.danishcake.shokorocket.simulation.Walker.WalkerState;
 
 /**
@@ -105,7 +106,7 @@ public class GameDrawer {
 	 * Creates the background texture
 	 * @param world The world to create the background texture from
 	 */
-	public void CreateBackground(SPWorld world)
+	public void CreateBackground(WorldBase world)
 	{
 		//Create background image
 		if(world != null)
@@ -151,7 +152,7 @@ public class GameDrawer {
 		}
 	}
 	
-	public void DrawTilesAndWalls(Canvas canvas, SPWorld world)
+	public void DrawTilesAndWalls(Canvas canvas, WorldBase world)
 	{
 		int wall_offset = -mWestWall.getFrameByIndex(0).getWidth() / 2;
 		for(int y = 0; y < world.getHeight(); y++)
@@ -276,7 +277,7 @@ public class GameDrawer {
 	 * @param canvas
 	 * @param world
 	 */
-	public void Draw(Canvas canvas, SPWorld world)
+	public void DrawSP(Canvas canvas, SPWorld world)
 	{
 		int sprite_count = 0;
 		for(int i = 0; i < mRenderItems.size(); i++)
@@ -506,7 +507,7 @@ public class GameDrawer {
 
 		mCacheBitmap = Bitmap.createBitmap(world.getWidth() * mGridSize, world.getHeight() * mGridSize, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(mCacheBitmap);
-		Draw(canvas, world);
+		DrawSP(canvas, world);
 
 		mDrawOffsetX = old_drawoffset_x;
 		mDrawOffsetY = old_drawoffset_y;

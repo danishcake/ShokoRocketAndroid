@@ -346,7 +346,7 @@ public class ModeSPGame extends Mode {
 			mGameDrawer.DrawCacheBitmap(canvas, mRotateAngle, mRotateScale);
 		} else
 		{
-			mGameDrawer.Draw(canvas, mWorld);
+			mGameDrawer.DrawSP(canvas, mWorld);
 			if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
 			{
 				mGameDrawer.DrawCursor(canvas, mCursorPosition.x, mCursorPosition.y, mRunningMode != RunningMode.Stopped);

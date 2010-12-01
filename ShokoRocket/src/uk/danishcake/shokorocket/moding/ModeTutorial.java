@@ -298,7 +298,7 @@ public class ModeTutorial extends Mode {
 			mGameDrawer.DrawCacheBitmap(canvas, mRotateAngle, mRotateScale);
 		} else
 		{
-			mGameDrawer.Draw(canvas, mWorld);
+			mGameDrawer.DrawSP(canvas, mWorld);
 		}
 		mWidgetPage.Draw(canvas);
 		if(mCursorPosition.x != -1)

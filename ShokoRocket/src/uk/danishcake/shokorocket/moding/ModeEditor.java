@@ -779,7 +779,7 @@ public class ModeEditor extends Mode {
 		} else if(mWorld != null){
 			//SPWorld has been created, so at next stage
 			mGameDrawer.DrawTilesAndWalls(canvas, mWorld);
-			mGameDrawer.Draw(canvas, mWorld);
+			mGameDrawer.DrawSP(canvas, mWorld);
 			if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
 			{
 				mGameDrawer.DrawCursor(canvas, mCursorPosition.x, mCursorPosition.y, mRunningMode != RunningMode.Stopped);
