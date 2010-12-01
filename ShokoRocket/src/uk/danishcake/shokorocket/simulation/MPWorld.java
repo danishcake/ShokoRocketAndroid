@@ -104,6 +104,8 @@ public class MPWorld extends WorldBase {
 	 * @param root the document element of the XML
 	 */
 	private void loadEntities(Element root) {
+		
+		//Load rockets (player locations)
 		NodeList player_list = root.getElementsByTagName("PlayerRocket");
 		for(int i = 0; i < player_list.getLength(); i++)
 		{
@@ -127,7 +129,61 @@ public class MPWorld extends WorldBase {
 				} catch(NullPointerException nfe)
 				{
 					throw new InvalidParameterException("Both x, y and id must be specified in PlayerRocket");
-				}			
+				}
+			}
+		}
+		
+		//Load spawners
+		NodeList spawner_list = root.getElementsByTagName("Spawner");
+		for(int i = 0; i < spawner_list.getLength(); i++)
+		{
+			Node spawner = player_list.item(i);
+			NamedNodeMap spawner_attr = spawner.getAttributes();
+			Node pos_x = spawner_attr.getNamedItem("x");
+			Node pos_y = spawner_attr.getNamedItem("y");
+			Node dir = spawner_attr.getNamedItem("d");
+			if(pos_x == null || pos_y == null || dir == null)
+			{
+				throw new InvalidParameterException("Both x, y & d must be specified in Spawner");
+			} else
+			{
+				try
+				{
+					int x = Integer.parseInt(pos_x.getNodeValue());
+					int y = Integer.parseInt(pos_y.getNodeValue());
+					Direction direction = Direction.valueOf(dir.getNodeValue());
+					
+					setSpawner(x, y, direction);
+				} catch(NullPointerException nfe)
+				{
+					throw new InvalidParameterException("Both x, y and id must be specified in PlayerRocket");
+				}
+			}
+		}
+
+		//Load holes
+		NodeList hole_list = root.getElementsByTagName("Hole");
+		for(int i = 0; i < hole_list.getLength(); i++)
+		{			
+			Node hole_node = hole_list.item(i);
+			NamedNodeMap hole_position_attr = hole_node.getAttributes();
+			
+			Node pos_x = hole_position_attr.getNamedItem("x");
+			Node pos_y = hole_position_attr.getNamedItem("y");
+			if(pos_x == null || pos_y == null)
+			{
+				throw new InvalidParameterException("Both x and y must be specified in hole");			
+			} else
+			{
+				try
+				{
+					int x = Integer.parseInt(pos_x.getNodeValue());
+					int y = Integer.parseInt(pos_y.getNodeValue());
+					setHole(x, y, true);
+				} catch(NumberFormatException nfe)
+				{
+					throw new InvalidParameterException("Unable to parse x or y in hole");
+				}
 			}
 		}
 	}
