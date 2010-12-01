@@ -91,6 +91,31 @@ public enum SquareType {
 		}		
 	}
 	
+	public SquareType DiminishMP()
+	{
+		switch(this)
+		{
+		case NorthArrow:
+			return SquareType.NorthHalfArrow;
+		case SouthArrow:
+			return SquareType.SouthHalfArrow;
+		case EastArrow:
+			return SquareType.EastHalfArrow;
+		case WestArrow:
+			return SquareType.WestHalfArrow;
+		case NorthHalfArrow:
+			return SquareType.Empty;
+		case SouthHalfArrow:
+			return SquareType.Empty;
+		case EastHalfArrow:
+			return SquareType.Empty;
+		case WestHalfArrow:
+			return SquareType.Empty;
+		default:
+			return this;
+		}		
+	}
+	
 	public SquareType Restore()
 	{
 		switch(this)

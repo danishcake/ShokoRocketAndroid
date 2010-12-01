@@ -51,7 +51,7 @@ public class MPWorld extends WorldBase {
 		for(int i = 0; i < mWidth * mHeight; i++){
 			mSpecialSquares[i] = new MPSquareType();
 			mSpecialSquares[i].square_type = SquareType.Empty;
-			mSpecialSquares[i].player_id = 0;
+			mSpecialSquares[i].player_id = -1;
 		}
 	}
 	
@@ -94,7 +94,7 @@ public class MPWorld extends WorldBase {
 		for(int i = 0; i < mWidth * mHeight; i++){
 			mSpecialSquares[i] = new MPSquareType();
 			mSpecialSquares[i].square_type = SquareType.Empty;
-			mSpecialSquares[i].player_id = 0;
+			mSpecialSquares[i].player_id = -1;
 		}
 		loadEntities(root);
 	}
@@ -309,8 +309,37 @@ public class MPWorld extends WorldBase {
 		}
 	}
 	
-	//TODO provide level loading
-	//TODO override walkerReachNewGridSquare
+	/**
+	 * Called when walker reaches a new gird square and must turn/die
+	 */
+	@Override
+	public void walkerReachNewSquare(Walker walker, int x, int y, Direction d) {
+		//First interact with special squares (arrow, holes & rockets)
+		SquareType square = getSpecialSquare(x, y);
+		//Holes
+		if(square == SquareType.Hole)
+		{
+			walker.setWalkerState(WalkerState.Dead);
+		}
+		if(square == SquareType.Rocket)
+		{
+			//TODO score increment
+			walker.setWalkerState(WalkerState.Rescued);
+		}
+		//Arrows
+		Direction arrow_direction = square.toArrowDirection(); 
+		if(arrow_direction != Direction.Invalid)
+		{
+			if(arrow_direction == Turns.TurnAround(d) && walker.getWalkerType() == WalkerType.Cat)
+			{
+				SquareType reduced = square.DiminishMP();
+				setSpecialSquare(x, y, reduced, getPlayer(x, y));
+			}
+			walker.setDirection2(arrow_direction);
+		}
+		/* Now interact with walls */
+		super.walkerReachNewSquare(walker, x, y, walker.getDirection());
+	}
 	//TODO send input messages
 	
 	/**
@@ -404,5 +433,33 @@ public class MPWorld extends WorldBase {
 		return mSpecialSquares[wallIndex(x, y)].square_type == SquareType.Rocket;
 	}
 	
+	/* getSpecialSquare
+	 * Gets the square type at x/y
+	 * @return the square type at x/y
+	 */
+	public SquareType getSpecialSquare(int x, int y) {
+		return mSpecialSquares[wallIndex(x, y)].square_type;
+	}
 	
+	public void setSpecialSquare(int x, int y, SquareType square_type, int player_id) {
+		mSpecialSquares[wallIndex(x, y)].square_type = square_type;
+		switch(square_type)
+		{
+		case EastArrow:
+		case EastHalfArrow:
+		case NorthArrow:
+		case NorthHalfArrow:
+		case WestArrow:
+		case WestHalfArrow:
+		case SouthArrow:
+		case SouthHalfArrow:
+		case Rocket:
+			mSpecialSquares[wallIndex(x, y)].player_id = player_id;
+			break;
+		default:
+			mSpecialSquares[wallIndex(x, y)].player_id = -1;
+			break;
+		}
+		
+	}
 }
