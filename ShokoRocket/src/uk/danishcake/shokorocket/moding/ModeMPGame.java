@@ -76,6 +76,23 @@ public class ModeMPGame extends Mode {
 	}
 	
 	@Override
+	public void previewGesture(int x1, int y1, int x2, int y2,
+			Direction direction) {
+		mGestureInProgress = true;
+		mGestureStart.x = x1;
+		mGestureStart.y = y1;
+		
+		mGestureEnd.x = x2;
+		mGestureEnd.y = y2;
+		mGestureDirection = direction;
+	}
+	
+	@Override
+	public void clearPreviewGesture() {
+		mGestureInProgress = false;
+	}
+	
+	@Override
 	public boolean handleBack() {
 		mPendMode = mModeMenu;
 		return true;
