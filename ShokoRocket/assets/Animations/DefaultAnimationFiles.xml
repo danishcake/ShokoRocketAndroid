@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AnimationFiles>
    <Animation id="arrows" val="Animations/Game/arrows.animation" />
+   <Animation id="mp_arrows" val="Animations/Game/arrows_mp.animation" />
    <Animation id="cursor" val="Animations/Game/cursor.animation" />
    <Animation id="gesture_arrows" val="Animations/Game/gesture_arrows.animation" />
    <Animation id="halfarrows" val="Animations/Game/halfarrows.animation" />

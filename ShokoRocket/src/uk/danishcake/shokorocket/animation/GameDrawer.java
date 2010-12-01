@@ -22,7 +22,7 @@ import uk.danishcake.shokorocket.simulation.Walker.WalkerState;
 
 /**
  * Encapsulates methods to draw a world
- * @author Edward
+ * @author Edward Woolhouse
  *
  */
 public class GameDrawer {
@@ -55,6 +55,17 @@ public class GameDrawer {
 	private EnumMap<Direction, Animation> mFullArrowAnimations = new EnumMap<Direction, Animation>(Direction.class);
 	private EnumMap<Direction, Animation> mGestureArrowAnimations = new EnumMap<Direction, Animation>(Direction.class);
 	private EnumMap<Direction, Animation> mHalfArrowAnimations = new EnumMap<Direction, Animation>(Direction.class);
+	
+	private EnumMap<Direction, Animation> mMPFullArrowAnimations0 = new EnumMap<Direction, Animation>(Direction.class);
+	private EnumMap<Direction, Animation> mMPHalfArrowAnimations0 = new EnumMap<Direction, Animation>(Direction.class);
+	private EnumMap<Direction, Animation> mMPFullArrowAnimations1 = mFullArrowAnimations;
+	private EnumMap<Direction, Animation> mMPHalfArrowAnimations1 = mHalfArrowAnimations;
+	private EnumMap<Direction, Animation> mMPFullArrowAnimations2 = new EnumMap<Direction, Animation>(Direction.class);
+	private EnumMap<Direction, Animation> mMPHalfArrowAnimations2 = new EnumMap<Direction, Animation>(Direction.class);
+	private EnumMap<Direction, Animation> mMPFullArrowAnimations3 = new EnumMap<Direction, Animation>(Direction.class);
+	private EnumMap<Direction, Animation> mMPHalfArrowAnimations3 = new EnumMap<Direction, Animation>(Direction.class);
+	
+
 	private Bitmap mTileA = null;
 	private Bitmap mTileB = null;
 	private Animation mNorthWall = null;
@@ -274,9 +285,45 @@ public class GameDrawer {
 				mMPRocketAnimation[2] = mp_rocket_animations.get("Normal2");
 				mMPRocketAnimation[3] = mp_rocket_animations.get("Normal3");
 				
+				Map<String, Animation> mp_arrow_animations = Animation.GetAnimations(context, skin.getAnimation("mp_arrows"), scale);
 				
 				
+				mMPFullArrowAnimations0.put(Direction.North, mp_arrow_animations.get("North0"));
+				mMPFullArrowAnimations0.put(Direction.South, mp_arrow_animations.get("South0"));
+				mMPFullArrowAnimations0.put(Direction.East, mp_arrow_animations.get("East0"));
+				mMPFullArrowAnimations0.put(Direction.West, mp_arrow_animations.get("West0"));
+				mMPFullArrowAnimations0.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
 				
+				mMPFullArrowAnimations2.put(Direction.North, mp_arrow_animations.get("North2"));
+				mMPFullArrowAnimations2.put(Direction.South, mp_arrow_animations.get("South2"));
+				mMPFullArrowAnimations2.put(Direction.East, mp_arrow_animations.get("East2"));
+				mMPFullArrowAnimations2.put(Direction.West, mp_arrow_animations.get("West2"));
+				mMPFullArrowAnimations2.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+				
+				mMPFullArrowAnimations3.put(Direction.North, mp_arrow_animations.get("North3"));
+				mMPFullArrowAnimations3.put(Direction.South, mp_arrow_animations.get("South3"));
+				mMPFullArrowAnimations3.put(Direction.East, mp_arrow_animations.get("East3"));
+				mMPFullArrowAnimations3.put(Direction.West, mp_arrow_animations.get("West3"));
+				mMPFullArrowAnimations3.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+				
+				mMPHalfArrowAnimations0.put(Direction.North, mp_arrow_animations.get("North0"));
+				mMPHalfArrowAnimations0.put(Direction.South, mp_arrow_animations.get("South0"));
+				mMPHalfArrowAnimations0.put(Direction.East, mp_arrow_animations.get("East0"));
+				mMPHalfArrowAnimations0.put(Direction.West, mp_arrow_animations.get("West0"));
+				mMPHalfArrowAnimations0.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+				
+				mMPHalfArrowAnimations2.put(Direction.North, mp_arrow_animations.get("North2"));
+				mMPHalfArrowAnimations2.put(Direction.South, mp_arrow_animations.get("South2"));
+				mMPHalfArrowAnimations2.put(Direction.East, mp_arrow_animations.get("East2"));
+				mMPHalfArrowAnimations2.put(Direction.West, mp_arrow_animations.get("West2"));
+				mMPHalfArrowAnimations2.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+				
+				mMPHalfArrowAnimations3.put(Direction.North, mp_arrow_animations.get("North3"));
+				mMPHalfArrowAnimations3.put(Direction.South, mp_arrow_animations.get("South3"));
+				mMPHalfArrowAnimations3.put(Direction.East, mp_arrow_animations.get("East3"));
+				mMPHalfArrowAnimations3.put(Direction.West, mp_arrow_animations.get("West3"));
+				mMPHalfArrowAnimations3.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+
 				mAnimationsLoaded = true;
 			} catch(IOException ex)
 			{
@@ -327,13 +374,49 @@ public class GameDrawer {
 				case SouthArrow:
 				case EastArrow:
 				case WestArrow:
-					mFullArrowAnimations.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+				{
+					int player_id = world.getPlayer(x, y); // Limit to 0-3
+					switch(player_id)
+					{
+					case 0:
+						mMPFullArrowAnimations0.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+						break;
+					case 1:
+						mMPFullArrowAnimations1.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+						break;
+					case 2:
+						mMPFullArrowAnimations2.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+						break;
+					case 3:
+					default:
+						mMPFullArrowAnimations3.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+						break;
+					}
+				}
 					break;
 				case NorthHalfArrow:
 				case SouthHalfArrow:
 				case EastHalfArrow:
 				case WestHalfArrow:
-					mHalfArrowAnimations.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+				{
+					int player_id = world.getPlayer(x, y); // Limit to 0-3
+					switch(player_id)
+					{
+					case 0:
+						mMPHalfArrowAnimations0.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+						break;
+					case 1:
+						mMPHalfArrowAnimations1.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+						break;
+					case 2:
+						mMPHalfArrowAnimations2.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+						break;
+					case 3:
+					default:
+						mMPHalfArrowAnimations3.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+						break;
+					}
+				}
 					break;
 				}
 			}
