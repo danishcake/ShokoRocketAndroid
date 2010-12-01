@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>lines</Name>
+<Author>tstek</Author>
+<Size x="9" y="12"/>
+<V x="0" y="0" />
+<H x="0" y="0" />
+<H x="1" y="0" />
+<H x="2" y="0" />
+<H x="3" y="0" />
+<H x="4" y="0" />
+<H x="5" y="0" />
+<H x="6" y="0" />
+<H x="7" y="0" />
+<H x="8" y="0" />
+<H x="0" y="1" />
+<H x="8" y="1" />
+<V x="0" y="2" />
+<H x="0" y="3" />
+<H x="8" y="3" />
+<V x="0" y="4" />
+<H x="0" y="5" />
+<H x="8" y="5" />
+<V x="0" y="6" />
+<H x="0" y="7" />
+<H x="8" y="7" />
+<V x="0" y="8" />
+<H x="0" y="9" />
+<H x="8" y="9" />
+<V x="0" y="10" />
+<H x="0" y="11" />
+<H x="8" y="11" />
+<Mouse x="0" y="0" d="East" />
+<Cat x="8" y="1" d="West" />
+<Cat x="7" y="1" d="West" />
+<Cat x="6" y="1" d="West" />
+<Cat x="5" y="1" d="West" />
+<Cat x="4" y="1" d="West" />
+<Cat x="3" y="1" d="West" />
+<Cat x="8" y="3" d="West" />
+<Cat x="6" y="3" d="West" />
+<Cat x="4" y="3" d="West" />
+<Cat x="2" y="3" d="West" />
+<Cat x="0" y="3" d="West" />
+<Cat x="4" y="5" d="West" />
+<Cat x="6" y="5" d="West" />
+<Cat x="5" y="5" d="West" />
+<Cat x="8" y="5" d="West" />
+<Cat x="0" y="5" d="West" />
+<Cat x="2" y="7" d="West" />
+<Cat x="6" y="7" d="West" />
+<Cat x="8" y="7" d="West" />
+<Cat x="7" y="7" d="West" />
+<Cat x="1" y="7" d="West" />
+<Cat x="0" y="7" d="West" />
+<Cat x="1" y="9" d="West" />
+<Cat x="3" y="9" d="West" />
+<Cat x="8" y="9" d="West" />
+<Cat x="4" y="7" d="West" />
+<Cat x="4" y="9" d="West" />
+<Cat x="7" y="3" d="West" />
+<Cat x="1" y="3" d="West" />
+<Cat x="1" y="5" d="West" />
+<Cat x="2" y="5" d="West" />
+<Cat x="5" y="9" d="West" />
+<Cat x="0" y="9" d="West" />
+<Cat x="7" y="9" d="West" />
+<Cat x="1" y="1" d="West" />
+<Arrow x="5" y="0" d="South"/>
+<Arrow x="5" y="2" d="East"/>
+<Arrow x="6" y="2" d="South"/>
+<Arrow x="1" y="4" d="South"/>
+<Arrow x="6" y="4" d="West"/>
+<Arrow x="1" y="6" d="East"/>
+<Arrow x="6" y="6" d="South"/>
+<Arrow x="6" y="8" d="East"/>
+<Arrow x="7" y="8" d="South"/>
+<Rocket x="0" y="11" />
+<Rocket x="1" y="11" />
+<Rocket x="2" y="11" />
+<Rocket x="3" y="11" />
+<Rocket x="4" y="11" />
+<Rocket x="5" y="11" />
+<Rocket x="6" y="11" />
+<Rocket x="7" y="11" />
+<Rocket x="8" y="11" />
+</Level>
