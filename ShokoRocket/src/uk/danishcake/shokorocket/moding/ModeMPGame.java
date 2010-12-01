@@ -4,6 +4,7 @@ import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.MPWorld;
 import uk.danishcake.shokorocket.simulation.Vector2i;
+import uk.danishcake.shokorocket.sound.SoundManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -73,6 +74,72 @@ public class ModeMPGame extends Mode {
 				canvas.drawBitmap(frame, (mGestureStart.x + mGestureEnd.x) / 2 - frame.getWidth() / 2, (mGestureStart.y + mGestureEnd.y) / 2 - frame.getHeight() / 2, null);
 		}
 		super.Redraw(canvas);
+	}
+	
+	@Override
+	public void handleTap(int x, int y) {
+		mWidgetPage.handleTap(x, y);
+		Vector2i offset = mGameDrawer.getDrawOffset();
+		int grid_x = (x - offset.x) / mGameDrawer.getGridSize();
+		int grid_y = (y - offset.y) / mGameDrawer.getGridSize();
+		if(grid_x >= 0 && grid_y >= 0 && grid_x < mWorld.getWidth() && grid_y < mWorld.getHeight())
+		{
+			mCursorPosition.x = grid_x;
+			mCursorPosition.y = grid_y;
+			SoundManager.PlaySound(mClickSound);
+		}
+	}
+	
+	@Override
+	public void handleDPad(Direction direction) {
+		if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
+		{
+			switch(direction)
+			{
+			case North:
+				mCursorPosition.y--;
+				if (mCursorPosition.y < 0)
+					mCursorPosition.y = 0;
+				break;
+			case South:
+				mCursorPosition.y++;
+				if (mCursorPosition.y >= mWorld.getHeight())
+					mCursorPosition.y = mWorld.getHeight() - 1;
+				break;
+			case West:
+				mCursorPosition.x--;
+				if (mCursorPosition.x < 0)
+					mCursorPosition.x = 0;
+				break;
+			case East:
+				mCursorPosition.x++;
+				if (mCursorPosition.x >= mWorld.getWidth())
+					mCursorPosition.x = mWorld.getWidth() - 1;
+				break;
+			}
+		}
+	}
+	
+	@Override
+	public void handleGesture(Direction direction) {
+		if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
+		{
+			switch(direction)
+			{
+			case North:
+				SoundManager.PlaySound(mClickSound);
+				break;
+			case South:
+				SoundManager.PlaySound(mClickSound);
+				break;
+			case West:
+				SoundManager.PlaySound(mClickSound);
+				break;
+			case East:
+				SoundManager.PlaySound(mClickSound);
+				break;
+			}
+		}
 	}
 	
 	@Override
