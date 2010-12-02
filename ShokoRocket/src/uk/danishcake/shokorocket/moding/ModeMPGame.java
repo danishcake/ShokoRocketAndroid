@@ -52,7 +52,7 @@ public class ModeMPGame extends Mode {
 													mScreenWidth * 3 / 4 - mBtnSep / 2, mScreenHeight - mBtnBorder));
 		mScoreWidgets[3] = new Widget(np3, new Rect(mScreenWidth * 3 / 4 + mBtnSep / 2, mScreenHeight - mBtnSize - mBtnBorder, 
 													mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
-		
+		mWidgetPage.setFontSize(mFontSize);
 		mWidgetPage.addWidget(mScoreWidgets[0]);
 		mWidgetPage.addWidget(mScoreWidgets[1]);
 		mWidgetPage.addWidget(mScoreWidgets[2]);
@@ -77,6 +77,7 @@ public class ModeMPGame extends Mode {
 	@Override
 	public ModeAction Tick(int timespan) {
 		mWorld.Tick(timespan);
+		updateScores();
 		if(mPlayerID == -1) mPlayerID = mWorld.getPlayerID();
 		return super.Tick(timespan);
 	}
@@ -200,5 +201,14 @@ public class ModeMPGame extends Mode {
 	public boolean handleBack() {
 		mPendMode = mModeMenu;
 		return true;
+	}
+
+	private void updateScores() {
+		//TODO maybe cache ltv and only update on change?
+		int[] scores = mWorld.getPlayerScores();
+		for(int i = 0; i < 4; i++)
+		{
+			mScoreWidgets[i].setText(Integer.toString(scores[i]));
+		}
 	}
 }
