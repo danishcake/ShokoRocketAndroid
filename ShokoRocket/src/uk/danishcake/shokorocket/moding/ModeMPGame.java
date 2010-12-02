@@ -78,10 +78,6 @@ public class ModeMPGame extends Mode {
 			if(x != -1 && y != -1)
 				mGameDrawer.drawMPCursor(canvas, x, y, i);
 		}
-		if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
-		{
-			mGameDrawer.DrawCursor(canvas, mCursorPosition.x, mCursorPosition.y, true);
-		}
 		mWidgetPage.Draw(canvas);
 		if(mGestureInProgress)
 		{
