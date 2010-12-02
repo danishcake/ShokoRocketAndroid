@@ -30,8 +30,7 @@ public class ModeUnlocks extends Mode {
 	public void Setup(Context context) {
 		super.Setup(context);
 		mWidgetPage = new WidgetPage();
-		
-		int np_border = context.getResources().getInteger(R.integer.np_border);		
+				
 		Widget back = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - mBtnBorder - mBtnSize, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
 		back.setText("Back");
 		
@@ -42,8 +41,8 @@ public class ModeUnlocks extends Mode {
 		tutorial.setText("Tutorial");
 		
 		List<RadioWidget> skins = new ArrayList<RadioWidget>();
-		NinePatchData set_np = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_radio_set)), np_border, np_border, np_border, np_border);
-		NinePatchData unset_np = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_radio_unset)), np_border, np_border, np_border, np_border);
+		NinePatchData set_np = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_radio_set)), mNPBorder, mNPBorder, mNPBorder, mNPBorder);
+		NinePatchData unset_np = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_radio_unset)), mNPBorder, mNPBorder, mNPBorder, mNPBorder);
 		
 		RadioWidget skin_pink = new RadioWidget(set_np, unset_np, new Rect(mBtnBorder, mBtnBorder + 1 * (mBtnSize + mBtnSep), mScreenWidth - mBtnBorder, mBtnBorder + 1 * (mBtnSize + mBtnSep) + mBtnSize), skins);
 		skin_pink.setText("Pink mice");

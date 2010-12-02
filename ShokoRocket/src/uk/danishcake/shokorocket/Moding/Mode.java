@@ -45,6 +45,7 @@ public class Mode {
 	protected int mBtnSize2 = 64;
 	protected int mLevelBorder = 8;
 	protected int mGridSize = 64;
+	protected int mNPBorder = 16;
 	protected int mCatSound = -1;
 	protected int mClickSound = -1;
 	protected int mMouseSound = -1;
@@ -77,8 +78,8 @@ public class Mode {
 			//TODO log
 		}
 		
-		int np_border = context.getResources().getInteger(R.integer.np_border);
-		mBtnNP = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_button)), np_border, np_border, np_border, np_border);
+		mNPBorder = context.getResources().getInteger(R.integer.np_border);
+		mBtnNP = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_button)), mNPBorder, mNPBorder, mNPBorder, mNPBorder);
 	}
 
 	/**

@@ -1,20 +1,26 @@
 package uk.danishcake.shokorocket.moding;
 
+import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
+import uk.danishcake.shokorocket.gui.NinePatchData;
+import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.MPWorld;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 public class ModeMPGame extends Mode {
 	private ModeMPMenu mModeMenu = null;
 	private SkinProgress mSkin = null;
 	private MPWorld mWorld = null;
 	private GameDrawer mGameDrawer = new GameDrawer();
+	Widget[] mScoreWidgets = new Widget[4];
 	
 	private Vector2i mCursorPosition = new Vector2i(-1, -1);
 	private Vector2i mGestureStart = new Vector2i(0, 0);
@@ -32,6 +38,25 @@ public class ModeMPGame extends Mode {
 	@Override
 	public void Setup(Context context) {
 		super.Setup(context);
+		
+		NinePatchData np0 = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_mpbutton0)), mNPBorder, mNPBorder, mNPBorder, mNPBorder);
+		NinePatchData np1 = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_mpbutton1)), mNPBorder, mNPBorder, mNPBorder, mNPBorder);
+		NinePatchData np2 = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_mpbutton2)), mNPBorder, mNPBorder, mNPBorder, mNPBorder);
+		NinePatchData np3 = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_mpbutton3)), mNPBorder, mNPBorder, mNPBorder, mNPBorder);
+		
+		mScoreWidgets[0] = new Widget(np0, new Rect(mBtnBorder, mScreenHeight - mBtnSize - mBtnBorder, 
+													mScreenWidth / 4 - mBtnSep / 2, mScreenHeight - mBtnBorder));
+		mScoreWidgets[1] = new Widget(np1, new Rect(mScreenWidth /4 + mBtnSep / 2, mScreenHeight - mBtnSize - mBtnBorder, 
+													mScreenWidth / 2 - mBtnSep / 2, mScreenHeight - mBtnBorder));
+		mScoreWidgets[2] = new Widget(np2, new Rect(mScreenWidth / 2 + mBtnSep / 2, mScreenHeight - mBtnSize - mBtnBorder, 
+													mScreenWidth * 3 / 4 - mBtnSep / 2, mScreenHeight - mBtnBorder));
+		mScoreWidgets[3] = new Widget(np3, new Rect(mScreenWidth * 3 / 4 + mBtnSep / 2, mScreenHeight - mBtnSize - mBtnBorder, 
+													mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
+		
+		mWidgetPage.addWidget(mScoreWidgets[0]);
+		mWidgetPage.addWidget(mScoreWidgets[1]);
+		mWidgetPage.addWidget(mScoreWidgets[2]);
+		mWidgetPage.addWidget(mScoreWidgets[3]);
 		
 		//Setup autoscaling twice, for portrait and landscape orientations
 		int required_width = mWorld.getWidth() * mGridSize;
