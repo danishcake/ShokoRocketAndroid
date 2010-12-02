@@ -64,7 +64,7 @@ public class GameDrawer {
 	private EnumMap<Direction, Animation> mMPHalfArrowAnimations2 = new EnumMap<Direction, Animation>(Direction.class);
 	private EnumMap<Direction, Animation> mMPFullArrowAnimations3 = new EnumMap<Direction, Animation>(Direction.class);
 	private EnumMap<Direction, Animation> mMPHalfArrowAnimations3 = new EnumMap<Direction, Animation>(Direction.class);
-	
+	private Animation mSpawnerAnimation = null;
 
 	private Bitmap mTileA = null;
 	private Bitmap mTileB = null;
@@ -332,6 +332,9 @@ public class GameDrawer {
 				mMPCursorAnimations[1] = mp_cursor_animations.get("Normal1");
 				mMPCursorAnimations[2] = mp_cursor_animations.get("Normal2");
 				mMPCursorAnimations[3] = mp_cursor_animations.get("Normal3");
+				
+				Map<String, Animation> spawner_animations = Animation.GetAnimations(context, skin.getAnimation("spawner"), scale);
+				mSpawnerAnimation = spawner_animations.get("Normal");
 
 				mAnimationsLoaded = true;
 			} catch(IOException ex)
@@ -378,6 +381,7 @@ public class GameDrawer {
 				case SouthSpawner:
 				case EastSpawner:
 				case WestSpawner:
+					mSpawnerAnimation.DrawCurrentFrame(canvas, drawX, drawY);
 					break;
 				case NorthArrow:
 				case SouthArrow:

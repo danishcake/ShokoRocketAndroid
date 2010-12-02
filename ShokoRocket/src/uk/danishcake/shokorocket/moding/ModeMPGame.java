@@ -89,21 +89,15 @@ public class ModeMPGame extends Mode {
 		Vector2i[] cursors = mWorld.getCursorPositions();
 		for(int i = 0; i < 4; i++)
 		{
-			int x;
-			int y;
-			if(i == mPlayerID)
+			if(i != mPlayerID)
 			{
-				x = mCursorPosition.x;
-				y = mCursorPosition.y;
+				if(cursors[i].x != -1 && cursors[i].y != -1)
+					mGameDrawer.drawMPCursor(canvas, cursors[i].x, cursors[i].y, i);
 			}
-			else
-			{
-				x = cursors[i].x;
-				y = cursors[i].y;
-			}
-			if(x != -1 && y != -1)
-				mGameDrawer.drawMPCursor(canvas, x, y, i);
 		}
+		//Draw player cursor last so on top
+		if(cursors[mPlayerID].x != -1 && cursors[mPlayerID].y != -1)
+			mGameDrawer.drawMPCursor(canvas, cursors[mPlayerID].x, cursors[mPlayerID].y, mPlayerID);
 		mWidgetPage.Draw(canvas);
 		if(mGestureInProgress)
 		{

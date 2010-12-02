@@ -15,4 +15,5 @@
    <Animation id="tick" val="Animations/Game/tick.animation" />
    <Animation id="tiles" val="Animations/Game/tiles.animation" />
    <Animation id="walls" val="Animations/Game/walls.animation" />
+   <Animation id="spawner" val="Animations/Game/spawner.animation" />
 </AnimationFiles>
