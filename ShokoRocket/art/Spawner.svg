@@ -15,8 +15,11 @@
    sodipodi:version="0.32"
    inkscape:version="0.48.0 r9654"
    version="1.0"
-   sodipodi:docname="Rocket.svg"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+   sodipodi:docname="Spawner.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="C:\Users\Edward\Documents\Android Workspace\ShokoRocketAndroid\ShokoRocket\assets\Bitmaps\Game\Spawner.png"
+   inkscape:export-xdpi="360"
+   inkscape:export-ydpi="360">
   <defs
      id="defs4">
     <linearGradient
@@ -77,13 +80,13 @@
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:window-width="1280"
-     inkscape:window-height="778"
+     inkscape:window-height="738"
      inkscape:window-x="-8"
-     inkscape:window-y="8"
+     inkscape:window-y="-8"
      inkscape:snap-nodes="false"
      inkscape:snap-bbox="true"
      inkscape:object-nodes="false"
-     inkscape:window-maximized="0">
+     inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
        id="grid2393"

@@ -95,9 +95,9 @@ public class ModeMPGame extends Mode {
 					mGameDrawer.drawMPCursor(canvas, cursors[i].x, cursors[i].y, i);
 			}
 		}
-		//Draw player cursor last so on top
-		if(cursors[mPlayerID].x != -1 && cursors[mPlayerID].y != -1)
-			mGameDrawer.drawMPCursor(canvas, cursors[mPlayerID].x, cursors[mPlayerID].y, mPlayerID);
+		//Draw player cursor last so on top. Use local value for responsiveness
+		if(mPlayerID != -1 && cursors[mPlayerID].x != -1 && cursors[mPlayerID].y != -1)
+			mGameDrawer.drawMPCursor(canvas, mCursorPosition.x, mCursorPosition.y, mPlayerID);
 		mWidgetPage.Draw(canvas);
 		if(mGestureInProgress)
 		{
@@ -124,6 +124,7 @@ public class ModeMPGame extends Mode {
 			mCursorPosition.x = grid_x;
 			mCursorPosition.y = grid_y;
 			SoundManager.PlaySound(mClickSound);
+			mWorld.cursorPlacement(mCursorPosition.x, mCursorPosition.y);
 		}
 	}
 	
@@ -154,6 +155,7 @@ public class ModeMPGame extends Mode {
 					mCursorPosition.x = mWorld.getWidth() - 1;
 				break;
 			}
+			mWorld.cursorPlacement(mCursorPosition.x, mCursorPosition.y);
 		}
 	}
 	
