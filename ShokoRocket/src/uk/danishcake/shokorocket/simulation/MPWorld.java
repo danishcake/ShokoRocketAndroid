@@ -291,6 +291,7 @@ public class MPWorld extends WorldBase {
 			ArrayList<Walker> justDeadMice = new ArrayList<Walker>();
 			ArrayList<Walker> justRescuedMice = new ArrayList<Walker>();
 			ArrayList<Walker> justDeadCats = new ArrayList<Walker>();
+			ArrayList<Walker> expiredWalkers = new ArrayList<Walker>();
 			
 			for(Walker mouse : mLiveMice)
 			{
@@ -333,16 +334,25 @@ public class MPWorld extends WorldBase {
 			for(Walker mouse : mDeadMice)
 			{
 				mouse.DeathTick(timespan);
+				if(mouse.getDeathTime() > 5000)
+					expiredWalkers.add(mouse);
 			}
 			for(Walker mouse : mRescuedMice)
 			{
 				mouse.DeathTick(timespan);
+				if(mouse.getDeathTime() > 5000)
+					expiredWalkers.add(mouse);
 			}
 			for(Walker cat : mDeadCats)
 			{
 				cat.DeathTick(timespan);
+				if(cat.getDeathTime() > 5000)
+					expiredWalkers.add(cat);
 			}
 			//TODO remove dead walkers once animation complete
+			mDeadMice.removeAll(expiredWalkers);
+			mRescuedMice.removeAll(expiredWalkers);
+			mDeadCats.removeAll(expiredWalkers);
 			mSubFrame++;
 		}
 	}
@@ -361,7 +371,25 @@ public class MPWorld extends WorldBase {
 		}
 		if(square == SquareType.Rocket)
 		{
+			int player = getPlayer(x, y);
 			//TODO score increment
+			switch(walker.getWalkerType())
+			{
+			case Mouse:
+				mScores[player]++;
+				break;
+			case MouseGold:
+				mScores[player] += 50;
+				break;
+			case MouseSpecial:
+				//TODO special mice
+				break;
+			case Cat:
+				mScores[player] = (mScores[player]* 2) / 3;
+				break;
+			}
+			if(mScores[player] < 0) mScores[player] = 0;
+			if(mScores[player] > 999) mScores[player] = 999;
 			walker.setWalkerState(WalkerState.Rescued);
 		}
 		//Arrows
