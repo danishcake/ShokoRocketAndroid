@@ -4,6 +4,7 @@ public class Message {
 	public static final int MESSAGE_FRAME_END = 0;
 	public static final int MESSAGE_CURSOR_POSITION = 1;
 	public static final int MESSAGE_ARROW_PLACEMENT = 2;
+	public static final int MESSAGE_ARROW_CLEAR = 3;
 	/* Message has hidden header items of no interest as follows */
 	/*
 	public int message_id;

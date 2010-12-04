@@ -13,6 +13,7 @@ import org.w3c.dom.NodeList;
 
 import uk.danishcake.shokorocket.networking.GameSync;
 import uk.danishcake.shokorocket.networking.LocalSync;
+import uk.danishcake.shokorocket.networking.messages.ArrowClearMessage;
 import uk.danishcake.shokorocket.networking.messages.ArrowPlacementMessage;
 import uk.danishcake.shokorocket.networking.messages.CursorPositioningMessage;
 import uk.danishcake.shokorocket.networking.messages.Message;
@@ -228,7 +229,7 @@ public class MPWorld extends WorldBase {
 		//Initialise as a temporary measure
 		if(mSync == null){
 			mSync = new LocalSync(this);
-			mSync.Connect("3");
+			mSync.Connect("HHH"); //Three hard AI
 			mPlayerID = mSync.getClientID();
 		}
 		
@@ -427,6 +428,11 @@ public class MPWorld extends WorldBase {
 					toggleArrow(message.x, message.y, message.direction, message.user_id, false);
 			}
 			break;
+		case Message.MESSAGE_ARROW_CLEAR:
+			{
+				clearPlayerArrows(next_message.user_id);
+			}
+			break;
 		}
 	}
 
@@ -471,6 +477,20 @@ public class MPWorld extends WorldBase {
 	 */
 	public Direction getSpawner(int x, int y) {
 		return mSpecialSquares[wallIndex(x, y)].square_type.toSpawnerDirection();
+	}
+	
+	public void clearPlayerArrows(int player)
+	{
+		for(int y = 0; y < mHeight; y++)
+		{
+			for(int x = 0; x < mWidth; x++)
+			{
+				if(getArrow(x, y) != Direction.Invalid && getPlayer(x, y) == player)
+				{
+					setArrow(x, y, Direction.Invalid, -1);
+				}
+			}
+		}
 	}
 	
 	/**
@@ -582,11 +602,24 @@ public class MPWorld extends WorldBase {
 		return mScores;
 	}
 	
+	/**
+	 * Sends a message to other players to place an arrow
+	 */
 	public void arrowPlacement(int x, int y, Direction d)
 	{
 		mSync.sendMessage(new ArrowPlacementMessage(x, y, d));
 	}
 	
+	/**
+	 * Clears all of this players arrows
+	 */
+	public void clearArrows() {
+		mSync.sendMessage(new ArrowClearMessage());
+	}
+	
+	/**
+	 * Moves the cursor for this player - purely aesthetic
+	 */
 	public void cursorPlacement(int x, int y) {
 		mSync.sendMessage(new CursorPositioningMessage(x, y));
 	}

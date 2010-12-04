@@ -17,7 +17,7 @@ public class LocalSync extends GameSync {
 	
 	private MPWorld mWorld;
 	ArrayList<Message> mPendMessages = new ArrayList<Message>();
-	int i = 0;
+	int[] mDifficulty = new int[]{0, 0, 0};
 
 	public LocalSync(MPWorld world) {
 		mWorld = world;
@@ -26,7 +26,27 @@ public class LocalSync extends GameSync {
 	@Override
 	public void Connect(String dest) {
 		// TODO parse dest for client count/difficulty etc 
-		
+		//Format [0EMH][0EMH][0EMH]
+		for(int i = 0; i < 3; i++)
+		{
+			char player = dest.charAt(i);
+			switch(player)
+			{
+			case '0':
+			default:
+				mDifficulty[i] = 0;
+				break;
+			case 'E':
+				mDifficulty[i] = 1;
+				break;
+			case 'M':
+				mDifficulty[i] = 2;
+				break;
+			case 'H':
+				mDifficulty[i] = 3;
+				break;
+			}
+		}
 	}
 
 	@Override
@@ -45,24 +65,20 @@ public class LocalSync extends GameSync {
 	private void generateMessages()	{
 		ArrayList<Message> messages = new ArrayList<Message>();
 		messages.addAll(mPendMessages);
-		//Message m = new ArrowPlacementMessage(1, 1, Direction.East);
-		//m.setCommon(1, 1);
-		//messages.add(m);
 		
-		Message cp_m = new CursorPositioningMessage(i % 5, i / 5);
-		cp_m.user_id = 1;
-		messages.add(cp_m);
-		
-		cp_m = new CursorPositioningMessage(i % 5 + 1, i / 5);
-		cp_m.user_id = 2;
-		messages.add(cp_m);
-		
-		cp_m = new CursorPositioningMessage(i % 5 + 2, i / 5);
-		cp_m.user_id = 3;
-		messages.add(cp_m);
-		
-		i++;
-		i %= 50;
+		for(int i = 0; i < 3; i++){
+			switch(mDifficulty[i])
+			{
+			case 0:
+			default:
+				break;
+			case 1:
+			case 2:
+			case 3:
+				break;
+			}
+		}
+
 
 		mMessageStack.add(messages);
 		mPendMessages.clear();

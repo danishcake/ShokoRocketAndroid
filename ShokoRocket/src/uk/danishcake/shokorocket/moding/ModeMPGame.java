@@ -3,6 +3,7 @@ package uk.danishcake.shokorocket.moding;
 import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.NinePatchData;
+import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.MPWorld;
@@ -52,6 +53,8 @@ public class ModeMPGame extends Mode {
 													mScreenWidth * 3 / 4 - mBtnSep / 2, mScreenHeight - mBtnBorder));
 		mScoreWidgets[3] = new Widget(np3, new Rect(mScreenWidth * 3 / 4 + mBtnSep / 2, mScreenHeight - mBtnSize - mBtnBorder, 
 													mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
+		
+		
 		mWidgetPage.setFontSize(mFontSize);
 		mWidgetPage.addWidget(mScoreWidgets[0]);
 		mWidgetPage.addWidget(mScoreWidgets[1]);
@@ -78,7 +81,16 @@ public class ModeMPGame extends Mode {
 	public ModeAction Tick(int timespan) {
 		mWorld.Tick(timespan);
 		updateScores();
-		if(mPlayerID == -1) mPlayerID = mWorld.getPlayerID();
+		if(mPlayerID == -1)
+		{
+			mPlayerID = mWorld.getPlayerID();
+			mScoreWidgets[mPlayerID].setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					mWorld.clearArrows();
+				}
+			});
+		}
 		mGameDrawer.Tick(timespan);
 		return super.Tick(timespan);
 	}
