@@ -30,8 +30,8 @@ public class MPWorld extends WorldBase {
 	private ArrayList<Walker> mDeadMice = new ArrayList<Walker>();
 	private ArrayList<Walker> mRescuedMice = new ArrayList<Walker>();
 	private ArrayList<Walker> mDeadCats = new ArrayList<Walker>();
-	private int mFixedTimestep = 20;
-	private int mCommunicationTimestep = 100;
+	private int mFixedTimestep = 100;
+	private int mCommunicationTimestep = 500;
 	private int mCommunicationFrameTime = 0;
 	private int mSubFrame = 0;
 	private List<Message> mMessages = new ArrayList<Message>();
@@ -39,6 +39,11 @@ public class MPWorld extends WorldBase {
 	private Vector2i[] mCursorPositions = new Vector2i[4];
 	private int[] mScores = new int[4];
 	private int mPlayerID = 0;
+	
+	private int mSpawnMax = 20;
+	private int mSpawnInterval = 400;
+	private int mSpawnTimer = 1500;
+	private int mTimer = 0;
 	
 	/* MPWorld(input)
 	 * Loads a world from specified XML file
@@ -103,6 +108,7 @@ public class MPWorld extends WorldBase {
 		w.setWalkerType(walker_type);
 		w.setPosition(new Vector2i(x, y));
 		w.setDirection(d);
+		w.setWorld(this);
 		switch (walker_type) {
 		case Mouse:
 		case MouseGold:
@@ -249,6 +255,23 @@ public class MPWorld extends WorldBase {
 		//If mCommunicationFrameTime has been reset then simulation is synced and can continue
 		if(mCommunicationFrameTime < mCommunicationTimestep)
 		{
+			mTimer += mFixedTimestep;
+			if(mSpawnTimer <= mTimer && mLiveMice.size() + mLiveCats.size() < mSpawnMax)
+			{
+				for(int x = 0; x < mWidth; x++)
+				{
+					for(int y = 0; y < mHeight; y++)
+					{
+						Direction spawn_dir = getSpawner(x, y);
+						if(spawn_dir != Direction.Invalid)
+						{
+							addWalker(x, y, spawn_dir, WalkerType.Mouse);
+						}
+					}
+				}
+				mSpawnTimer = mTimer + mSpawnInterval;
+			}
+			
 			//Action any messages this frame
 			if(mMessages.size() > 0)
 			{

@@ -79,6 +79,7 @@ public class ModeMPGame extends Mode {
 		mWorld.Tick(timespan);
 		updateScores();
 		if(mPlayerID == -1) mPlayerID = mWorld.getPlayerID();
+		mGameDrawer.Tick(timespan);
 		return super.Tick(timespan);
 	}
 	
