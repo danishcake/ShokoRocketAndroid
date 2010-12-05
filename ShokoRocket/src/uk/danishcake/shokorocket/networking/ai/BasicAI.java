@@ -73,7 +73,7 @@ public class BasicAI extends BaseAI {
 				int L_p = mRocketPosition.x;
 				int L_sel = mRocketPosition.x;
 
-				for(int i = 0; i < mWorld.getHeight() - 1; i++)
+				for(int i = 0; i < mWorld.getWidth() - 1; i++)
 				{
 					if(i & 0x01 == 0) //TODO correct bias towards one side
 					{
@@ -88,7 +88,7 @@ public class BasicAI extends BaseAI {
 						}
 					} else
 					{
-						if(L_p < mWorld.getHeight - 1)
+						if(L_p < mWorld.getWidth() - 1)
 						{
 							L_p++;
 							L_sel = L_p;
@@ -102,7 +102,7 @@ public class BasicAI extends BaseAI {
 					if(isRowClear(mRocketPosition.y, mRocketPosition.x, L_sel) && 
 					   isColClear(L_sel, mRocketPosition.y, mBestRow))
 					{
-						CursorPositioningMessage cpm = new CursorPositioningMessage(mRocketPosition.x, mBestRow);
+						CursorPositioningMessage cpm = new CursorPositioningMessage(L_sel, mBestRow);
 						cpm.setCommon(mPlayerID, 1);
 						messages.add(cpm);
 
@@ -130,7 +130,53 @@ public class BasicAI extends BaseAI {
 				messages.add(apm);
 			} else
 			{
-				
+				//Walk alternate sides out to find row/col
+				int L_m = mRocketPosition.y;
+				int L_p = mRocketPosition.y;
+				int L_sel = mRocketPosition.y;
+
+				for(int i = 0; i < mWorld.getHeight() - 1; i++)
+				{
+					if(i & 0x01 == 0) //TODO correct bias towards one side
+					{
+						if(L_m > 0)
+						{
+							L_m--;
+							L_sel = L_m;
+						} else
+						{
+							L_p++;
+							L_sel = L_p;
+						}
+					} else
+					{
+						if(L_p < mWorld.getHeight() - 1)
+						{
+							L_p++;
+							L_sel = L_p;
+						} else
+						{
+							L_m--;
+							L_sel = L_m;
+						}
+					}
+					//Check if L_sel OK
+					if(isColClear(mRocketPosition.x, mRocketPosition.y, L_sel) && 
+					   isRowClear(L_sel, mRocketPosition.x, mBestCol))
+					{
+						CursorPositioningMessage cpm = new CursorPositioningMessage(mRocketPosition.x, L_sel);
+						cpm.setCommon(mPlayerID, 1);
+						messages.add(cpm);
+
+						ArrowPlacementMessage apm = new ArrowPlacementMessage(mRocketPosition.x, L_sel, L_sel > mRocketPosition.y ? Direction.South : Direction.North);
+						apm.setCommon(mPlayerID, 1);
+						messages.add(apm);
+
+						ArrowPlacementMessage apm2 = new ArrowPlacementMessage(mBestCol, L_sel, mBestCol > mRocketPosition.x ? Direction.West : Direction.East);
+						apm2.setCommon(mPlayerID, 1);
+						messages.add(apm2);
+					}
+				}
 			}
 		}
 	}
