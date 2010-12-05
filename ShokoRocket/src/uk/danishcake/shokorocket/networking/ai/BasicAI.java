@@ -100,6 +100,9 @@ public class BasicAI extends BaseAI {
 		}
 	}
 
+	/**
+	 * Finds the number of mice in each row/column moving towards the rocket in that axis
+	 */
 	private void scan_sweep() {
 		for(int i = 0; i < mWorld.getWidth(); i++)
 			mColCount[i] = 0;
@@ -111,7 +114,11 @@ public class BasicAI extends BaseAI {
 			Walker mouse = mouse_it.next();
 			int x = mouse.getPosition().x;
 			int y = mouse.getPosition().y;
-			mColCount[x]++;
+			if((y <= mRocketPosition.y && mouse.getDirection() == Direction.South) || 
+			   (y >= mRocketPosition.y && mouse.getDirection() == Direction.North))
+				mColCount[x]++;
+			if((x <= mRocketPosition.x && mouse.getDirection() == Direction.East) || 
+			   (x >= mRocketPosition.x && mouse.getDirection() == Direction.West))
 			mRowCount[y]++;
 		}
 		int max_count = 0;
