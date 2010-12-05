@@ -67,7 +67,54 @@ public class BasicAI extends BaseAI {
 				apm.setCommon(mPlayerID, 1);
 				messages.add(apm);
 			} else //Find an L shape
-			{ 
+			{
+				//Walk alternate sides out to find row/col
+				int L_m = mRocketPosition.x;
+				int L_p = mRocketPosition.x;
+				int L_sel = mRocketPosition.x;
+
+				for(int i = 0; i < mWorld.getHeight() - 1; i++)
+				{
+					if(i & 0x01 == 0) //TODO correct bias towards one side
+					{
+						if(L_m > 0)
+						{
+							L_m--;
+							L_sel = L_m;
+						} else
+						{
+							L_p++;
+							L_sel = L_p;
+						}
+					} else
+					{
+						if(L_p < mWorld.getHeight - 1)
+						{
+							L_p++;
+							L_sel = L_p;
+						} else
+						{
+							L_m--;
+							L_sel = L_m;
+						}
+					}
+					//Check if L_sel OK
+					if(isRowClear(mRocketPosition.y, mRocketPosition.x, L_sel) && 
+					   isColClear(L_sel, mRocketPosition.y, mBestRow))
+					{
+						CursorPositioningMessage cpm = new CursorPositioningMessage(mRocketPosition.x, mBestRow);
+						cpm.setCommon(mPlayerID, 1);
+						messages.add(cpm);
+
+						ArrowPlacementMessage apm = new ArrowPlacementMessage(L_sel, mRocketPosition.y, L_sel > mRocketPosition.x ? Direction.West : Direction.East);
+						apm.setCommon(mPlayerID, 1);
+						messages.add(apm);
+
+						ArrowPlacementMessage apm2 = new ArrowPlacementMessage(L_sel, mBestRow, mBestRow > mRocketPosition.y ? Direction.South : Direction.North);
+						apm2.setCommon(mPlayerID, 1);
+						messages.add(apm2);
+					}
+				}
 			}
 		} else if(pref == 2)
 		{
@@ -83,6 +130,7 @@ public class BasicAI extends BaseAI {
 				messages.add(apm);
 			} else
 			{
+				
 			}
 		}
 	}
