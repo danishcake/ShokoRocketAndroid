@@ -1,5 +1,18 @@
 package uk.danishcake.shokorocket.networking.ai;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import uk.danishcake.shokorocket.networking.messages.ArrowClearMessage;
+import uk.danishcake.shokorocket.networking.messages.ArrowPlacementMessage;
+import uk.danishcake.shokorocket.networking.messages.CursorPositioningMessage;
+import uk.danishcake.shokorocket.networking.messages.Message;
+import uk.danishcake.shokorocket.simulation.Direction;
+import uk.danishcake.shokorocket.simulation.MPWorld;
+import uk.danishcake.shokorocket.simulation.SquareType;
+import uk.danishcake.shokorocket.simulation.Vector2i;
+import uk.danishcake.shokorocket.simulation.Walker;
+
 public class BasicAI extends BaseAI {
 	private int[] mRowCount;
 	private int[] mColCount;
@@ -11,7 +24,7 @@ public class BasicAI extends BaseAI {
 
 	@Override
 	public void setup(MPWorld world, int player_id) {
-		super(world, player_id);
+		super.setup(world, player_id);
 
 		mRowCount = new int[mWorld.getHeight()];
 		mColCount = new int[mWorld.getWidth()];
@@ -27,18 +40,16 @@ public class BasicAI extends BaseAI {
 	}
 	
 	public void generateMessages(ArrayList<Message> messages) {
+		mActTimer++;
 		if(mActTimer < AI_RATE)
 		{
 			return;
 		} else if(mActTimer == AI_RATE)
 		{
 			ArrowClearMessage acm = new ArrowClearMessage();
-			acm.setCommon(mPlayerID, 1);
+			acm.setCommon(mPlayerID, 0);
 			messages.add(acm);
-			return;
-		} else if(mActTimer > mPlayerID)
-		{
-			mActTimer = 0; //Now place an arrow
+			mActTimer = 0;
 		}
 
 		//Chose whether to use columns or rows based on area with most walkers
@@ -75,7 +86,7 @@ public class BasicAI extends BaseAI {
 
 				for(int i = 0; i < mWorld.getWidth() - 1; i++)
 				{
-					if(i & 0x01 == 0) //TODO correct bias towards one side
+					if((i & 0x01) == 0) //TODO correct bias towards one side
 					{
 						if(L_m > 0)
 						{
@@ -113,6 +124,7 @@ public class BasicAI extends BaseAI {
 						ArrowPlacementMessage apm2 = new ArrowPlacementMessage(L_sel, mBestRow, mBestRow > mRocketPosition.y ? Direction.South : Direction.North);
 						apm2.setCommon(mPlayerID, 1);
 						messages.add(apm2);
+						break;
 					}
 				}
 			}
@@ -137,7 +149,7 @@ public class BasicAI extends BaseAI {
 
 				for(int i = 0; i < mWorld.getHeight() - 1; i++)
 				{
-					if(i & 0x01 == 0) //TODO correct bias towards one side
+					if((i & 0x01) == 0) //TODO correct bias towards one side
 					{
 						if(L_m > 0)
 						{
@@ -168,13 +180,14 @@ public class BasicAI extends BaseAI {
 						cpm.setCommon(mPlayerID, 1);
 						messages.add(cpm);
 
-						ArrowPlacementMessage apm = new ArrowPlacementMessage(mRocketPosition.x, L_sel, L_sel > mRocketPosition.y ? Direction.South : Direction.North);
+						ArrowPlacementMessage apm = new ArrowPlacementMessage(mRocketPosition.x, L_sel, L_sel > mRocketPosition.y ? Direction.North : Direction.South);
 						apm.setCommon(mPlayerID, 1);
 						messages.add(apm);
 
 						ArrowPlacementMessage apm2 = new ArrowPlacementMessage(mBestCol, L_sel, mBestCol > mRocketPosition.x ? Direction.West : Direction.East);
 						apm2.setCommon(mPlayerID, 1);
 						messages.add(apm2);
+						break;
 					}
 				}
 			}
@@ -189,10 +202,10 @@ public class BasicAI extends BaseAI {
 		int high = colA < colB ? colB : colA;
 		for(int x = low; x <= high; x++)
 		{
-			SquareType ss = mWorld.getSpecialSquare(x, row)
+			SquareType ss = mWorld.getSpecialSquare(x, row);
 			//TODO walls
 			//TODO holes, other rockets
-			if(ss == SquareType.Hole || (ss == SquareType.Rocket && mWorld.getPlayer(x, row) != mPlayer))
+			if(ss == SquareType.Hole || (ss == SquareType.Rocket && mWorld.getPlayer(x, row) != mPlayerID))
 			{
 				return false;
 			}
@@ -208,10 +221,10 @@ public class BasicAI extends BaseAI {
 		int high = rowA < rowB ? rowB : rowA;
 		for(int y = low; y <= high; y++)
 		{
-			SquareType ss = mWorld.getSpecialSquare(col, y)
+			SquareType ss = mWorld.getSpecialSquare(col, y);
 			//TODO walls
 			//TODO holes, other rockets
-			if(ss == SquareType.Hole || (ss == SquareType.Rocket && mWorld.getPlayer(col, y) != mPlayer))
+			if(ss == SquareType.Hole || (ss == SquareType.Rocket && mWorld.getPlayer(col, y) != mPlayerID))
 			{
 				return false;
 			}

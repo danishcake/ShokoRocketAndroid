@@ -1,16 +1,10 @@
 package uk.danishcake.shokorocket.networking;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-
-import uk.danishcake.shokorocket.networking.messages.ArrowClearMessage;
-import uk.danishcake.shokorocket.networking.messages.ArrowPlacementMessage;
-import uk.danishcake.shokorocket.networking.messages.CursorPositioningMessage;
+import uk.danishcake.shokorocket.networking.ai.BaseAI;
+import uk.danishcake.shokorocket.networking.ai.BasicAI;
 import uk.danishcake.shokorocket.networking.messages.Message;
-import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.MPWorld;
-import uk.danishcake.shokorocket.simulation.Vector2i;
-import uk.danishcake.shokorocket.simulation.Walker;
 
 /**
  * LocalSync is a simplistic multiplayer connection that is all local
@@ -38,20 +32,20 @@ public class LocalSync extends GameSync {
 			{
 			case '0':
 			default:
-				mAI[player] = null;
+				mAI[i] = null;
 				break;
 			case 'E':
-				mAI[player] = new BasicAI();
+				mAI[i] = new BasicAI();
 				break;
 			case 'M':
-				mAI[player] = new BasicAI(); //TODO harder AI
+				mAI[i] = new BasicAI(); //TODO harder AI
 				break;
 			case 'H':
-				mAI[player] = new BasicAI(); //TODO harder AI
+				mAI[i] = new BasicAI(); //TODO harder AI
 				break;
 			}
-			if(mAI[player] != null)
-				mAI[player].setup(mWorld, i + 1);
+			if(mAI[i] != null)
+				mAI[i].setup(mWorld, i + 1);
 		}
 	}
 
@@ -74,7 +68,8 @@ public class LocalSync extends GameSync {
 
 		/* Perform AI work, generate responses */
 		for(int i = 0; i < 3; i++){
-			mAi[i].generateMessages(messages);
+			if(mAI[i] != null)
+				mAI[i].generateMessages(messages);
 		}
 		mMessageStack.add(messages);
 		mPendMessages.clear();
