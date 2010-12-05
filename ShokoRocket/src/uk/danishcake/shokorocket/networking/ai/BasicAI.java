@@ -20,7 +20,7 @@ public class BasicAI extends BaseAI {
 	private int mBestCol;
 	Vector2i mRocketPosition;
 	private int mActTimer = 0;
-	private final int AI_RATE = 10;
+	private final int AI_RATE = 20;
 
 	@Override
 	public void setup(MPWorld world, int player_id) {
@@ -121,7 +121,7 @@ public class BasicAI extends BaseAI {
 						apm.setCommon(mPlayerID, 1);
 						messages.add(apm);
 
-						ArrowPlacementMessage apm2 = new ArrowPlacementMessage(L_sel, mBestRow, mBestRow > mRocketPosition.y ? Direction.South : Direction.North);
+						ArrowPlacementMessage apm2 = new ArrowPlacementMessage(L_sel, mBestRow, mBestRow > mRocketPosition.y ? Direction.North : Direction.South);
 						apm2.setCommon(mPlayerID, 1);
 						messages.add(apm2);
 						break;
