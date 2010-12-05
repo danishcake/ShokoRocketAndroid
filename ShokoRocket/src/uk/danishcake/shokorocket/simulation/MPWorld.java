@@ -508,7 +508,7 @@ public class MPWorld extends WorldBase {
 			setArrow(x, y, Direction.Invalid, player);
 		else if(getPlayer(x, y) == player) //Allow change
 			setArrow(x, y, direction, player);
-		else if(direction == Direction.Invalid || allow_new) //Allow new
+		else if(cur_dir == Direction.Invalid && allow_new) //Allow new
 			setArrow(x, y, direction, player);
 	}
 	
