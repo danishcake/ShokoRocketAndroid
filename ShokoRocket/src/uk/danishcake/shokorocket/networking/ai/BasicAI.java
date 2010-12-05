@@ -54,50 +54,75 @@ public class BasicAI extends BaseAI {
 		else if(mBestCol != -1)
 			pref = 2;
 
-		if(pref == 1)
+		if(pref == 1) //Do a row
 		{
-			if(mBestRow < mRocketPosition.y)
-			{
-				//Place down arrow
+			Direction arrow_dir = mBestRow < mRocketPosition.y ? Direction.South : Direction.North;
+			if(isColClear(mRocketPosition.x, mBestRow, mRocketPosition.y)) {
+				//If column clear place direct arrow
 				CursorPositioningMessage cpm = new CursorPositioningMessage(mRocketPosition.x, mBestRow);
 				cpm.setCommon(mPlayerID, 1);
 				messages.add(cpm);
 
-				ArrowPlacementMessage apm = new ArrowPlacementMessage(mRocketPosition.x, mBestRow, Direction.South);
+				ArrowPlacementMessage apm = new ArrowPlacementMessage(mRocketPosition.x, mBestRow, arrow_dir);
 				apm.setCommon(mPlayerID, 1);
 				messages.add(apm);
-			} else if(mBestRow > mRocketPosition.y)
-			{
-				CursorPositioningMessage cpm = new CursorPositioningMessage(mRocketPosition.x, mBestRow);
-				cpm.setCommon(mPlayerID, 1);
-				messages.add(cpm);
-
-				ArrowPlacementMessage apm = new ArrowPlacementMessage(mRocketPosition.x, mBestRow, Direction.North);
-				apm.setCommon(mPlayerID, 1);
-				messages.add(apm);
+			} else //Find an L shape
+			{ 
 			}
 		} else if(pref == 2)
 		{
-			if(mBestCol < mRocketPosition.x)
-			{
+			Direction arrow_dir = mBestCol < mRocketPosition.x ? Direction.East : Direction.West;
+			if(isRowClear(mRocketPosition.y, mBestCol, mRocketPosition.x)) {
+				//If row clear place direct arrow
 				CursorPositioningMessage cpm = new CursorPositioningMessage(mBestCol, mRocketPosition.y);
 				cpm.setCommon(mPlayerID, 1);
 				messages.add(cpm);
 
-				ArrowPlacementMessage apm = new ArrowPlacementMessage(mBestCol, mRocketPosition.y, Direction.East);
+				ArrowPlacementMessage apm = new ArrowPlacementMessage(mBestCol, mRocketPosition.y, arrow_dir);
 				apm.setCommon(mPlayerID, 1);
 				messages.add(apm);
-			} else if(mBestRow > mRocketPosition.x)
+			} else
 			{
-				CursorPositioningMessage cpm = new CursorPositioningMessage(mBestCol, mRocketPosition.y);
-				cpm.setCommon(mPlayerID, 1);
-				messages.add(cpm);
-
-				ArrowPlacementMessage apm = new ArrowPlacementMessage(mBestCol, mRocketPosition.y, Direction.West);
-				apm.setCommon(mPlayerID, 1);
-				messages.add(apm);
 			}
 		}
+	}
+	
+	/**
+	 * Checks that there is a clear route between along a row between two columns
+	 */
+	private boolean isRowClear(int row, int colA, int colB) {
+		int low = colA < colB ? colA : colB;
+		int high = colA < colB ? colB : colA;
+		for(int x = low; x <= high; x++)
+		{
+			SquareType ss = mWorld.getSpecialSquare(x, row)
+			//TODO walls
+			//TODO holes, other rockets
+			if(ss == SquareType.Hole || (ss == SquareType.Rocket && mWorld.getPlayer(x, row) != mPlayer))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Checks that there is a clear route between along a row between two columns
+	 */
+	private boolean isColClear(int col, int rowA, int rowB) {
+		int low = rowA < rowB ? rowA : rowB;
+		int high = rowA < rowB ? rowB : rowA;
+		for(int y = low; y <= high; y++)
+		{
+			SquareType ss = mWorld.getSpecialSquare(col, y)
+			//TODO walls
+			//TODO holes, other rockets
+			if(ss == SquareType.Hole || (ss == SquareType.Rocket && mWorld.getPlayer(col, y) != mPlayer))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
