@@ -5,7 +5,9 @@ import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.OnClickListener;
+import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.SPWorld;
+import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.sound.SoundManager;
 
 import android.app.AlertDialog;
@@ -21,6 +23,8 @@ import android.widget.Toast;
 
 
 public class ModeSPMenu extends Mode {
+	
+	//SP related stuff
 	private Widget mLevelName;
 	private Widget mLevelPackName;
 	private SPWorld mWorld = null;
@@ -31,6 +35,13 @@ public class ModeSPMenu extends Mode {
 	private boolean mDrawTick = false;
 	private boolean mMakeTrainingOffer = false;
 	private SkinProgress mSkin;
+	private SPWorld mPendWorld = null;
+	private int mWorldPendTimer = 0;
+	private final int WORLD_TRANSITION_TIME = 250;
+	private Vector2i mWorldOffset = new Vector2i(0, 0);
+	private Vector2i mPendWorldOffset = new Vector2i(0, 0);
+	private Direction mWorldDirection = Direction.West; //Transition from this direction
+	
 	
 	@Override
 	public void Setup(Context context) {
@@ -100,33 +111,49 @@ public class ModeSPMenu extends Mode {
 		scrollRight.setOnClickListener(new OnClickListener() {
 			@Override
 			public void OnClick(Widget widget) {
-				mProgress.nextLevel();
-				ChangeLevel();
-				SoundManager.PlaySound(mClickSound);
+				if(mPendWorld == null)
+				{
+					mProgress.nextLevel();
+					mWorldDirection = Direction.East;
+					startTransition();
+					SoundManager.PlaySound(mClickSound);
+				}
 			}
 		});
 		scrollLeft.setOnClickListener(new OnClickListener() {
 			@Override
 			public void OnClick(Widget widget) {
-				mProgress.prevLevel();
-				ChangeLevel();
-				SoundManager.PlaySound(mClickSound);
+				if(mPendWorld == null)
+				{
+					mProgress.prevLevel();
+					mWorldDirection = Direction.West;
+					startTransition();
+					SoundManager.PlaySound(mClickSound);
+				}
 			}
 		});
 		levelPackLeft.setOnClickListener(new OnClickListener() {
 			@Override
 			public void OnClick(Widget widget) {
-				mProgress.prevLevelPack();
-				ChangeLevel();
-				SoundManager.PlaySound(mClickSound);
+				if(mPendWorld == null)
+				{
+					mProgress.prevLevelPack();
+					mWorldDirection = Direction.North;
+					startTransition();
+					SoundManager.PlaySound(mClickSound);
+				}
 			}
 		});
 		levelPackRight.setOnClickListener(new OnClickListener() {
 			@Override
 			public void OnClick(Widget widget) {
-				mProgress.nextLevelPack();
-				ChangeLevel();
-				SoundManager.PlaySound(mClickSound);
+				if(mPendWorld == null)
+				{
+					mProgress.nextLevelPack();
+					mWorldDirection = Direction.South;
+					startTransition();
+					SoundManager.PlaySound(mClickSound);
+				}
 			}
 		});
 		
@@ -212,6 +239,7 @@ public class ModeSPMenu extends Mode {
 		});
 		
 		LoadLevelList();
+		startTransition();
 
 		ChangeLevel();
 		mSetup = true;
@@ -225,30 +253,78 @@ public class ModeSPMenu extends Mode {
 		mProgress.Reload();
 	}
 	
+	private void control_level_transition(int timespan) {
+		if(mPendWorld != null) {
+			mWorldPendTimer += timespan;
+			if(mWorldPendTimer > WORLD_TRANSITION_TIME) mWorldPendTimer = WORLD_TRANSITION_TIME;
+			switch(mWorldDirection) {
+			case East:
+				mWorldOffset.x = -mWorldPendTimer * mScreenWidth / WORLD_TRANSITION_TIME;
+				mPendWorldOffset.x = mScreenWidth + mWorldOffset.x;
+				mWorldOffset.y = 0;
+				mPendWorldOffset.y = 0;
+				break;
+			case West:
+				mWorldOffset.x = mWorldPendTimer * mScreenWidth / WORLD_TRANSITION_TIME;
+				mPendWorldOffset.x = mWorldOffset.x - mScreenWidth;
+				mWorldOffset.y = 0;
+				mPendWorldOffset.y = 0;
+				break;
+			case North:
+				mWorldOffset.x = 0;
+				mPendWorldOffset.x = 0;
+				mWorldOffset.y = mWorldPendTimer * mScreenHeight / WORLD_TRANSITION_TIME;
+				mPendWorldOffset.y = mWorldOffset.y - mScreenHeight;
+				break;
+			case South:
+				mWorldOffset.x = 0;
+				mPendWorldOffset.x = 0;
+				mWorldOffset.y = -mWorldPendTimer * mScreenHeight / WORLD_TRANSITION_TIME;
+				mPendWorldOffset.y = mScreenHeight + mWorldOffset.y;
+			default:
+				break;
+			}
+			if(mWorldPendTimer >= WORLD_TRANSITION_TIME) {
+				mWorld = mPendWorld;
+				ChangeLevel();
+				mPendWorld = null;
+				mWorldPendTimer = 0;
+				mWorldOffset.x = 0;
+				mWorldOffset.y = 0;
+			}
+			
+		}
+	}
+	
+	private void startTransition() {
+		if(mPendWorld == null)
+		{
+			try
+			{
+				mWorldPendTimer = 0;
+				mPendWorld = mProgress.getWorld();
+			} catch(Exception ex)
+			{
+				mPendWorld = null;
+			}
+		}
+	}
+	
 	/**
 	 * Updates the gui with a new level
 	 */
 	private void ChangeLevel()
 	{
-		try
+		mLevelPackName.setText(mProgress.getLevelPack());
+		if(mWorld != null)
 		{
-			mLevelPackName.setText(mProgress.getLevelPack());
-			mWorld = mProgress.getWorld();
-
 			mLevelName.setText(Integer.toString(mProgress.getLevelIndex() + 1) + "/" + Integer.toString(mProgress.getLevelPackSize()) + ": " + mWorld.getLevelName()); 
-			mGameDrawer.CreateBackground(mWorld);
-			mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mBtnBorder + mBtnSize + mBtnSep + mBtnSize + 4);
 			mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
-		} catch(IOException io_ex)
+		} else 
 		{
-			Log.e("ModeSPMenu.ChangeLevel", "Error changing level");
+			mLevelName.setText("Error loading level");
 			mDrawTick = false;
-			if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
-				mLevelName.setText(mContext.getString(R.string.menu_error_loading));
-			else
-				mLevelName.setText(mContext.getString(R.string.menu_external_storage_unmounted));
-			mWorld = null;
-		}	
+		}
 	}
 	
 	@Override
@@ -262,6 +338,7 @@ public class ModeSPMenu extends Mode {
 	
 	@Override
 	public ModeAction Tick(int timespan) {
+		control_level_transition(timespan);
 		mGameDrawer.Tick(timespan);
 		if(mMakeTrainingOffer)
 		{
@@ -275,11 +352,26 @@ public class ModeSPMenu extends Mode {
 	@Override
 	public void Redraw(Canvas canvas) {
 		if(mWorld != null)
+		{
+			mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2) + mWorldOffset.x, mBtnBorder + mBtnSize + mBtnSep + mBtnSize + 4 + mWorldOffset.y);
+			mGameDrawer.DrawTilesAndWalls(canvas, mWorld);
 			mGameDrawer.DrawSP(canvas, mWorld);
+		}
 		else
 		{
 			//TODO draw a SD card symbol
 		}
+		if(mPendWorld != null)
+		{
+			mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mPendWorld.getWidth() * mGameDrawer.getGridSize() / 2) + mPendWorldOffset.x, mBtnBorder + mBtnSize + mBtnSep + mBtnSize + 4 + mPendWorldOffset.y);
+			mGameDrawer.DrawTilesAndWalls(canvas, mPendWorld);
+			mGameDrawer.DrawSP(canvas, mPendWorld);
+		}
+		else
+		{
+			//TODO draw a SD card symbol
+		}
+		
 		mWidgetPage.Draw(canvas);
 		if(mDrawTick)
 		{
