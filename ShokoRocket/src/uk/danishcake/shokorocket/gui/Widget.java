@@ -2,6 +2,8 @@ package uk.danishcake.shokorocket.gui;
 
 import java.util.ArrayList;
 
+import uk.danishcake.shokorocket.simulation.Vector2i;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -371,13 +373,13 @@ public class Widget {
 	 * Draws the widget onto a canvas
 	 * @param canvas
 	 */
-	public void Draw(Canvas canvas)
+	public void Draw(Canvas canvas, Vector2i offset)
 	{
 		if(mInvalidated)
 		{
 			Redraw(); 
 		}
-		canvas.drawBitmap(mFrontbuffer, mBounds.left, mBounds.top, null);
+		canvas.drawBitmap(mFrontbuffer, mBounds.left + offset.x, mBounds.top + offset.y, null);
 	}
 	
 	/**

@@ -1,6 +1,8 @@
 package uk.danishcake.shokorocket.gui;
 
 import java.util.ArrayList;
+
+import uk.danishcake.shokorocket.simulation.Vector2i;
 import android.graphics.Canvas;
 
 /**
@@ -10,7 +12,9 @@ import android.graphics.Canvas;
  */
 public class WidgetPage {
 	private ArrayList<Widget> mWidgets = new ArrayList<Widget>();
+	private Vector2i mOffset = new Vector2i(0, 0);
 	private int mFontSize = -1;
+	private boolean mEnabled = true;
 	
 	public void addWidget(Widget widget) {
 		mWidgets.add(widget);
@@ -19,6 +23,7 @@ public class WidgetPage {
 	}
 	
 	public void handleTap(int x, int y) {
+		if(!mEnabled) return;
 		for (Widget widget : mWidgets) {
 			widget.handleTap(x, y);
 		}			
@@ -26,8 +31,8 @@ public class WidgetPage {
 	
 	public void Draw(Canvas canvas) {
 		for (Widget widget : mWidgets) {
-			widget.Draw(canvas);
-		}	
+			widget.Draw(canvas, mOffset);
+		}
 	}
 	
 	public void Tick(int timespan) {
@@ -38,5 +43,14 @@ public class WidgetPage {
 	
 	public void setFontSize(int fontSize) {
 		mFontSize = fontSize;
+	}
+	
+	public void setOffset(int x, int y) {
+		mOffset.x = x;
+		mOffset.y = y;
+	}
+	
+	public void setEnabled(boolean enabled) {
+		mEnabled = enabled;
 	}
 }
