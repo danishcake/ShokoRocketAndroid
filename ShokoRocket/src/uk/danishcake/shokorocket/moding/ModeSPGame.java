@@ -92,13 +92,13 @@ public class ModeSPGame extends Mode {
 
 		mGameDrawer = mGameDrawerNorm;
 		if(smaller < 1)
-			mGameDrawer.Setup(mContext, (int)(((float)mGridSize) * smaller), mSkin);
+			mGameDrawer.Setup(mContext, (int)(((float)mGridSize) * smaller), mSkin, false);
 		else
-			mGameDrawer.Setup(mContext, mGridSize, mSkin);
+			mGameDrawer.Setup(mContext, mGridSize, mSkin, false);
 		if(smaller_rot < 1)
-			mGameDrawerRot.Setup(mContext, (int)(((float)mGridSize) * smaller_rot), mSkin);
+			mGameDrawerRot.Setup(mContext, (int)(((float)mGridSize) * smaller_rot), mSkin, false);
 		else
-			mGameDrawerRot.Setup(mContext, mGridSize, mSkin);
+			mGameDrawerRot.Setup(mContext, mGridSize, mSkin, false);
 
 		mGameDrawer.CreateBackground(mWorld);
 		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mLevelBorder);

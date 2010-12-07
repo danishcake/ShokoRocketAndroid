@@ -38,7 +38,7 @@ public class ModeSPMenu extends Mode {
 		if(mSetup)
 		{
 			mProgress.AssessUnlockable(mSkin);
-			mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size), mSkin);
+			mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size), mSkin, false);
 			mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
 			if(mEditorLoaded)
 				LoadLevelList();
@@ -52,7 +52,7 @@ public class ModeSPMenu extends Mode {
 		mProgress.AssessUnlockable(mSkin);
 		mMakeTrainingOffer = Progress.IsFirstRun(context);
 		
-		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size), mSkin);
+		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size), mSkin, false);
 				
 		mLevelPackName = new Widget(mBtnNP, new Rect(mBtnSize + mBtnSep + mBtnBorder, mBtnBorder, mScreenWidth - (mBtnSize + mBtnBorder + mBtnSep), mBtnBorder + mBtnSize));
 		

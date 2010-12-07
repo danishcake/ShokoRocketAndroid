@@ -237,7 +237,7 @@ public class ModeTutorial extends Mode {
 			mWidgetPage.addWidget(mNextButton);
 			mWidgetPage.addWidget(mExplanation);
 			
-			mGameDrawer.Setup(mContext, mGridSize, new SkinProgress(mContext));
+			mGameDrawer.Setup(mContext, mGridSize, new SkinProgress(mContext), false);
 			mWorld = new SPWorld(mContext.getAssets().open("TutorialLevels/Tut1.Level"));
 			mGameDrawer.setDrawOffset((mScreenWidth - mWorld.getWidth() * mGameDrawer.getGridSize()) / 2, mBtnBorder + mBtnSize * 2 + mBtnSep * 2);
 			mGameDrawer.CreateBackground(mWorld);

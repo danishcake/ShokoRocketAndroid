@@ -209,7 +209,7 @@ public class GameDrawer {
 	 * Loads any unloaded textures
 	 * @param context The context to obtain animations from
 	 */
-	public void Setup(Context context, int gridSize, SkinProgress skin)
+	public void Setup(Context context, int gridSize, SkinProgress skin, boolean loadMP)
 	{
 		mGridSize = gridSize;
 		float referenceGridSize = (float)context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.grid_size);
@@ -283,58 +283,61 @@ public class GameDrawer {
 				Map<String, Animation> tick_animations = Animation.GetAnimations(context, skin.getAnimation("tick"), scale); 
 				mTickAnimation = tick_animations.get("All");
 				
-				//Multiplayer 
-				Map<String, Animation> mp_rocket_animations = Animation.GetAnimations(context, skin.getAnimation("mp_rockets"), scale);
-				mMPRocketAnimation[0] = mp_rocket_animations.get("Normal0");
-				mMPRocketAnimation[1] = mp_rocket_animations.get("Normal1");
-				mMPRocketAnimation[2] = mp_rocket_animations.get("Normal2");
-				mMPRocketAnimation[3] = mp_rocket_animations.get("Normal3");
-				
-				Map<String, Animation> mp_arrow_animations = Animation.GetAnimations(context, skin.getAnimation("mp_arrows"), scale);
-				mMPFullArrowAnimations0.put(Direction.North, mp_arrow_animations.get("North0"));
-				mMPFullArrowAnimations0.put(Direction.South, mp_arrow_animations.get("South0"));
-				mMPFullArrowAnimations0.put(Direction.East, mp_arrow_animations.get("East0"));
-				mMPFullArrowAnimations0.put(Direction.West, mp_arrow_animations.get("West0"));
-				mMPFullArrowAnimations0.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
-				
-				mMPFullArrowAnimations2.put(Direction.North, mp_arrow_animations.get("North2"));
-				mMPFullArrowAnimations2.put(Direction.South, mp_arrow_animations.get("South2"));
-				mMPFullArrowAnimations2.put(Direction.East, mp_arrow_animations.get("East2"));
-				mMPFullArrowAnimations2.put(Direction.West, mp_arrow_animations.get("West2"));
-				mMPFullArrowAnimations2.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
-				
-				mMPFullArrowAnimations3.put(Direction.North, mp_arrow_animations.get("North3"));
-				mMPFullArrowAnimations3.put(Direction.South, mp_arrow_animations.get("South3"));
-				mMPFullArrowAnimations3.put(Direction.East, mp_arrow_animations.get("East3"));
-				mMPFullArrowAnimations3.put(Direction.West, mp_arrow_animations.get("West3"));
-				mMPFullArrowAnimations3.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
-				
-				mMPHalfArrowAnimations0.put(Direction.North, mp_arrow_animations.get("North0"));
-				mMPHalfArrowAnimations0.put(Direction.South, mp_arrow_animations.get("South0"));
-				mMPHalfArrowAnimations0.put(Direction.East, mp_arrow_animations.get("East0"));
-				mMPHalfArrowAnimations0.put(Direction.West, mp_arrow_animations.get("West0"));
-				mMPHalfArrowAnimations0.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
-				
-				mMPHalfArrowAnimations2.put(Direction.North, mp_arrow_animations.get("North2"));
-				mMPHalfArrowAnimations2.put(Direction.South, mp_arrow_animations.get("South2"));
-				mMPHalfArrowAnimations2.put(Direction.East, mp_arrow_animations.get("East2"));
-				mMPHalfArrowAnimations2.put(Direction.West, mp_arrow_animations.get("West2"));
-				mMPHalfArrowAnimations2.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
-				
-				mMPHalfArrowAnimations3.put(Direction.North, mp_arrow_animations.get("North3"));
-				mMPHalfArrowAnimations3.put(Direction.South, mp_arrow_animations.get("South3"));
-				mMPHalfArrowAnimations3.put(Direction.East, mp_arrow_animations.get("East3"));
-				mMPHalfArrowAnimations3.put(Direction.West, mp_arrow_animations.get("West3"));
-				mMPHalfArrowAnimations3.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
-				
-				Map<String, Animation> mp_cursor_animations = Animation.GetAnimations(context, skin.getAnimation("mp_cursors"), scale);
-				mMPCursorAnimations[0] = mp_cursor_animations.get("Normal0");
-				mMPCursorAnimations[1] = mp_cursor_animations.get("Normal1");
-				mMPCursorAnimations[2] = mp_cursor_animations.get("Normal2");
-				mMPCursorAnimations[3] = mp_cursor_animations.get("Normal3");
-				
-				Map<String, Animation> spawner_animations = Animation.GetAnimations(context, skin.getAnimation("spawner"), scale);
-				mSpawnerAnimation = spawner_animations.get("Normal");
+				if(loadMP)
+				{
+					//Multiplayer 
+					Map<String, Animation> mp_rocket_animations = Animation.GetAnimations(context, skin.getAnimation("mp_rockets"), scale);
+					mMPRocketAnimation[0] = mp_rocket_animations.get("Normal0");
+					mMPRocketAnimation[1] = mp_rocket_animations.get("Normal1");
+					mMPRocketAnimation[2] = mp_rocket_animations.get("Normal2");
+					mMPRocketAnimation[3] = mp_rocket_animations.get("Normal3");
+					
+					Map<String, Animation> mp_arrow_animations = Animation.GetAnimations(context, skin.getAnimation("mp_arrows"), scale);
+					mMPFullArrowAnimations0.put(Direction.North, mp_arrow_animations.get("North0"));
+					mMPFullArrowAnimations0.put(Direction.South, mp_arrow_animations.get("South0"));
+					mMPFullArrowAnimations0.put(Direction.East, mp_arrow_animations.get("East0"));
+					mMPFullArrowAnimations0.put(Direction.West, mp_arrow_animations.get("West0"));
+					mMPFullArrowAnimations0.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+					
+					mMPFullArrowAnimations2.put(Direction.North, mp_arrow_animations.get("North2"));
+					mMPFullArrowAnimations2.put(Direction.South, mp_arrow_animations.get("South2"));
+					mMPFullArrowAnimations2.put(Direction.East, mp_arrow_animations.get("East2"));
+					mMPFullArrowAnimations2.put(Direction.West, mp_arrow_animations.get("West2"));
+					mMPFullArrowAnimations2.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+					
+					mMPFullArrowAnimations3.put(Direction.North, mp_arrow_animations.get("North3"));
+					mMPFullArrowAnimations3.put(Direction.South, mp_arrow_animations.get("South3"));
+					mMPFullArrowAnimations3.put(Direction.East, mp_arrow_animations.get("East3"));
+					mMPFullArrowAnimations3.put(Direction.West, mp_arrow_animations.get("West3"));
+					mMPFullArrowAnimations3.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+					
+					mMPHalfArrowAnimations0.put(Direction.North, mp_arrow_animations.get("North0"));
+					mMPHalfArrowAnimations0.put(Direction.South, mp_arrow_animations.get("South0"));
+					mMPHalfArrowAnimations0.put(Direction.East, mp_arrow_animations.get("East0"));
+					mMPHalfArrowAnimations0.put(Direction.West, mp_arrow_animations.get("West0"));
+					mMPHalfArrowAnimations0.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+					
+					mMPHalfArrowAnimations2.put(Direction.North, mp_arrow_animations.get("North2"));
+					mMPHalfArrowAnimations2.put(Direction.South, mp_arrow_animations.get("South2"));
+					mMPHalfArrowAnimations2.put(Direction.East, mp_arrow_animations.get("East2"));
+					mMPHalfArrowAnimations2.put(Direction.West, mp_arrow_animations.get("West2"));
+					mMPHalfArrowAnimations2.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+					
+					mMPHalfArrowAnimations3.put(Direction.North, mp_arrow_animations.get("North3"));
+					mMPHalfArrowAnimations3.put(Direction.South, mp_arrow_animations.get("South3"));
+					mMPHalfArrowAnimations3.put(Direction.East, mp_arrow_animations.get("East3"));
+					mMPHalfArrowAnimations3.put(Direction.West, mp_arrow_animations.get("West3"));
+					mMPHalfArrowAnimations3.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+					
+					Map<String, Animation> mp_cursor_animations = Animation.GetAnimations(context, skin.getAnimation("mp_cursors"), scale);
+					mMPCursorAnimations[0] = mp_cursor_animations.get("Normal0");
+					mMPCursorAnimations[1] = mp_cursor_animations.get("Normal1");
+					mMPCursorAnimations[2] = mp_cursor_animations.get("Normal2");
+					mMPCursorAnimations[3] = mp_cursor_animations.get("Normal3");
+					
+					Map<String, Animation> spawner_animations = Animation.GetAnimations(context, skin.getAnimation("spawner"), scale);
+					mSpawnerAnimation = spawner_animations.get("Normal");
+				}
 
 				mAnimationsLoaded = true;
 			} catch(IOException ex)

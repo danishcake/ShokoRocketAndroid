@@ -68,9 +68,9 @@ public class ModeMPGame extends Mode {
 		float scaleY = ((float)(mScreenHeight - mBtnSize - mBtnBorder - mLevelBorder * 2)) / (float)required_height;
 		float smaller = scaleX < scaleY ? scaleX : scaleY;
 		if(smaller < 1)
-			mGameDrawer.Setup(mContext, (int)(((float)mGridSize) * smaller), mSkin);
+			mGameDrawer.Setup(mContext, (int)(((float)mGridSize) * smaller), mSkin, true);
 		else
-			mGameDrawer.Setup(mContext, mGridSize, mSkin);
+			mGameDrawer.Setup(mContext, mGridSize, mSkin, true);
 
 		mGameDrawer.CreateBackground(mWorld);
 		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mLevelBorder);
