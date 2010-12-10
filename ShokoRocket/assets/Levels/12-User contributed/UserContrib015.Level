@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>Snowball's Journey - 3</Name>
+<Author>Mari</Author>
+<Size x="5" y="5"/>
+<V x="0" y="0" />
+<H x="0" y="0" />
+<H x="1" y="0" />
+<V x="2" y="0" />
+<H x="2" y="0" />
+<V x="3" y="0" />
+<H x="3" y="0" />
+<H x="4" y="0" />
+<V x="0" y="1" />
+<V x="2" y="1" />
+<V x="3" y="1" />
+<V x="0" y="2" />
+<V x="3" y="2" />
+<V x="0" y="3" />
+<H x="3" y="3" />
+<V x="0" y="4" />
+<Mouse x="4" y="0" d="South" />
+<Cat x="2" y="1" d="South" />
+<Rocket x="2" y="0" />
+<Arrow x="4" y="0" d="West"/>
+<Arrow x="1" y="2" d="East"/>
+<Arrow x="2" y="2" d="West"/>
+<Arrow x="2" y="4" d="North"/>
+</Level>
