@@ -1,6 +1,5 @@
 package uk.danishcake.shokorocket.moding;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 
@@ -10,11 +9,10 @@ import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.gui.Widget;
-import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.simulation.Vector2i;
-import uk.danishcake.shokorocket.simulation.World;
+import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.simulation.Direction;
-import uk.danishcake.shokorocket.simulation.World.WorldState;
+import uk.danishcake.shokorocket.simulation.SPWorld.WorldState;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.app.Dialog;
 import android.content.Context;
@@ -34,14 +32,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ModeGame extends Mode {
-	private WidgetPage mWidgetPage = new WidgetPage();
+public class ModeSPGame extends Mode {
 	private Widget mLeftArrowCount, mRightArrowCount, mUpArrowCount, mDownArrowCount;
 	private GameDrawer mGameDrawer;
 	private GameDrawer mGameDrawerRot = new GameDrawer();
 	private GameDrawer mGameDrawerNorm = new GameDrawer();
-	private World mWorld;
-	private ModeMenu mModeMenu;
+	private SPWorld mWorld;
+	private ModeSPMenu mModeMenu;
 	private int mResetTimer = 0;
 	private static final int ResetTime = 1500;
 	private Vector2i mCursorPosition = new Vector2i(-1, -1);
@@ -49,19 +46,7 @@ public class ModeGame extends Mode {
 	boolean mCompleteDialogShown = false;
 	int mCompleteAge = 0;
 	private Progress mProgress;
-	private SkinProgress mSkin;
-	
-	private int mBtnSize = 48;
-	private int mBtnSize2 = 64;
-	private int mBtnSep = 8;
-	private int mBtnBorder = 16;
-	private int mFontSize = 16;
-	private int mLevelBorder = 8;
-	
-	private int mCatSound = -1;
-	private int mClickSound = -1;
-	private int mMouseSound = -1; 
-	
+	private SkinProgress mSkin;	
 	
 	private RunningMode mRunningMode = RunningMode.Stopped;
 	private int mRotateTimer = 0;
@@ -81,38 +66,21 @@ public class ModeGame extends Mode {
 	private final int E_MENU_ROTATE = 1;
 	private final int E_MENU_BACK = 2;
 	
-	public ModeGame(World world, ModeMenu menu, Progress progress, SkinProgress skin)
+	public ModeSPGame(SPWorld world, ModeSPMenu menu, Progress progress, SkinProgress skin)
 	{
 		mWorld = world;
 		mModeMenu = menu;
 		mProgress = progress;
 		mSkin = skin;
-		
-		try
-		{
-			mCatSound = SoundManager.LoadSound("Sounds/Cat.ogg");
-			mClickSound = SoundManager.LoadSound("Sounds/Click.ogg");
-			mMouseSound = SoundManager.LoadSound("Sounds/Mouse.ogg");
-		} catch(IOException io_ex)
-		{
-			//TODO log
-		}
 	}
 	
 	@Override
 	public void Setup(Context context) {
-		mContext = context;
-		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
-		mBtnSize2 = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_wide_size);
-		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
-		mBtnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
-		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
-		mLevelBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.level_border);
+		super.Setup(context);
 		
 		//Setup autoscaling twice, for portrait and landscape orientations
-		int grid_size = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.grid_size);
-		int required_width = mWorld.getWidth() * grid_size;
-		int required_height = mWorld.getHeight() * grid_size;
+		int required_width = mWorld.getWidth() * mGridSize;
+		int required_height = mWorld.getHeight() * mGridSize;
 		float scaleX = ((float)mScreenWidth - mLevelBorder * 2) / (float)required_width;
 		float scaleY = ((float)(mScreenHeight - mBtnSize - mBtnBorder - mLevelBorder * 2)) / (float)required_height;
 		float scaleX_rot = ((float)mScreenWidth - mLevelBorder * 2) / (float)required_height;
@@ -124,13 +92,13 @@ public class ModeGame extends Mode {
 
 		mGameDrawer = mGameDrawerNorm;
 		if(smaller < 1)
-			mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller), mSkin);
+			mGameDrawer.Setup(mContext, (int)(((float)mGridSize) * smaller), mSkin, false);
 		else
-			mGameDrawer.Setup(mContext, grid_size, mSkin);
+			mGameDrawer.Setup(mContext, mGridSize, mSkin, false);
 		if(smaller_rot < 1)
-			mGameDrawerRot.Setup(mContext, (int)(((float)grid_size) * smaller_rot), mSkin);
+			mGameDrawerRot.Setup(mContext, (int)(((float)mGridSize) * smaller_rot), mSkin, false);
 		else
-			mGameDrawerRot.Setup(mContext, grid_size, mSkin);
+			mGameDrawerRot.Setup(mContext, mGridSize, mSkin, false);
 
 		mGameDrawer.CreateBackground(mWorld);
 		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mLevelBorder);
@@ -155,12 +123,9 @@ public class ModeGame extends Mode {
 			handler.post(new ToastRunnable(mContext, mWorld.getLevelName() + "\n\nBy " + mWorld.getAuthor(), Toast.LENGTH_SHORT));
 		}
 		else
-			handler.post(mShowSplashRunnable);
+			handler.post(mShowSplashRunnable);			
 		
-		int np_border = context.getResources().getInteger(R.integer.np_border);
-		NinePatchData btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_button)), np_border, np_border, np_border, np_border);			
-		
-		Widget reset = new Widget(btn_np, new Rect(mScreenWidth - (mBtnSize2 + mBtnBorder), mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
+		Widget reset = new Widget(mBtnNP, new Rect(mScreenWidth - (mBtnSize2 + mBtnBorder), mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
 		reset.setText(context.getString(R.string.game_reset));
 		reset.setOnClickListener(new OnClickListener() {				
 			@Override
@@ -180,7 +145,7 @@ public class ModeGame extends Mode {
 			}
 		});
 		
-		Widget go = new Widget(btn_np, new Rect(mScreenWidth - mBtnSize2 - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnBorder));
+		Widget go = new Widget(mBtnNP, new Rect(mScreenWidth - mBtnSize2 - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnBorder));
 		go.setText(context.getString(R.string.game_go));
 		go.setOnClickListener(new OnClickListener() {				
 			@Override
@@ -370,7 +335,6 @@ public class ModeGame extends Mode {
 			break;
 		}
 		
-		mWidgetPage.Tick(timespan);
 		mGameDrawer.Tick(timespan);
 		return super.Tick(timespan);
 	}
@@ -382,7 +346,7 @@ public class ModeGame extends Mode {
 			mGameDrawer.DrawCacheBitmap(canvas, mRotateAngle, mRotateScale);
 		} else
 		{
-			mGameDrawer.Draw(canvas, mWorld);
+			mGameDrawer.DrawSP(canvas, mWorld);
 			if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
 			{
 				mGameDrawer.DrawCursor(canvas, mCursorPosition.x, mCursorPosition.y, mRunningMode != RunningMode.Stopped);
@@ -593,9 +557,11 @@ public class ModeGame extends Mode {
 						try
 						{
 							mSemaphore.acquire();
+
 							mProgress.nextUnbeaten();
-							World world = mProgress.getWorld();
-							mPendMode = new ModeGame(world, mModeMenu, mProgress, mSkin);
+							SPWorld world = mProgress.getWorld();
+							mPendMode = new ModeSPGame(world, mModeMenu, mProgress, mSkin);
+							
 							mSemaphore.release();
 						} catch(InterruptedException int_ex)
 						{

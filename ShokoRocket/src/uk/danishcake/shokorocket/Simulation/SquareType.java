@@ -3,9 +3,9 @@ package uk.danishcake.shokorocket.simulation;
 
 
 public enum SquareType {
-	Empty, Rocket, Hole, NorthArrow, SouthArrow, EastArrow, WestArrow, NorthHalfArrow, SouthHalfArrow, WestHalfArrow, EastHalfArrow, NorthDestroyedArrow, SouthDestroyedArrow, WestDestroyedArrow, EastDestroyedArrow;
+	Empty, Rocket, Hole, NorthArrow, SouthArrow, EastArrow, WestArrow, NorthHalfArrow, SouthHalfArrow, WestHalfArrow, EastHalfArrow, NorthDestroyedArrow, SouthDestroyedArrow, WestDestroyedArrow, EastDestroyedArrow, NorthSpawner, SouthSpawner, WestSpawner, EastSpawner;
 	
-	public Direction ToDirection() {
+	public Direction toArrowDirection() {
 		switch(this)
 		{
 		case NorthArrow:
@@ -25,7 +25,7 @@ public enum SquareType {
 		}
 	}
 	
-	public Direction GetDirectionality() {
+	public Direction getArrowDirectionality() {
 		switch(this)
 		{
 		case NorthArrow:
@@ -49,6 +49,23 @@ public enum SquareType {
 		}		
 	}
 	
+	public Direction toSpawnerDirection()
+	{
+		switch(this)
+		{
+		case NorthSpawner:
+			return Direction.North;
+		case SouthSpawner:
+			return Direction.South;
+		case EastSpawner:
+			return Direction.East;
+		case WestSpawner:
+			return Direction.West;
+		default:
+			return Direction.Invalid;
+		}
+	}
+	
 	public SquareType Diminish()
 	{
 		switch(this)
@@ -69,6 +86,31 @@ public enum SquareType {
 			return SquareType.EastDestroyedArrow;
 		case WestHalfArrow:
 			return SquareType.WestDestroyedArrow;
+		default:
+			return this;
+		}		
+	}
+	
+	public SquareType DiminishMP()
+	{
+		switch(this)
+		{
+		case NorthArrow:
+			return SquareType.NorthHalfArrow;
+		case SouthArrow:
+			return SquareType.SouthHalfArrow;
+		case EastArrow:
+			return SquareType.EastHalfArrow;
+		case WestArrow:
+			return SquareType.WestHalfArrow;
+		case NorthHalfArrow:
+			return SquareType.Empty;
+		case SouthHalfArrow:
+			return SquareType.Empty;
+		case EastHalfArrow:
+			return SquareType.Empty;
+		case WestHalfArrow:
+			return SquareType.Empty;
 		default:
 			return this;
 		}		

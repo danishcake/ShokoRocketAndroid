@@ -4,36 +4,24 @@ import java.io.IOException;
 
 import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
-import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.gui.Widget;
-import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.Vector2i;
-import uk.danishcake.shokorocket.simulation.World;
+import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
 public class ModeTutorial extends Mode {
-	
-	private int mBtnSize = 48;
-	private int mBtnSep = 8;
-	private int mBtnBorder = 16;
-	private int mFontSize = 16;
-	
-	private int mClickSound = -1;
-	
-	private WidgetPage mWidgetPage = new WidgetPage();
 	private Widget mNextButton = null;
 	private Widget mExplanation = null;
 	
-	private ModeMenu mModeMenu = null;
-	private World mWorld = null;
+	private ModeSPMenu mModeMenu = null;
+	private SPWorld mWorld = null;
 	private GameDrawer mGameDrawer = new GameDrawer();
 	
 	private Vector2i mCursorPosition = new Vector2i(-1, -1);
@@ -124,7 +112,7 @@ public class ModeTutorial extends Mode {
 		@Override
 		public void OnClick(Widget widget) {
 			try {
-				mWorld = new World(mContext.getAssets().open("TutorialLevels/Tut2.Level"));
+				mWorld = new SPWorld(mContext.getAssets().open("TutorialLevels/Tut2.Level"));
 				mGameDrawer.CreateBackground(mWorld);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -148,7 +136,7 @@ public class ModeTutorial extends Mode {
 		@Override
 		public void OnClick(Widget widget) {
 			try {
-				mWorld = new World(mContext.getAssets().open("TutorialLevels/Tut3.Level"));
+				mWorld = new SPWorld(mContext.getAssets().open("TutorialLevels/Tut3.Level"));
 				mGameDrawer.CreateBackground(mWorld);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -164,7 +152,7 @@ public class ModeTutorial extends Mode {
 		@Override
 		public void OnClick(Widget widget) {
 			try {
-				mWorld = new World(mContext.getAssets().open("TutorialLevels/Tut4.Level"));
+				mWorld = new SPWorld(mContext.getAssets().open("TutorialLevels/Tut4.Level"));
 				mWorld.LoadSolution();
 				mGameDrawer.CreateBackground(mWorld);
 			} catch (IOException e) {
@@ -223,39 +211,23 @@ public class ModeTutorial extends Mode {
 	},
 	};
 	
-	public ModeTutorial(ModeMenu menu) {
+	public ModeTutorial(ModeSPMenu menu) {
 		mModeMenu = menu;
 	}
 	
 	public void Setup(Context context)
 	{
-		mContext = context;
-		
-		try
-		{
-			mClickSound = SoundManager.LoadSound("Sounds/Click.ogg");
-		} catch(IOException io_ex)
-		{
-			//TODO log
-		}
-		
-		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
-		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
-		mBtnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
-		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
-		
+		super.Setup(context);
+
 		try {
-			int np_border = context.getResources().getInteger(R.integer.np_border);  
-			NinePatchData btn_np = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_button)), np_border, np_border, np_border, np_border);
-			
-			mNextButton = new Widget(btn_np, new Rect(mBtnBorder, 
+			mNextButton = new Widget(mBtnNP, new Rect(mBtnBorder, 
 													  mScreenHeight - mBtnBorder - mBtnSize,
 													  mScreenWidth - mBtnBorder, 
 													  mScreenHeight - mBtnBorder));
 			mNextButton.setText("Next");
 			mNextButton.setOnClickListener(mTutorialStages[0]);
 			
-			mExplanation = new Widget(btn_np, new Rect(mBtnBorder,
+			mExplanation = new Widget(mBtnNP, new Rect(mBtnBorder,
 													   mBtnBorder,
 													   mScreenWidth - mBtnBorder,
 													   mBtnBorder + mBtnSize * 2 + mBtnSep)); 
@@ -265,8 +237,8 @@ public class ModeTutorial extends Mode {
 			mWidgetPage.addWidget(mNextButton);
 			mWidgetPage.addWidget(mExplanation);
 			
-			mWorld = new World(mContext.getAssets().open("TutorialLevels/Tut1.Level"));
-			mGameDrawer.Setup(mContext, mContext.getResources().getInteger(uk.danishcake.shokorocket.R.integer.tutorial_grid_size), new SkinProgress(mContext));
+			mGameDrawer.Setup(mContext, mGridSize, new SkinProgress(mContext), false);
+			mWorld = new SPWorld(mContext.getAssets().open("TutorialLevels/Tut1.Level"));
 			mGameDrawer.setDrawOffset((mScreenWidth - mWorld.getWidth() * mGameDrawer.getGridSize()) / 2, mBtnBorder + mBtnSize * 2 + mBtnSep * 2);
 			mGameDrawer.CreateBackground(mWorld);
 		} catch(IOException io_ex) {
@@ -283,7 +255,6 @@ public class ModeTutorial extends Mode {
 	public ModeAction Tick(int timespan)
 	{
 		mGameDrawer.Tick(timespan);
-		mWidgetPage.Tick(timespan);
 		if(mRunning)
 		{
 			mWorld.Tick(timespan * 5);
@@ -327,7 +298,7 @@ public class ModeTutorial extends Mode {
 			mGameDrawer.DrawCacheBitmap(canvas, mRotateAngle, mRotateScale);
 		} else
 		{
-			mGameDrawer.Draw(canvas, mWorld);
+			mGameDrawer.DrawSP(canvas, mWorld);
 		}
 		mWidgetPage.Draw(canvas);
 		if(mCursorPosition.x != -1)
@@ -354,10 +325,5 @@ public class ModeTutorial extends Mode {
 		}
 
 		super.Redraw(canvas);
-	}
-	
-	@Override
-	public void handleTap(int x, int y) {
-		mWidgetPage.handleTap(x, y);
 	}
 }

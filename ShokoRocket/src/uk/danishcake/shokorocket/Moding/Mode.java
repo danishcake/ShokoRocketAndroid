@@ -1,12 +1,16 @@
 package uk.danishcake.shokorocket.moding;
 
+import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
 import uk.danishcake.shokorocket.R;
+import uk.danishcake.shokorocket.gui.NinePatchData;
+import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +37,21 @@ public class Mode {
 	
 	private final int E_MENU_SOUND = 99;
 	private final int E_MENU_AUTOROTATE = 98;
+	
+	protected int mBtnSize = 48;
+	protected int mBtnSep = 8;
+	protected int mBtnBorder = 16;
+	protected int mFontSize = 16;
+	protected int mBtnSize2 = 64;
+	protected int mLevelBorder = 8;
+	protected int mGridSize = 64;
+	protected int mNPBorder = 16;
+	protected int mCatSound = -1;
+	protected int mClickSound = -1;
+	protected int mMouseSound = -1;
+	
+	protected NinePatchData mBtnNP;
+	protected WidgetPage mWidgetPage = new WidgetPage();
 
 	/**
 	 * Called before the first Tick to allow creation of state, after the previous 
@@ -41,6 +60,26 @@ public class Mode {
 	public void Setup(Context context)
 	{
 		mContext = context;
+		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
+		mBtnSize2 = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_wide_size);
+		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
+		mBtnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
+		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
+		mLevelBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.level_border);
+		mGridSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.grid_size);
+		
+		try
+		{
+			mCatSound = SoundManager.LoadSound("Sounds/Cat.ogg");
+			mClickSound = SoundManager.LoadSound("Sounds/Click.ogg");
+			mMouseSound = SoundManager.LoadSound("Sounds/Mouse.ogg");
+		} catch(IOException io_ex)
+		{
+			//TODO log
+		}
+		
+		mNPBorder = context.getResources().getInteger(R.integer.np_border);
+		mBtnNP = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_button)), mNPBorder, mNPBorder, mNPBorder, mNPBorder);
 	}
 
 	/**
@@ -58,6 +97,7 @@ public class Mode {
 	 */
 	public ModeAction Tick(int timespan)
 	{
+		mWidgetPage.Tick(timespan);
 		mAge += timespan;
 		if(mPendMode != null)
 		{
@@ -90,8 +130,8 @@ public class Mode {
 	 * @param x the x position of the event
 	 * @param y the y position of the event
 	 */
-	public void handleTap(int x, int y)	{
-	
+	public void handleTap(int x, int y) {
+		mWidgetPage.handleTap(x, y);
 	}
 	
 	/**

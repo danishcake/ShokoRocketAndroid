@@ -23,8 +23,8 @@ public class ModeIntro extends Mode {
 	
 	@Override
 	public void Setup(Context context) {
+		super.Setup(context);
 		mFirstRun = Progress.IsFirstRun(context);
-		mContext = context;
 		try
 		{
 			Map<String, Animation> animations = Animation.GetAnimations(context, "Animations/Intro/Splash.animation"); 
@@ -91,9 +91,9 @@ public class ModeIntro extends Mode {
 	@Override
 	public void handleTap(int x, int y) {
 		if(mFirstRun)
-			mPendMode = new ModeTutorial(new ModeMenu());
+			mPendMode = new ModeTutorial(new ModeSPMenu());
 		else
-			mPendMode = new ModeMenu();
+			mPendMode = new ModeSPMenu();
 	}
 	
 	@Override

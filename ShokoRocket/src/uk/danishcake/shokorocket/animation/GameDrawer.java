@@ -12,15 +12,17 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import uk.danishcake.shokorocket.moding.SkinProgress;
 import uk.danishcake.shokorocket.simulation.Direction;
+import uk.danishcake.shokorocket.simulation.MPWorld;
+import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.simulation.SquareType;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.Walker;
-import uk.danishcake.shokorocket.simulation.World;
+import uk.danishcake.shokorocket.simulation.WorldBase;
 import uk.danishcake.shokorocket.simulation.Walker.WalkerState;
 
 /**
  * Encapsulates methods to draw a world
- * @author Edward
+ * @author Edward Woolhouse
  *
  */
 public class GameDrawer {
@@ -47,16 +49,29 @@ public class GameDrawer {
 	private EnumMap<Direction, Animation> mCatAnimations = new EnumMap<Direction, Animation>(Direction.class);
 	private Animation mCatDeathAnimation = null;
 	private Animation mRocketAnimation = null;
+	private Animation[] mMPRocketAnimation = new Animation[4];
 	private Animation mHoleAnimation = null;
 	private Animation mRingAnimation = null;
 	private EnumMap<Direction, Animation> mFullArrowAnimations = new EnumMap<Direction, Animation>(Direction.class);
 	private EnumMap<Direction, Animation> mGestureArrowAnimations = new EnumMap<Direction, Animation>(Direction.class);
 	private EnumMap<Direction, Animation> mHalfArrowAnimations = new EnumMap<Direction, Animation>(Direction.class);
+	
+	private EnumMap<Direction, Animation> mMPFullArrowAnimations0 = new EnumMap<Direction, Animation>(Direction.class);
+	private EnumMap<Direction, Animation> mMPHalfArrowAnimations0 = new EnumMap<Direction, Animation>(Direction.class);
+	private EnumMap<Direction, Animation> mMPFullArrowAnimations1 = mFullArrowAnimations;
+	private EnumMap<Direction, Animation> mMPHalfArrowAnimations1 = mHalfArrowAnimations;
+	private EnumMap<Direction, Animation> mMPFullArrowAnimations2 = new EnumMap<Direction, Animation>(Direction.class);
+	private EnumMap<Direction, Animation> mMPHalfArrowAnimations2 = new EnumMap<Direction, Animation>(Direction.class);
+	private EnumMap<Direction, Animation> mMPFullArrowAnimations3 = new EnumMap<Direction, Animation>(Direction.class);
+	private EnumMap<Direction, Animation> mMPHalfArrowAnimations3 = new EnumMap<Direction, Animation>(Direction.class);
+	private Animation mSpawnerAnimation = null;
+
 	private Bitmap mTileA = null;
 	private Bitmap mTileB = null;
 	private Animation mNorthWall = null;
 	private Animation mWestWall = null;
 	private Animation mCursorAnimation = null;
+	private Animation[] mMPCursorAnimations = new Animation[4];
 	private Animation mTransCursorAnimation = null;
 	private Animation mTickAnimation = null;
 	private Bitmap mCacheBitmap = null;
@@ -93,6 +108,10 @@ public class GameDrawer {
 			mCursorAnimation.DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY);
 	}
 	
+	public void drawMPCursor(Canvas canvas, int x, int y, int id) {
+		mMPCursorAnimations[id].DrawCurrentFrame(canvas, x * mGridSize + mDrawOffsetX, y * mGridSize + mDrawOffsetY);
+	}
+	
 	public Animation GetTick() {
 		return mTickAnimation;
 	}
@@ -105,7 +124,7 @@ public class GameDrawer {
 	 * Creates the background texture
 	 * @param world The world to create the background texture from
 	 */
-	public void CreateBackground(World world)
+	public void CreateBackground(WorldBase world)
 	{
 		//Create background image
 		if(world != null)
@@ -151,7 +170,7 @@ public class GameDrawer {
 		}
 	}
 	
-	public void DrawTilesAndWalls(Canvas canvas, World world)
+	public void DrawTilesAndWalls(Canvas canvas, WorldBase world)
 	{
 		int wall_offset = -mWestWall.getFrameByIndex(0).getWidth() / 2;
 		for(int y = 0; y < world.getHeight(); y++)
@@ -190,7 +209,7 @@ public class GameDrawer {
 	 * Loads any unloaded textures
 	 * @param context The context to obtain animations from
 	 */
-	public void Setup(Context context, int gridSize, SkinProgress skin)
+	public void Setup(Context context, int gridSize, SkinProgress skin, boolean loadMP)
 	{
 		mGridSize = gridSize;
 		float referenceGridSize = (float)context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.grid_size);
@@ -263,6 +282,62 @@ public class GameDrawer {
 
 				Map<String, Animation> tick_animations = Animation.GetAnimations(context, skin.getAnimation("tick"), scale); 
 				mTickAnimation = tick_animations.get("All");
+				
+				if(loadMP)
+				{
+					//Multiplayer 
+					Map<String, Animation> mp_rocket_animations = Animation.GetAnimations(context, skin.getAnimation("mp_rockets"), scale);
+					mMPRocketAnimation[0] = mp_rocket_animations.get("Normal0");
+					mMPRocketAnimation[1] = mp_rocket_animations.get("Normal1");
+					mMPRocketAnimation[2] = mp_rocket_animations.get("Normal2");
+					mMPRocketAnimation[3] = mp_rocket_animations.get("Normal3");
+					
+					Map<String, Animation> mp_arrow_animations = Animation.GetAnimations(context, skin.getAnimation("mp_arrows"), scale);
+					mMPFullArrowAnimations0.put(Direction.North, mp_arrow_animations.get("North0"));
+					mMPFullArrowAnimations0.put(Direction.South, mp_arrow_animations.get("South0"));
+					mMPFullArrowAnimations0.put(Direction.East, mp_arrow_animations.get("East0"));
+					mMPFullArrowAnimations0.put(Direction.West, mp_arrow_animations.get("West0"));
+					mMPFullArrowAnimations0.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+					
+					mMPFullArrowAnimations2.put(Direction.North, mp_arrow_animations.get("North2"));
+					mMPFullArrowAnimations2.put(Direction.South, mp_arrow_animations.get("South2"));
+					mMPFullArrowAnimations2.put(Direction.East, mp_arrow_animations.get("East2"));
+					mMPFullArrowAnimations2.put(Direction.West, mp_arrow_animations.get("West2"));
+					mMPFullArrowAnimations2.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+					
+					mMPFullArrowAnimations3.put(Direction.North, mp_arrow_animations.get("North3"));
+					mMPFullArrowAnimations3.put(Direction.South, mp_arrow_animations.get("South3"));
+					mMPFullArrowAnimations3.put(Direction.East, mp_arrow_animations.get("East3"));
+					mMPFullArrowAnimations3.put(Direction.West, mp_arrow_animations.get("West3"));
+					mMPFullArrowAnimations3.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+					
+					mMPHalfArrowAnimations0.put(Direction.North, mp_arrow_animations.get("North0"));
+					mMPHalfArrowAnimations0.put(Direction.South, mp_arrow_animations.get("South0"));
+					mMPHalfArrowAnimations0.put(Direction.East, mp_arrow_animations.get("East0"));
+					mMPHalfArrowAnimations0.put(Direction.West, mp_arrow_animations.get("West0"));
+					mMPHalfArrowAnimations0.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+					
+					mMPHalfArrowAnimations2.put(Direction.North, mp_arrow_animations.get("North2"));
+					mMPHalfArrowAnimations2.put(Direction.South, mp_arrow_animations.get("South2"));
+					mMPHalfArrowAnimations2.put(Direction.East, mp_arrow_animations.get("East2"));
+					mMPHalfArrowAnimations2.put(Direction.West, mp_arrow_animations.get("West2"));
+					mMPHalfArrowAnimations2.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+					
+					mMPHalfArrowAnimations3.put(Direction.North, mp_arrow_animations.get("North3"));
+					mMPHalfArrowAnimations3.put(Direction.South, mp_arrow_animations.get("South3"));
+					mMPHalfArrowAnimations3.put(Direction.East, mp_arrow_animations.get("East3"));
+					mMPHalfArrowAnimations3.put(Direction.West, mp_arrow_animations.get("West3"));
+					mMPHalfArrowAnimations3.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
+					
+					Map<String, Animation> mp_cursor_animations = Animation.GetAnimations(context, skin.getAnimation("mp_cursors"), scale);
+					mMPCursorAnimations[0] = mp_cursor_animations.get("Normal0");
+					mMPCursorAnimations[1] = mp_cursor_animations.get("Normal1");
+					mMPCursorAnimations[2] = mp_cursor_animations.get("Normal2");
+					mMPCursorAnimations[3] = mp_cursor_animations.get("Normal3");
+					
+					Map<String, Animation> spawner_animations = Animation.GetAnimations(context, skin.getAnimation("spawner"), scale);
+					mSpawnerAnimation = spawner_animations.get("Normal");
+				}
 
 				mAnimationsLoaded = true;
 			} catch(IOException ex)
@@ -276,7 +351,259 @@ public class GameDrawer {
 	 * @param canvas
 	 * @param world
 	 */
-	public void Draw(Canvas canvas, World world)
+	public void DrawMP(Canvas canvas, MPWorld world)
+	{
+		int sprite_count = 0;
+		for(int i = 0; i < mRenderItems.size(); i++)
+		{
+			mRenderItems.get(i).animation = null;
+		}
+		if(mWorldBitmap != null)
+			canvas.drawBitmap(mWorldBitmap, mDrawOffsetX, mDrawOffsetY, null);
+		//Draw rockets, arrows & holes		
+		for(int x = 0; x < world.getWidth(); x++)
+		{
+			for(int y = 0; y < world.getHeight(); y++)
+			{
+				SquareType square = world.getSpecialSquare(x, y);
+				int drawX = x * mGridSize + mDrawOffsetX;
+				int drawY = y * mGridSize + mDrawOffsetY;
+				switch(square)
+				{
+				case Hole:
+					mHoleAnimation.DrawCurrentFrame(canvas, drawX, drawY);
+					break;
+				case Rocket:
+				{
+					int player_id = world.getPlayer(x, y); // Limit to 0-3
+					if(player_id < 0 || player_id > 3) player_id = 0;
+					mMPRocketAnimation[player_id].DrawCurrentFrame(canvas, drawX, drawY);
+				}
+					break;
+				case NorthSpawner:
+				case SouthSpawner:
+				case EastSpawner:
+				case WestSpawner:
+					mSpawnerAnimation.DrawCurrentFrame(canvas, drawX, drawY);
+					break;
+				case NorthArrow:
+				case SouthArrow:
+				case EastArrow:
+				case WestArrow:
+				{
+					int player_id = world.getPlayer(x, y); // Limit to 0-3
+					switch(player_id)
+					{
+					case 0:
+						mMPFullArrowAnimations0.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+						break;
+					case 1:
+						mMPFullArrowAnimations1.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+						break;
+					case 2:
+						mMPFullArrowAnimations2.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+						break;
+					case 3:
+					default:
+						mMPFullArrowAnimations3.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+						break;
+					}
+				}
+					break;
+				case NorthHalfArrow:
+				case SouthHalfArrow:
+				case EastHalfArrow:
+				case WestHalfArrow:
+				{
+					int player_id = world.getPlayer(x, y); // Limit to 0-3
+					switch(player_id)
+					{
+					case 0:
+						mMPHalfArrowAnimations0.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+						break;
+					case 1:
+						mMPHalfArrowAnimations1.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+						break;
+					case 2:
+						mMPHalfArrowAnimations2.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+						break;
+					case 3:
+					default:
+						mMPHalfArrowAnimations3.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+						break;
+					}
+				}
+					break;
+				}
+			}
+		}
+		
+		
+		//Draw cats & mice
+		ArrayList<Walker> mice = world.getLiveMice();
+		ArrayList<Walker> cats = world.getLiveCats();
+		for (Walker walker : mice) {
+			Vector2i position = walker.getPosition();
+			int x = position.x * mGridSize + mDrawOffsetX;
+			int y = position.y * mGridSize + mDrawOffsetY;
+			switch(walker.getDirection())
+			{
+			case North:
+				y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case South:
+				y += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case East:
+				x += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case West:
+				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			}
+			Animation animation = mMouseAnimations.get(walker.getDirection());
+			if(animation != null)
+			{
+				if(++sprite_count > mRenderItems.size())
+				{
+					mRenderItems.add(new RenderItem());
+				}
+				RenderItem ri = mRenderItems.get(sprite_count-1);
+				ri.x = x;
+				ri.y = y;
+				ri.animation = animation;
+			}
+		}
+		for (Walker walker : cats) {
+			Vector2i position = walker.getPosition();
+			int x = position.x * mGridSize + mDrawOffsetX;
+			int y = position.y * mGridSize + mDrawOffsetY;
+			switch(walker.getDirection())
+			{
+			case North:
+				y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case South:
+				y += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case East:
+				x += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case West:
+				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			}
+			Animation animation = mCatAnimations.get(walker.getDirection());
+			if(animation != null)
+			{
+				if(++sprite_count > mRenderItems.size())
+				{
+					mRenderItems.add(new RenderItem());
+				}
+				RenderItem ri = mRenderItems.get(sprite_count-1);
+				ri.x = x;
+				ri.y = y;
+				ri.animation = animation;
+			}
+		}
+		//Sort cats & mice by depth
+		java.util.Collections.sort(mRenderItems);
+		for(int i = 0; i < sprite_count; i++)
+		{
+			RenderItem ri = mRenderItems.get(i);
+			ri.animation.DrawCurrentFrame(canvas, ri.x, ri.y);
+		}
+		for(Walker walker : world.getDeadMice())
+		{
+			Vector2i position = walker.getPosition();
+			int x = position.x * mGridSize + mDrawOffsetX;
+			int y = position.y * mGridSize + mDrawOffsetY;
+			switch(walker.getDirection())
+			{
+			case North:
+				y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case South:
+				y += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case East:
+				x += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case West:
+				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			}
+			
+			mRingAnimation.DrawCurrentFrame(canvas, x, y);
+			
+			int death_time = walker.getDeathTime();
+			if(death_time < 5000)
+			{
+				y -= walker.getDeathTime() * 20 / 5000;
+				mMouseDeathAnimation.DrawFrameAtTime(canvas, x, y, death_time / 5);
+			}
+		}
+		for(Walker walker : world.getRescuedMice())
+		{
+			Vector2i position = walker.getPosition();
+			int x = position.x * mGridSize + mDrawOffsetX;
+			int y = position.y * mGridSize + mDrawOffsetY;
+			switch(walker.getDirection())
+			{
+			case North:
+				y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case South:
+				y += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case East:
+				x += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case West:
+				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			}
+			
+			int death_time = walker.getDeathTime();
+			if(death_time < 5000)
+			{
+				mMouseRescueAnimation.DrawFrameAtTime(canvas, x, y, death_time / 5);
+			}
+		}
+		for(Walker walker : world.getDeadCats())
+		{
+			Vector2i position = walker.getPosition();
+			int x = position.x * mGridSize + mDrawOffsetX;
+			int y = position.y * mGridSize + mDrawOffsetY;
+			switch(walker.getDirection())
+			{
+			case North:
+				y -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case South:
+				y += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case East:
+				x += (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			case West:
+				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
+				break;
+			}
+			if(walker.getWalkerState() == WalkerState.Rescued)
+			{
+				mRingAnimation.DrawCurrentFrame(canvas, x, y);
+			}
+			
+			int death_time = walker.getDeathTime();
+			if(death_time < 5000)
+			{
+				mCatDeathAnimation.DrawFrameAtTime(canvas, x, y, death_time / 5);
+			}
+		}
+	}
+	
+	public void DrawSP(Canvas canvas, SPWorld world)
 	{
 		int sprite_count = 0;
 		for(int i = 0; i < mRenderItems.size(); i++)
@@ -305,13 +632,13 @@ public class GameDrawer {
 				case SouthArrow:
 				case EastArrow:
 				case WestArrow:
-					mFullArrowAnimations.get(square.GetDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+					mFullArrowAnimations.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
 					break;
 				case NorthHalfArrow:
 				case SouthHalfArrow:
 				case EastHalfArrow:
 				case WestHalfArrow:
-					mHalfArrowAnimations.get(square.GetDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
+					mHalfArrowAnimations.get(square.getArrowDirectionality()).DrawCurrentFrame(canvas, drawX, drawY);
 					break;
 				}
 			}
@@ -497,7 +824,7 @@ public class GameDrawer {
 		mMouseDeathAnimation.Tick(timespan);
 	}
 	
-	public void CreateCacheBitmap(World world)
+	public void CreateCacheBitmap(SPWorld world)
 	{
 		int old_drawoffset_x = mDrawOffsetX;
 		int old_drawoffset_y = mDrawOffsetY;
@@ -506,7 +833,7 @@ public class GameDrawer {
 
 		mCacheBitmap = Bitmap.createBitmap(world.getWidth() * mGridSize, world.getHeight() * mGridSize, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(mCacheBitmap);
-		Draw(canvas, world);
+		DrawSP(canvas, world);
 
 		mDrawOffsetX = old_drawoffset_x;
 		mDrawOffsetY = old_drawoffset_y;

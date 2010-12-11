@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -34,15 +33,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
-import uk.danishcake.shokorocket.gui.NinePatchData;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.moding.Mode;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.SquareType;
 import uk.danishcake.shokorocket.simulation.Vector2i;
-import uk.danishcake.shokorocket.simulation.World;
-import uk.danishcake.shokorocket.simulation.World.WorldState;
+import uk.danishcake.shokorocket.simulation.SPWorld;
+import uk.danishcake.shokorocket.simulation.SPWorld.WorldState;
 import uk.danishcake.shokorocket.sound.SoundManager;
 
 public class ModeEditor extends Mode {
@@ -83,7 +81,7 @@ public class ModeEditor extends Mode {
 					TextView level_author = (TextView) mNewLevelDialog.findViewById(R.id.LevelAuthor);
 					TextView level_name = (TextView) mNewLevelDialog.findViewById(R.id.LevelName);
 					
-					mWorld = new World(Integer.parseInt((String)width_spinner.getSelectedItem()),
+					mWorld = new SPWorld(Integer.parseInt((String)width_spinner.getSelectedItem()),
 									   Integer.parseInt((String)height_spinner.getSelectedItem()));
 					mWorld.setAuthor(level_author.getText().toString());
 					mWorld.setLevelName(level_name.getText().toString());
@@ -114,34 +112,22 @@ public class ModeEditor extends Mode {
 	private Dialog mPickFilenameDialog = null;
 	private Dialog mPickPropertiesDialog = null;
 	private Dialog mShareDialog = null;	
-	private World mWorld = null;
+	private SPWorld mWorld = null;
 	private GameDrawer mGameDrawer = null;
-	private ModeMenu mModeMenu;
+	private ModeSPMenu mModeMenu;
 	private RunningMode mRunningMode = RunningMode.Stopped;
 	
 	private int mResetTimer = 0;
 	private static final int ResetTime = 1500;
-
-	
-	private int mCatSound = -1;
-	private int mClickSound = -1;
-	private int mMouseSound = -1;
 	
 	boolean mSaveNeeded = false;
 	boolean mValidated = false;
-
-	private WidgetPage mWidgetPage = null;
 	
 	private Vector2i mCursorPosition = new Vector2i(-1, -1);
 	private Vector2i mGestureStart = new Vector2i(0, 0);
 	private Vector2i mGestureEnd = new Vector2i(0, 0);
 	private Direction mGestureDirection = Direction.Invalid;
 	private boolean mGestureInProgress = false;
-	
-	private int mBtnSize = 48;
-	private int mBtnSep = 8;
-	private int mBtnBorder = 16;
-	private int mFontSize = 16;
 	
 	private final int E_MENU_NEW = 1;
 	private final int E_MENU_SAVE = 2;
@@ -157,7 +143,7 @@ public class ModeEditor extends Mode {
 	private final int E_MENU_ARROWMODE = 11;
 	
 	
-	public ModeEditor(ModeMenu menu, World world, SkinProgress skin)
+	public ModeEditor(ModeSPMenu menu, SPWorld world, SkinProgress skin)
 	{
 		mWorld = world;
 		if(world != null)
@@ -172,20 +158,18 @@ public class ModeEditor extends Mode {
 	private void InitialiseDrawing() {
 		mGameDrawer = new GameDrawer();
 
-		int grid_size = mContext.getResources().getInteger(R.integer.grid_size);
-		int level_border = mContext.getResources().getInteger(uk.danishcake.shokorocket.R.integer.level_border);
-		int required_width = mWorld.getWidth() * grid_size ;
-		int required_height = mWorld.getHeight() * grid_size ;
-		float scaleX = ((float)mScreenWidth - level_border  * 2) / (float)required_width;
-		float scaleY = ((float)(mScreenHeight - mBtnSize - mBtnBorder - level_border  * 2)) / (float)required_height;
+		int required_width = mWorld.getWidth() * mGridSize ;
+		int required_height = mWorld.getHeight() * mGridSize ;
+		float scaleX = ((float)mScreenWidth - mLevelBorder  * 2) / (float)required_width;
+		float scaleY = ((float)(mScreenHeight - mBtnSize - mBtnBorder - mLevelBorder * 2)) / (float)required_height;
 
 		float smaller = scaleX < scaleY ? scaleX : scaleY;
 		
 		if(smaller < 1)
-			mGameDrawer.Setup(mContext, (int)(((float)grid_size) * smaller), mSkin);
+			mGameDrawer.Setup(mContext, (int)(((float)mGridSize) * smaller), mSkin, false);
 		else
-			mGameDrawer.Setup(mContext, grid_size, mSkin);
-		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), level_border);
+			mGameDrawer.Setup(mContext, mGridSize, mSkin, false);
+		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mLevelBorder);
 		
 	}
 	
@@ -196,16 +180,14 @@ public class ModeEditor extends Mode {
 		mWidgetPage = new WidgetPage();
 		mWidgetPage.setFontSize(mFontSize);
 	
-		int np_border = mContext.getResources().getInteger(R.integer.np_border); 
-		NinePatchData np = new NinePatchData(BitmapFactory.decodeStream(mContext.getResources().openRawResource(R.raw.blank_button)), np_border, np_border, np_border, np_border);
-		mEditModeWidget = new Widget(np, new Rect(mScreenWidth / 2  + mBtnBorder, 
+		mEditModeWidget = new Widget(mBtnNP, new Rect(mScreenWidth / 2  + mBtnBorder, 
 												  mScreenHeight     - mBtnSize - mBtnBorder, 
 												  mScreenWidth      - mBtnBorder, 
 												  mScreenHeight     - mBtnBorder));
 		mEditModeWidget.setText(mContext.getString(R.string.editor_mode_walls));
 		mEditMode = EditMode.Walls;
 		
-		mTryWidget = new Widget(np, new Rect(mBtnBorder, 
+		mTryWidget = new Widget(mBtnNP, new Rect(mBtnBorder, 
 											 mScreenHeight     - mBtnSize - mBtnBorder, 
 											 mScreenWidth / 2  - mBtnSep, 
 											 mScreenHeight     - mBtnBorder));
@@ -273,7 +255,7 @@ public class ModeEditor extends Mode {
 
 	@Override
 	public void Setup(final Context context) {
-		mContext = context;
+		super.Setup(context);
 		
 		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
 		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
@@ -340,7 +322,6 @@ public class ModeEditor extends Mode {
 				break;
 			}
 			mGameDrawer.Tick(timespan);
-			mWidgetPage.Tick(timespan);
 		}
 		
 		return super.Tick(timespan);
@@ -430,7 +411,7 @@ public class ModeEditor extends Mode {
 				mWorld.toggleDirection(mCursorPosition.x, mCursorPosition.y, direction);
 				break;
 			case Arrows:
-				if(mWorld.getSpecialSquare(mCursorPosition.x, mCursorPosition.y).GetDirectionality() == Direction.Invalid)
+				if(mWorld.getSpecialSquare(mCursorPosition.x, mCursorPosition.y).getArrowDirectionality() == Direction.Invalid)
 					mWorld.setSpecialSquare(mCursorPosition.x, mCursorPosition.y, SquareType.Empty);
 				mWorld.toggleArrow(mCursorPosition.x, mCursorPosition.y, direction);
 				break;
@@ -796,9 +777,9 @@ public class ModeEditor extends Mode {
 		if(mNewLevelDialog != null) {
 			
 		} else if(mWorld != null){
-			//World has been created, so at next stage
+			//SPWorld has been created, so at next stage
 			mGameDrawer.DrawTilesAndWalls(canvas, mWorld);
-			mGameDrawer.Draw(canvas, mWorld);
+			mGameDrawer.DrawSP(canvas, mWorld);
 			if(mCursorPosition.x != -1 && mCursorPosition.y != -1)
 			{
 				mGameDrawer.DrawCursor(canvas, mCursorPosition.x, mCursorPosition.y, mRunningMode != RunningMode.Stopped);

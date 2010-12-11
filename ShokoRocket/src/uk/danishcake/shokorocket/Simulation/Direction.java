@@ -9,7 +9,7 @@ public enum Direction {
 	East,
 	West;
 	
-	public SquareType ToArrow() {
+	public SquareType toArrow() {
 		switch(this)
 		{
 		case North:
@@ -18,6 +18,22 @@ public enum Direction {
 			return SquareType.SouthArrow;
 		case West:
 			return SquareType.WestArrow;
+		case East:
+			return SquareType.EastArrow;
+		default:
+			return SquareType.Empty;		
+		}
+	}
+	
+	public SquareType toSpawner() {
+		switch(this)
+		{
+		case North:
+			return SquareType.NorthSpawner;
+		case South:
+			return SquareType.SouthSpawner;
+		case West:
+			return SquareType.WestSpawner;
 		case East:
 			return SquareType.EastArrow;
 		default:

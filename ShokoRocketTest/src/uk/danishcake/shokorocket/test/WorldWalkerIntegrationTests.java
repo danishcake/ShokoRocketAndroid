@@ -7,15 +7,15 @@ import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.SquareType;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.Walker;
-import uk.danishcake.shokorocket.simulation.World;
-import uk.danishcake.shokorocket.simulation.World.WorldState;
+import uk.danishcake.shokorocket.simulation.SPWorld;
+import uk.danishcake.shokorocket.simulation.SPWorld.WorldState;
 
 public class WorldWalkerIntegrationTests extends TestCase {
 	
 	public void testWalkerWorldBasics()
 	{
 		{//Check getter and setter of world work
-			World world = new World();
+			SPWorld world = new SPWorld();
 			Walker walker = new Walker();
 			walker.setWorld(world);
 			
@@ -23,7 +23,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 		}
 		
 		{//Check it can't be added to a world outside of bounds - should throw in this case
-			World world = new World();
+			SPWorld world = new SPWorld();
 			Walker walker = new Walker();
 			walker.setPosition(new Vector2i(15, 0));
 			
@@ -43,7 +43,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 	public void testWalkerTurns() 
 	{
 		Walker walker = new Walker();
-		World world = new World();
+		SPWorld world = new SPWorld();
 		walker.setWorld(world);
 		
 		/* Test corner turn
@@ -225,7 +225,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 	void testWalkersTurnWhenAdded()
 	{
 		/* Tests that a walker that is totally surrounded will stop */
-		World world = new World();
+		SPWorld world = new SPWorld();
 		world.setEast(0, 0, true);
 		world.setNorth(0, 0, true);
 		world.setWest(0, 0, true);
@@ -240,7 +240,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 	public void testTrappedWalker()
 	{
 		/* Tests that a walker that is totally surrounded will stop */
-		World world = new World();
+		SPWorld world = new SPWorld();
 		world.setEast(0, 0, true);
 		world.setSouth(0, 0, true);
 		world.setNorth(0, 0, true);
@@ -257,7 +257,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 	
 	public void testAddMiceToWorld()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		assertEquals(0, world.getLiveMice().size());
 		
 		Walker walker = new Walker();
@@ -269,7 +269,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 
 	public void testAddCatsToWorld()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		assertEquals(0, world.getLiveCats().size());
 		
 		Walker walker = new Walker();
@@ -282,7 +282,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 	public void testRelativeSpeed()
 	{
 		//Cats move at 2/3rds speed of a mouse
-		World world = new World();
+		SPWorld world = new SPWorld();
 		Walker mouse = new Walker();
 		Walker cat = new Walker();
 		
@@ -303,7 +303,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 	
 	public void testMiceAffectedByArrows() 
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		Walker walker = new Walker();
 		walker.setPosition(new Vector2i(0, 2));
 		walker.setDirection(Direction.East);
@@ -337,7 +337,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 	
 	public void testCatsAffectedByArrows()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		Walker walker = new Walker();
 		walker.setPosition(new Vector2i(0, 2));
 		walker.setDirection(Direction.East);
@@ -372,7 +372,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 	
 	public void testCatsDiminishArrows()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		Walker walker = new Walker();
 		walker.setPosition(new Vector2i(0, 2));
 		walker.setDirection(Direction.East);
@@ -425,7 +425,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 	//This also tests that timesteps are broken up
 	public void testCatsKillMice()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		Walker mouse = new Walker();
 		Walker cat = new Walker();
 		
@@ -443,7 +443,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 	
 	public void testHolesKillMice()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		Walker walker = new Walker();
 		walker.setPosition(new Vector2i(2, 2));
 		walker.setDirection(Direction.East);
@@ -459,7 +459,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 	
 	public void testHolesKillCats()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		Walker walker = new Walker();
 		walker.setPosition(new Vector2i(2, 2));
 		walker.setDirection(Direction.East);
@@ -475,7 +475,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 	
 	public void testRocketsRescueMice()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		Walker walker = new Walker();
 		walker.setPosition(new Vector2i(2, 2));
 		walker.setDirection(Direction.East);
@@ -492,7 +492,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 	
 	public void testCatsKillRockets()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		Walker walker = new Walker();
 		walker.setPosition(new Vector2i(2, 2));
 		walker.setDirection(Direction.East);
@@ -501,7 +501,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 		world.setRocket(4, 2, true);
 		
 		
-		assertEquals(World.WorldState.OK, world.getWorldState());
+		assertEquals(SPWorld.WorldState.OK, world.getWorldState());
 		
 		world.Tick(3000);
 		
@@ -509,12 +509,12 @@ public class WorldWalkerIntegrationTests extends TestCase {
 		assertEquals(1, world.getDeadCats().size());
 		
 		//Now for world state
-		assertEquals(World.WorldState.Failed, world.getWorldState());
+		assertEquals(SPWorld.WorldState.Failed, world.getWorldState());
 	}
 	
 	public void testWrappingCollisions()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		Walker mouse = new Walker();
 		Walker cat = new Walker();
 		
@@ -537,7 +537,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 	
 	public void testWorldReset()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		Walker mouse_to_die = new Walker();
 		mouse_to_die.setPosition(new Vector2i(8,0));
 		mouse_to_die.setDirection(Direction.East);
@@ -588,7 +588,7 @@ public class WorldWalkerIntegrationTests extends TestCase {
 		// C>M> 
 		//It should be safe, but it collides!
 		
-		World world = new World();
+		SPWorld world = new SPWorld();
 		Walker mouse = new Walker();
 		mouse.setPosition(new Vector2i(5, 5));
 		mouse.setDirection(Direction.East);

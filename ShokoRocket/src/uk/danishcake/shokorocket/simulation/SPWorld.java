@@ -11,19 +11,12 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.NamedNodeMap;
-import org.xml.sax.SAXException;
 
-
-
-public class World {
+public class SPWorld extends WorldBase {
 	public enum WorldState
 	{
 		OK, Failed, Success
@@ -34,15 +27,7 @@ public class World {
 		public int y;
 		public Direction direction;
 	}
-	private int mWidth = 12;
-	private int mHeight = 9;
-	private String mLevelName = "Default";
-	private String mLevelAuthor = "Unknown";
-	
-	private final int eWestWall = 1;
-	private final int eNorthWall = 2;
-	private int[] mWalls = new int[mWidth*mHeight];
-	
+		
 	private ArrayList<Walker> mLiveMice = new ArrayList<Walker>();
 	private ArrayList<Walker> mDeadMice = new ArrayList<Walker>();
 	private ArrayList<Walker> mRescuedMice = new ArrayList<Walker>();
@@ -56,72 +41,11 @@ public class World {
 	private ArrayList<Direction> mArrowStock = new ArrayList<Direction>();
 	private boolean mUnlimitedArrows = false;
 	
-	private String mIdentifier = "";
-	private String mFilename = "";
 	private String mSplashMessage = null;
 	
 	private boolean mMouseRescued = false;
 	private int mRotation = 0;
-
-	/* getWidth
-	 * @return width of the level - defaults to 12
-	 */
-	public int getWidth() {
-		return mWidth;
-	}
-	/* getHeight
-	 * @return height of the level - defaults to 9
-	 */	
-	public int getHeight() {
-		return mHeight;
-	}
-	
-	/* getAuthor
-	 * @return the author of the map
-	 */
-	public String getAuthor() {
-		return mLevelAuthor;
-	}
-	
-	/**
-	 * Sets the level author
-	 * @param author The name of the author
-	 */
-	public void setAuthor(String author) {
-		mLevelAuthor = author;
-	}
-	
-	/* getLevelName
-	 * @return the name of the level
-	 */	
-	public String getLevelName() {
-		return mLevelName;
-	}
-	
-	/**
-	 * Sets the level name
-	 * @param name The name of the level
-	 */
-	public void setLevelName(String name) {
-		mLevelName = name;
-	}
-	
-	/**
-	 * Sets the filename. This is used to determine if a file has already been saved
-	 * @param name The filename to store. 
-	 */
-	public void setFilename(String name) {
-		mFilename = name;
-	}
-	
-	/**
-	 * Gets the filename. If it has not been set then it returns ""
-	 * @return The filename set by setFilename
-	 */
-	public String getFilename() {
-		return mFilename;
-	}
-	
+		
 	/**
 	 * Sets the splash message. This will be shown when a level is loaded.
 	 * @param message the splash message
@@ -136,22 +60,6 @@ public class World {
 	 */
 	public String getSplashMessage() {
 		return mSplashMessage;
-	}
-	
-	/**
-	 * Gets an identifier for this level 
-	 * @return
-	 */
-	public String getIdentifier() {
-		return mIdentifier;
-	}
-	
-	/**
-	 * Sets the identifier for this level. Planned use is the filename
-	 * @param id
-	 */
-	public void setIdentifier(String id) {
-		mIdentifier = id;
 	}
 	
 	/* getLiveMice
@@ -413,7 +321,7 @@ public class World {
 	 */
 	public void setArrow(int x, int y, Direction direction) {
 		SquareType square_type = mSpecialSquares[wallIndex(x, y)];
-		Direction square_dir = square_type.GetDirectionality();
+		Direction square_dir = square_type.getArrowDirectionality();
 		//Can't set arrow in rocket or hole
 		if(square_type == SquareType.Hole || square_type == SquareType.Rocket)
 			return;
@@ -425,17 +333,17 @@ public class World {
 		case West:
 		case East:
 			if(mUnlimitedArrows)
-				mSpecialSquares[wallIndex(x, y)] = direction.ToArrow();
+				mSpecialSquares[wallIndex(x, y)] = direction.toArrow();
 			else if(stockHasArrow(direction))
 			{
 				if(square_dir == Direction.Invalid)
 				{
-					mSpecialSquares[wallIndex(x, y)] = direction.ToArrow();
+					mSpecialSquares[wallIndex(x, y)] = direction.toArrow();
 					removeArrowFromStock(direction);
 				} else
 				{
 					mArrowStock.add(square_dir);
-					mSpecialSquares[wallIndex(x, y)] = direction.ToArrow();
+					mSpecialSquares[wallIndex(x, y)] = direction.toArrow();
 					removeArrowFromStock(direction);	
 				}
 			}
@@ -543,83 +451,39 @@ public class World {
 		return mouse_rescued;
 	}
 	
-	public World(int width, int height)
+	public SPWorld(int width, int height)
 	{
-		mWidth = width;
-		mHeight = height;
-		mWalls = new int[mWidth * mHeight];
+		super(width, height);
 		mSpecialSquares = new SquareType[mWidth*mHeight];
-		defaultWalls();
 		defaultSpecialSquares();
 		mUnlimitedArrows = true;
 	}
 	
-	/* World()
+	/* SPWorld()
 	 * Creates a empty world 12x9 with walls around the edge
 	 */
-	public World() 
+	public SPWorld() 
 	{
-		defaultWalls();
+		super();
 		defaultSpecialSquares();
 		mUnlimitedArrows = true;
 	}
 	
-	/* World(input)
+	/* SPWorld(input)
 	 * Loads a world from specified XML file
 	 * @param input an InputStream representing the level  
 	 */
-	public World(InputStream input) throws IOException
+	public SPWorld(InputStream input) throws IOException
 	{
-		mUnlimitedArrows = false;
-		try
-		{
-			javax.xml.parsers.DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			dbf.setValidating(false);
-			dbf.setCoalescing(false);
-			dbf.setExpandEntityReferences(false);
-			javax.xml.parsers.DocumentBuilder dbuilder = dbf.newDocumentBuilder();
-			Document document = dbuilder.parse(input);
-			Element root = document.getDocumentElement();
-			
-			
-			loadProperties(root);
-			defaultSpecialSquares();
-			loadWalls(root);
-			loadEntities(root);
-			loadSolution(root);
-		}
-		catch(ParserConfigurationException parse_config_error)
-		{
-			throw new IOException("Unable to create parser to read XML: " + parse_config_error.getMessage());
-		}
-		catch(SAXException sax_error)
-		{
-			throw new IOException("Unable to load level due to SAX exception: " + sax_error.getMessage());
-		}
-		catch(InvalidParameterException xml_error)
-		{
-			throw new IOException("Unable to load level due to XML parameter error : " + xml_error.getMessage());
-		}
+		LoadFromXML(input);
+		//loadSpecific is then called with root element to parse
 	}
 	
-	/* Loads size, author and name etc from XML
-	 * @param root the document element in the XML level
-	 */
-	private void loadProperties(Element root) {
-		NodeList author_nodes = root.getElementsByTagName("Author");
-		if(author_nodes.getLength() >= 1)
-		{
-			String author = author_nodes.item(0).getFirstChild().getNodeValue();
-			if(author != null)
-				mLevelAuthor = author;
-		}
-		NodeList levelname_nodes = root.getElementsByTagName("Name");
-		if(levelname_nodes.getLength() >= 1)
-		{
-			String level_name = levelname_nodes.item(0).getFirstChild().getNodeValue();
-			if(level_name != null)
-				mLevelName = level_name; 
-		}
+	@Override
+	protected void loadSpecific(Element root) {
+		mUnlimitedArrows = false;
+		mSpecialSquares = new SquareType[mWidth*mHeight];
+		defaultSpecialSquares();
 		NodeList splash_nodes = root.getElementsByTagName("Splash");
 		if(splash_nodes.getLength() >= 1)
 		{
@@ -627,85 +491,8 @@ public class World {
 			if(splash_text != null)
 				mSplashMessage = splash_text; 
 		}
-		NodeList size_nodes = root.getElementsByTagName("Size");
-		if(size_nodes.getLength() >= 1)
-		{
-			Node size_node = size_nodes.item(0);
-			NamedNodeMap sizes = size_node.getAttributes();
-			Node size_x = sizes.getNamedItem("x");
-			Node size_y = sizes.getNamedItem("y");
-			if(size_x == null || size_y == null)
-			{
-				throw new InvalidParameterException("Both x and y must be specified in size");			
-			} else
-			{
-				try
-				{
-					mWidth = Integer.parseInt(size_x.getNodeValue());
-					mHeight = Integer.parseInt(size_y.getNodeValue());
-					mWalls = new int[mWidth*mHeight];
-					mSpecialSquares = new SquareType[mWidth*mHeight];
-				} catch(NumberFormatException nfe)
-				{
-					throw new InvalidParameterException("Unable to parse x or y in size");
-				}
-			}
-		}
-	}
-	
-	/* Loads walls from XML
-	 * @param root the document element in the XML level
-	 */	
-	private void loadWalls(Element root) {
-		NodeList h_list = root.getElementsByTagName("H");
-		for(int i = 0; i < h_list.getLength(); i++)
-		{			
-			Node h_node = h_list.item(i);
-			NamedNodeMap wall_position_attr = h_node.getAttributes();
-			
-			Node pos_x = wall_position_attr.getNamedItem("x");
-			Node pos_y = wall_position_attr.getNamedItem("y");
-			if(pos_x == null || pos_y == null)
-			{
-				throw new InvalidParameterException("Both x and y must be specified in wall");			
-			} else
-			{
-				try
-				{
-					int x = Integer.parseInt(pos_x.getNodeValue());
-					int y = Integer.parseInt(pos_y.getNodeValue());
-					setNorth(x, y, true);
-				} catch(NumberFormatException nfe)
-				{
-					throw new InvalidParameterException("Unable to parse x or y in wall");
-				}
-			}
-		}
-		
-		NodeList v_list = root.getElementsByTagName("V");
-		for(int i = 0; i < v_list.getLength(); i++)
-		{			
-			Node v_node = v_list.item(i);
-			NamedNodeMap wall_position_attr = v_node.getAttributes();
-			
-			Node pos_x = wall_position_attr.getNamedItem("x");
-			Node pos_y = wall_position_attr.getNamedItem("y");
-			if(pos_x == null || pos_y == null)
-			{
-				throw new InvalidParameterException("Both x and y must be specified in wall");			
-			} else
-			{
-				try
-				{
-					int x = Integer.parseInt(pos_x.getNodeValue());
-					int y = Integer.parseInt(pos_y.getNodeValue());
-					setWest(x, y, true);
-				} catch(NumberFormatException nfe)
-				{
-					throw new InvalidParameterException("Unable to parse x or y in wall");
-				}
-			}
-		}
+		loadEntities(root);
+		loadSolution(root);
 	}
 	
 	/* Loads entities from XML
@@ -929,7 +716,7 @@ public class World {
 				case SouthArrow:
 				case SouthHalfArrow:
 				case SouthDestroyedArrow:
-					Direction d = square.GetDirectionality();
+					Direction d = square.getArrowDirectionality();
 					out.println("<Arrow x=\"" + Integer.toString(x) + "\" y=\"" + Integer.toString(y) + "\" d=\"" + d.toString() + "\"/>");
 					break;
 				}
@@ -938,21 +725,6 @@ public class World {
 		out.println("</Level>");
 		out.flush();
 		out.close();
-	}
-	
-	
-	/* defaultWalls()
-	 * Sets the default walls around the edge
-	 */
-	private void defaultWalls()	{
-		for(int x = 0; x < mWidth; x++)
-		{
-			setNorth(x, 0, true);
-		}
-		for(int y = 0; y < mHeight; y++)
-		{
-			setWest(0, y, true);
-		}
 	}
 	
 	/* defaultSpecialSquares()
@@ -967,205 +739,7 @@ public class World {
 			}
 		}
 	}
-	
-	/* wallIndex
-	 * @param x x coordinate - must be between 0 and width-1
-	 * @param y y coordinate - must be between 0 and height-1
-	 * @return index into wall array corresponding to (x,y)
-	 */
-	private int wallIndex(int x, int y)	{
-		return y * mWidth + x;
-	}
 
-	/* getNorth
-	 * Gets the north wall state
-	 */
-	public boolean getNorth(int x, int y) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		return (mWalls[wallIndex(x, y)] & eNorthWall) != 0;
-	}
-	/* getWest
-	 * Gets the west wall state
-	 */
-	public boolean getWest(int x, int y) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		return (mWalls[wallIndex(x, y)] & eWestWall) != 0;
-	}
-	/* getEast
-	 * Gets the east wall state
-	 */
-	public boolean getEast(int x, int y) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		return (mWalls[wallIndex((x + 1) % mWidth, y)] & eWestWall) != 0;
-	}
-	/* getSouth
-	 * Gets the south wall state
-	 */
-	public boolean getSouth(int x, int y) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		return (mWalls[wallIndex(x, (y + 1) % mHeight)] & eNorthWall) != 0;
-	}
-	/* getDirection
-	 * Gets the wall state for a particular direction
-	 */
-	public boolean getDirection(int x, int y, Direction direction) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		switch(direction)
-		{
-		case North:
-			return getNorth(x,y);
-		case West:
-			return getWest(x,y);
-		case East:
-			return getEast(x,y);
-		case South:
-			return getSouth(x,y);
-		}
-		return false;
-	}
-	
-	
-	/* setNorth
-	 * Sets the north wall state. Achieves this by bit twiddling.
-	 */
-	public void setNorth(int x, int y, boolean set) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		int wi = wallIndex(x, y);
-		mWalls[wi] = (mWalls[wi] & ~eNorthWall) | (set ? eNorthWall : 0);  
-	}
-	/* setWest
-	 * Sets the west wall state. Achieves this by bit twiddling.
-	 */
-	public void setWest(int x, int y, boolean set) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		int wi = wallIndex(x, y);
-		mWalls[wi] = (mWalls[wi] & ~eWestWall) | (set ? eWestWall : 0);	
-	}
-	/* setEast
-	 * Sets the east wall state. Achieves this by bit twiddling.
-	 */
-	public void setEast(int x, int y, boolean set) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		int wi = wallIndex((x+1) % mWidth, y);
-		mWalls[wi] = (mWalls[wi] & ~eWestWall) | (set ? eWestWall : 0);		
-	}
-	/* setSouth
-	 * Sets the south wall state. Achieves this by bit twiddling
-	 */ 
-	public void setSouth(int x, int y, boolean set) {
-		if(x < 0 || x >= mWidth || y < 0 || y >= mHeight)
-			throw new InvalidParameterException("x/y outside valid world area");
-		int wi = wallIndex(x, (y + 1) % mHeight);
-		mWalls[wi] = (mWalls[wi] & ~eNorthWall) | (set ? eNorthWall : 0);		
-	}
-	
-	public void toggleDirection(int x, int y, Direction direction) {
-		switch(direction)
-		{
-		case North:
-			setNorth(x, y, !getDirection(x, y, direction));
-			break;
-		case South:
-			setSouth(x, y, !getDirection(x, y, direction));
-			break;
-		case East:
-			setEast(x, y, !getDirection(x, y, direction));
-			break;
-		case West:
-			setWest(x, y, !getDirection(x, y, direction));
-			break;
-		}
-	}
-	
-	/* checkCollision
-	 * Checks if the two walkers are close
-	 */
-	private boolean checkCollision(Walker cat, Walker mouse) {
-		final long FractionScale = 1000;
-		final long CollisionRadius = 333*333;
-		Vector2i cat_pos = cat.getPosition();
-		Vector2i mouse_pos = mouse.getPosition();
-		long cat_pos_x = cat_pos.x * FractionScale;
-		long cat_pos_y = cat_pos.y * FractionScale;
-		long mouse_pos_x = mouse_pos.x * FractionScale;
-		long mouse_pos_y = mouse_pos.y * FractionScale;
-		
-		switch(cat.getDirection())
-		{
-		case East:
-			cat_pos_x += cat.getFraction() * FractionScale / Walker.FractionReset;
-			break;
-		case North:
-			cat_pos_y -= cat.getFraction() * FractionScale / Walker.FractionReset;
-			break;
-		case South:
-			cat_pos_y += cat.getFraction() * FractionScale / Walker.FractionReset;
-			break;
-		case West:
-			cat_pos_x -= cat.getFraction() * FractionScale / Walker.FractionReset;
-			break;	
-		}
-		
-		switch(mouse.getDirection())
-		{
-		case East:
-			mouse_pos_x += mouse.getFraction() * FractionScale / Walker.FractionReset;
-			break;
-		case North:
-			mouse_pos_y -= mouse.getFraction() * FractionScale / Walker.FractionReset;
-			break;
-		case South:
-			mouse_pos_y += mouse.getFraction() * FractionScale / Walker.FractionReset;
-			break;
-		case West:
-			mouse_pos_x -= mouse.getFraction() * FractionScale / Walker.FractionReset;
-			break;	
-		}
-		
-		long dx = mouse_pos_x - cat_pos_x;
-		long dy = mouse_pos_y - cat_pos_y;
-		dx *= dx;
-		dy *= dy;
-		//Collision has occurred if closer than 0.333
-		long range_sqr = dx + dy;
-
-		
-		
-		
-		
-		if(mouse_pos_x > mWidth * FractionScale / 2)
-			mouse_pos_x -= mWidth * FractionScale;
-		if(mouse_pos_y > mHeight * FractionScale / 2)
-			mouse_pos_y -= mHeight * FractionScale;
-		
-		if(cat_pos_x > mWidth * FractionScale / 2)
-			cat_pos_x -= mWidth * FractionScale;
-		if(cat_pos_y > mHeight * FractionScale / 2)
-			cat_pos_y -= mHeight * FractionScale;
-		
-		long dx2 = mouse_pos_x - cat_pos_x;
-		long dy2 = mouse_pos_y - cat_pos_y;
-		dx2 *= dx2;
-		dy2 *= dy2;
-		//Collision has occurred if closer than 0.333
-		long range_sqr2 = dx2 + dy2;
-
-
-		if(range_sqr <= CollisionRadius)
-			return true;
-		if(range_sqr2 <= CollisionRadius) 
-			return true;
-		return false;
-	}
-	
 	/* tick
 	 * Advances cats, mice & performs collisions
 	 * @param timespan the number of milliseconds to advance for
@@ -1246,6 +820,34 @@ public class World {
 				mWorldState = WorldState.Success;
 			}
 		}
+	}
+	
+	@Override
+	public void walkerReachNewSquare(Walker walker, int x, int y, Direction d) {
+		//First interact with special squares (arrow, holes & rockets)
+		SquareType square = getSpecialSquare(x, y);
+		//Holes
+		if(square == SquareType.Hole)
+		{
+			walker.setWalkerState(WalkerState.Dead);
+		}
+		if(square == SquareType.Rocket)
+		{
+			walker.setWalkerState(WalkerState.Rescued);
+		}
+		//Arrows
+		Direction arrow_direction = square.toArrowDirection(); 
+		if(arrow_direction != Direction.Invalid)
+		{
+			if(arrow_direction == Turns.TurnAround(d) && walker.getWalkerType() == WalkerType.Cat)
+			{
+				SquareType reduced = square.Diminish();
+				setSpecialSquare(x, y, reduced);
+			}
+			walker.setDirection2(arrow_direction);
+		}
+		/* Now interact with walls */
+		super.walkerReachNewSquare(walker, x, y, walker.getDirection());
 	}
 	
 	/* Reset

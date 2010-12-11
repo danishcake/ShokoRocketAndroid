@@ -6,7 +6,7 @@ import java.security.InvalidParameterException;
 public class Walker {
 	public enum WalkerType
 	{
-		Unknown, Cat, Mouse
+		Unknown, Cat, Mouse, MouseGold, MouseSpecial
 	}
 	public enum WalkerState
 	{
@@ -25,7 +25,7 @@ public class Walker {
 	private int mSpeed = MouseSpeed;
 	private Direction mDirection = Direction.North;
 	private Direction mStartingDirection = Direction.North;
-	private World mWorld = null;
+	private WorldBase mWorld = null;
 	private WalkerType mWalkerType = WalkerType.Unknown;
 	private WalkerState mWalkerState = WalkerState.Alive;
 	private boolean mFirstAdvance = true;
@@ -36,6 +36,9 @@ public class Walker {
 	public Vector2i getPosition() {
 		return new Vector2i(mX, mY);
 	}
+	public int getX() {return mX;}
+	public int getY() {return mY;}
+	
 	/**
 	 * Gets the initial position of the walker
 	 * @return
@@ -77,6 +80,13 @@ public class Walker {
 		mStartingDirection = mDirection;
 	}
 	
+	/* Sets the direction faced by the walker, but not the starting direction
+	 * so resetting the walker will return it to it's original direction
+	 */
+	public void setDirection2(Direction direction) {
+		mDirection = direction;
+	}
+	
 	/* Gets the fraction between 0 and FractionReset of the walkers progress to the next square
 	 * @return 0-FractionReset-1 integer representing progress to next square
 	 */
@@ -97,10 +107,18 @@ public class Walker {
 	}
 	
 	/* setWalkerType
-	 * Sets the type of walker, called by World from addCat and addMouse
+	 * Sets the type of walker, called by SPWorld from addCat and addMouse
 	 */
 	public void setWalkerType(WalkerType walker_type) {
 		mWalkerType = walker_type;
+	}
+	
+	/**
+	 * getWalkerType
+	 * @return the type of the walker
+	 */
+	public WalkerType getWalkerType() {
+		return mWalkerType;
 	}
 	
 	/* getWalkerState
@@ -110,10 +128,17 @@ public class Walker {
 		return mWalkerState;
 	}
 	
+	/* setWalkerState
+	 * Sets the state of the walker - whether alive or dead or rescued etc
+	 */
+	public void setWalkerState(WalkerState state) {
+		mWalkerState = state;
+	}
+	
 	/* Sets the world in which the walker will turn and interact
 	 * @param world the world the walker will be active in
 	 */
-	public void setWorld(World world) {
+	public void setWorld(WorldBase world) {
 		if(world.getWidth() <= mX || world.getHeight() <= mY)
 			throw new InvalidParameterException("Unable to set world as walker outside range. Walker at (" + Integer.toString(mX) + "," + Integer.toString(mY) + "), world size is (" + Integer.toString(world.getWidth()) + "," + Integer.toString(world.getHeight()) + ")");
 		mWorld = world;
@@ -121,7 +146,7 @@ public class Walker {
 	/* Gets the world the walker is moving in
 	 * @return the world the walker is moving through
 	 */
-	public World getWorld() {
+	public WorldBase getWorld() {
 		return mWorld;
 	}
 	/**
@@ -206,44 +231,7 @@ public class Walker {
 	private void reachNewGridSquare() {
 		if(mWorld != null)
 		{
-			//First interact with special squares (arrow, holes & rockets)
-			SquareType square = mWorld.getSpecialSquare(mX, mY);
-			//Holes
-			if(square == SquareType.Hole)
-			{
-				mWalkerState = WalkerState.Dead;
-			}
-			if(square == SquareType.Rocket)
-			{
-				mWalkerState = WalkerState.Rescued;
-			}
-			//Arrows
-			Direction arrow_direction = square.ToDirection(); 
-			if(arrow_direction != Direction.Invalid)
-			{
-				if(arrow_direction == Turns.TurnAround(mDirection) && mWalkerType == WalkerType.Cat)
-				{
-					SquareType reduced = square.Diminish();
-					mWorld.setSpecialSquare(mX, mY, reduced);
-				}
-				mDirection = arrow_direction;
-			}
-			//Now interact with walls
-			if(!mWorld.getDirection(mX, mY, mDirection))
-			{
-				//mDirection = mDirection; //Carry straight on!
-			} 
-			else if(mWorld.getDirection(mX, mY, mDirection) && 
-					!mWorld.getDirection(mX, mY, Turns.TurnRight(mDirection)))
-				mDirection = Turns.TurnRight(mDirection);
-			else if(mWorld.getDirection(mX, mY, mDirection) &&
-					mWorld.getDirection(mX, mY, Turns.TurnRight(mDirection)) &&
-					!mWorld.getDirection(mX, mY, Turns.TurnLeft(mDirection)))
-				mDirection = Turns.TurnLeft(mDirection);
-			else if(!mWorld.getDirection(mX, mY, Turns.TurnAround(mDirection)))
-				mDirection = Turns.TurnAround(mDirection);
-			else
-				mDirection = Direction.Invalid;		
+			mWorld.walkerReachNewSquare(this, mX, mY, mDirection);		
 		}
 	}
 }

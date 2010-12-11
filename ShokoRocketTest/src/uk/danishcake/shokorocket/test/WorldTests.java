@@ -9,12 +9,12 @@ import android.test.AndroidTestCase;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.SquareType;
 import uk.danishcake.shokorocket.simulation.Walker;
-import uk.danishcake.shokorocket.simulation.World;
+import uk.danishcake.shokorocket.simulation.SPWorld;
 
 public class WorldTests extends AndroidTestCase {
 	public void testWorldDefaults()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		assertEquals(12, world.getWidth());
 		assertEquals(9, world.getHeight());
 		assertEquals(true, world.getArrowStockUnlimited());
@@ -22,7 +22,7 @@ public class WorldTests extends AndroidTestCase {
 	
 	public void testWorldWallBounds()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		boolean negative_x_throws = false;
 		boolean negative_y_throws = false;
 		boolean excessive_x_throws = false;
@@ -79,7 +79,7 @@ public class WorldTests extends AndroidTestCase {
 	
 	public void testWorldWallDefaults()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		for(int x = 0; x < 12; x++)
 		{
 			assertTrue(world.getNorth(x, 0));
@@ -113,8 +113,8 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 01.Level");			
-			World world = new World(world_stream);
+			InputStream world_stream = getContext().getAssets().open("Levels/01-Original Easy/Level 01.Level");			
+			SPWorld world = new SPWorld(world_stream);
 			
 			assertEquals("Edward Woolhouse", world.getAuthor());
 			assertEquals("Seems familiar", world.getLevelName());
@@ -129,8 +129,8 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 01.Level");			
-			World world = new World(world_stream);
+			InputStream world_stream = getContext().getAssets().open("Levels/01-Original Easy/Level 01.Level");			
+			SPWorld world = new SPWorld(world_stream);
 
 			assertEquals(12, world.getWidth());
 			assertEquals(9, world.getHeight());
@@ -145,8 +145,8 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 01.Level");			
-			World world = new World(world_stream);
+			InputStream world_stream = getContext().getAssets().open("Levels/01-Original Easy/Level 01.Level");			
+			SPWorld world = new SPWorld(world_stream);
 
 			assertTrue(world.getWest(2, 0));
 			assertFalse(world.getWest(2, 1));
@@ -162,8 +162,8 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 23.Level");			
-			World world = new World(world_stream);
+			InputStream world_stream = getContext().getAssets().open("Levels/01-Original Easy/Level 23.Level");			
+			SPWorld world = new SPWorld(world_stream);
 			assertEquals(10, world.getLiveMice().size());
 			assertEquals(7, world.getLiveCats().size());
 			//Test mouse position TODO
@@ -179,8 +179,8 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 06.Level");			
-			World world = new World(world_stream);
+			InputStream world_stream = getContext().getAssets().open("Levels/01-Original Easy/Level 06.Level");			
+			SPWorld world = new SPWorld(world_stream);
 			assertEquals(1, world.getLiveMice().size());
 			Walker mouse = world.getLiveMice().get(0);
 			assertEquals(4, mouse.getPosition().x);
@@ -200,7 +200,7 @@ public class WorldTests extends AndroidTestCase {
 	public void testWorldManualHolesAndRockets()
 	{
 		//Holes
-		World world = new World();
+		SPWorld world = new SPWorld();
 		
 		assertFalse(world.getHole(0,0));
 		
@@ -244,7 +244,7 @@ public class WorldTests extends AndroidTestCase {
 	public void testWorldHolesAndRocketsExlusivity()
 	{
 		//Holes
-		World world = new World();
+		SPWorld world = new SPWorld();
 		
 		world.setHole(0, 0, true);
 		assertTrue(world.getHole(0,0));
@@ -258,8 +258,8 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 23.Level");			
-			World world = new World(world_stream);
+			InputStream world_stream = getContext().getAssets().open("Levels/01-Original Easy/Level 23.Level");			
+			SPWorld world = new SPWorld(world_stream);
 			
 			assertFalse(world.getHole(0, 0));
 			assertTrue(world.getHole(4, 8));
@@ -274,7 +274,7 @@ public class WorldTests extends AndroidTestCase {
 	
 	public void testWorldSolution()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		world.setArrow(1, 1, Direction.East);
 		world.setArrow(2, 2, Direction.West);
 		assertEquals(SquareType.EastArrow, world.getSpecialSquare(1, 1));
@@ -305,8 +305,8 @@ public class WorldTests extends AndroidTestCase {
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 23.Level");			
-			World world = new World(world_stream);
+			InputStream world_stream = getContext().getAssets().open("Levels/01-Original Easy/Level 23.Level");			
+			SPWorld world = new SPWorld(world_stream);
 			
 			assertEquals(SquareType.Empty, world.getSpecialSquare(1, 1));
 			assertEquals(SquareType.Empty, world.getSpecialSquare(5, 0));
@@ -333,30 +333,30 @@ public class WorldTests extends AndroidTestCase {
 	
 	public void testArrowStockLimitsArrows()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		world.setArrowStockUnlimited(true);
 
 		world.setArrow(0, 0, Direction.East);
 		world.setArrow(1, 1, Direction.East);
 		
-		assertEquals(Direction.East, world.getSpecialSquare(0, 0).ToDirection());
-		assertEquals(Direction.East, world.getSpecialSquare(1, 1).ToDirection());
+		assertEquals(Direction.East, world.getSpecialSquare(0, 0).toArrowDirection());
+		assertEquals(Direction.East, world.getSpecialSquare(1, 1).toArrowDirection());
 		
-		World world2 = new World();
+		SPWorld world2 = new SPWorld();
 		world2.setArrowStockUnlimited(false);
 		
 		world2.setArrow(0, 0, Direction.East);
 		world2.setArrow(1, 1, Direction.East);
-		assertEquals(Direction.Invalid, world2.getSpecialSquare(0, 0).ToDirection());
-		assertEquals(Direction.Invalid, world2.getSpecialSquare(1, 1).ToDirection());
+		assertEquals(Direction.Invalid, world2.getSpecialSquare(0, 0).toArrowDirection());
+		assertEquals(Direction.Invalid, world2.getSpecialSquare(1, 1).toArrowDirection());
 	}
 	
 	public void testResetArrows()
 	{
 		try
 		{
-			InputStream world_stream = getContext().getAssets().open("Levels/Original Easy/Level 23.Level");			
-			World world = new World(world_stream);
+			InputStream world_stream = getContext().getAssets().open("Levels/01-Original Easy/Level 23.Level");			
+			SPWorld world = new SPWorld(world_stream);
 			world.LoadSolution();
 			
 			assertEquals(SquareType.EastArrow, world.getSpecialSquare(1, 1));

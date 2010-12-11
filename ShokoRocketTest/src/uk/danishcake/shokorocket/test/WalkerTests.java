@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.Walker;
-import uk.danishcake.shokorocket.simulation.World;
+import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.simulation.Walker.WalkerState;
 
 public class WalkerTests extends TestCase {
@@ -74,7 +74,7 @@ public class WalkerTests extends TestCase {
 	public void testWalkerWraps()
 	{
 		//Wrapping requires a world
-		World world = new World();
+		SPWorld world = new SPWorld();
 		Walker walker = new Walker();
 		walker.setPosition(new Vector2i(3,1));
 		world.setNorth(3, 0, false);
@@ -89,7 +89,7 @@ public class WalkerTests extends TestCase {
 	
 	public void testWalkerReset()
 	{
-		World world = new World();
+		SPWorld world = new SPWorld();
 		Walker walker = new Walker();
 		walker.setPosition(new Vector2i(0,5));
 		walker.setDirection(Direction.South);
