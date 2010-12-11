@@ -7,6 +7,7 @@ import uk.danishcake.shokorocket.simulation.Vector2i;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -56,6 +57,17 @@ public class Widget {
 		mFrontbuffer = Bitmap.createBitmap(mBounds.width(), mBounds.height(), Bitmap.Config.ARGB_8888);
 		
 		drawNP(mBackbuffer, ninePatchData);
+	}
+	
+	public Widget(Bitmap backbuffer, Point position) 
+	{
+		mBackbuffer = backbuffer;
+		mBounds = new Rect(position.x, position.y, position.x + backbuffer.getWidth(), position.y + backbuffer.getHeight());
+		mBackbuffer = Bitmap.createBitmap(mBounds.width(), mBounds.height(), Bitmap.Config.ARGB_8888);
+		mFrontbuffer = Bitmap.createBitmap(mBounds.width(), mBounds.height(), Bitmap.Config.ARGB_8888);
+		
+		Canvas c = new Canvas(mBackbuffer);
+		c.drawBitmap(backbuffer, 0, 0, null);
 	}
 	
 	protected void drawNP(Bitmap dest, NinePatchData ninePatchData)
@@ -401,5 +413,9 @@ public class Widget {
 				mOnDisabledClick.OnClick(this);
 			}
 		}
+	}
+	
+	public void setPosition(Point position) {
+		mBounds.offsetTo(position.x, position.y);
 	}
 }

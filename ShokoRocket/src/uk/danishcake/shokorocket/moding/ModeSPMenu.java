@@ -17,7 +17,10 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Environment;
 import android.os.Handler;
@@ -30,6 +33,8 @@ public class ModeSPMenu extends Mode {
 	//SP related stuff
 	private Widget mLevelName;
 	private Widget mLevelPackName;
+	private Widget mPlayButton;
+	private Point mPlayPosition;
 	private SPWorld mWorld = null;
 	private GameDrawer mGameDrawer;
 	private boolean mSetup = false;
@@ -109,7 +114,11 @@ public class ModeSPMenu extends Mode {
 			unlocks.setText(context.getString(R.string.menu_unlocks));
 
 			Widget loadEditor = new Widget(mBtnNP, new Rect(mBtnBorder , mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth / 2 - mBtnSep / 2, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
-			loadEditor.setText(context.getString(R.string.menu_editor));		
+			loadEditor.setText(context.getString(R.string.menu_editor));
+
+			Bitmap play_bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.play);
+			mPlayPosition = new Point(mScreenWidth / 2 - play_bm.getWidth() / 2, mScreenHeight / 2 - play_bm.getHeight() / 2);
+			mPlayButton = new Widget(play_bm, mPlayPosition);
 
 			scrollRight.setOnClickListener(new OnClickListener() {
 				@Override
@@ -164,6 +173,15 @@ public class ModeSPMenu extends Mode {
 			});
 
 			playMap.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					if(mPendMode == null)
+						mPendMode = new ModeSPGame(mWorld, ModeSPMenu.this, mProgress, mSkin);
+					SoundManager.PlaySound(mClickSound);
+				}
+			});
+			
+			mPlayButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
 					if(mPendMode == null)
@@ -261,6 +279,7 @@ public class ModeSPMenu extends Mode {
 			mPuzzlePage.addWidget(loadEditor);
 			mPuzzlePage.addWidget(toggleMP);
 			mPuzzlePage.addWidget(toggleAI);
+			mPuzzlePage.addWidget(mPlayButton);
 		}
 		
 		//Setup AI page widgets
@@ -409,6 +428,7 @@ public class ModeSPMenu extends Mode {
 				mWorldPendTimer = 0;
 				mWorldOffset.x = 0;
 				mWorldOffset.y = 0;
+				mPlayButton.setPosition(mPlayPosition);
 			}
 			
 		}
@@ -421,6 +441,7 @@ public class ModeSPMenu extends Mode {
 			{
 				mWorldPendTimer = 0;
 				mPendWorld = mProgress.getWorld();
+				mPlayButton.setPosition(new Point(0, -1000));
 			} catch(Exception ex)
 			{
 				mPendWorld = null;
