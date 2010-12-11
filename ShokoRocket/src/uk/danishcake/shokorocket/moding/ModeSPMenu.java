@@ -1,11 +1,14 @@
 package uk.danishcake.shokorocket.moding;
 
 import java.io.IOException;
+
 import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.OnClickListener;
+import uk.danishcake.shokorocket.gui.WidgetPage;
 import uk.danishcake.shokorocket.simulation.Direction;
+import uk.danishcake.shokorocket.simulation.MPWorld;
 import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.sound.SoundManager;
@@ -43,6 +46,15 @@ public class ModeSPMenu extends Mode {
 	private Direction mWorldDirection = Direction.West; //Transition from this direction
 	
 	
+	//Widget pages and transition control
+	private WidgetPage mAIPage = new WidgetPage();
+	private WidgetPage mIPPage = new WidgetPage();
+	private WidgetPage mPuzzlePage = mWidgetPage;
+	private WidgetPage mPendPage = null; 
+	private int mPagePendTimer = 0;
+	private static int PAGE_TRANSITION_TIME = 250;
+	
+	
 	@Override
 	public void Setup(Context context) {
 		mGameDrawer = new GameDrawer();
@@ -62,181 +74,276 @@ public class ModeSPMenu extends Mode {
 		mSkin = new SkinProgress(context);
 		mProgress.AssessUnlockable(mSkin);
 		mMakeTrainingOffer = Progress.IsFirstRun(context);
-		
+
 		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size), mSkin, false);
-				
-		mLevelPackName = new Widget(mBtnNP, new Rect(mBtnSize + mBtnSep + mBtnBorder, mBtnBorder, mScreenWidth - (mBtnSize + mBtnBorder + mBtnSep), mBtnBorder + mBtnSize));
-		
-		Widget levelPackLeft = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder, mBtnBorder + mBtnSize, mBtnBorder + mBtnSize));
-		levelPackLeft.setText("<");
 
-		Widget levelPackRight = new Widget(mBtnNP, new Rect(mScreenWidth - (mBtnBorder + mBtnSize), mBtnBorder, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize));
-		levelPackRight.setText(">");
-		
+		//Setup puzzle page widgets
+		{
+			mLevelPackName = new Widget(mBtnNP, new Rect(mBtnSize + mBtnSep + mBtnBorder, mBtnBorder, mScreenWidth - (mBtnSize + mBtnBorder + mBtnSep), mBtnBorder + mBtnSize));
 
-		mLevelName = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnSize + mBtnSep + mBtnBorder, mScreenWidth - mBtnBorder, mBtnSize + mBtnSep + mBtnBorder + mBtnSize)); 
-		mLevelName.setText(context.getString(R.string.menu_level_name));
-		
-		Widget scrollLeft = new Widget(mBtnNP, new Rect(mBtnSize + mBtnBorder + mBtnSep, mScreenHeight - (mBtnSize + mBtnBorder), mBtnSize * 2 + mBtnBorder + mBtnSep, mScreenHeight - mBtnBorder));
-		scrollLeft.setText("<");
-		
-		Widget scrollRight = new Widget(mBtnNP, new Rect(mScreenWidth - (mBtnSize + mBtnBorder), mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
-		scrollRight.setText(">");
-		
-		Widget playMap = new Widget(mBtnNP, new Rect(mBtnBorder + (mBtnSize+ mBtnSep) * 2, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - (mBtnSize + mBtnBorder + mBtnSep), mScreenHeight - mBtnBorder));
-		playMap.setText(context.getString(R.string.menu_play));
-		
-		Widget toggleMP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mBtnSize + mBtnBorder, mScreenHeight - mBtnBorder));
-		toggleMP.setText("MP");
-		
-		Widget unlocks = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep, mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
-		unlocks.setText(context.getString(R.string.menu_unlocks));
-		
-		Widget loadEditor = new Widget(mBtnNP, new Rect(mBtnBorder , mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth / 2 - mBtnSep, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
-		loadEditor.setText(context.getString(R.string.menu_editor));		
-		
-		mWidgetPage.setFontSize(mFontSize);
-		mWidgetPage.addWidget(levelPackLeft);
-		mWidgetPage.addWidget(levelPackRight);
-		mWidgetPage.addWidget(mLevelPackName);
-		mWidgetPage.addWidget(mLevelName);
-		mWidgetPage.addWidget(scrollRight);
-		mWidgetPage.addWidget(scrollLeft);
-		mWidgetPage.addWidget(playMap);
-		mWidgetPage.addWidget(unlocks);
-		mWidgetPage.addWidget(loadEditor);
-		mWidgetPage.addWidget(toggleMP);
-		
+			Widget levelPackLeft = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder, mBtnBorder + mBtnSize, mBtnBorder + mBtnSize));
+			levelPackLeft.setText("<");
+
+			Widget levelPackRight = new Widget(mBtnNP, new Rect(mScreenWidth - (mBtnBorder + mBtnSize), mBtnBorder, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize));
+			levelPackRight.setText(">");
+
+			mLevelName = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnSize + mBtnSep + mBtnBorder, mScreenWidth - mBtnBorder, mBtnSize + mBtnSep + mBtnBorder + mBtnSize)); 
+			mLevelName.setText(context.getString(R.string.menu_level_name));
+
+			Widget scrollLeft = new Widget(mBtnNP, new Rect(-mBtnBorder, mScreenHeight / 2 - mBtnSize / 2, mBtnSize, mScreenHeight / 2 + mBtnSize / 2));
+			scrollLeft.setText("<");
+
+			Widget scrollRight = new Widget(mBtnNP, new Rect(mScreenWidth - mBtnSize, mScreenHeight / 2 - mBtnSize / 2, mScreenWidth + mBtnBorder, mScreenHeight / 2 + mBtnSize / 2));
+			scrollRight.setText(">");
+
+			Widget playMap = new Widget(mBtnNP, new Rect(mScreenWidth / 2  + mBtnSep / 2, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
+			playMap.setText(context.getString(R.string.menu_play));
+
+			Widget toggleMP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mBtnSize + mBtnBorder, mScreenHeight - mBtnBorder));
+			toggleMP.setText("MP");
+
+			Widget toggleAI = new Widget(mBtnNP, new Rect(mBtnBorder + mBtnSize + mBtnSep, mScreenHeight - (mBtnSize + mBtnBorder), mBtnBorder + mBtnSize * 2 + mBtnSep, mScreenHeight - mBtnBorder));
+			toggleAI.setText("AI");
+
+			Widget unlocks = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
+			unlocks.setText(context.getString(R.string.menu_unlocks));
+
+			Widget loadEditor = new Widget(mBtnNP, new Rect(mBtnBorder , mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth / 2 - mBtnSep / 2, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
+			loadEditor.setText(context.getString(R.string.menu_editor));		
+
+			scrollRight.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					if(mPendWorld == null)
+					{
+						mProgress.nextLevel();
+						mWorldDirection = Direction.East;
+						startTransition();
+						SoundManager.PlaySound(mClickSound);
+					}
+				}
+			});
+
+			scrollLeft.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					if(mPendWorld == null)
+					{
+						mProgress.prevLevel();
+						mWorldDirection = Direction.West;
+						startTransition();
+						SoundManager.PlaySound(mClickSound);
+					}
+				}
+			});
+
+			levelPackLeft.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					if(mPendWorld == null)
+					{
+						mProgress.prevLevelPack();
+						mWorldDirection = Direction.North;
+						startTransition();
+						SoundManager.PlaySound(mClickSound);
+					}
+				}
+			});
+
+			levelPackRight.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					if(mPendWorld == null)
+					{
+						mProgress.nextLevelPack();
+						mWorldDirection = Direction.South;
+						startTransition();
+						SoundManager.PlaySound(mClickSound);
+					}
+				}
+			});
+
+			playMap.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					if(mPendMode == null)
+						mPendMode = new ModeSPGame(mWorld, ModeSPMenu.this, mProgress, mSkin);
+					SoundManager.PlaySound(mClickSound);
+				}
+			});
+
+			unlocks.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					if(mPendMode == null)
+						mPendMode = new ModeUnlocks(ModeSPMenu.this, mSkin, mProgress);
+					SoundManager.PlaySound(mClickSound);
+				}
+			});
+
+			loadEditor.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					if(mPendMode == null)
+					{
+						if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+						{
+							Toast.makeText(mContext, R.string.menu_editor_requies_storage, Toast.LENGTH_LONG).show();
+							return;
+						}
+						if(mProgress.getLevelPack().equals("My Levels"))
+						{
+							AlertDialog.Builder builder = new Builder(mContext);
+							builder.setMessage(R.string.menu_edit_this_level_prompt);
+							builder.setPositiveButton(R.string.menu_edit, new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									try
+									{
+										mSemaphore.acquire();
+										mPendMode = new ModeEditor(ModeSPMenu.this, mWorld, mSkin);
+										mSemaphore.release();
+									} catch(InterruptedException int_ex)
+									{
+										Log.e("ModeSPMenu.Setup", "Semaphore interupted");
+									}
+								}
+							});
+							builder.setNeutralButton(R.string.menu_new, new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									try
+									{
+										mSemaphore.acquire();
+										mPendMode = new ModeEditor(ModeSPMenu.this, null, mSkin);
+										mEditorLoaded = true;
+										mSemaphore.release();
+									} catch(InterruptedException int_ex)
+									{
+										Log.e("ModeSPMenu.Setup", "Semaphore interupted");
+									}
+								}
+							});
+							builder.create().show();
+						} else
+						{
+							mPendMode = new ModeEditor(ModeSPMenu.this, null, mSkin);
+							mEditorLoaded = true;
+						}
 	
-		scrollRight.setOnClickListener(new OnClickListener() {
-			@Override
-			public void OnClick(Widget widget) {
-				if(mPendWorld == null)
-				{
-					mProgress.nextLevel();
-					mWorldDirection = Direction.East;
-					startTransition();
-					SoundManager.PlaySound(mClickSound);
-				}
-			}
-		});
-		scrollLeft.setOnClickListener(new OnClickListener() {
-			@Override
-			public void OnClick(Widget widget) {
-				if(mPendWorld == null)
-				{
-					mProgress.prevLevel();
-					mWorldDirection = Direction.West;
-					startTransition();
-					SoundManager.PlaySound(mClickSound);
-				}
-			}
-		});
-		levelPackLeft.setOnClickListener(new OnClickListener() {
-			@Override
-			public void OnClick(Widget widget) {
-				if(mPendWorld == null)
-				{
-					mProgress.prevLevelPack();
-					mWorldDirection = Direction.North;
-					startTransition();
-					SoundManager.PlaySound(mClickSound);
-				}
-			}
-		});
-		levelPackRight.setOnClickListener(new OnClickListener() {
-			@Override
-			public void OnClick(Widget widget) {
-				if(mPendWorld == null)
-				{
-					mProgress.nextLevelPack();
-					mWorldDirection = Direction.South;
-					startTransition();
-					SoundManager.PlaySound(mClickSound);
-				}
-			}
-		});
-		
-		playMap.setOnClickListener(new OnClickListener() {
-			@Override
-			public void OnClick(Widget widget) {
-				if(mPendMode == null)
-					mPendMode = new ModeSPGame(mWorld, ModeSPMenu.this, mProgress, mSkin);
-				SoundManager.PlaySound(mClickSound);
-			}
-		});
-		
-		unlocks.setOnClickListener(new OnClickListener() {
-			@Override
-			public void OnClick(Widget widget) {
-				if(mPendMode == null)
-					mPendMode = new ModeUnlocks(ModeSPMenu.this, mSkin, mProgress);
-				SoundManager.PlaySound(mClickSound);
-			}
-		});
-		
-		loadEditor.setOnClickListener(new OnClickListener() {
-			@Override
-			public void OnClick(Widget widget) {
-				if(mPendMode == null)
-				{
-					if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
-					{
-						Toast.makeText(mContext, R.string.menu_editor_requies_storage, Toast.LENGTH_LONG).show();
-						return;
+						SoundManager.PlaySound(mClickSound);
 					}
-					if(mProgress.getLevelPack().equals("My Levels"))
-					{
-						AlertDialog.Builder builder = new Builder(mContext);
-						builder.setMessage(R.string.menu_edit_this_level_prompt);
-						builder.setPositiveButton(R.string.menu_edit, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								try
-								{
-									mSemaphore.acquire();
-									mPendMode = new ModeEditor(ModeSPMenu.this, mWorld, mSkin);
-									mSemaphore.release();
-								} catch(InterruptedException int_ex)
-								{
-									Log.e("ModeSPMenu.Setup", "Semaphore interupted");
-								}
-							}
-						});
-						builder.setNeutralButton(R.string.menu_new, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								try
-								{
-									mSemaphore.acquire();
-									mPendMode = new ModeEditor(ModeSPMenu.this, null, mSkin);
-									mEditorLoaded = true;
-									mSemaphore.release();
-								} catch(InterruptedException int_ex)
-								{
-									Log.e("ModeSPMenu.Setup", "Semaphore interupted");
-								}
-							}
-						});
-						builder.create().show();
-					} else
-					{
-						mPendMode = new ModeEditor(ModeSPMenu.this, null, mSkin);
-						mEditorLoaded = true;
-					}
+				}
+			});
 
-					SoundManager.PlaySound(mClickSound);
+			toggleMP.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					gotoPage(mIPPage);
 				}
-			}
-		});
+			});
+
+			toggleAI.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					gotoPage(mAIPage);
+				}
+			});
+
+
+			mPuzzlePage.setFontSize(mFontSize);
+			mPuzzlePage.addWidget(levelPackLeft);
+			mPuzzlePage.addWidget(levelPackRight);
+			mPuzzlePage.addWidget(mLevelPackName);
+			mPuzzlePage.addWidget(mLevelName);
+			mPuzzlePage.addWidget(scrollRight);
+			mPuzzlePage.addWidget(scrollLeft);
+			mPuzzlePage.addWidget(playMap);
+			mPuzzlePage.addWidget(unlocks);
+			mPuzzlePage.addWidget(loadEditor);
+			mPuzzlePage.addWidget(toggleMP);
+			mPuzzlePage.addWidget(toggleAI);
+		}
 		
-		toggleMP.setOnClickListener(new OnClickListener() {
-			@Override
-			public void OnClick(Widget widget) {
-				if(mPendMode == null)
-				{
-					mPendMode = new ModeMPMenu(ModeSPMenu.this, mSkin); 
+		//Setup AI page widgets
+		{
+			Widget toggleMP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mBtnSize + mBtnBorder, mScreenHeight - mBtnBorder));
+			toggleMP.setText("MP");
+
+			Widget toggleSP = new Widget(mBtnNP, new Rect(mBtnBorder + mBtnSize + mBtnSep, mScreenHeight - (mBtnSize + mBtnBorder), mBtnBorder + mBtnSize * 2 + mBtnSep, mScreenHeight - mBtnBorder));
+			toggleSP.setText("SP");
+
+			Widget testAI = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize));
+			testAI.setText("Test AI");
+
+			Widget lameExcuses = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSize + mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize));
+			lameExcuses.setText("This AI is currently in development, and hence is rather stupid. If you are a computer science type, please feel free to contribute a better AI algorithm (see ShokoRocketAndroid on GitHub for code)");
+
+			toggleMP.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					gotoPage(mIPPage);
 				}
-			}
-		});
+			});
+
+			toggleSP.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					gotoPage(mPuzzlePage);
+				}
+			});
+
+			testAI.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					if(mPendMode == null)
+					{
+						try {
+							MPWorld world = new MPWorld(mContext.getAssets().open("MultiplayerLevels/MP001.Level"));
+							mPendMode = new ModeMPGame(ModeSPMenu.this, mSkin, world);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			});
+			
+			mAIPage.setFontSize(mFontSize);
+			mAIPage.addWidget(toggleSP);
+			mAIPage.addWidget(testAI);
+			mAIPage.addWidget(toggleMP);
+			mAIPage.addWidget(lameExcuses);
+		}
+		//Setup IP page widgets
+		{
+			
+			Widget toggleAI = new Widget(mBtnNP, new Rect(mBtnBorder + mBtnSize + mBtnSep, mScreenHeight - (mBtnSize + mBtnBorder), mBtnBorder + mBtnSize * 2 + mBtnSep, mScreenHeight - mBtnBorder));
+			toggleAI.setText("AI");
+
+			Widget toggleSP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mBtnSize + mBtnBorder, mScreenHeight - mBtnBorder));
+			toggleSP.setText("SP");
+			
+			Widget lameExcuses = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSize + mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize));
+			lameExcuses.setText("There is currently no multiplayer. Versus AI is in work, and once satisfactory I will start on proper multiplayer");
+
+			toggleAI.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					gotoPage(mAIPage);
+				}
+			});
+
+			toggleSP.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					gotoPage(mPuzzlePage);
+				}
+			});
+
+			mIPPage.setFontSize(mFontSize);
+			mIPPage.addWidget(toggleSP);
+			mIPPage.addWidget(toggleAI);
+			mIPPage.addWidget(lameExcuses);
+		}
 		
 		LoadLevelList();
 		startTransition();
@@ -244,7 +351,18 @@ public class ModeSPMenu extends Mode {
 		ChangeLevel();
 		mSetup = true;
 	}
-	
+
+	/**
+	 * Starts a transition to the specified page. Ignored if transition in progress.
+	 */
+	private void gotoPage(WidgetPage page) {
+		if(mPendPage == null && page != mWidgetPage) {
+			mWidgetPage.setEnabled(false);
+			mPendPage = page;
+			mPagePendTimer = 0;
+		}
+	}
+
 	/**
 	 * Loads a list of levels from external storage and assets
 	 */
@@ -338,8 +456,12 @@ public class ModeSPMenu extends Mode {
 	
 	@Override
 	public ModeAction Tick(int timespan) {
-		control_level_transition(timespan);
-		mGameDrawer.Tick(timespan);
+		controlWidgetPages(timespan);
+		if(mWidgetPage == mPuzzlePage && mPendPage == null)
+		{
+			control_level_transition(timespan);
+			mGameDrawer.Tick(timespan);
+		}
 		if(mMakeTrainingOffer)
 		{
 			Handler handler = new Handler(mContext.getMainLooper());
@@ -348,32 +470,64 @@ public class ModeSPMenu extends Mode {
 		}
 		return super.Tick(timespan);
 	}
-	
+
+	/**
+	 * Controls transitioning and positioning of widget pages
+	 */
+	private void controlWidgetPages(int timespan) {
+		//Move page across off screen, bring in the next page. 20% gap
+		if(mPendPage != null) {
+			mPagePendTimer += timespan;
+			if(mPagePendTimer > PAGE_TRANSITION_TIME) mPagePendTimer = PAGE_TRANSITION_TIME;
+			int x_offset      = (mPagePendTimer * mScreenWidth / PAGE_TRANSITION_TIME);
+			int x_offset_pend = (mPagePendTimer * mScreenWidth / PAGE_TRANSITION_TIME) -
+								mScreenWidth;
+			mWidgetPage.setOffset(x_offset, 0);
+			mPendPage.setOffset(x_offset_pend, 0);
+			
+			if(mPagePendTimer >= PAGE_TRANSITION_TIME) {
+				mWidgetPage = mPendPage;
+				mWidgetPage.setEnabled(true);
+				mWidgetPage.setOffset(0, 0);
+				mPendPage = null;
+			}
+		}
+	}
+
 	@Override
 	public void Redraw(Canvas canvas) {
-		if(mWorld != null)
+		if(mWidgetPage == mPuzzlePage)
 		{
-			mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2) + mWorldOffset.x, mBtnBorder + mBtnSize + mBtnSep + mBtnSize + 4 + mWorldOffset.y);
-			mGameDrawer.DrawTilesAndWalls(canvas, mWorld);
-			mGameDrawer.DrawSP(canvas, mWorld);
+			if(mWorld != null)
+			{
+				mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2) + mWorldOffset.x, 
+										  mScreenHeight / 2 - mWorld.getHeight() * (mGameDrawer.getGridSize() / 2) + mWorldOffset.y);
+				mGameDrawer.DrawTilesAndWalls(canvas, mWorld);
+				mGameDrawer.DrawSP(canvas, mWorld);
+			}
+			else
+			{
+				//TODO draw a SD card symbol
+			}
+			if(mPendWorld != null)
+			{
+				mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mPendWorld.getWidth() * mGameDrawer.getGridSize() / 2) + mPendWorldOffset.x, 
+										  mScreenHeight / 2 - mPendWorld.getHeight() * (mGameDrawer.getGridSize() / 2) + mPendWorldOffset.y);
+				mGameDrawer.DrawTilesAndWalls(canvas, mPendWorld);
+				mGameDrawer.DrawSP(canvas, mPendWorld);
+			}
+			else
+			{
+				//TODO draw a SD card symbol
+			}
 		}
-		else
-		{
-			//TODO draw a SD card symbol
-		}
-		if(mPendWorld != null)
-		{
-			mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mPendWorld.getWidth() * mGameDrawer.getGridSize() / 2) + mPendWorldOffset.x, mBtnBorder + mBtnSize + mBtnSep + mBtnSize + 4 + mPendWorldOffset.y);
-			mGameDrawer.DrawTilesAndWalls(canvas, mPendWorld);
-			mGameDrawer.DrawSP(canvas, mPendWorld);
-		}
-		else
-		{
-			//TODO draw a SD card symbol
-		}
-		
+
 		mWidgetPage.Draw(canvas);
-		if(mDrawTick)
+		if(mPendPage != null)
+		{
+			mPendPage.Draw(canvas);
+		}
+		if(mWidgetPage == mPuzzlePage && mDrawTick)
 		{
 			mGameDrawer.GetTick().DrawCurrentFrame(canvas, mScreenWidth - mBtnBorder - mBtnSize + mBtnBorder - mBtnSep,  mBtnBorder + mBtnSep + mBtnSize + mBtnSep);
 		}
@@ -430,4 +584,38 @@ public class ModeSPMenu extends Mode {
 			}
 		}
 	};
+	
+
+	@Override
+	public void handleGesture(Direction direction) {
+		if(mPendWorld == null)
+		{
+			switch(direction) {
+			case West:
+				mProgress.nextLevel();
+				mWorldDirection = Direction.East;
+				startTransition();
+				SoundManager.PlaySound(mClickSound);
+				break;
+			case East:
+				mProgress.prevLevel();
+				mWorldDirection = Direction.West;
+				startTransition();
+				SoundManager.PlaySound(mClickSound);
+				break;
+			case North:
+				mProgress.nextLevelPack();
+				mWorldDirection = Direction.South;
+				startTransition();
+				SoundManager.PlaySound(mClickSound);
+				break;
+			case South:
+				mProgress.prevLevelPack();
+				mWorldDirection = Direction.North;
+				startTransition();
+				SoundManager.PlaySound(mClickSound);
+				break;
+			}
+		}
+	}
 }
