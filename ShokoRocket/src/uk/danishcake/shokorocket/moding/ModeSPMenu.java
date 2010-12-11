@@ -281,7 +281,7 @@ public class ModeSPMenu extends Mode {
 			testAI.setText("Test AI");
 
 			Widget lameExcuses = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSize + mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize));
-			lameExcuses.setText("This AI is currently in development, and hence is rather stupid. If you are a computer science type, please feel free to contribute a better AI algorithm (see ShokoRocketAndroid on GitHub for code)");
+			lameExcuses.setText("BETA warning:\n This AI is currently in development, and hence is rather stupid. If you are a computer science type person, please feel free to contribute a better AI algorithm (see ShokoRocketAndroid on GitHub for code)");
 
 			toggleMP.setOnClickListener(new OnClickListener() {
 				@Override
@@ -329,7 +329,7 @@ public class ModeSPMenu extends Mode {
 			toggleSP.setText("Puzzle");
 			
 			Widget lameExcuses = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSize + mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize));
-			lameExcuses.setText("There is currently no multiplayer. Versus AI is in work, and once satisfactory I will start on proper multiplayer");
+			lameExcuses.setText("BETA warning:\nThere is currently no multiplayer. Versus AI is in work, and once satisfactory I will start on proper multiplayer");
 
 			toggleAI.setOnClickListener(new OnClickListener() {
 				@Override
