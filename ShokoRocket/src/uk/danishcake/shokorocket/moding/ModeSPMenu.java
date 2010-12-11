@@ -101,13 +101,10 @@ public class ModeSPMenu extends Mode {
 			Widget scrollRight = new Widget(mBtnNP, new Rect(mScreenWidth - mBtnSize, mScreenHeight / 2 - mBtnSize / 2, mScreenWidth + mBtnBorder, mScreenHeight / 2 + mBtnSize / 2));
 			scrollRight.setText(">");
 
-			Widget playMap = new Widget(mBtnNP, new Rect(mScreenWidth / 2  + mBtnSep / 2, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
-			playMap.setText(context.getString(R.string.menu_play));
+			Widget toggleMP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth / 2 - mBtnSep / 2, mScreenHeight - mBtnBorder));
+			toggleMP.setText("Online");
 
-			Widget toggleMP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mBtnSize + mBtnBorder, mScreenHeight - mBtnBorder));
-			toggleMP.setText("MP");
-
-			Widget toggleAI = new Widget(mBtnNP, new Rect(mBtnBorder + mBtnSize + mBtnSep, mScreenHeight - (mBtnSize + mBtnBorder), mBtnBorder + mBtnSize * 2 + mBtnSep, mScreenHeight - mBtnBorder));
+			Widget toggleAI = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
 			toggleAI.setText("AI");
 
 			Widget unlocks = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
@@ -172,15 +169,6 @@ public class ModeSPMenu extends Mode {
 				}
 			});
 
-			playMap.setOnClickListener(new OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					if(mPendMode == null)
-						mPendMode = new ModeSPGame(mWorld, ModeSPMenu.this, mProgress, mSkin);
-					SoundManager.PlaySound(mClickSound);
-				}
-			});
-			
 			mPlayButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
@@ -274,7 +262,6 @@ public class ModeSPMenu extends Mode {
 			mPuzzlePage.addWidget(mLevelName);
 			mPuzzlePage.addWidget(scrollRight);
 			mPuzzlePage.addWidget(scrollLeft);
-			mPuzzlePage.addWidget(playMap);
 			mPuzzlePage.addWidget(unlocks);
 			mPuzzlePage.addWidget(loadEditor);
 			mPuzzlePage.addWidget(toggleMP);
@@ -284,11 +271,11 @@ public class ModeSPMenu extends Mode {
 		
 		//Setup AI page widgets
 		{
-			Widget toggleMP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mBtnSize + mBtnBorder, mScreenHeight - mBtnBorder));
-			toggleMP.setText("MP");
+			Widget toggleMP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth / 2 - mBtnSep / 2, mScreenHeight - mBtnBorder));
+			toggleMP.setText("Online");
 
-			Widget toggleSP = new Widget(mBtnNP, new Rect(mBtnBorder + mBtnSize + mBtnSep, mScreenHeight - (mBtnSize + mBtnBorder), mBtnBorder + mBtnSize * 2 + mBtnSep, mScreenHeight - mBtnBorder));
-			toggleSP.setText("SP");
+			Widget toggleSP = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
+			toggleSP.setText("Puzzle");
 
 			Widget testAI = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize));
 			testAI.setText("Test AI");
@@ -335,11 +322,11 @@ public class ModeSPMenu extends Mode {
 		//Setup IP page widgets
 		{
 			
-			Widget toggleAI = new Widget(mBtnNP, new Rect(mBtnBorder + mBtnSize + mBtnSep, mScreenHeight - (mBtnSize + mBtnBorder), mBtnBorder + mBtnSize * 2 + mBtnSep, mScreenHeight - mBtnBorder));
+			Widget toggleAI = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
 			toggleAI.setText("AI");
 
-			Widget toggleSP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mBtnSize + mBtnBorder, mScreenHeight - mBtnBorder));
-			toggleSP.setText("SP");
+			Widget toggleSP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth / 2 - mBtnSep / 2, mScreenHeight - mBtnBorder));
+			toggleSP.setText("Puzzle");
 			
 			Widget lameExcuses = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSize + mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize));
 			lameExcuses.setText("There is currently no multiplayer. Versus AI is in work, and once satisfactory I will start on proper multiplayer");
