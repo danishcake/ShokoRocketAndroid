@@ -46,11 +46,14 @@ public class MPWorld extends WorldBase {
 	private int mSpawnTimer = 1500;
 	private int mTimer = 0;
 	
+	private String mConnectString = "HHH";
+	
 	/* MPWorld(input)
 	 * Loads a world from specified XML file
 	 * @param input an InputStream representing the level  
 	 */
-	public MPWorld(InputStream input) throws IOException {
+	public MPWorld(InputStream input, String connect) throws IOException {
+		mConnectString = connect;
 		LoadFromXML(input);
 		//loadSpecific is then called with root element to parse
 		for(int i = 0; i < 4; i++)
@@ -229,7 +232,7 @@ public class MPWorld extends WorldBase {
 		//Initialise as a temporary measure
 		if(mSync == null){
 			mSync = new LocalSync(this);
-			mSync.Connect("HHH"); //Three hard AI
+			mSync.Connect(mConnectString); //Three hard AI
 			mPlayerID = mSync.getClientID();
 		}
 		

@@ -278,9 +278,15 @@ public class ModeMenu extends Mode {
 			toggleSP.setText("Puzzle");
 
 			Widget testAI = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize));
-			testAI.setText("Test AI");
+			testAI.setText("Test versus 3 AI");
 
-			Widget lameExcuses = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSize + mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize));
+			Widget testAI2 = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSep + mBtnSize, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize * 2 + mBtnSep));
+			testAI2.setText("Test versus 2 AI");
+
+			Widget testAI3 = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSep * 2 + mBtnSize * 2, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize * 3 + mBtnSep * 2));
+			testAI3.setText("Test versus 1 AI");
+
+			Widget lameExcuses = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSize * 3 + mBtnSep * 3, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize));
 			lameExcuses.setText("BETA warning:\n This AI is currently in development, and hence is rather stupid. If you are a computer science type person, please feel free to contribute a better AI algorithm (see ShokoRocketAndroid on GitHub for code)");
 
 			toggleMP.setOnClickListener(new OnClickListener() {
@@ -303,7 +309,7 @@ public class ModeMenu extends Mode {
 					if(mPendMode == null)
 					{
 						try {
-							MPWorld world = new MPWorld(mContext.getAssets().open("MultiplayerLevels/MP001.Level"));
+							MPWorld world = new MPWorld(mContext.getAssets().open("MultiplayerLevels/MP001.Level"), "HHH");
 							mPendMode = new ModeMPGame(ModeMenu.this, mSkin, world);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
@@ -312,10 +318,43 @@ public class ModeMenu extends Mode {
 					}
 				}
 			});
-			
+
+			testAI2.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					if(mPendMode == null)
+					{
+						try {
+							MPWorld world = new MPWorld(mContext.getAssets().open("MultiplayerLevels/MP001.Level"), "0HH");
+							mPendMode = new ModeMPGame(ModeMenu.this, mSkin, world);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			});
+
+			testAI3.setOnClickListener(new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					if(mPendMode == null)
+					{
+						try {
+							MPWorld world = new MPWorld(mContext.getAssets().open("MultiplayerLevels/MP001.Level"), "00H");
+							mPendMode = new ModeMPGame(ModeMenu.this, mSkin, world);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			});
 			mAIPage.setFontSize(mFontSize);
 			mAIPage.addWidget(toggleSP);
 			mAIPage.addWidget(testAI);
+			mAIPage.addWidget(testAI2);
+			mAIPage.addWidget(testAI3);
 			mAIPage.addWidget(toggleMP);
 			mAIPage.addWidget(lameExcuses);
 		}
