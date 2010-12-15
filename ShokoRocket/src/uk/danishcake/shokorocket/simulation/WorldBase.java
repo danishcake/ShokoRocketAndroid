@@ -477,7 +477,7 @@ public abstract class WorldBase {
 		else if(!getDirection(x, y, Turns.TurnAround(d)))
 			walker.setDirection2(Turns.TurnAround(d));
 		else
-			walker.setDirection2(Direction.Invalid);		
+			walker.setDirection2(Direction.Invalid);
 
 	}
 }
