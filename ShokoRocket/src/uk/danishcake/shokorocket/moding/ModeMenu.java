@@ -596,7 +596,7 @@ public class ModeMenu extends Mode {
 
 	@Override
 	public void handleGesture(Direction direction) {
-		if(mPendWorld == null)
+		if(mPendWorld == null && mWidgetPage == mPuzzlePage)
 		{
 			switch(direction) {
 			case West:
