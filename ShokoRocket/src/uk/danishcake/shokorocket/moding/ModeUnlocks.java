@@ -16,11 +16,11 @@ import android.graphics.Rect;
 import android.widget.Toast;
 
 public class ModeUnlocks extends Mode {
-	private ModeSPMenu mModeMenu;
+	private ModeMenu mModeMenu;
 	private SkinProgress mSkin;
 	private Progress mProgress;
 	
-	public ModeUnlocks(ModeSPMenu menu, SkinProgress skin, Progress progress) {
+	public ModeUnlocks(ModeMenu menu, SkinProgress skin, Progress progress) {
 		mModeMenu = menu;
 		mSkin = skin;
 		mProgress = progress;

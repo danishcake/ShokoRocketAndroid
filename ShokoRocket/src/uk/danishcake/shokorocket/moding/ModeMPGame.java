@@ -17,7 +17,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 public class ModeMPGame extends Mode {
-	private ModeSPMenu mModeMenu = null;
+	private ModeMenu mModeMenu = null;
 	private SkinProgress mSkin = null;
 	private MPWorld mWorld = null;
 	private GameDrawer mGameDrawer = new GameDrawer();
@@ -30,7 +30,7 @@ public class ModeMPGame extends Mode {
 	private boolean mGestureInProgress = false;
 	private int mPlayerID = -1;
 
-	public ModeMPGame(ModeSPMenu menu, SkinProgress skin, MPWorld world) {
+	public ModeMPGame(ModeMenu menu, SkinProgress skin, MPWorld world) {
 		mSkin = skin;
 		mModeMenu = menu;
 		mWorld = world;
