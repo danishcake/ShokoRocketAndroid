@@ -221,19 +221,23 @@ public class Widget {
 			mInvalidated = true;
 		}
 	}
-	
+
+	public String getText() {
+		return mText;
+	}
+
 	public void setVerticalAlignment(VerticalAlignment alignment) {
 		mVerticalAlignment = alignment;
 	}
-	
+
 	public void setHorizontalAlignment(HorizontalAlignment alignment) {
 		mHorizontalAlignment = alignment;
 	}
-	
+
 	public void setFontSize(int fontSize) {
 		mFontSize = fontSize;
 	}
-	
+
 	/**
 	 * Sets the callback to fire when tapped and enabled
 	 * @param callback
@@ -241,7 +245,7 @@ public class Widget {
 	public void setOnClickListener(OnClickListener callback) {
 		mOnClick = callback;
 	}
-	
+
 	/**
 	 * Sets the callback to fire when tapped and disabled
 	 * @param callback
@@ -259,7 +263,7 @@ public class Widget {
 			mInvalidated = true;
 		mEnabled = enabled;
 	}
-	
+
 	/**
 	 * Injects time into the widget
 	 * @param timespan Elapsed time in milliseconds
@@ -273,7 +277,7 @@ public class Widget {
 				mInvalidated = true;
 		}
 	}
-	
+
 	/**
 	 * Causes the backbuffer to be redrawn onto the frontbuffer, and apply text and fades on top of it
 	 */

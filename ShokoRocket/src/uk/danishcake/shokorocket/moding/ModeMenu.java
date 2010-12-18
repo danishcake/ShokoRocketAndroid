@@ -49,7 +49,12 @@ public class ModeMenu extends Mode {
 	private Vector2i mWorldOffset = new Vector2i(0, 0);
 	private Vector2i mPendWorldOffset = new Vector2i(0, 0);
 	private Direction mWorldDirection = Direction.West; //Transition from this direction
-	
+
+	/* AI widgets */
+	Widget mAI1;
+	Widget mAI2;
+	Widget mAI3;
+	Widget mLaunchAI;
 	
 	//Widget pages and transition control
 	private WidgetPage mAIPage = new WidgetPage();
@@ -277,17 +282,44 @@ public class ModeMenu extends Mode {
 			Widget toggleSP = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
 			toggleSP.setText("Puzzle");
 
-			Widget testAI = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize));
-			testAI.setText("Test versus 3 AI");
+			mLaunchAI = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize));
+			mLaunchAI.setText("Launch");
 
-			Widget testAI2 = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSep + mBtnSize, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize * 2 + mBtnSep));
-			testAI2.setText("Test versus 2 AI");
+			Widget human = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSep + mBtnSize, mScreenWidth / 2 - mBtnSep / 2, mBtnBorder + mBtnSep + mBtnSize * 2));
+			human.setText("P1");
+			human.setEnabled(false);
+			mAI1 = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mBtnBorder + mBtnSep + mBtnSize, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSep + mBtnSize * 2));
+			mAI1.setText("Easy AI");
+			mAI2 = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSep * 2 + mBtnSize * 2, mScreenWidth / 2 - mBtnSep / 2, mBtnBorder + mBtnSep * 2 + mBtnSize * 3));
+			mAI2.setText("Easy AI");
+			mAI3 = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mBtnBorder + mBtnSep * 2 + mBtnSize * 2, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSep * 2 + mBtnSize * 3));
+			mAI3.setText("Easy AI");
+			
+			OnClickListener ai_change = new OnClickListener() {
+				@Override
+				public void OnClick(Widget widget) {
+					if(widget.getText().equals("Easy AI"))
+					{
+						widget.setText("Medium AI");
+					} else if(widget.getText().equals("Medium AI"))
+					{
+						widget.setText("Hard AI");
+					} else if(widget.getText().equals("Hard AI"))
+					{
+						widget.setText("None");
+					} else
+					{
+						widget.setText("Easy AI");
+					}
+					mLaunchAI.setEnabled(!(mAI1.getText().equals("None") && 
+										   mAI2.getText().equals("None") &&
+										   mAI3.getText().equals("None")));
+				}
+			};
 
-			Widget testAI3 = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSep * 2 + mBtnSize * 2, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize * 3 + mBtnSep * 2));
-			testAI3.setText("Test versus 1 AI");
-
-			Widget lameExcuses = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSize * 3 + mBtnSep * 3, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize));
-			lameExcuses.setText("BETA warning:\n This AI is currently in development, and hence is rather stupid. If you are a computer science type person, please feel free to contribute a better AI algorithm (see ShokoRocketAndroid on GitHub for code)");
+			mAI1.setOnClickListener(ai_change);
+			mAI2.setOnClickListener(ai_change);
+			mAI3.setOnClickListener(ai_change);
 
 			toggleMP.setOnClickListener(new OnClickListener() {
 				@Override
@@ -303,13 +335,26 @@ public class ModeMenu extends Mode {
 				}
 			});
 
-			testAI.setOnClickListener(new OnClickListener() {
+			mLaunchAI.setOnClickListener(new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
 					if(mPendMode == null)
 					{
 						try {
-							MPWorld world = new MPWorld(mContext.getAssets().open("MultiplayerLevels/MP001.Level"), "HHH");
+							String ai_string = "";
+							Widget[] ai_widgets = {mAI1, mAI2, mAI3};
+							for (Widget ai_widget : ai_widgets) {
+								if(ai_widget.getText().equals("Easy AI"))
+									ai_string = ai_string + "E";
+								else if(ai_widget.getText().equals("Medium AI"))
+									ai_string = ai_string + "M";
+								else if(ai_widget.getText().equals("Easy AI"))
+									ai_string = ai_string + "H";
+								else
+									ai_string = ai_string + " ";
+							}
+
+							MPWorld world = new MPWorld(mContext.getAssets().open("MultiplayerLevels/MP001.Level"), ai_string);
 							mPendMode = new ModeMPGame(ModeMenu.this, mSkin, world);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
@@ -319,44 +364,14 @@ public class ModeMenu extends Mode {
 				}
 			});
 
-			testAI2.setOnClickListener(new OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					if(mPendMode == null)
-					{
-						try {
-							MPWorld world = new MPWorld(mContext.getAssets().open("MultiplayerLevels/MP001.Level"), "0HH");
-							mPendMode = new ModeMPGame(ModeMenu.this, mSkin, world);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}
-			});
-
-			testAI3.setOnClickListener(new OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					if(mPendMode == null)
-					{
-						try {
-							MPWorld world = new MPWorld(mContext.getAssets().open("MultiplayerLevels/MP001.Level"), "00H");
-							mPendMode = new ModeMPGame(ModeMenu.this, mSkin, world);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}
-			});
 			mAIPage.setFontSize(mFontSize);
 			mAIPage.addWidget(toggleSP);
-			mAIPage.addWidget(testAI);
-			mAIPage.addWidget(testAI2);
-			mAIPage.addWidget(testAI3);
+			mAIPage.addWidget(mLaunchAI);
 			mAIPage.addWidget(toggleMP);
-			mAIPage.addWidget(lameExcuses);
+			mAIPage.addWidget(human);
+			mAIPage.addWidget(mAI1);
+			mAIPage.addWidget(mAI2);
+			mAIPage.addWidget(mAI3);
 		}
 		//Setup IP page widgets
 		{

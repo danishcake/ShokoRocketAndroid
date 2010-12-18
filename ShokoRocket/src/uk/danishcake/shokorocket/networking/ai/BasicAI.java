@@ -256,7 +256,7 @@ public class BasicAI extends BaseAI {
 						d = Turns.TurnLeft(mInterceptDirection);
 					else
 						d = Turns.TurnRight(mInterceptDirection);
-					ArrowPlacementMessage apm = new ArrowPlacementMessage(mInterceptPosition.x, mInterceptPosition.y, Turns.TurnAround(mInterceptDirection));
+					ArrowPlacementMessage apm = new ArrowPlacementMessage(mInterceptPosition.x, mInterceptPosition.y, d);
 					apm.setCommon(mPlayerID, 1);
 					messages.add(apm);
 					break;
