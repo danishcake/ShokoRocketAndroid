@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -50,6 +51,7 @@ public class MPWorld extends WorldBase {
 	private int mSpawnMax = SPAWN_DEFAULT;
 	private int mSpawnInterval = 400;
 	private int mSpawnTimer = 1500;
+	private Random mRandom;
 	private int mTimer = 0;
 	private static final int SPAWN_DEFAULT = 20;
 
@@ -138,9 +140,11 @@ public class MPWorld extends WorldBase {
 		case MouseGold:
 		case MouseSpecial:
 			mLiveMice.add(w);
+			w.setSpeed(Walker.MouseSpeed);
 			break;
 		default:
 			mLiveCats.add(w);
+			w.setSpeed(Walker.CatSpeed);
 			break;
 		}
 	}
@@ -254,6 +258,7 @@ public class MPWorld extends WorldBase {
 			mSync = new LocalSync(this);
 			mSync.Connect(mConnectString);
 			mPlayerID = mSync.getClientID();
+			mRandom = new Random(0);
 		}
 		mStateTimerLTV = mStateTimer;
 		if(mStateTimer > 0)
@@ -342,7 +347,17 @@ public class MPWorld extends WorldBase {
 						Direction spawn_dir = getSpawner(x, y);
 						if(spawn_dir != Direction.Invalid)
 						{
-							addWalker(x, y, spawn_dir, WalkerType.Mouse);
+							WalkerType wt;
+							int rn = mRandom.nextInt(60);
+							if(rn == 0)
+								wt = WalkerType.MouseSpecial;
+							else if(rn == 1)
+								wt = WalkerType.MouseGold;
+							else if(rn == 2)
+								wt = WalkerType.Cat;
+							else
+								wt = WalkerType.Mouse;
+							addWalker(x, y, spawn_dir, wt);
 						}
 					}
 				}

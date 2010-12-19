@@ -481,6 +481,19 @@ public class GameDrawer {
 		ArrayList<Walker> mice = world.getLiveMice();
 		ArrayList<Walker> cats = world.getLiveCats();
 		for (Walker walker : mice) {
+			EnumMap<Direction, Animation> mouse_type;
+			switch(walker.getWalkerType()){
+				case Mouse:
+				default:
+					mouse_type = mMouseAnimations;
+					break;
+				case MouseGold:
+					mouse_type = mGoldMouseAnimations;
+					break;
+				case MouseSpecial:
+					mouse_type = mSpecialMouseAnimations;
+					break;
+			}
 			Vector2i position = walker.getPosition();
 			int x = position.x * mGridSize + mDrawOffsetX;
 			int y = position.y * mGridSize + mDrawOffsetY;
@@ -499,7 +512,7 @@ public class GameDrawer {
 				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
 				break;
 			}
-			Animation animation = mMouseAnimations.get(walker.getDirection());
+			Animation animation = mouse_type.get(walker.getDirection());
 			if(animation != null)
 			{
 				if(++sprite_count > mRenderItems.size())
@@ -553,6 +566,20 @@ public class GameDrawer {
 		}
 		for(Walker walker : world.getDeadMice())
 		{
+			Animation mouse_anim;
+			switch(walker.getWalkerType())
+			{
+			case Mouse:
+			default:
+				mouse_anim = mMouseDeathAnimation;
+				break;
+			case MouseGold:
+				mouse_anim = mGoldMouseDeathAnimation;
+				break;
+			case MouseSpecial:
+				mouse_anim = mSpecialMouseDeathAnimation;
+				break;
+			}
 			Vector2i position = walker.getPosition();
 			int x = position.x * mGridSize + mDrawOffsetX;
 			int y = position.y * mGridSize + mDrawOffsetY;
@@ -578,11 +605,26 @@ public class GameDrawer {
 			if(death_time < 5000)
 			{
 				y -= walker.getDeathTime() * 20 / 5000;
-				mMouseDeathAnimation.DrawFrameAtTime(canvas, x, y, death_time / 5);
+				mouse_anim.DrawFrameAtTime(canvas, x, y, death_time / 5);
 			}
 		}
 		for(Walker walker : world.getRescuedMice())
 		{
+			Animation mouse_anim;
+			switch(walker.getWalkerType())
+			{
+			case Mouse:
+			default:
+				mouse_anim = mMouseRescueAnimation;
+				break;
+			case MouseGold:
+				mouse_anim = mGoldMouseRescueAnimation;
+				break;
+			case MouseSpecial:
+				mouse_anim = mSpecialMouseRescueAnimation;
+				break;
+			}
+
 			Vector2i position = walker.getPosition();
 			int x = position.x * mGridSize + mDrawOffsetX;
 			int y = position.y * mGridSize + mDrawOffsetY;
@@ -605,7 +647,7 @@ public class GameDrawer {
 			int death_time = walker.getDeathTime();
 			if(death_time < 5000)
 			{
-				mMouseRescueAnimation.DrawFrameAtTime(canvas, x, y, death_time / 5);
+				mouse_anim.DrawFrameAtTime(canvas, x, y, death_time / 5);
 			}
 		}
 		for(Walker walker : world.getDeadCats())
@@ -856,10 +898,15 @@ public class GameDrawer {
 		for (Animation animation : mMouseAnimations.values()) {
 			animation.Tick(timespan);
 		}
+		for (Animation animation : mGoldMouseAnimations.values()) {
+			animation.Tick(timespan);
+		}
+		for (Animation animation : mSpecialMouseAnimations.values()) {
+			animation.Tick(timespan);
+		}
 		for (Animation animation : mCatAnimations.values()) {
 			animation.Tick(timespan);
 		}
-		mMouseDeathAnimation.Tick(timespan);
 	}
 	
 	public void CreateCacheBitmap(SPWorld world)
