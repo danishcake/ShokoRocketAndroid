@@ -25,14 +25,20 @@ import uk.danishcake.shokorocket.simulation.Walker.WalkerType;
  * Walkers are not preserved past death, but rather thrown away (or recycled?)
  */
 public class MPWorld extends WorldBase {
+	private enum MPGameState
+	{
+		Countdown, InPlay, GoldSelect, MouseMania, CatMania, SpeedUp, SlowDown, Finished 
+	}
+
 	private GameSync mSync = null;
 	private ArrayList<Walker> mLiveMice = new ArrayList<Walker>();
 	private ArrayList<Walker> mLiveCats = new ArrayList<Walker>();
 	private ArrayList<Walker> mDeadMice = new ArrayList<Walker>();
 	private ArrayList<Walker> mRescuedMice = new ArrayList<Walker>();
 	private ArrayList<Walker> mDeadCats = new ArrayList<Walker>();
-	private int mFixedTimestep = 100;
-	private int mCommunicationTimestep = 500;
+	private static final int REAL_FIXED_TIMESTEP = 20;
+	private static final int FIXED_TIMESTEP = 100;
+	private static final int COMM_RATIO = 5;
 	private int mCommunicationFrameTime = 0;
 	private int mSubFrame = 0;
 	private List<Message> mMessages = new ArrayList<Message>();
@@ -40,13 +46,27 @@ public class MPWorld extends WorldBase {
 	private Vector2i[] mCursorPositions = new Vector2i[4];
 	private int[] mScores = new int[4];
 	private int mPlayerID = 0;
-	
-	private int mSpawnMax = 20;
+
+	private int mSpawnMax = SPAWN_DEFAULT;
 	private int mSpawnInterval = 400;
 	private int mSpawnTimer = 1500;
 	private int mTimer = 0;
+	private static final int SPAWN_DEFAULT = 20;
+
+	private MPGameState mGameState = MPGameState.Countdown;
+	private int mStateTimer = COUNTDOWN_TIME;
+	private int mStateTimerLTV = mStateTimer;
+	private static final int COUNTDOWN_TIME = 3000;
+	private static final int GOLDSELECT_TIME = 1500;
+	private static final int MOUSEMANIA_TIME = 10000;
+	private static final int CATMANIA_TIME = 10000;
+	private static final int SPEEDUP_TIME = 10000;
+	private static final int SLOWDOWN_TIME = 10000;
+	private static final int FINISHED_TIME = 4000;
 	
 	private String mConnectString = "HHH";
+	
+	public OnGuiMessage mGUIMessage = null;
 	
 	/* MPWorld(input)
 	 * Loads a world from specified XML file
@@ -232,34 +252,87 @@ public class MPWorld extends WorldBase {
 		//Initialise as a temporary measure
 		if(mSync == null){
 			mSync = new LocalSync(this);
-			mSync.Connect(mConnectString); //Three hard AI
+			mSync.Connect(mConnectString);
 			mPlayerID = mSync.getClientID();
 		}
-		
-		//Ignore timespan, all frames are mFixedTimestep long
-		timespan = mFixedTimestep;
-		//Freeze until
-		mCommunicationFrameTime += timespan;
-		if(mCommunicationFrameTime >= mCommunicationTimestep)
+		mStateTimerLTV = mStateTimer;
+		if(mStateTimer > 0)
 		{
-			if(mCommunicationFrameTime == mCommunicationTimestep)
+			mStateTimer -= REAL_FIXED_TIMESTEP; //20ms, FIXED_TIMESTEP is 100ms
+			if(mStateTimer <= 0)
+			{
+				if(mGameState == MPGameState.Countdown && mGUIMessage != null)
+				{
+					mGUIMessage.show("GO!", 1200);
+				}
+				mGameState = MPGameState.InPlay;
+			}
+		}
+		mSpawnMax = SPAWN_DEFAULT;
+		switch(mGameState)
+		{
+		case MouseMania:
+			mSpawnMax = 2 * SPAWN_DEFAULT;
+		case CatMania:
+		case InPlay:
+			timespan = FIXED_TIMESTEP;
+			break;
+		case Countdown:
+			if(mStateTimer < 3000 && mStateTimerLTV >= 3000)
+			{
+				if(mGUIMessage != null)
+				{
+					mGUIMessage.show("3", 800);
+				}
+			}
+			if(mStateTimer < 2000 && mStateTimerLTV >= 2000)
+			{
+				if(mGUIMessage != null)
+				{
+					mGUIMessage.show("2", 800);
+				}
+			}
+			if(mStateTimer < 1000 && mStateTimerLTV >= 1000)
+			{
+				if(mGUIMessage != null)
+				{
+					mGUIMessage.show("1", 800);
+				}
+			}
+		case GoldSelect:
+		case Finished:
+		default:
+			timespan = 0;
+			break;
+		case SpeedUp:
+			timespan = FIXED_TIMESTEP * 2;
+			break;
+		case SlowDown:
+			timespan = FIXED_TIMESTEP / 1;
+			break;
+		}
+
+		//Freeze until
+		mCommunicationFrameTime += FIXED_TIMESTEP;
+		if(mCommunicationFrameTime >= FIXED_TIMESTEP * COMM_RATIO)
+		{
+			if(mCommunicationFrameTime == FIXED_TIMESTEP * COMM_RATIO)
 			{
 				mSync.SendFrameEnd();
-				
-				//Allow to advance once sync frame is within 2 of sent frame
-				if(mSync.getReadyFrame() >= mSync.getSentFrame() - 2)
-				{
-					mCommunicationFrameTime = 0;
-					mSubFrame = 0;
-					mMessages = mSync.popMessages();
-				}
-			}	
+			}
+			//Allow to advance once sync frame is within 2 of sent frame
+			if(mSync.getReadyFrame() >= mSync.getSentFrame() - 2)
+			{
+				mCommunicationFrameTime = 0;
+				mSubFrame = 0;
+				mMessages = mSync.popMessages();
+			}
 		}
 		
 		//If mCommunicationFrameTime has been reset then simulation is synced and can continue
-		if(mCommunicationFrameTime < mCommunicationTimestep)
+		if(mCommunicationFrameTime < FIXED_TIMESTEP * COMM_RATIO)
 		{
-			mTimer += mFixedTimestep;
+			mTimer += timespan;
 			if(mSpawnTimer <= mTimer && mLiveMice.size() + mLiveCats.size() < mSpawnMax)
 			{
 				for(int x = 0; x < mWidth; x++)

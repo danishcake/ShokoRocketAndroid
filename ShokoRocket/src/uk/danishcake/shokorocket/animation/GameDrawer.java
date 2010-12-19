@@ -46,6 +46,15 @@ public class GameDrawer {
 	private EnumMap<Direction, Animation> mMouseAnimations = new EnumMap<Direction, Animation>(Direction.class);
 	private Animation mMouseDeathAnimation = null;
 	private Animation mMouseRescueAnimation = null;
+	//MP only Mouse
+	private EnumMap<Direction, Animation> mSpecialMouseAnimations = new EnumMap<Direction, Animation>(Direction.class);
+	private Animation mSpecialMouseDeathAnimation = null;
+	private Animation mSpecialMouseRescueAnimation = null;
+	//MP only Mouse
+	private EnumMap<Direction, Animation> mGoldMouseAnimations = new EnumMap<Direction, Animation>(Direction.class);
+	private Animation mGoldMouseDeathAnimation = null;
+	private Animation mGoldMouseRescueAnimation = null;
+	
 	private EnumMap<Direction, Animation> mCatAnimations = new EnumMap<Direction, Animation>(Direction.class);
 	private Animation mCatDeathAnimation = null;
 	private Animation mRocketAnimation = null;
@@ -220,15 +229,17 @@ public class GameDrawer {
 		{
 			try
 			{
-				Map<String, Animation> mouse_animations = Animation.GetAnimations(context, skin.getAnimation("mouse"), scale);
-				mMouseAnimations.put(Direction.North, mouse_animations.get("North"));
-				mMouseAnimations.put(Direction.South, mouse_animations.get("South"));
-				mMouseAnimations.put(Direction.East, mouse_animations.get("East"));
-				mMouseAnimations.put(Direction.West, mouse_animations.get("West"));
-				mMouseAnimations.put(Direction.Invalid, mouse_animations.get("Stopped"));
-				mMouseDeathAnimation = mouse_animations.get("Death");
-				mMouseRescueAnimation = mouse_animations.get("Rescue");
-
+				if(!loadMP)
+				{
+					Map<String, Animation> mouse_animations = Animation.GetAnimations(context, skin.getAnimation("mouse"), scale);
+					mMouseAnimations.put(Direction.North, mouse_animations.get("North"));
+					mMouseAnimations.put(Direction.South, mouse_animations.get("South"));
+					mMouseAnimations.put(Direction.East, mouse_animations.get("East"));
+					mMouseAnimations.put(Direction.West, mouse_animations.get("West"));
+					mMouseAnimations.put(Direction.Invalid, mouse_animations.get("Stopped"));
+					mMouseDeathAnimation = mouse_animations.get("Death");
+					mMouseRescueAnimation = mouse_animations.get("Rescue");
+				}
 				Map<String, Animation> cat_animations = Animation.GetAnimations(context, skin.getAnimation("kapukapu"), scale);
 				mCatAnimations.put(Direction.North, cat_animations.get("North"));
 				mCatAnimations.put(Direction.South, cat_animations.get("South"));
@@ -337,6 +348,33 @@ public class GameDrawer {
 					
 					Map<String, Animation> spawner_animations = Animation.GetAnimations(context, skin.getAnimation("spawner"), scale);
 					mSpawnerAnimation = spawner_animations.get("Normal");
+					
+					Map<String, Animation> mouse_animations = Animation.GetAnimations(context, skin.getAnimation("plain_mouse"), scale);
+					mMouseAnimations.put(Direction.North, mouse_animations.get("North"));
+					mMouseAnimations.put(Direction.South, mouse_animations.get("South"));
+					mMouseAnimations.put(Direction.East, mouse_animations.get("East"));
+					mMouseAnimations.put(Direction.West, mouse_animations.get("West"));
+					mMouseAnimations.put(Direction.Invalid, mouse_animations.get("Stopped"));
+					mMouseDeathAnimation = mouse_animations.get("Death");
+					mMouseRescueAnimation = mouse_animations.get("Rescue");
+
+					Map<String, Animation> special_mouse_animations = Animation.GetAnimations(context, skin.getAnimation("special_mouse"), scale);
+					mSpecialMouseAnimations.put(Direction.North, special_mouse_animations.get("North"));
+					mSpecialMouseAnimations.put(Direction.South, special_mouse_animations.get("South"));
+					mSpecialMouseAnimations.put(Direction.East, special_mouse_animations.get("East"));
+					mSpecialMouseAnimations.put(Direction.West, special_mouse_animations.get("West"));
+					mSpecialMouseAnimations.put(Direction.Invalid, special_mouse_animations.get("Stopped"));
+					mSpecialMouseDeathAnimation = special_mouse_animations.get("Death");
+					mSpecialMouseRescueAnimation = special_mouse_animations.get("Rescue");
+
+					Map<String, Animation> gold_mouse_animations = Animation.GetAnimations(context, skin.getAnimation("gold_mouse"), scale);
+					mGoldMouseAnimations.put(Direction.North, gold_mouse_animations.get("North"));
+					mGoldMouseAnimations.put(Direction.South, gold_mouse_animations.get("South"));
+					mGoldMouseAnimations.put(Direction.East, gold_mouse_animations.get("East"));
+					mGoldMouseAnimations.put(Direction.West, gold_mouse_animations.get("West"));
+					mGoldMouseAnimations.put(Direction.Invalid, gold_mouse_animations.get("Stopped"));
+					mGoldMouseDeathAnimation = gold_mouse_animations.get("Death");
+					mGoldMouseRescueAnimation = gold_mouse_animations.get("Rescue");
 				}
 
 				mAnimationsLoaded = true;

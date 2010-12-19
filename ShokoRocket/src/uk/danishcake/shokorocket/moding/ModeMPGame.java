@@ -7,14 +7,19 @@ import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.MPWorld;
+import uk.danishcake.shokorocket.simulation.OnGuiMessage;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Typeface;
+import android.graphics.Paint.Align;
 
 public class ModeMPGame extends Mode {
 	private ModeMenu mModeMenu = null;
@@ -29,11 +34,20 @@ public class ModeMPGame extends Mode {
 	private Direction mGestureDirection = Direction.Invalid;
 	private boolean mGestureInProgress = false;
 	private int mPlayerID = -1;
+	private String mGameMessage = "";
+	private int mMessageTimer = 0;
+	private Paint mTextPaint;
 
 	public ModeMPGame(ModeMenu menu, SkinProgress skin, MPWorld world) {
 		mSkin = skin;
 		mModeMenu = menu;
 		mWorld = world;
+		mWorld.mGUIMessage = handleMessage;
+		mTextPaint = new Paint();
+		mTextPaint.setColor(android.graphics.Color.rgb(255, 255, 255));
+		mTextPaint.setTextAlign(Align.CENTER);
+		mTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
+		mTextPaint.setTextSize(100);
 	}
 	
 	@Override
@@ -74,13 +88,13 @@ public class ModeMPGame extends Mode {
 
 		mGameDrawer.CreateBackground(mWorld);
 		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mLevelBorder);
-		
 	}
 	
 	@Override
 	public ModeAction Tick(int timespan) {
 		mWorld.Tick(timespan);
 		updateScores();
+		if(mMessageTimer > 0) mMessageTimer -= timespan;
 		if(mPlayerID == -1)
 		{
 			mPlayerID = mWorld.getPlayerID();
@@ -123,6 +137,25 @@ public class ModeMPGame extends Mode {
 			if(mGestureDirection != Direction.Invalid)
 				canvas.drawBitmap(frame, (mGestureStart.x + mGestureEnd.x) / 2 - frame.getWidth() / 2, (mGestureStart.y + mGestureEnd.y) / 2 - frame.getHeight() / 2, null);
 		}
+		if(mMessageTimer > 0)
+		{
+			float width = mTextPaint.measureText(mGameMessage);
+			float height = (-mTextPaint.ascent() + mTextPaint.descent());
+			if(width < mScreenWidth / 2)
+				width = mScreenWidth / 2;
+
+			mTextPaint.setColor(Color.WHITE);
+			canvas.drawRoundRect(new RectF(mScreenWidth / 2 - width / 2 - 20, mScreenHeight / 2 - height / 2 - 20, 
+					   mScreenWidth / 2 + width / 2 + 20, mScreenHeight / 2 + height / 2 + 20), 16, 16, mTextPaint);
+
+			mTextPaint.setColor(Color.BLUE);
+			canvas.drawRoundRect(new RectF(mScreenWidth / 2 - width / 2 - 16, mScreenHeight / 2 - height / 2 - 16, 
+										   mScreenWidth / 2 + width / 2 + 16, mScreenHeight / 2 + height / 2 + 16), 16, 16, mTextPaint);
+
+			mTextPaint.setColor(Color.WHITE);
+			canvas.drawText(mGameMessage, mScreenWidth / 2, mScreenHeight / 2 - height / 2 - mTextPaint.ascent(), mTextPaint);
+		}
+
 		super.Redraw(canvas);
 	}
 	
@@ -220,4 +253,12 @@ public class ModeMPGame extends Mode {
 			mScoreWidgets[i].setText(Integer.toString(scores[i]));
 		}
 	}
+
+	private OnGuiMessage handleMessage = new OnGuiMessage() {
+		@Override
+		public void show(String message, int timespan) {
+			mGameMessage = message;
+			mMessageTimer = timespan;
+		}
+	};
 }
