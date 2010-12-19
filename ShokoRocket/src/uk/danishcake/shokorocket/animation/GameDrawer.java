@@ -322,22 +322,22 @@ public class GameDrawer {
 					mMPFullArrowAnimations3.put(Direction.West, mp_arrow_animations.get("West3"));
 					mMPFullArrowAnimations3.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
 					
-					mMPHalfArrowAnimations0.put(Direction.North, mp_arrow_animations.get("North0"));
-					mMPHalfArrowAnimations0.put(Direction.South, mp_arrow_animations.get("South0"));
-					mMPHalfArrowAnimations0.put(Direction.East, mp_arrow_animations.get("East0"));
-					mMPHalfArrowAnimations0.put(Direction.West, mp_arrow_animations.get("West0"));
+					mMPHalfArrowAnimations0.put(Direction.North, mp_arrow_animations.get("HalfNorth0"));
+					mMPHalfArrowAnimations0.put(Direction.South, mp_arrow_animations.get("HalfSouth0"));
+					mMPHalfArrowAnimations0.put(Direction.East, mp_arrow_animations.get("HalfEast0"));
+					mMPHalfArrowAnimations0.put(Direction.West, mp_arrow_animations.get("HalfWest0"));
 					mMPHalfArrowAnimations0.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
 					
-					mMPHalfArrowAnimations2.put(Direction.North, mp_arrow_animations.get("North2"));
-					mMPHalfArrowAnimations2.put(Direction.South, mp_arrow_animations.get("South2"));
-					mMPHalfArrowAnimations2.put(Direction.East, mp_arrow_animations.get("East2"));
-					mMPHalfArrowAnimations2.put(Direction.West, mp_arrow_animations.get("West2"));
+					mMPHalfArrowAnimations2.put(Direction.North, mp_arrow_animations.get("HalfNorth2"));
+					mMPHalfArrowAnimations2.put(Direction.South, mp_arrow_animations.get("HalfSouth2"));
+					mMPHalfArrowAnimations2.put(Direction.East, mp_arrow_animations.get("HalfEast2"));
+					mMPHalfArrowAnimations2.put(Direction.West, mp_arrow_animations.get("HalfWest2"));
 					mMPHalfArrowAnimations2.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
 					
-					mMPHalfArrowAnimations3.put(Direction.North, mp_arrow_animations.get("North3"));
-					mMPHalfArrowAnimations3.put(Direction.South, mp_arrow_animations.get("South3"));
-					mMPHalfArrowAnimations3.put(Direction.East, mp_arrow_animations.get("East3"));
-					mMPHalfArrowAnimations3.put(Direction.West, mp_arrow_animations.get("West3"));
+					mMPHalfArrowAnimations3.put(Direction.North, mp_arrow_animations.get("HalfNorth3"));
+					mMPHalfArrowAnimations3.put(Direction.South, mp_arrow_animations.get("HalfSouth3"));
+					mMPHalfArrowAnimations3.put(Direction.East, mp_arrow_animations.get("HalfEast3"));
+					mMPHalfArrowAnimations3.put(Direction.West, mp_arrow_animations.get("HalfWest3"));
 					mMPHalfArrowAnimations3.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
 					
 					Map<String, Animation> mp_cursor_animations = Animation.GetAnimations(context, skin.getAnimation("mp_cursors"), scale);
