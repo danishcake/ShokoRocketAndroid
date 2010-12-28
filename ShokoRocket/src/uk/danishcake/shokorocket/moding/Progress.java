@@ -55,6 +55,7 @@ public class Progress {
 	}
 
 	private ArrayList<LevelPack> mLevels = new ArrayList<LevelPack>();
+	private ArrayList<String> mUserLevels = null;
 	private int mLevelPackIndex = 0;
 	private Context mContext;
 	
@@ -172,11 +173,17 @@ public class Progress {
 	}
 	
 	/**
-	 * Create a SPWorld from the currently selected level
-	 * @return the currently selected world
+	 * Gets the levels stored on the SD card
 	 */
-	public SPWorld getWorld() throws FileNotFoundException, IOException {
-		String level_name = getLevel();
+	ArrayList<String> getUserLevels() {
+		return mUserLevels;
+	}
+	
+	/**
+	 * Creates a level from the specified string in the form 
+	 * assets:// or external storage://
+	 */
+	public SPWorld getWorld(String level_name) throws FileNotFoundException, IOException {
 		if(level_name.startsWith("assets://"))
 		{
 			SPWorld world = new SPWorld(mContext.getAssets().open(level_name.substring(9)));
@@ -187,9 +194,17 @@ public class Progress {
 			SPWorld world = new SPWorld(new FileInputStream(level_name));
 			File level_file = new File(level_name);
 			world.setFilename(level_file.getName());
-			
 			return world;
 		}
+	}
+	
+	/**
+	 * Create a SPWorld from the currently selected level
+	 * @return the currently selected world
+	 */
+	public SPWorld getWorld() throws FileNotFoundException, IOException {
+		String level_name = getLevel();
+		return getWorld(level_name);
 	}
 	
 	public Progress(Context context)
@@ -231,7 +246,7 @@ public class Progress {
 			}
 			
 			mLevels.clear();
-			
+			mUserLevels = new ArrayList<String>();
 			//First list levels in assets
 			for (String level_pack : level_packs) {
 				LevelPack lp = new LevelPack();
@@ -243,6 +258,10 @@ public class Progress {
 					pr.beaten = false;
 					pr.filename = "assets://Levels/" + level_pack + "/" + level;
 					lp.levels.add(pr);
+					if(level_pack.equals("12-User contributed"))
+					{
+						mUserLevels.add(pr.filename);
+					}
 				}
 				mLevels.add(lp);
 			}
