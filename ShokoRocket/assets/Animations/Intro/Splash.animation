@@ -5,4 +5,7 @@
   <Animation Name="Left">
     <Frame Width="213" Height="101" Top="101" Left="0" File="Bitmaps/Intro/Logo.png" Time="0.25"/>
   </Animation>
+  <Animation Name="CreditRocket">
+  <Frame Width="64" Height="135" Top="0" Left="0" File="Bitmaps/Intro/CreditRocket.png" Time="0.25"/>
+  </Animation>
 </AnimationSet>

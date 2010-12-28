@@ -63,7 +63,11 @@ public class ModeMenu extends Mode {
 	private WidgetPage mPendPage = null; 
 	private int mPagePendTimer = 0;
 	private static int PAGE_TRANSITION_TIME = 250;
-	
+
+	public ModeMenu(Progress progress)
+	{
+		mProgress = progress;
+	}
 	
 	@Override
 	public void Setup(Context context) {
@@ -80,7 +84,6 @@ public class ModeMenu extends Mode {
 			return;
 		}
 		super.Setup(context);
-		mProgress = new Progress(context);
 		mSkin = new SkinProgress(context);
 		mProgress.AssessUnlockable(mSkin);
 		mMakeTrainingOffer = Progress.IsFirstRun(context);
