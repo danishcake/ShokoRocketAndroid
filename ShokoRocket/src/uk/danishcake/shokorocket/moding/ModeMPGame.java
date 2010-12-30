@@ -47,7 +47,7 @@ public class ModeMPGame extends Mode {
 		mTextPaint.setColor(android.graphics.Color.rgb(255, 255, 255));
 		mTextPaint.setTextAlign(Align.CENTER);
 		mTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
-		mTextPaint.setTextSize(100);
+		mTextPaint.setTextSize(mFontSize * 3);
 	}
 	
 	@Override
