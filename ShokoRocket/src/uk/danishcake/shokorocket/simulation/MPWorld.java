@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Random;
 
@@ -28,7 +29,7 @@ import uk.danishcake.shokorocket.simulation.Walker.WalkerType;
 public class MPWorld extends WorldBase {
 	private enum MPGameState
 	{
-		Countdown, InPlay, GoldSelect, MouseMania, CatMania, SpeedUp, SlowDown, Finished 
+		Countdown, InPlay, SpecialSelect, MouseMania, CatMania, SpeedUp, SlowDown, Finished 
 	}
 
 	private GameSync mSync = null;
@@ -52,6 +53,7 @@ public class MPWorld extends WorldBase {
 	private int mSpawnInterval = 400;
 	private int mSpawnTimer = 1500;
 	private Random mRandom;
+	private Random mRandomUnsynced = new Random();
 	private int mTimer = 0;
 	private static final int SPAWN_DEFAULT = 20;
 
@@ -59,15 +61,16 @@ public class MPWorld extends WorldBase {
 	private int mStateTimer = COUNTDOWN_TIME;
 	private int mStateTimerLTV = mStateTimer;
 	private static final int COUNTDOWN_TIME = 3000;
-	private static final int GOLDSELECT_TIME = 1500;
+	private static final int SPECIALSELECT_TIME = 1500;
 	private static final int MOUSEMANIA_TIME = 10000;
 	private static final int CATMANIA_TIME = 10000;
 	private static final int SPEEDUP_TIME = 10000;
 	private static final int SLOWDOWN_TIME = 10000;
 	private static final int FINISHED_TIME = 4000;
-	
+
 	private String mConnectString = "HHH";
-	
+	private EnumMap<MPGameState, String> mStateNames = new EnumMap<MPGameState, String>(MPGameState.class);
+	private MPGameState mPendingSpecialState = MPGameState.InPlay;
 	public OnGuiMessage mGUIMessage = null;
 	
 	/* MPWorld(input)
@@ -83,6 +86,10 @@ public class MPWorld extends WorldBase {
 			mCursorPositions[i] = new Vector2i(-1, -1);
 			mScores[i] = 0;
 		}
+		mStateNames.put(MPGameState.CatMania, "CAT MANIA");
+		mStateNames.put(MPGameState.MouseMania, "MOUSE MANIA");
+		mStateNames.put(MPGameState.SpeedUp, "SPEED UP");
+		mStateNames.put(MPGameState.SlowDown, "SLOW DOWN");
 	}
 	
 	public MPWorld() {
@@ -98,6 +105,10 @@ public class MPWorld extends WorldBase {
 			mCursorPositions[i] = new Vector2i(-1, -1);
 			mScores[i] = 0;
 		}
+		mStateNames.put(MPGameState.CatMania, "CAT MANIA");
+		mStateNames.put(MPGameState.MouseMania, "MOUSE MANIA");
+		mStateNames.put(MPGameState.SpeedUp, "SPEED UP");
+		mStateNames.put(MPGameState.SlowDown, "SLOW DOWN");
 	}
 	
 	public final Vector2i[] getCursorPositions() {
@@ -270,7 +281,23 @@ public class MPWorld extends WorldBase {
 				{
 					mGUIMessage.show("GO!", 1200);
 				}
-				mGameState = MPGameState.InPlay;
+				mGameState = mPendingSpecialState;
+				mPendingSpecialState = MPGameState.InPlay;
+				switch(mGameState)
+				{
+				case CatMania:
+					mStateTimer = CATMANIA_TIME;
+					break;
+				case MouseMania:
+					mStateTimer = MOUSEMANIA_TIME;
+					break;
+				case SpeedUp:
+					mStateTimer = SPEEDUP_TIME;
+					break;
+				case SlowDown:
+					mStateTimer = SLOWDOWN_TIME;
+					break;
+				}
 			}
 		}
 		mSpawnMax = SPAWN_DEFAULT;
@@ -304,7 +331,46 @@ public class MPWorld extends WorldBase {
 					mGUIMessage.show("1", 800);
 				}
 			}
-		case GoldSelect:
+			timespan = 0;
+			break;
+		case SpecialSelect:
+			//Fast spin at start, slow down at end
+			//Define as linear ramp from 10hz to 1hz over 1s 
+			//Timer counts from 1500 to 500 during this period
+			if(mStateTimer >= 500)
+			{
+				int count = ((mStateTimer - 500) * (mStateTimer - 500)) / 100000;
+				int ltv_count = ((mStateTimerLTV - 500) * (mStateTimerLTV - 500)) / 100000;
+				if(count != ltv_count)
+				{
+					if(count != 0)
+					{
+						int r_index = mRandomUnsynced.nextInt(4);
+						MPGameState roll_state;
+						switch(r_index)
+						{
+						case 0:
+						default:
+							roll_state = MPGameState.CatMania;
+							break;
+						case 1:
+							roll_state = MPGameState.MouseMania;
+							break;
+						case 2:
+							roll_state = MPGameState.SpeedUp;
+							break;
+						case 3:
+							roll_state = MPGameState.SlowDown;
+							break;
+						}
+						mGUIMessage.show(mStateNames.get(roll_state), 500);
+					} else
+					{
+						mGUIMessage.show(mStateNames.get(mPendingSpecialState), 500);
+					}
+				}
+			}
+			timespan = 0;
 		case Finished:
 		default:
 			timespan = 0;
@@ -313,7 +379,7 @@ public class MPWorld extends WorldBase {
 			timespan = FIXED_TIMESTEP * 2;
 			break;
 		case SlowDown:
-			timespan = FIXED_TIMESTEP / 1;
+			timespan = FIXED_TIMESTEP / 2;
 			break;
 		}
 
@@ -340,27 +406,7 @@ public class MPWorld extends WorldBase {
 			mTimer += timespan;
 			if(mSpawnTimer <= mTimer && mLiveMice.size() + mLiveCats.size() < mSpawnMax)
 			{
-				for(int x = 0; x < mWidth; x++)
-				{
-					for(int y = 0; y < mHeight; y++)
-					{
-						Direction spawn_dir = getSpawner(x, y);
-						if(spawn_dir != Direction.Invalid)
-						{
-							WalkerType wt;
-							int rn = mRandom.nextInt(60);
-							if(rn == 0)
-								wt = WalkerType.MouseSpecial;
-							else if(rn == 1)
-								wt = WalkerType.MouseGold;
-							else if(rn == 2)
-								wt = WalkerType.Cat;
-							else
-								wt = WalkerType.Mouse;
-							addWalker(x, y, spawn_dir, wt);
-						}
-					}
-				}
+				spawnWalkers();
 				mSpawnTimer = mTimer + mSpawnInterval;
 			}
 			
@@ -448,7 +494,62 @@ public class MPWorld extends WorldBase {
 			mSubFrame++;
 		}
 	}
-	
+
+	/**
+	 * Spawns a walker from each spawner
+	 */
+	private void spawnWalkers()
+	{
+		int special_chance = 1;
+		int gold_chance = 1;
+		int cat_chance = 1;
+		int mouse_chance = 60;
+
+		switch(mGameState)
+		{
+		case CatMania:
+			//Only spawn cats
+			cat_chance = 1;
+			mouse_chance = 0;
+			gold_chance = 0;
+			special_chance = 0;
+			break;
+		case MouseMania:
+		case SpeedUp:
+			//Only spawn regular mice
+			cat_chance = 0;
+			mouse_chance = 1;
+			gold_chance = 0;
+			special_chance = 0;
+			break;
+		case SlowDown:
+		default:
+			//Normal spawning
+			break;
+		}
+		for(int x = 0; x < mWidth; x++)
+		{
+			for(int y = 0; y < mHeight; y++)
+			{
+				Direction spawn_dir = getSpawner(x, y);
+				if(spawn_dir != Direction.Invalid)
+				{
+					WalkerType wt;
+					int rn = mRandom.nextInt(special_chance + gold_chance + cat_chance + mouse_chance);
+					if(rn < special_chance)
+						wt = WalkerType.MouseSpecial;
+					else if(rn < special_chance + gold_chance)
+						wt = WalkerType.MouseGold;
+					else if(rn < special_chance + gold_chance + cat_chance)
+						wt = WalkerType.Cat;
+					else
+						wt = WalkerType.Mouse;
+					addWalker(x, y, spawn_dir, wt);
+				}
+			}
+		}
+	}
+
 	/**
 	 * Called when walker reaches a new gird square and must turn/die
 	 */
@@ -474,7 +575,13 @@ public class MPWorld extends WorldBase {
 				mScores[player] += 50;
 				break;
 			case MouseSpecial:
-				//TODO special mice
+				if(mGameState != MPGameState.SpecialSelect)
+				{
+					mGameState = MPGameState.SpecialSelect;
+					mStateTimer = SPECIALSELECT_TIME;
+					final MPGameState[] pend_states = new MPGameState[] {MPGameState.CatMania, MPGameState.MouseMania, MPGameState.SpeedUp, MPGameState.SlowDown};
+					mPendingSpecialState = pend_states[mRandom.nextInt(4)];
+				}
 				break;
 			case Cat:
 				mScores[player] = (mScores[player]* 2) / 3;
