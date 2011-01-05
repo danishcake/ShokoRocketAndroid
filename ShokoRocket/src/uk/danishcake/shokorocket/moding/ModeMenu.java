@@ -386,7 +386,7 @@ public class ModeMenu extends Mode {
 			toggleSP.setText("Puzzle");
 			
 			Widget lameExcuses = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSize + mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize));
-			lameExcuses.setText("BETA warning:\nThere is currently no multiplayer. Versus AI is in work, and once satisfactory I will start on proper multiplayer");
+			lameExcuses.setText(context.getString(R.string.mp_beta_warning));
 
 			toggleAI.setOnClickListener(new OnClickListener() {
 				@Override
@@ -505,7 +505,7 @@ public class ModeMenu extends Mode {
 			mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
 		} else 
 		{
-			mLevelName.setText("Error loading level");
+			mLevelName.setText(mContext.getString(R.string.error_loading_level));
 			mDrawTick = false;
 		}
 	}
