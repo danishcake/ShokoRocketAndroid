@@ -6,6 +6,7 @@ import uk.danishcake.shokorocket.animation.BackgroundDrawer;
 import uk.danishcake.shokorocket.simulation.Direction;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -85,19 +86,22 @@ public class GameStateMachine {
 		if(lengthSq > lengthReqSq)
 		{
 			double angle = Math.atan2(deltaX, deltaY);
-			double dot_north = Math.sin(angle) * 0 + Math.cos(angle) * -1;
-			double dot_east = Math.sin(angle) * 1 + Math.cos(angle) * 0;
-			double dot_west = Math.sin(angle) * -1 + Math.cos(angle) * 0;
-			double dot_south = Math.sin(angle) * 0 + Math.cos(angle) * 1;
+			double dot_south = Math.cos(angle);
+			double dot_east = Math.sin(angle);
 			
-			if(dot_north > angularError)
-				return Direction.North;
-			if(dot_east > angularError)
-				return Direction.East;
-			if(dot_west > angularError)
-				return Direction.West;
-			if(dot_south > angularError)
-				return Direction.South;
+			if(Math.abs(dot_south) > Math.abs(dot_east))
+			{
+				if(dot_south > 0)
+					return Direction.South;
+				else
+					return Direction.North;
+			} else
+			{
+				if(dot_east > 0)
+					return Direction.East;
+				else
+					return Direction.West; 
+			}
 		}
 		return Direction.Invalid;
 	}
