@@ -74,4 +74,14 @@ public class LocalSync extends GameSync {
 		mMessageStack.add(messages);
 		mPendMessages.clear();
 	}
+	
+	public ArrayList<String> getPlayerNames()
+	{
+		ArrayList<String> names = new ArrayList<String>(4);
+		names.add("Red");
+		names.add("Blue");
+		names.add("Green");
+		names.add("Yellow");
+		return names;
+	}
 }

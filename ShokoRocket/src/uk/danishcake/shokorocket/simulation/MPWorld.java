@@ -402,7 +402,8 @@ public class MPWorld extends WorldBase {
 				if(mScores[i] > mScores[win_index])
 					win_index = i;
 			}
-			mGUIMessage.show("Player " + Integer.toString(win_index + 1) + " wins!", 20000);
+			
+			mGUIMessage.show(mSync.getPlayerNames().get(win_index) + " wins!", 20000);
 			mGameState = MPGameState.Finished;
 		}
 
