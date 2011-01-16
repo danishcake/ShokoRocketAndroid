@@ -16,4 +16,7 @@
    <Animation id="tiles" val="Animations/Game/tiles.animation" />
    <Animation id="walls" val="Animations/Game/walls.animation" />
    <Animation id="spawner" val="Animations/Game/spawner.animation" />
+   <Animation id="plain_mouse" val="Animations/Game/mouse_shokowhite.animation" />
+   <Animation id="gold_mouse" val="Animations/Game/Contributor.animation" />
+   <Animation id="special_mouse" val="Animations/Game/ShokoPink.animation" />
 </AnimationFiles>

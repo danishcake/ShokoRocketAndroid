@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Random;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -25,14 +27,20 @@ import uk.danishcake.shokorocket.simulation.Walker.WalkerType;
  * Walkers are not preserved past death, but rather thrown away (or recycled?)
  */
 public class MPWorld extends WorldBase {
+	private enum MPGameState
+	{
+		Countdown, InPlay, SpecialSelect, MouseMania, CatMania, SpeedUp, SlowDown, Finished 
+	}
+
 	private GameSync mSync = null;
 	private ArrayList<Walker> mLiveMice = new ArrayList<Walker>();
 	private ArrayList<Walker> mLiveCats = new ArrayList<Walker>();
 	private ArrayList<Walker> mDeadMice = new ArrayList<Walker>();
 	private ArrayList<Walker> mRescuedMice = new ArrayList<Walker>();
 	private ArrayList<Walker> mDeadCats = new ArrayList<Walker>();
-	private int mFixedTimestep = 100;
-	private int mCommunicationTimestep = 500;
+	private static final int REAL_FIXED_TIMESTEP = 20;
+	private static final int FIXED_TIMESTEP = 100;
+	private static final int COMM_RATIO = 5;
 	private int mCommunicationFrameTime = 0;
 	private int mSubFrame = 0;
 	private List<Message> mMessages = new ArrayList<Message>();
@@ -40,13 +48,33 @@ public class MPWorld extends WorldBase {
 	private Vector2i[] mCursorPositions = new Vector2i[4];
 	private int[] mScores = new int[4];
 	private int mPlayerID = 0;
-	
-	private int mSpawnMax = 20;
+
+	private int mSpawnMax = SPAWN_DEFAULT;
 	private int mSpawnInterval = 400;
 	private int mSpawnTimer = 1500;
+	private Random mRandom;
+	private Random mRandomUnsynced = new Random();
 	private int mTimer = 0;
-	
+	private int mRealtime = 0;
+	private static final int SPAWN_DEFAULT = 20;
+
+	private MPGameState mGameState = MPGameState.Countdown;
+	private int mStateTimer = COUNTDOWN_TIME;
+	private int mStateTimerLTV = mStateTimer;
+	private static final int COUNTDOWN_TIME = 3000;
+	private static final int SPECIALSELECT_TIME = 1500;
+	private static final int MOUSEMANIA_TIME = 10000;
+	private static final int CATMANIA_TIME = 10000;
+	private static final int SPEEDUP_TIME = 10000;
+	private static final int SLOWDOWN_TIME = 10000;
+	private static final int FINISHED_TIME = 4000;
+	private static final int GAME_TIME = 120 * 1000;
+
 	private String mConnectString = "HHH";
+	private EnumMap<MPGameState, String> mStateNames = new EnumMap<MPGameState, String>(MPGameState.class);
+	private MPGameState mPendingSpecialState = MPGameState.InPlay;
+	public OnGuiMessage mGUIMessage = null;
+	public OnGuiMessage mEndMessage = null;
 	
 	/* MPWorld(input)
 	 * Loads a world from specified XML file
@@ -61,6 +89,10 @@ public class MPWorld extends WorldBase {
 			mCursorPositions[i] = new Vector2i(-1, -1);
 			mScores[i] = 0;
 		}
+		mStateNames.put(MPGameState.CatMania, "CAT MANIA");
+		mStateNames.put(MPGameState.MouseMania, "MOUSE MANIA");
+		mStateNames.put(MPGameState.SpeedUp, "SPEED UP");
+		mStateNames.put(MPGameState.SlowDown, "SLOW DOWN");
 	}
 	
 	public MPWorld() {
@@ -76,6 +108,10 @@ public class MPWorld extends WorldBase {
 			mCursorPositions[i] = new Vector2i(-1, -1);
 			mScores[i] = 0;
 		}
+		mStateNames.put(MPGameState.CatMania, "CAT MANIA");
+		mStateNames.put(MPGameState.MouseMania, "MOUSE MANIA");
+		mStateNames.put(MPGameState.SpeedUp, "SPEED UP");
+		mStateNames.put(MPGameState.SlowDown, "SLOW DOWN");
 	}
 	
 	public final Vector2i[] getCursorPositions() {
@@ -118,9 +154,11 @@ public class MPWorld extends WorldBase {
 		case MouseGold:
 		case MouseSpecial:
 			mLiveMice.add(w);
+			w.setSpeed(Walker.MouseSpeed);
 			break;
 		default:
 			mLiveCats.add(w);
+			w.setSpeed(Walker.CatSpeed);
 			break;
 		}
 	}
@@ -229,50 +267,170 @@ public class MPWorld extends WorldBase {
 	}
 	
 	public void Tick(int timespan) {
+		int ltv_realtime = mRealtime;
+		mRealtime += timespan;
 		//Initialise as a temporary measure
 		if(mSync == null){
 			mSync = new LocalSync(this);
-			mSync.Connect(mConnectString); //Three hard AI
+			mSync.Connect(mConnectString);
 			mPlayerID = mSync.getClientID();
+			mRandom = new Random(0);
 		}
-		
-		//Ignore timespan, all frames are mFixedTimestep long
-		timespan = mFixedTimestep;
-		//Freeze until
-		mCommunicationFrameTime += timespan;
-		if(mCommunicationFrameTime >= mCommunicationTimestep)
+		mStateTimerLTV = mStateTimer;
+		if(mStateTimer > 0)
 		{
-			if(mCommunicationFrameTime == mCommunicationTimestep)
+			mStateTimer -= REAL_FIXED_TIMESTEP; //20ms, FIXED_TIMESTEP is 100ms
+			if(mStateTimer <= 0)
+			{
+				if(mGameState == MPGameState.Countdown && mGUIMessage != null)
+				{
+					mGUIMessage.show("GO!", 1200);
+				}
+				mGameState = mPendingSpecialState;
+				mPendingSpecialState = MPGameState.InPlay;
+				switch(mGameState)
+				{
+				case CatMania:
+					mStateTimer = CATMANIA_TIME;
+					break;
+				case MouseMania:
+					mStateTimer = MOUSEMANIA_TIME;
+					break;
+				case SpeedUp:
+					mStateTimer = SPEEDUP_TIME;
+					break;
+				case SlowDown:
+					mStateTimer = SLOWDOWN_TIME;
+					break;
+				}
+			}
+		}
+		mSpawnMax = SPAWN_DEFAULT;
+		switch(mGameState)
+		{
+		case MouseMania:
+			mSpawnMax = 2 * SPAWN_DEFAULT;
+		case CatMania:
+		case InPlay:
+			timespan = FIXED_TIMESTEP;
+			break;
+		case Countdown:
+			if(mStateTimer < 3000 && mStateTimerLTV >= 3000)
+			{
+				if(mGUIMessage != null)
+				{
+					mGUIMessage.show("3", 800);
+				}
+			}
+			if(mStateTimer < 2000 && mStateTimerLTV >= 2000)
+			{
+				if(mGUIMessage != null)
+				{
+					mGUIMessage.show("2", 800);
+				}
+			}
+			if(mStateTimer < 1000 && mStateTimerLTV >= 1000)
+			{
+				if(mGUIMessage != null)
+				{
+					mGUIMessage.show("1", 800);
+				}
+			}
+			timespan = 0;
+			break;
+		case SpecialSelect:
+			//Fast spin at start, slow down at end
+			//Define as linear ramp from 10hz to 1hz over 1s 
+			//Timer counts from 1500 to 500 during this period
+			if(mStateTimer >= 500)
+			{
+				int count = ((mStateTimer - 500) * (mStateTimer - 500)) / 100000;
+				int ltv_count = ((mStateTimerLTV - 500) * (mStateTimerLTV - 500)) / 100000;
+				if(count != ltv_count)
+				{
+					if(count != 0)
+					{
+						int r_index = mRandomUnsynced.nextInt(4);
+						MPGameState roll_state;
+						switch(r_index)
+						{
+						case 0:
+						default:
+							roll_state = MPGameState.CatMania;
+							break;
+						case 1:
+							roll_state = MPGameState.MouseMania;
+							break;
+						case 2:
+							roll_state = MPGameState.SpeedUp;
+							break;
+						case 3:
+							roll_state = MPGameState.SlowDown;
+							break;
+						}
+						mGUIMessage.show(mStateNames.get(roll_state), 500);
+					} else
+					{
+						mGUIMessage.show(mStateNames.get(mPendingSpecialState), 500);
+					}
+				}
+			}
+			timespan = 0;
+		case Finished:
+		default:
+			timespan = 0;
+			if(mRealtime > GAME_TIME + 2000)
+				mEndMessage.show("", 0); //End the game, return to Menu
+			break;
+		case SpeedUp:
+			timespan = FIXED_TIMESTEP * 2;
+			break;
+		case SlowDown:
+			timespan = FIXED_TIMESTEP / 2;
+			break;
+		}
+		if(mRealtime > GAME_TIME - 30000 && ltv_realtime <= GAME_TIME - 30000)
+		{
+			mGUIMessage.show("30s left!", 750);
+		}
+		if(mRealtime > GAME_TIME && mGameState != MPGameState.Finished)
+		{
+			//Determine winner
+			int win_index = 0;
+			for(int i = 1; i < 4; i++)
+			{
+				if(mScores[i] > mScores[win_index])
+					win_index = i;
+			}
+			
+			mGUIMessage.show(mSync.getPlayerNames().get(win_index) + " wins!", 20000);
+			mGameState = MPGameState.Finished;
+		}
+
+		//Freeze until actionable data
+		mCommunicationFrameTime += FIXED_TIMESTEP;
+		if(mCommunicationFrameTime >= FIXED_TIMESTEP * COMM_RATIO)
+		{
+			if(mCommunicationFrameTime == FIXED_TIMESTEP * COMM_RATIO)
 			{
 				mSync.SendFrameEnd();
-				
-				//Allow to advance once sync frame is within 2 of sent frame
-				if(mSync.getReadyFrame() >= mSync.getSentFrame() - 2)
-				{
-					mCommunicationFrameTime = 0;
-					mSubFrame = 0;
-					mMessages = mSync.popMessages();
-				}
-			}	
+			}
+			//Allow to advance once sync frame is within 2 of sent frame
+			if(mSync.getReadyFrame() >= mSync.getSentFrame() - 2)
+			{
+				mCommunicationFrameTime = 0;
+				mSubFrame = 0;
+				mMessages = mSync.popMessages();
+			}
 		}
 		
 		//If mCommunicationFrameTime has been reset then simulation is synced and can continue
-		if(mCommunicationFrameTime < mCommunicationTimestep)
+		if(mCommunicationFrameTime < FIXED_TIMESTEP * COMM_RATIO)
 		{
-			mTimer += mFixedTimestep;
+			mTimer += timespan;
 			if(mSpawnTimer <= mTimer && mLiveMice.size() + mLiveCats.size() < mSpawnMax)
 			{
-				for(int x = 0; x < mWidth; x++)
-				{
-					for(int y = 0; y < mHeight; y++)
-					{
-						Direction spawn_dir = getSpawner(x, y);
-						if(spawn_dir != Direction.Invalid)
-						{
-							addWalker(x, y, spawn_dir, WalkerType.Mouse);
-						}
-					}
-				}
+				spawnWalkers();
 				mSpawnTimer = mTimer + mSpawnInterval;
 			}
 			
@@ -360,7 +518,62 @@ public class MPWorld extends WorldBase {
 			mSubFrame++;
 		}
 	}
-	
+
+	/**
+	 * Spawns a walker from each spawner
+	 */
+	private void spawnWalkers()
+	{
+		int special_chance = 1;
+		int gold_chance = 1;
+		int cat_chance = 1;
+		int mouse_chance = 60;
+
+		switch(mGameState)
+		{
+		case CatMania:
+			//Only spawn cats
+			cat_chance = 1;
+			mouse_chance = 0;
+			gold_chance = 0;
+			special_chance = 0;
+			break;
+		case MouseMania:
+		case SpeedUp:
+			//Only spawn regular mice
+			cat_chance = 0;
+			mouse_chance = 1;
+			gold_chance = 0;
+			special_chance = 0;
+			break;
+		case SlowDown:
+		default:
+			//Normal spawning
+			break;
+		}
+		for(int x = 0; x < mWidth; x++)
+		{
+			for(int y = 0; y < mHeight; y++)
+			{
+				Direction spawn_dir = getSpawner(x, y);
+				if(spawn_dir != Direction.Invalid)
+				{
+					WalkerType wt;
+					int rn = mRandom.nextInt(special_chance + gold_chance + cat_chance + mouse_chance);
+					if(rn < special_chance)
+						wt = WalkerType.MouseSpecial;
+					else if(rn < special_chance + gold_chance)
+						wt = WalkerType.MouseGold;
+					else if(rn < special_chance + gold_chance + cat_chance)
+						wt = WalkerType.Cat;
+					else
+						wt = WalkerType.Mouse;
+					addWalker(x, y, spawn_dir, wt);
+				}
+			}
+		}
+	}
+
 	/**
 	 * Called when walker reaches a new gird square and must turn/die
 	 */
@@ -386,7 +599,13 @@ public class MPWorld extends WorldBase {
 				mScores[player] += 50;
 				break;
 			case MouseSpecial:
-				//TODO special mice
+				if(mGameState != MPGameState.SpecialSelect)
+				{
+					mGameState = MPGameState.SpecialSelect;
+					mStateTimer = SPECIALSELECT_TIME;
+					final MPGameState[] pend_states = new MPGameState[] {MPGameState.CatMania, MPGameState.MouseMania, MPGameState.SpeedUp, MPGameState.SlowDown};
+					mPendingSpecialState = pend_states[mRandom.nextInt(4)];
+				}
 				break;
 			case Cat:
 				mScores[player] = (mScores[player]* 2) / 3;
@@ -412,6 +631,10 @@ public class MPWorld extends WorldBase {
 	}
 	
 	private void handleMessage(Message next_message) {
+		boolean allow_change = mGameState != MPGameState.Finished && 
+							   mGameState != MPGameState.SpecialSelect &&
+							   mGameState != MPGameState.Countdown;
+		
 		//Action message
 		switch(next_message.message_type)
 		{
@@ -424,16 +647,22 @@ public class MPWorld extends WorldBase {
 			break;
 		case Message.MESSAGE_ARROW_PLACEMENT:
 			{
-				ArrowPlacementMessage message = (ArrowPlacementMessage)next_message;
-				if(getArrowCount(message.user_id) < 3)
-					toggleArrow(message.x, message.y, message.direction, message.user_id, true);
-				else
-					toggleArrow(message.x, message.y, message.direction, message.user_id, false);
+				if(allow_change)
+				{
+					ArrowPlacementMessage message = (ArrowPlacementMessage)next_message;
+					if(getArrowCount(message.user_id) < 3)
+						toggleArrow(message.x, message.y, message.direction, message.user_id, true);
+					else
+						toggleArrow(message.x, message.y, message.direction, message.user_id, false);
+				}
 			}
 			break;
 		case Message.MESSAGE_ARROW_CLEAR:
 			{
-				clearPlayerArrows(next_message.user_id);
+				if(allow_change)
+				{
+					clearPlayerArrows(next_message.user_id);
+				}
 			}
 			break;
 		}

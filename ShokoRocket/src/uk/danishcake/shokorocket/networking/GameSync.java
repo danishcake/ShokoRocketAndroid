@@ -70,4 +70,6 @@ public abstract class GameSync {
 	public int getClientID() {
 		return mClientID;
 	}
+	
+	public abstract ArrayList<String> getPlayerNames(); 
 }

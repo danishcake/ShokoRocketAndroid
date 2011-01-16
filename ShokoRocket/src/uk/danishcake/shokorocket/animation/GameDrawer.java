@@ -46,6 +46,15 @@ public class GameDrawer {
 	private EnumMap<Direction, Animation> mMouseAnimations = new EnumMap<Direction, Animation>(Direction.class);
 	private Animation mMouseDeathAnimation = null;
 	private Animation mMouseRescueAnimation = null;
+	//MP only Mouse
+	private EnumMap<Direction, Animation> mSpecialMouseAnimations = new EnumMap<Direction, Animation>(Direction.class);
+	private Animation mSpecialMouseDeathAnimation = null;
+	private Animation mSpecialMouseRescueAnimation = null;
+	//MP only Mouse
+	private EnumMap<Direction, Animation> mGoldMouseAnimations = new EnumMap<Direction, Animation>(Direction.class);
+	private Animation mGoldMouseDeathAnimation = null;
+	private Animation mGoldMouseRescueAnimation = null;
+	
 	private EnumMap<Direction, Animation> mCatAnimations = new EnumMap<Direction, Animation>(Direction.class);
 	private Animation mCatDeathAnimation = null;
 	private Animation mRocketAnimation = null;
@@ -220,15 +229,17 @@ public class GameDrawer {
 		{
 			try
 			{
-				Map<String, Animation> mouse_animations = Animation.GetAnimations(context, skin.getAnimation("mouse"), scale);
-				mMouseAnimations.put(Direction.North, mouse_animations.get("North"));
-				mMouseAnimations.put(Direction.South, mouse_animations.get("South"));
-				mMouseAnimations.put(Direction.East, mouse_animations.get("East"));
-				mMouseAnimations.put(Direction.West, mouse_animations.get("West"));
-				mMouseAnimations.put(Direction.Invalid, mouse_animations.get("Stopped"));
-				mMouseDeathAnimation = mouse_animations.get("Death");
-				mMouseRescueAnimation = mouse_animations.get("Rescue");
-
+				if(!loadMP)
+				{
+					Map<String, Animation> mouse_animations = Animation.GetAnimations(context, skin.getAnimation("mouse"), scale);
+					mMouseAnimations.put(Direction.North, mouse_animations.get("North"));
+					mMouseAnimations.put(Direction.South, mouse_animations.get("South"));
+					mMouseAnimations.put(Direction.East, mouse_animations.get("East"));
+					mMouseAnimations.put(Direction.West, mouse_animations.get("West"));
+					mMouseAnimations.put(Direction.Invalid, mouse_animations.get("Stopped"));
+					mMouseDeathAnimation = mouse_animations.get("Death");
+					mMouseRescueAnimation = mouse_animations.get("Rescue");
+				}
 				Map<String, Animation> cat_animations = Animation.GetAnimations(context, skin.getAnimation("kapukapu"), scale);
 				mCatAnimations.put(Direction.North, cat_animations.get("North"));
 				mCatAnimations.put(Direction.South, cat_animations.get("South"));
@@ -311,22 +322,22 @@ public class GameDrawer {
 					mMPFullArrowAnimations3.put(Direction.West, mp_arrow_animations.get("West3"));
 					mMPFullArrowAnimations3.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
 					
-					mMPHalfArrowAnimations0.put(Direction.North, mp_arrow_animations.get("North0"));
-					mMPHalfArrowAnimations0.put(Direction.South, mp_arrow_animations.get("South0"));
-					mMPHalfArrowAnimations0.put(Direction.East, mp_arrow_animations.get("East0"));
-					mMPHalfArrowAnimations0.put(Direction.West, mp_arrow_animations.get("West0"));
+					mMPHalfArrowAnimations0.put(Direction.North, mp_arrow_animations.get("HalfNorth0"));
+					mMPHalfArrowAnimations0.put(Direction.South, mp_arrow_animations.get("HalfSouth0"));
+					mMPHalfArrowAnimations0.put(Direction.East, mp_arrow_animations.get("HalfEast0"));
+					mMPHalfArrowAnimations0.put(Direction.West, mp_arrow_animations.get("HalfWest0"));
 					mMPHalfArrowAnimations0.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
 					
-					mMPHalfArrowAnimations2.put(Direction.North, mp_arrow_animations.get("North2"));
-					mMPHalfArrowAnimations2.put(Direction.South, mp_arrow_animations.get("South2"));
-					mMPHalfArrowAnimations2.put(Direction.East, mp_arrow_animations.get("East2"));
-					mMPHalfArrowAnimations2.put(Direction.West, mp_arrow_animations.get("West2"));
+					mMPHalfArrowAnimations2.put(Direction.North, mp_arrow_animations.get("HalfNorth2"));
+					mMPHalfArrowAnimations2.put(Direction.South, mp_arrow_animations.get("HalfSouth2"));
+					mMPHalfArrowAnimations2.put(Direction.East, mp_arrow_animations.get("HalfEast2"));
+					mMPHalfArrowAnimations2.put(Direction.West, mp_arrow_animations.get("HalfWest2"));
 					mMPHalfArrowAnimations2.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
 					
-					mMPHalfArrowAnimations3.put(Direction.North, mp_arrow_animations.get("North3"));
-					mMPHalfArrowAnimations3.put(Direction.South, mp_arrow_animations.get("South3"));
-					mMPHalfArrowAnimations3.put(Direction.East, mp_arrow_animations.get("East3"));
-					mMPHalfArrowAnimations3.put(Direction.West, mp_arrow_animations.get("West3"));
+					mMPHalfArrowAnimations3.put(Direction.North, mp_arrow_animations.get("HalfNorth3"));
+					mMPHalfArrowAnimations3.put(Direction.South, mp_arrow_animations.get("HalfSouth3"));
+					mMPHalfArrowAnimations3.put(Direction.East, mp_arrow_animations.get("HalfEast3"));
+					mMPHalfArrowAnimations3.put(Direction.West, mp_arrow_animations.get("HalfWest3"));
 					mMPHalfArrowAnimations3.put(Direction.Invalid, mp_arrow_animations.get("Stopped"));
 					
 					Map<String, Animation> mp_cursor_animations = Animation.GetAnimations(context, skin.getAnimation("mp_cursors"), scale);
@@ -337,6 +348,33 @@ public class GameDrawer {
 					
 					Map<String, Animation> spawner_animations = Animation.GetAnimations(context, skin.getAnimation("spawner"), scale);
 					mSpawnerAnimation = spawner_animations.get("Normal");
+					
+					Map<String, Animation> mouse_animations = Animation.GetAnimations(context, skin.getAnimation("plain_mouse"), scale);
+					mMouseAnimations.put(Direction.North, mouse_animations.get("North"));
+					mMouseAnimations.put(Direction.South, mouse_animations.get("South"));
+					mMouseAnimations.put(Direction.East, mouse_animations.get("East"));
+					mMouseAnimations.put(Direction.West, mouse_animations.get("West"));
+					mMouseAnimations.put(Direction.Invalid, mouse_animations.get("Stopped"));
+					mMouseDeathAnimation = mouse_animations.get("Death");
+					mMouseRescueAnimation = mouse_animations.get("Rescue");
+
+					Map<String, Animation> special_mouse_animations = Animation.GetAnimations(context, skin.getAnimation("special_mouse"), scale);
+					mSpecialMouseAnimations.put(Direction.North, special_mouse_animations.get("North"));
+					mSpecialMouseAnimations.put(Direction.South, special_mouse_animations.get("South"));
+					mSpecialMouseAnimations.put(Direction.East, special_mouse_animations.get("East"));
+					mSpecialMouseAnimations.put(Direction.West, special_mouse_animations.get("West"));
+					mSpecialMouseAnimations.put(Direction.Invalid, special_mouse_animations.get("Stopped"));
+					mSpecialMouseDeathAnimation = special_mouse_animations.get("Death");
+					mSpecialMouseRescueAnimation = special_mouse_animations.get("Rescue");
+
+					Map<String, Animation> gold_mouse_animations = Animation.GetAnimations(context, skin.getAnimation("gold_mouse"), scale);
+					mGoldMouseAnimations.put(Direction.North, gold_mouse_animations.get("North"));
+					mGoldMouseAnimations.put(Direction.South, gold_mouse_animations.get("South"));
+					mGoldMouseAnimations.put(Direction.East, gold_mouse_animations.get("East"));
+					mGoldMouseAnimations.put(Direction.West, gold_mouse_animations.get("West"));
+					mGoldMouseAnimations.put(Direction.Invalid, gold_mouse_animations.get("Stopped"));
+					mGoldMouseDeathAnimation = gold_mouse_animations.get("Death");
+					mGoldMouseRescueAnimation = gold_mouse_animations.get("Rescue");
 				}
 
 				mAnimationsLoaded = true;
@@ -443,6 +481,19 @@ public class GameDrawer {
 		ArrayList<Walker> mice = world.getLiveMice();
 		ArrayList<Walker> cats = world.getLiveCats();
 		for (Walker walker : mice) {
+			EnumMap<Direction, Animation> mouse_type;
+			switch(walker.getWalkerType()){
+				case Mouse:
+				default:
+					mouse_type = mMouseAnimations;
+					break;
+				case MouseGold:
+					mouse_type = mGoldMouseAnimations;
+					break;
+				case MouseSpecial:
+					mouse_type = mSpecialMouseAnimations;
+					break;
+			}
 			Vector2i position = walker.getPosition();
 			int x = position.x * mGridSize + mDrawOffsetX;
 			int y = position.y * mGridSize + mDrawOffsetY;
@@ -461,7 +512,7 @@ public class GameDrawer {
 				x -= (mGridSize * walker.getFraction() / Walker.FractionReset);
 				break;
 			}
-			Animation animation = mMouseAnimations.get(walker.getDirection());
+			Animation animation = mouse_type.get(walker.getDirection());
 			if(animation != null)
 			{
 				if(++sprite_count > mRenderItems.size())
@@ -515,6 +566,20 @@ public class GameDrawer {
 		}
 		for(Walker walker : world.getDeadMice())
 		{
+			Animation mouse_anim;
+			switch(walker.getWalkerType())
+			{
+			case Mouse:
+			default:
+				mouse_anim = mMouseDeathAnimation;
+				break;
+			case MouseGold:
+				mouse_anim = mGoldMouseDeathAnimation;
+				break;
+			case MouseSpecial:
+				mouse_anim = mSpecialMouseDeathAnimation;
+				break;
+			}
 			Vector2i position = walker.getPosition();
 			int x = position.x * mGridSize + mDrawOffsetX;
 			int y = position.y * mGridSize + mDrawOffsetY;
@@ -540,11 +605,26 @@ public class GameDrawer {
 			if(death_time < 5000)
 			{
 				y -= walker.getDeathTime() * 20 / 5000;
-				mMouseDeathAnimation.DrawFrameAtTime(canvas, x, y, death_time / 5);
+				mouse_anim.DrawFrameAtTime(canvas, x, y, death_time / 5);
 			}
 		}
 		for(Walker walker : world.getRescuedMice())
 		{
+			Animation mouse_anim;
+			switch(walker.getWalkerType())
+			{
+			case Mouse:
+			default:
+				mouse_anim = mMouseRescueAnimation;
+				break;
+			case MouseGold:
+				mouse_anim = mGoldMouseRescueAnimation;
+				break;
+			case MouseSpecial:
+				mouse_anim = mSpecialMouseRescueAnimation;
+				break;
+			}
+
 			Vector2i position = walker.getPosition();
 			int x = position.x * mGridSize + mDrawOffsetX;
 			int y = position.y * mGridSize + mDrawOffsetY;
@@ -567,7 +647,7 @@ public class GameDrawer {
 			int death_time = walker.getDeathTime();
 			if(death_time < 5000)
 			{
-				mMouseRescueAnimation.DrawFrameAtTime(canvas, x, y, death_time / 5);
+				mouse_anim.DrawFrameAtTime(canvas, x, y, death_time / 5);
 			}
 		}
 		for(Walker walker : world.getDeadCats())
@@ -818,10 +898,15 @@ public class GameDrawer {
 		for (Animation animation : mMouseAnimations.values()) {
 			animation.Tick(timespan);
 		}
+		for (Animation animation : mGoldMouseAnimations.values()) {
+			animation.Tick(timespan);
+		}
+		for (Animation animation : mSpecialMouseAnimations.values()) {
+			animation.Tick(timespan);
+		}
 		for (Animation animation : mCatAnimations.values()) {
 			animation.Tick(timespan);
 		}
-		mMouseDeathAnimation.Tick(timespan);
 	}
 	
 	public void CreateCacheBitmap(SPWorld world)

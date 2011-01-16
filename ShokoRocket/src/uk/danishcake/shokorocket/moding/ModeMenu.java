@@ -285,19 +285,19 @@ public class ModeMenu extends Mode {
 			Widget toggleSP = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
 			toggleSP.setText("Puzzle");
 
-			mLaunchAI = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize));
-			mLaunchAI.setText("Launch");
-
-			Widget human = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSep + mBtnSize, mScreenWidth / 2 - mBtnSep / 2, mBtnBorder + mBtnSep + mBtnSize * 2));
+			Widget human = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder, mScreenWidth / 2 - mBtnSep / 2, mBtnBorder + mBtnSize));
 			human.setText("P1");
 			human.setEnabled(false);
-			mAI1 = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mBtnBorder + mBtnSep + mBtnSize, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSep + mBtnSize * 2));
+			mAI1 = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mBtnBorder, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize));
 			mAI1.setText("Easy AI");
-			mAI2 = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSep * 2 + mBtnSize * 2, mScreenWidth / 2 - mBtnSep / 2, mBtnBorder + mBtnSep * 2 + mBtnSize * 3));
+			mAI2 = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSep * 1 + mBtnSize * 1, mScreenWidth / 2 - mBtnSep / 2, mBtnBorder + mBtnSep * 1 + mBtnSize * 2));
 			mAI2.setText("Easy AI");
-			mAI3 = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mBtnBorder + mBtnSep * 2 + mBtnSize * 2, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSep * 2 + mBtnSize * 3));
+			mAI3 = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mBtnBorder + mBtnSep * 1 + mBtnSize * 1, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSep * 1 + mBtnSize * 2));
 			mAI3.setText("Easy AI");
-			
+
+			mLaunchAI = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize * 2, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize * 1));
+			mLaunchAI.setText("Launch");
+
 			OnClickListener ai_change = new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
