@@ -55,6 +55,7 @@ public class MPWorld extends WorldBase {
 	private Random mRandom;
 	private Random mRandomUnsynced = new Random();
 	private int mTimer = 0;
+	private int mRealtime = 0;
 	private static final int SPAWN_DEFAULT = 20;
 
 	private MPGameState mGameState = MPGameState.Countdown;
@@ -67,11 +68,13 @@ public class MPWorld extends WorldBase {
 	private static final int SPEEDUP_TIME = 10000;
 	private static final int SLOWDOWN_TIME = 10000;
 	private static final int FINISHED_TIME = 4000;
+	private static final int GAME_TIME = 120 * 1000;
 
 	private String mConnectString = "HHH";
 	private EnumMap<MPGameState, String> mStateNames = new EnumMap<MPGameState, String>(MPGameState.class);
 	private MPGameState mPendingSpecialState = MPGameState.InPlay;
 	public OnGuiMessage mGUIMessage = null;
+	public OnGuiMessage mEndMessage = null;
 	
 	/* MPWorld(input)
 	 * Loads a world from specified XML file
@@ -264,6 +267,8 @@ public class MPWorld extends WorldBase {
 	}
 	
 	public void Tick(int timespan) {
+		int ltv_realtime = mRealtime;
+		mRealtime += timespan;
 		//Initialise as a temporary measure
 		if(mSync == null){
 			mSync = new LocalSync(this);
@@ -374,6 +379,8 @@ public class MPWorld extends WorldBase {
 		case Finished:
 		default:
 			timespan = 0;
+			if(mRealtime > GAME_TIME + 2000)
+				mEndMessage.show("", 0); //End the game, return to Menu
 			break;
 		case SpeedUp:
 			timespan = FIXED_TIMESTEP * 2;
@@ -382,8 +389,24 @@ public class MPWorld extends WorldBase {
 			timespan = FIXED_TIMESTEP / 2;
 			break;
 		}
+		if(mRealtime > GAME_TIME - 30000 && ltv_realtime <= GAME_TIME - 30000)
+		{
+			mGUIMessage.show("30s left!", 750);
+		}
+		if(mRealtime > GAME_TIME && mGameState != MPGameState.Finished)
+		{
+			//Determine winner
+			int win_index = 0;
+			for(int i = 1; i < 4; i++)
+			{
+				if(mScores[i] > mScores[win_index])
+					win_index = i;
+			}
+			mGUIMessage.show("Player " + Integer.toString(win_index + 1) + " wins!", 20000);
+			mGameState = MPGameState.Finished;
+		}
 
-		//Freeze until
+		//Freeze until actionable data
 		mCommunicationFrameTime += FIXED_TIMESTEP;
 		if(mCommunicationFrameTime >= FIXED_TIMESTEP * COMM_RATIO)
 		{
@@ -607,6 +630,10 @@ public class MPWorld extends WorldBase {
 	}
 	
 	private void handleMessage(Message next_message) {
+		boolean allow_change = mGameState != MPGameState.Finished && 
+							   mGameState != MPGameState.SpecialSelect &&
+							   mGameState != MPGameState.Countdown;
+		
 		//Action message
 		switch(next_message.message_type)
 		{
@@ -619,16 +646,22 @@ public class MPWorld extends WorldBase {
 			break;
 		case Message.MESSAGE_ARROW_PLACEMENT:
 			{
-				ArrowPlacementMessage message = (ArrowPlacementMessage)next_message;
-				if(getArrowCount(message.user_id) < 3)
-					toggleArrow(message.x, message.y, message.direction, message.user_id, true);
-				else
-					toggleArrow(message.x, message.y, message.direction, message.user_id, false);
+				if(allow_change)
+				{
+					ArrowPlacementMessage message = (ArrowPlacementMessage)next_message;
+					if(getArrowCount(message.user_id) < 3)
+						toggleArrow(message.x, message.y, message.direction, message.user_id, true);
+					else
+						toggleArrow(message.x, message.y, message.direction, message.user_id, false);
+				}
 			}
 			break;
 		case Message.MESSAGE_ARROW_CLEAR:
 			{
-				clearPlayerArrows(next_message.user_id);
+				if(allow_change)
+				{
+					clearPlayerArrows(next_message.user_id);
+				}
 			}
 			break;
 		}

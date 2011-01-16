@@ -43,6 +43,7 @@ public class ModeMPGame extends Mode {
 		mModeMenu = menu;
 		mWorld = world;
 		mWorld.mGUIMessage = handleMessage;
+		mWorld.mEndMessage = handleGameEnd;
 		mTextPaint = new Paint();
 		mTextPaint.setColor(android.graphics.Color.rgb(255, 255, 255));
 		mTextPaint.setTextAlign(Align.CENTER);
@@ -259,6 +260,14 @@ public class ModeMPGame extends Mode {
 		public void show(String message, int timespan) {
 			mGameMessage = message;
 			mMessageTimer = timespan;
+		}
+	};
+	private OnGuiMessage handleGameEnd = new OnGuiMessage() {
+		@Override
+		public void show(String message, int timespan) {
+			//End the game when called
+			if(mPendMode == null)
+				mPendMode = mModeMenu;
 		}
 	};
 }
