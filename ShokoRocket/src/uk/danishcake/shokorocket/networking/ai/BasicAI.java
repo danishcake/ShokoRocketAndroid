@@ -623,7 +623,6 @@ public class BasicAI extends BaseAI {
 				{
 					//Very interesting!
 					mIntercept = true && interceptable;
-					mInterceptDirection = direction;
 					return;
 				}
 			}
@@ -631,6 +630,7 @@ public class BasicAI extends BaseAI {
 			{
 				mInterceptPosition.x = x;
 				mInterceptPosition.y = y;
+				mInterceptDirection = direction;
 				interceptable = true;
 			}
 			if(player_id == mPlayerID)
