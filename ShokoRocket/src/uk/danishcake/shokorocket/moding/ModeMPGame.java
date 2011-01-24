@@ -25,7 +25,7 @@ public class ModeMPGame extends Mode {
 	private ModeMenu mModeMenu = null;
 	private SkinProgress mSkin = null;
 	private MPWorld mWorld = null;
-	private GameDrawer mGameDrawer = new GameDrawer();
+	private GameDrawer mGameDrawer = null;
 	Widget[] mScoreWidgets = new Widget[4];
 	
 	private Vector2i mCursorPosition = new Vector2i(-1, -1);
@@ -38,7 +38,7 @@ public class ModeMPGame extends Mode {
 	private int mMessageTimer = 0;
 	private Paint mTextPaint;
 
-	public ModeMPGame(ModeMenu menu, SkinProgress skin, MPWorld world) {
+	public ModeMPGame(ModeMenu menu, SkinProgress skin, MPWorld world, GameDrawer gameDrawer) {
 		mSkin = skin;
 		mModeMenu = menu;
 		mWorld = world;
@@ -49,6 +49,7 @@ public class ModeMPGame extends Mode {
 		mTextPaint.setTextAlign(Align.CENTER);
 		mTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
 		mTextPaint.setTextSize(mFontSize * 3);
+		mGameDrawer = gameDrawer;
 	}
 	
 	@Override

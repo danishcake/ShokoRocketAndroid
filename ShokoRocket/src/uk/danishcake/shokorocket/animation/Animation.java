@@ -283,4 +283,20 @@ public class Animation {
 	{
 
 	}
+	
+	/**
+	 * Attempts to free all resources associated with this animation
+	 */
+	public void Teardown()
+	{
+		if(mFrames != null)
+		{
+			for (Bitmap bitmap : mFrames) {
+				if(bitmap != null)
+					bitmap.recycle();
+			}
+			mFrames.clear();
+		}
+		mFrames = null;
+	}
 }

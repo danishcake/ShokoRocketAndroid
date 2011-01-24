@@ -37,6 +37,8 @@ public class ModeMenu extends Mode {
 	private Point mPlayPosition;
 	private SPWorld mWorld = null;
 	private GameDrawer mGameDrawer;
+	private GameDrawer mGameDrawerNorm;
+	private GameDrawer mGameDrawerRot;
 	private boolean mSetup = false;
 	private boolean mEditorLoaded = false;
 	private Progress mProgress;
@@ -71,11 +73,9 @@ public class ModeMenu extends Mode {
 	
 	@Override
 	public void Setup(Context context) {
-		mGameDrawer = new GameDrawer();
 		if(mSetup)
 		{
 			mProgress.AssessUnlockable(mSkin);
-			mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size), mSkin, false);
 			mDrawTick = mProgress.IsComplete(mWorld.getIdentifier());
 			if(mEditorLoaded)
 				LoadLevelList();
@@ -83,11 +83,15 @@ public class ModeMenu extends Mode {
 			ChangeLevel();
 			return;
 		}
+
 		super.Setup(context);
 		mSkin = new SkinProgress(context);
 		mProgress.AssessUnlockable(mSkin);
 		mMakeTrainingOffer = Progress.IsFirstRun(context);
 
+		mGameDrawer = new GameDrawer();
+		mGameDrawerNorm = new GameDrawer();
+		mGameDrawerRot = new GameDrawer();
 		mGameDrawer.Setup(context, context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.preview_grid_size), mSkin, false);
 
 		//Setup puzzle page widgets
@@ -181,7 +185,16 @@ public class ModeMenu extends Mode {
 				@Override
 				public void OnClick(Widget widget) {
 					if(mPendMode == null)
-						mPendMode = new ModeSPGame(mWorld, ModeMenu.this, mProgress, mSkin);
+					{
+						try
+						{
+							SPWorld world = mProgress.getWorld();
+							mPendMode = new ModeSPGame(world, ModeMenu.this, mProgress, mSkin, mGameDrawerNorm, mGameDrawerRot);
+						} catch(Exception ex)
+						{
+							Log.e("ModeMenu.PlayButton.onClick", "Could not load level");
+						}
+					}
 					SoundManager.PlaySound(mClickSound);
 				}
 			});
@@ -358,7 +371,7 @@ public class ModeMenu extends Mode {
 							}
 
 							MPWorld world = new MPWorld(mContext.getAssets().open("MultiplayerLevels/MP001.Level"), ai_string);
-							mPendMode = new ModeMPGame(ModeMenu.this, mSkin, world);
+							mPendMode = new ModeMPGame(ModeMenu.this, mSkin, world, mGameDrawerNorm);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -631,7 +644,15 @@ public class ModeMenu extends Mode {
 							mSemaphore.acquire();
 							mProgress.gotoTrainingPack();
 							ChangeLevel();
-							mPendMode = new ModeSPGame(mWorld, ModeMenu.this, mProgress, mSkin);
+							try
+							{
+								SPWorld world = mProgress.getWorld();
+								mPendMode = new ModeSPGame(world, ModeMenu.this, mProgress, mSkin, mGameDrawerNorm, mGameDrawerRot);
+							} catch(Exception ex)
+							{
+								Log.e("ModeMenu.PlayButton.onClick", "Could not load level");
+							}
+							
 							mSemaphore.release();
 						} catch(InterruptedException int_ex)
 						{

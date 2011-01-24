@@ -10,6 +10,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.util.Log;
 import uk.danishcake.shokorocket.moding.SkinProgress;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.MPWorld;
@@ -42,7 +43,6 @@ public class GameDrawer {
 	}
 	
 	private Bitmap mWorldBitmap = null;
-	private boolean mAnimationsLoaded = false;
 	private EnumMap<Direction, Animation> mMouseAnimations = new EnumMap<Direction, Animation>(Direction.class);
 	private Animation mMouseDeathAnimation = null;
 	private Animation mMouseRescueAnimation = null;
@@ -87,9 +87,10 @@ public class GameDrawer {
 	private List<RenderItem> mRenderItems = new ArrayList<RenderItem>();
 	
 	private int mGridSize = 32;
-	
 	private int mDrawOffsetX = 0;
 	private int mDrawOffsetY = 0;
+	private float mScale = -1;
+	private boolean mMPLoaded = false;
 	
 	/**
 	 * Changes the position that the game is drawn at. Units are pixels
@@ -213,6 +214,169 @@ public class GameDrawer {
 			}
 		}
 	}
+
+	/**
+	 * Attempts to free all bitmap memory
+	 */
+	private void Teardown()
+	{
+		mScale = -1;
+		if(mCacheBitmap != null) mCacheBitmap.recycle();
+		mCacheBitmap = null;
+		if(mWorldBitmap != null) mWorldBitmap.recycle();
+		mWorldBitmap = null;
+		if(mTileA != null) mTileA.recycle();
+		mTileA = null;
+		if(mTileB != null) mTileB.recycle();
+		mTileB = null;
+
+		for (Animation animation : mCatAnimations.values()) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mCatAnimations.clear();
+
+		for (Animation animation : mFullArrowAnimations.values()) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mFullArrowAnimations.clear();
+
+		for (Animation animation : mGestureArrowAnimations.values()) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mGestureArrowAnimations.clear();
+
+		for (Animation animation : mGoldMouseAnimations.values()) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mGoldMouseAnimations.clear();
+
+		for (Animation animation : mHalfArrowAnimations.values()) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mHalfArrowAnimations.clear();
+
+		for (Animation animation : mMouseAnimations.values()) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mMouseAnimations.clear();
+
+		for (Animation animation : mMPFullArrowAnimations0.values()) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mMPFullArrowAnimations0.clear();
+
+		for (Animation animation : mMPFullArrowAnimations1.values()) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mMPFullArrowAnimations1.clear();
+
+		for (Animation animation : mMPFullArrowAnimations2.values()) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mMPFullArrowAnimations2.clear();
+
+		for (Animation animation : mMPFullArrowAnimations3.values()) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mMPFullArrowAnimations3.clear();
+
+		for (Animation animation : mMPHalfArrowAnimations0.values()) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mMPHalfArrowAnimations0.clear();
+
+		for (Animation animation : mMPHalfArrowAnimations1.values()) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mMPHalfArrowAnimations1.clear();
+
+		for (Animation animation : mMPHalfArrowAnimations2.values()) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mMPHalfArrowAnimations2.clear();
+
+		for (Animation animation : mMPHalfArrowAnimations3.values()) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mMPHalfArrowAnimations3.clear();
+
+		for (Animation animation : mSpecialMouseAnimations.values()) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mSpecialMouseAnimations.clear();
+
+		for (Animation animation : mMPCursorAnimations) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mMPCursorAnimations = new Animation[mMPCursorAnimations.length];
+
+		for (Animation animation : mMPRocketAnimation) {
+			if(animation != null)
+				animation.Teardown();
+		}
+		mMPRocketAnimation = new Animation[mMPRocketAnimation.length];
+
+		if(mCatDeathAnimation != null) mCatDeathAnimation.Teardown();
+		mCatDeathAnimation = null;
+
+		if(mCursorAnimation != null) mCursorAnimation.Teardown();
+		mCursorAnimation = null;
+
+		if(mGoldMouseDeathAnimation != null) mGoldMouseDeathAnimation.Teardown();
+		mGoldMouseDeathAnimation = null;
+
+		if(mGoldMouseRescueAnimation != null) mGoldMouseRescueAnimation.Teardown();
+		mGoldMouseRescueAnimation = null;
+
+		if(mHoleAnimation != null) mHoleAnimation.Teardown();
+		mHoleAnimation = null;
+
+		if(mMouseDeathAnimation != null) mMouseDeathAnimation.Teardown();
+		mMouseDeathAnimation = null;
+
+		if(mMouseRescueAnimation != null) mMouseRescueAnimation.Teardown();
+		mMouseRescueAnimation = null;
+
+		if(mNorthWall != null) mNorthWall.Teardown();
+		mNorthWall = null;
+
+		if(mWestWall!= null) mWestWall.Teardown();
+		mWestWall = null;
+
+		if(mRingAnimation != null) mRingAnimation.Teardown();
+		mRingAnimation = null;
+
+		if(mRocketAnimation != null) mRocketAnimation.Teardown();
+		mRocketAnimation = null;
+
+		if(mSpawnerAnimation != null) mSpawnerAnimation.Teardown();
+		mSpawnerAnimation = null;
+
+		if(mSpecialMouseDeathAnimation != null) mSpecialMouseDeathAnimation.Teardown();
+		mSpecialMouseDeathAnimation = null;
+
+		if(mSpecialMouseRescueAnimation != null) mSpecialMouseRescueAnimation.Teardown();
+		mSpecialMouseRescueAnimation = null;
+
+		if(mTickAnimation != null) mTickAnimation.Teardown();
+		mTickAnimation= null;
+	}
 	
 	/**
 	 * Loads any unloaded textures
@@ -222,11 +386,14 @@ public class GameDrawer {
 	{
 		mGridSize = gridSize;
 		float referenceGridSize = (float)context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.grid_size);
-		float scale = ((float)mGridSize) / referenceGridSize; 
+		float scale = ((float)mGridSize) / referenceGridSize;
 
 		//Load unloaded animations
-		if(context != null && !mAnimationsLoaded)
+		if(context != null && (scale != mScale || mMPLoaded != loadMP))
 		{
+			Log.d("GameDrawer.Setup", "Reloading due to scale change/mp change");
+			Log.d("GameDrawer.Setup", "Scale from " + Float.toString(mScale) + " to " + Float.toString(scale));
+			Teardown();
 			try
 			{
 				if(!loadMP)
@@ -377,7 +544,8 @@ public class GameDrawer {
 					mGoldMouseRescueAnimation = gold_mouse_animations.get("Rescue");
 				}
 
-				mAnimationsLoaded = true;
+				mScale = scale;
+				mMPLoaded = loadMP;
 			} catch(IOException ex)
 			{
 				//TODO log or something

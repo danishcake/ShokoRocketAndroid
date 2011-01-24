@@ -35,8 +35,8 @@ import android.widget.Toast;
 public class ModeSPGame extends Mode {
 	private Widget mLeftArrowCount, mRightArrowCount, mUpArrowCount, mDownArrowCount;
 	private GameDrawer mGameDrawer;
-	private GameDrawer mGameDrawerRot = new GameDrawer();
-	private GameDrawer mGameDrawerNorm = new GameDrawer();
+	private GameDrawer mGameDrawerRot = null;
+	private GameDrawer mGameDrawerNorm = null;
 	private SPWorld mWorld;
 	private ModeMenu mModeMenu;
 	private int mResetTimer = 0;
@@ -66,12 +66,14 @@ public class ModeSPGame extends Mode {
 	private final int E_MENU_ROTATE = 1;
 	private final int E_MENU_BACK = 2;
 	
-	public ModeSPGame(SPWorld world, ModeMenu menu, Progress progress, SkinProgress skin)
+	public ModeSPGame(SPWorld world, ModeMenu menu, Progress progress, SkinProgress skin, GameDrawer norm, GameDrawer rot)
 	{
 		mWorld = world;
 		mModeMenu = menu;
 		mProgress = progress;
 		mSkin = skin;
+		mGameDrawerNorm = norm;
+		mGameDrawerRot = rot;
 	}
 	
 	@Override
@@ -87,7 +89,6 @@ public class ModeSPGame extends Mode {
 		float scaleY_rot = ((float)(mScreenHeight - mBtnSize - mBtnBorder - mLevelBorder * 2)) / (float)required_width;
 		float smaller = scaleX < scaleY ? scaleX : scaleY;
 		float smaller_rot = scaleX_rot < scaleY_rot ? scaleX_rot : scaleY_rot;
-		
 		
 
 		mGameDrawer = mGameDrawerNorm;
@@ -560,7 +561,7 @@ public class ModeSPGame extends Mode {
 
 							mProgress.nextUnbeaten();
 							SPWorld world = mProgress.getWorld();
-							mPendMode = new ModeSPGame(world, mModeMenu, mProgress, mSkin);
+							mPendMode = new ModeSPGame(world, mModeMenu, mProgress, mSkin, mGameDrawerNorm, mGameDrawerRot);
 							
 							mSemaphore.release();
 						} catch(InterruptedException int_ex)
