@@ -860,6 +860,8 @@ public class GameDrawer {
 		}
 		if(mWorldBitmap != null)
 			canvas.drawBitmap(mWorldBitmap, mDrawOffsetX, mDrawOffsetY, null);
+		else
+			DrawTilesAndWalls(canvas, world);
 		//Draw rockets, arrows & holes		
 		for(int x = 0; x < world.getWidth(); x++)
 		{
@@ -1084,7 +1086,9 @@ public class GameDrawer {
 		mDrawOffsetX = 0;
 		mDrawOffsetY = 0;
 
-		mCacheBitmap = Bitmap.createBitmap(world.getWidth() * mGridSize, world.getHeight() * mGridSize, Bitmap.Config.ARGB_8888);
+		if(mCacheBitmap != null)
+			mCacheBitmap.recycle();
+		mCacheBitmap = Bitmap.createBitmap(world.getWidth() * mGridSize, world.getHeight() * mGridSize, Bitmap.Config.RGB_565);
 		Canvas canvas = new Canvas(mCacheBitmap);
 		DrawSP(canvas, world);
 

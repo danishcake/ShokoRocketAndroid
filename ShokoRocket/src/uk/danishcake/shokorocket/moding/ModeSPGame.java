@@ -101,11 +101,11 @@ public class ModeSPGame extends Mode {
 		else
 			mGameDrawerRot.Setup(mContext, mGridSize, mSkin, false);
 
-		mGameDrawer.CreateBackground(mWorld);
+		//mGameDrawer.CreateBackground(mWorld);
 		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mLevelBorder);
 
 		mWorld.RotateRight();
-		mGameDrawerRot.CreateBackground(mWorld);
+		//mGameDrawerRot.CreateBackground(mWorld);
 		mGameDrawerRot.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawerRot.getGridSize() / 2), mLevelBorder);
 		mWorld.RotateLeft();
 		

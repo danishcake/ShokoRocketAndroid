@@ -210,6 +210,10 @@ public class Animation {
 				//TODO error handling or logging or something
 			}
 		}
+		for (Bitmap bitmap : src_cache.values()) {
+			bitmap.recycle();
+		}
+		src_cache.clear();
 		
 		return an;
 	}
