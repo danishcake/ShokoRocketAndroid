@@ -203,7 +203,11 @@ public class ModeMenu extends Mode {
 				@Override
 				public void OnClick(Widget widget) {
 					if(mPendMode == null)
+					{
+						mGameDrawerNorm.Teardown();
+						mGameDrawerRot.Teardown();
 						mPendMode = new ModeUnlocks(ModeMenu.this, mSkin, mProgress);
+					}
 					SoundManager.PlaySound(mClickSound);
 				}
 			});
@@ -227,6 +231,8 @@ public class ModeMenu extends Mode {
 									try
 									{
 										mSemaphore.acquire();
+										mGameDrawerNorm.Teardown();
+										mGameDrawerRot.Teardown();
 										mPendMode = new ModeEditor(ModeMenu.this, mWorld, mSkin);
 										mSemaphore.release();
 									} catch(InterruptedException int_ex)
@@ -240,6 +246,8 @@ public class ModeMenu extends Mode {
 									try
 									{
 										mSemaphore.acquire();
+										mGameDrawerNorm.Teardown();
+										mGameDrawerRot.Teardown();
 										mPendMode = new ModeEditor(ModeMenu.this, null, mSkin);
 										mEditorLoaded = true;
 										mSemaphore.release();
@@ -252,6 +260,8 @@ public class ModeMenu extends Mode {
 							builder.create().show();
 						} else
 						{
+							mGameDrawerNorm.Teardown();
+							mGameDrawerRot.Teardown();
 							mPendMode = new ModeEditor(ModeMenu.this, null, mSkin);
 							mEditorLoaded = true;
 						}
@@ -371,6 +381,7 @@ public class ModeMenu extends Mode {
 							}
 
 							MPWorld world = new MPWorld(mContext.getAssets().open("MultiplayerLevels/MP001.Level"), ai_string);
+							mGameDrawerRot.Teardown();
 							mPendMode = new ModeMPGame(ModeMenu.this, mSkin, world, mGameDrawerNorm);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block

@@ -113,7 +113,6 @@ public class ModeTutorial extends Mode {
 		public void OnClick(Widget widget) {
 			try {
 				mWorld = new SPWorld(mContext.getAssets().open("TutorialLevels/Tut2.Level"));
-				mGameDrawer.CreateBackground(mWorld);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -137,7 +136,6 @@ public class ModeTutorial extends Mode {
 		public void OnClick(Widget widget) {
 			try {
 				mWorld = new SPWorld(mContext.getAssets().open("TutorialLevels/Tut3.Level"));
-				mGameDrawer.CreateBackground(mWorld);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -154,7 +152,6 @@ public class ModeTutorial extends Mode {
 			try {
 				mWorld = new SPWorld(mContext.getAssets().open("TutorialLevels/Tut4.Level"));
 				mWorld.LoadSolution();
-				mGameDrawer.CreateBackground(mWorld);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -240,7 +237,6 @@ public class ModeTutorial extends Mode {
 			mGameDrawer.Setup(mContext, mGridSize, new SkinProgress(mContext), false);
 			mWorld = new SPWorld(mContext.getAssets().open("TutorialLevels/Tut1.Level"));
 			mGameDrawer.setDrawOffset((mScreenWidth - mWorld.getWidth() * mGameDrawer.getGridSize()) / 2, mBtnBorder + mBtnSize * 2 + mBtnSep * 2);
-			mGameDrawer.CreateBackground(mWorld);
 		} catch(IOException io_ex) {
 			//TODO log
 		}
@@ -266,7 +262,6 @@ public class ModeTutorial extends Mode {
 			{
 				mWorld.RotateRight();
 				mGameDrawer.CreateCacheBitmap(mWorld);
-				mGameDrawer.CreateBackground(mWorld);
 			}
 			if(mAge > mRotateStart + RotateTime)
 			{

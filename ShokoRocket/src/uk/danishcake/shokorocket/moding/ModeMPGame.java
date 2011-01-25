@@ -88,7 +88,6 @@ public class ModeMPGame extends Mode {
 		else
 			mGameDrawer.Setup(mContext, mGridSize, mSkin, true);
 
-		mGameDrawer.CreateBackground(mWorld);
 		mGameDrawer.setDrawOffset(mScreenWidth / 2 - (mWorld.getWidth() * mGameDrawer.getGridSize() / 2), mLevelBorder);
 	}
 	

@@ -41,8 +41,7 @@ public class GameDrawer {
 			return y - another.y;
 		}
 	}
-	
-	private Bitmap mWorldBitmap = null;
+
 	private EnumMap<Direction, Animation> mMouseAnimations = new EnumMap<Direction, Animation>(Direction.class);
 	private Animation mMouseDeathAnimation = null;
 	private Animation mMouseRescueAnimation = null;
@@ -129,57 +128,7 @@ public class GameDrawer {
 	public Animation GetArrow(Direction direction) {
 		return mGestureArrowAnimations.get(direction);
 	}
-	
-	/**
-	 * Creates the background texture
-	 * @param world The world to create the background texture from
-	 */
-	public void CreateBackground(WorldBase world)
-	{
-		//Create background image
-		if(world != null)
-		{
-			mWorldBitmap = Bitmap.createBitmap(world.getWidth() * mGridSize, world.getHeight() * mGridSize, Bitmap.Config.ARGB_8888);
-			Canvas world_canvas = new Canvas(mWorldBitmap);
-			world_canvas.drawARGB(255, 255, 255, 255);
-			
-			for(int y = 0; y < world.getHeight(); y++)
-			{
-				boolean use_tile_a = (y % 2 == 0);
-				for(int x = 0; x < world.getWidth(); x++)	
-				{
-					if(use_tile_a)
-						world_canvas.drawBitmap(mTileA, x * mGridSize, y * mGridSize, null);
-					else
-						world_canvas.drawBitmap(mTileB, x * mGridSize, y * mGridSize, null);
-					use_tile_a = !use_tile_a;
-				}
-			}
-			for(int y = 0; y < world.getHeight(); y++)
-			{
-				for(int x = 0; x < world.getWidth(); x++)
-				{
-					if(world.getWest(x, y))
-					{
-						mWestWall.DrawCurrentFrame(world_canvas, x * mGridSize, y * mGridSize);
-						if(x == 0)
-							mWestWall.DrawCurrentFrame(world_canvas, world_canvas.getWidth() - mWestWall.getCurrentFrame().getWidth(), y * mGridSize);
-					}
-					if(world.getNorth(x, y))
-					{
-						mNorthWall.DrawCurrentFrame(world_canvas, x * mGridSize, y * mGridSize);
-						if(y == 0)
-							mNorthWall.DrawCurrentFrame(world_canvas, x * mGridSize, world_canvas.getHeight() - mNorthWall.getCurrentFrame().getHeight());
-					}
-				}
-			}
-			
-		} else //Destroy background if passed null
-		{
-			mWorldBitmap = null;
-		}
-	}
-	
+
 	public void DrawTilesAndWalls(Canvas canvas, WorldBase world)
 	{
 		int wall_offset = -mWestWall.getFrameByIndex(0).getWidth() / 2;
@@ -218,13 +167,11 @@ public class GameDrawer {
 	/**
 	 * Attempts to free all bitmap memory
 	 */
-	private void Teardown()
+	public void Teardown()
 	{
 		mScale = -1;
 		if(mCacheBitmap != null) mCacheBitmap.recycle();
 		mCacheBitmap = null;
-		if(mWorldBitmap != null) mWorldBitmap.recycle();
-		mWorldBitmap = null;
 		if(mTileA != null) mTileA.recycle();
 		mTileA = null;
 		if(mTileB != null) mTileB.recycle();
@@ -564,8 +511,7 @@ public class GameDrawer {
 		{
 			mRenderItems.get(i).animation = null;
 		}
-		if(mWorldBitmap != null)
-			canvas.drawBitmap(mWorldBitmap, mDrawOffsetX, mDrawOffsetY, null);
+		DrawTilesAndWalls(canvas, world);
 		//Draw rockets, arrows & holes		
 		for(int x = 0; x < world.getWidth(); x++)
 		{
@@ -858,10 +804,7 @@ public class GameDrawer {
 		{
 			mRenderItems.get(i).animation = null;
 		}
-		if(mWorldBitmap != null)
-			canvas.drawBitmap(mWorldBitmap, mDrawOffsetX, mDrawOffsetY, null);
-		else
-			DrawTilesAndWalls(canvas, world);
+		DrawTilesAndWalls(canvas, world);
 		//Draw rockets, arrows & holes		
 		for(int x = 0; x < world.getWidth(); x++)
 		{

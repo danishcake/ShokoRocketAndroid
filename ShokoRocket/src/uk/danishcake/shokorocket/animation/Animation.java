@@ -194,16 +194,14 @@ public class Animation {
 					src = BitmapFactory.decodeStream(bmp);
 				}
 				src_cache.put(filename, src);
-				Bitmap dest = Bitmap.createBitmap(src, left, top, width, height);
-				if(scale != 1.0f)
-				{
-					int scaled_width = (int)(dest.getWidth() * scale);
-					int scaled_height = (int)(dest.getHeight() * scale);
-					if(scaled_width == 0) scaled_width = 1;
-					if(scaled_height == 0) scaled_height = 1;
-					dest = Bitmap.createScaledBitmap(dest, scaled_width, scaled_height, true);
-				}
-				
+				Bitmap src_area = Bitmap.createBitmap(src, left, top, width, height);
+
+				int scaled_width = (int)(src_area.getWidth() * scale);
+				int scaled_height = (int)(src_area.getHeight() * scale);
+				if(scaled_width == 0) scaled_width = 1;
+				if(scaled_height == 0) scaled_height = 1;
+				Bitmap dest = Bitmap.createScaledBitmap(src_area, scaled_width, scaled_height, true);
+
 				an.AddFrame(dest);
 			} catch(NumberFormatException nfe)
 			{
