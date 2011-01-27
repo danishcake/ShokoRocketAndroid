@@ -27,14 +27,37 @@ public class BasicAI extends BaseAI {
 
 	private Vector2i mRocketPosition = new Vector2i(0, 0);
 	
-	private final int AI_RATE = 10;
+	private int AI_RATE = 10;
 	private int mActTimer = 0;
+	private boolean mMaliceIntercept;
+	private boolean mMaliceBlock;
 	
 	private int mTarget = 0;
 	private Vector2i mTargetRocket = new Vector2i(0, 0);
 	private Vector2i mLastBlockPos = new Vector2i(0, 0);
 	private Direction mLastBlockDir = Direction.Invalid;
 
+	public BasicAI(int difficulty){
+		if(difficulty <= 0)
+		{
+			AI_RATE = 35;
+			mMaliceIntercept = false;
+			mMaliceBlock = false;
+		}
+		else if(difficulty == 1)
+		{
+			AI_RATE = 20;
+			mMaliceIntercept = false;
+			mMaliceBlock = true;
+		}
+		else
+		{
+			AI_RATE = 10;
+			mMaliceIntercept = true;
+			mMaliceBlock = true;
+		}
+	}
+	
 	@Override
 	public void setup(MPWorld world, int player_id) {
 		super.setup(world, player_id);
@@ -243,7 +266,7 @@ public class BasicAI extends BaseAI {
 		}
 
 		mIntercept = false;
-		if(++mMaliceTactic < 10)
+		if(++mMaliceTactic < 10 && mMaliceIntercept)
 		{
 			//Use final arrow to screw with others
 			//Try walking a spawner, see if it leads to an enemy
@@ -265,7 +288,7 @@ public class BasicAI extends BaseAI {
 		}
 		if(mMaliceTactic > 15)
 			mMaliceTactic = 0;
-		if(!mIntercept)
+		if(!mIntercept && mMaliceBlock)
 		{
 			//Look down each axis of rocket, count mice heading towards it
 			int from_north = 0;
@@ -623,7 +646,6 @@ public class BasicAI extends BaseAI {
 				{
 					//Very interesting!
 					mIntercept = true && interceptable;
-					mInterceptDirection = direction;
 					return;
 				}
 			}
@@ -631,6 +653,7 @@ public class BasicAI extends BaseAI {
 			{
 				mInterceptPosition.x = x;
 				mInterceptPosition.y = y;
+				mInterceptDirection = direction;
 				interceptable = true;
 			}
 			if(player_id == mPlayerID)

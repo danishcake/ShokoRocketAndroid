@@ -35,13 +35,13 @@ public class LocalSync extends GameSync {
 				mAI[i] = null;
 				break;
 			case 'E':
-				mAI[i] = new BasicAI();
+				mAI[i] = new BasicAI(0);
 				break;
 			case 'M':
-				mAI[i] = new BasicAI(); //TODO harder AI
+				mAI[i] = new BasicAI(1);
 				break;
 			case 'H':
-				mAI[i] = new BasicAI(); //TODO harder AI
+				mAI[i] = new BasicAI(2);
 				break;
 			}
 			if(mAI[i] != null)

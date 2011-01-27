@@ -374,7 +374,7 @@ public class ModeMenu extends Mode {
 									ai_string = ai_string + "E";
 								else if(ai_widget.getText().equals("Medium AI"))
 									ai_string = ai_string + "M";
-								else if(ai_widget.getText().equals("Easy AI"))
+								else if(ai_widget.getText().equals("Hard AI"))
 									ai_string = ai_string + "H";
 								else
 									ai_string = ai_string + " ";
