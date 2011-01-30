@@ -6,7 +6,6 @@ import uk.danishcake.shokorocket.animation.BackgroundDrawer;
 import uk.danishcake.shokorocket.simulation.Direction;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -80,9 +79,6 @@ public class GameStateMachine {
 		int lengthSq = deltaX * deltaX + deltaY * deltaY;
 		int lengthReqSq = (mScreenHeight / 8) * (mScreenHeight / 8);
 
-		
-		double angularError = Math.cos(Math.PI / 3);
-		
 		if(lengthSq > lengthReqSq)
 		{
 			double angle = Math.atan2(deltaX, deltaY);
