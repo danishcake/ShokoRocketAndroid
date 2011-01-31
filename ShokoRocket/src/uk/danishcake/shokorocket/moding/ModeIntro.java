@@ -29,14 +29,22 @@ public class ModeIntro extends Mode {
 		public int age;
 		public String text;
 	}
+	private class Smoke
+	{
+		public Vector2i position;
+		public Vector2i velocity;
+		public int age;
+	}
 	
 	Animation mLogoLeft;
 	Animation mLogoRight;
 	Animation mCreditRocket;
+	Animation mSmokeAnimation;
 	Interpolator mLogoInterpolator = null;
 	Matrix mMatrix = new Matrix();
 	boolean mFirstRun = false;
 	private List<Rocket> mRockets = new ArrayList<Rocket>();
+	private List<Smoke> mPlumes = new ArrayList<Smoke>();
 	private int mSpawnTimer = 0;
 	private Random mRandom = new Random();
 	private Progress mProgress = null;
@@ -85,6 +93,7 @@ public class ModeIntro extends Mode {
 			mLogoLeft = animations.get("Left");
 			mLogoRight = animations.get("Right");
 			mCreditRocket = animations.get("CreditRocket");
+			mSmokeAnimation = animations.get("Smoke");
 		} catch(IOException io_ex)
 		{
 			//TODO log it!
@@ -98,7 +107,7 @@ public class ModeIntro extends Mode {
 	
 	@Override
 	public ModeAction Tick(int timespan) {
-		int rocket_speed = mScreenHeight * timespan / 2400; 
+		int rocket_speed = 300 * 800 / mScreenHeight; //300px/s 
 		mLogoLeft.Tick(timespan);
 		mLogoRight.Tick(timespan);
 		mCreditRocket.Tick(timespan);
@@ -111,7 +120,7 @@ public class ModeIntro extends Mode {
 				if(!mUserLevels.get(mUserLevelIndex).equals(""))
 				{
 					Rocket rocket = new Rocket();
-					rocket.position = new Vector2i(mRandom.nextInt(mScreenWidth-128)+32, mScreenHeight + 150 + mRandom.nextInt(50));
+					rocket.position = new Vector2i(mRandom.nextInt(mScreenWidth-128)+32, (mScreenHeight + 150 + mRandom.nextInt(50)) * 1000);
 					rocket.age = 0;
 					rocket.text = mUserLevels.get(mUserLevelIndex);
 					mRockets.add(rocket);
@@ -123,9 +132,46 @@ public class ModeIntro extends Mode {
 		Iterator<Rocket> v_it = mRockets.iterator();
 		while(v_it.hasNext()){
 			Rocket rocket = v_it.next();
-			rocket.position.y -= rocket_speed;
-			if(rocket.position.y < -1000)
+			int ltv_age= rocket.age;
+			rocket.age += timespan;
+			rocket.position.y -= rocket_speed * timespan;
+			if(rocket.position.y < -1000000)
 				v_it.remove();
+			final int smoke_offset = 100000;
+			if(rocket.age / 80 > ltv_age / 80)
+			{
+				{
+					Smoke s = new Smoke();
+					s.position = new Vector2i(rocket.position.x * 1000 + 10000, rocket.position.y + smoke_offset);
+					s.velocity = new Vector2i(-7, -rocket_speed);
+					mPlumes.add(s);
+				}
+				{
+					Smoke s = new Smoke();
+					s.position = new Vector2i(rocket.position.x * 1000, rocket.position.y + smoke_offset);
+					s.velocity = new Vector2i(0, -rocket_speed);
+					mPlumes.add(s);
+				}
+				{
+					Smoke s = new Smoke();
+					s.position = new Vector2i(rocket.position.x * 1000 - 10000, rocket.position.y + smoke_offset);
+					s.velocity = new Vector2i(7, -rocket_speed);
+					mPlumes.add(s);
+				}
+			}
+		}
+		
+		Iterator<Smoke> s_it = mPlumes.iterator();
+		while(s_it.hasNext()){
+			Smoke smoke = s_it.next();
+			smoke.position.y += timespan * smoke.velocity.y;
+			smoke.position.x += timespan * smoke.velocity.x;
+			
+			smoke.age += timespan;
+			if(smoke.age >= 1000)
+				s_it.remove();
+			if(smoke.age > 125 && smoke.velocity.y < 0)
+				smoke.velocity.y = 0;
 		}
 
 		return super.Tick(timespan);
@@ -162,8 +208,12 @@ public class ModeIntro extends Mode {
 		mMatrix.postTranslate(x, y);
 
 		for (Rocket r : mRockets) {
-			canvas.drawBitmap(mCreditRocket.getCurrentFrame(), r.position.x, r.position.y, null);
-			canvas.drawText(r.text, r.position.x+32, r.position.y, mTextPaint);
+			canvas.drawBitmap(mCreditRocket.getCurrentFrame(), r.position.x, r.position.y / 1000, null);
+			canvas.drawText(r.text, r.position.x+32, r.position.y / 1000, mTextPaint);
+		}
+		
+		for (Smoke s : mPlumes) {
+			canvas.drawBitmap(mSmokeAnimation.getFrameByTime(s.age), s.position.x/1000, s.position.y/1000, null);
 		}
 		
 		if(mAge < 2500)

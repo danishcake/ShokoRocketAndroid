@@ -8,4 +8,14 @@
   <Animation Name="CreditRocket">
   <Frame Width="64" Height="135" Top="0" Left="0" File="Bitmaps/Intro/CreditRocket.png" Time="0.25"/>
   </Animation>
+  <Animation Name="Smoke" FPS="8">
+    <Frame Width="64" Height="64" Top="0" Left="0"   File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
+    <Frame Width="64" Height="64" Top="0" Left="64"  File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
+    <Frame Width="64" Height="64" Top="0" Left="128" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
+    <Frame Width="64" Height="64" Top="0" Left="192" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
+    <Frame Width="64" Height="64" Top="0" Left="256" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
+    <Frame Width="64" Height="64" Top="0" Left="320" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
+    <Frame Width="64" Height="64" Top="0" Left="384" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
+    <Frame Width="64" Height="64" Top="0" Left="448" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
+  </Animation>
 </AnimationSet>
