@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+    <Name>Devious Cat Trap</Name>
+    <Author>Edward Woolhouse</Author>
+    <Size x="9" y="12" />
+    <V x="0" y="0" />
+    <V x="0" y="1" />
+    <V x="0" y="2" />
+    <V x="0" y="3" />
+    <V x="0" y="4" />
+    <V x="0" y="5" />
+    <V x="0" y="6" />
+    <V x="0" y="7" />
+    <V x="0" y="8" />
+    <V x="0" y="9" />
+    <V x="0" y="10" />
+    <V x="0" y="11" />
+    <V x="1" y="4" />
+    <V x="1" y="10" />
+    <V x="2" y="6" />
+    <V x="2" y="11" />
+    <V x="3" y="4" />
+    <V x="4" y="4" />
+    <V x="4" y="10" />
+    <V x="5" y="4" />
+    <V x="5" y="10" />
+    <V x="6" y="4" />
+    <V x="7" y="6" />
+    <V x="7" y="11" />
+    <V x="8" y="4" />
+    <V x="8" y="10" />
+    <H x="0" y="0" />
+    <H x="0" y="3" />
+    <H x="1" y="0" />
+    <H x="1" y="5" />
+    <H x="1" y="10" />
+    <H x="2" y="0" />
+    <H x="2" y="3" />
+    <H x="2" y="4" />
+    <H x="2" y="7" />
+    <H x="3" y="0" />
+    <H x="3" y="11" />
+    <H x="4" y="0" />
+    <H x="4" y="3" />
+    <H x="4" y="5" />
+    <H x="4" y="11" />
+    <H x="5" y="0" />
+    <H x="5" y="11" />
+    <H x="6" y="0" />
+    <H x="6" y="3" />
+    <H x="6" y="4" />
+    <H x="6" y="7" />
+    <H x="7" y="0" />
+    <H x="7" y="5" />
+    <H x="7" y="10" />
+    <H x="8" y="0" />
+    <H x="8" y="3" />
+    <Arrow x="0" y="10" d="South" />
+    <Arrow x="4" y="3" d="North" />
+    <Arrow x="4" y="6" d="South" />
+    <Rocket x="4" y="10" />
+    <Arrow x="6" y="3" d="South" />
+    <Arrow x="7" y="2" d="South" />
+    <Arrow x="8" y="10" d="South" />
+    <Mouse x="1" y="0" d="South" />
+    <Mouse x="7" y="0" d="South" />
+    <Mouse x="8" y="0" d="East" />
+    <Mouse x="6" y="0" d="East" />
+    <Mouse x="4" y="0" d="East" />
+    <Mouse x="2" y="0" d="East" />
+    <Mouse x="0" y="0" d="East" />
+    <Mouse x="5" y="0" d="South" />
+    <Mouse x="3" y="0" d="South" />
+    <Cat x="8" y="3" d="West" />
+    <Cat x="0" y="3" d="East" />
+</Level>
