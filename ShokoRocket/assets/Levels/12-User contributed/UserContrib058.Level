@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>boop boop</Name>
+<Author>equid</Author>
+<Size x="4" y="4"/>
+<V x="0" y="0" />
+<H x="0" y="0" />
+<H x="2" y="0" />
+<H x="3" y="0" />
+<H x="2" y="1" />
+<V x="3" y="1" />
+<V x="0" y="2" />
+<V x="1" y="2" />
+<V x="0" y="3" />
+<H x="1" y="3" />
+<Mouse x="2" y="1" d="South" />
+<Cat x="1" y="2" d="East" />
+<Cat x="3" y="1" d="South" />
+<Arrow x="1" y="0" d="North"/>
+<Arrow x="2" y="1" d="North"/>
+<Rocket x="1" y="3" />
+<Arrow x="3" y="3" d="East"/>
+</Level>
