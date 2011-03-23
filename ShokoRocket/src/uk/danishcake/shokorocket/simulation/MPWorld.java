@@ -13,6 +13,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import android.util.Log;
+
 import uk.danishcake.shokorocket.networking.GameSync;
 import uk.danishcake.shokorocket.networking.LocalSync;
 import uk.danishcake.shokorocket.networking.messages.ArrowClearMessage;
@@ -47,6 +49,7 @@ public class MPWorld extends WorldBase {
 	private MPSquareType[] mSpecialSquares = new MPSquareType[mWidth*mHeight];
 	private Vector2i[] mCursorPositions = new Vector2i[4];
 	private int[] mScores = new int[4];
+	private int[] mArrowCount = new int[4];
 	private int mPlayerID = 0;
 
 	private int mSpawnMax = SPAWN_DEFAULT;
@@ -650,10 +653,7 @@ public class MPWorld extends WorldBase {
 				if(allow_change)
 				{
 					ArrowPlacementMessage message = (ArrowPlacementMessage)next_message;
-					if(getArrowCount(message.user_id) < 3)
-						toggleArrow(message.x, message.y, message.direction, message.user_id, true);
-					else
-						toggleArrow(message.x, message.y, message.direction, message.user_id, false);
+					toggleArrow(message.x, message.y, message.direction, message.user_id);
 				}
 			}
 			break;
@@ -729,7 +729,9 @@ public class MPWorld extends WorldBase {
 	 * Toggles arrow at (x,y) for player p. If already one present with same direction  
 	 * and player then clears. Different players do not overwrite existing arrows
 	 */
-	public void toggleArrow(int x, int y, Direction direction, int player, boolean allow_new) {
+	public void toggleArrow(int x, int y, Direction direction, int player) {
+		int arrow_count = getArrowCount(player);
+
 		SquareType square_type = getSpecialSquare(x, y);
 		if(square_type == SquareType.Hole || square_type == SquareType.Rocket || 
 		   square_type == SquareType.SouthSpawner || square_type == SquareType.NorthSpawner ||
@@ -739,9 +741,19 @@ public class MPWorld extends WorldBase {
 		if(cur_dir == direction && getPlayer(x, y) == player) //Allow clear
 			setArrow(x, y, Direction.Invalid, player);
 		else if(getPlayer(x, y) == player) //Allow change
+		{
+			mArrowCount[player]++;
 			setArrow(x, y, direction, player);
-		else if(cur_dir == Direction.Invalid && allow_new) //Allow new
+		}
+		else if(cur_dir == Direction.Invalid) //Empty square, so a new arrow
+		{
+			//Cause the oldest arrow to be replaced if 3 already present
+			if(arrow_count >= 3)
+				removeOldestArrow(player);
+
+			mArrowCount[player]++;
 			setArrow(x, y, direction, player);
+		}
 	}
 	
 	/**
@@ -751,6 +763,7 @@ public class MPWorld extends WorldBase {
 	public void setArrow(int x, int y, Direction direction, int player) {
 		mSpecialSquares[wallIndex(x, y)].square_type = direction.toArrow();
 		mSpecialSquares[wallIndex(x, y)].player_id = direction == Direction.Invalid ? -1 : player;
+		if(player != -1) mSpecialSquares[wallIndex(x, y)].order = mArrowCount[player];
 	}
 	
 	/**
@@ -771,6 +784,36 @@ public class MPWorld extends WorldBase {
 			}
 		}
 		return count;
+	}
+	
+	/**
+	 * Removes the oldest arrow placed by the specified player
+	 */
+	private void removeOldestArrow(int id) {
+		int age = mArrowCount[id];
+		int oldest_x = 0;
+		int oldest_y = 0;
+		boolean found = false;
+		for(int y = 0; y < mHeight; y++)
+		{
+			for(int x = 0; x < mWidth; x++)
+			{
+				if(getArrow(x, y) != Direction.Invalid && getPlayer(x, y) == id)
+				{
+					if(mSpecialSquares[wallIndex(x, y)].order < age)
+					{
+						oldest_x = x;
+						oldest_y = y;
+						age = mSpecialSquares[wallIndex(x, y)].order;
+						found = true;
+					}
+				}
+			}
+		}
+		if(found)
+		{
+			setSpecialSquare(oldest_x, oldest_y, SquareType.Empty, -1);
+		}
 	}
 	
 	/**
