@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="puzzle_run_speed_faster">Plus vite</string>
     <string name="menu_unlocks">Débloquer</string>
     <string name="tutorial_15">Si vous aimez ce jeu participez en faisant des critiques et parlez en autour de vous !</string>
     <string name="tutorial_14">Appuyez sur menu pour voir les options de rotation</string>

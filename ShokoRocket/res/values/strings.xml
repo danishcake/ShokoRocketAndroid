@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="puzzle_run_speed_faster">Faster</string>
     <string name="error_loading_level">Error loading level</string>
     <string name="mp_beta_warning">BETA warning:\n There is currently no multiplayer. Versus AI is in work, and once satisfactory I will start on proper multiplayer</string>
     <string name="menu_unlocks">Unlocks</string>

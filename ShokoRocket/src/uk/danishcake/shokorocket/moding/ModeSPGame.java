@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 public class ModeSPGame extends Mode {
 	private Widget mLeftArrowCount, mRightArrowCount, mUpArrowCount, mDownArrowCount;
+	private Widget mGo;
 	private GameDrawer mGameDrawer;
 	private GameDrawer mGameDrawerRot = null;
 	private GameDrawer mGameDrawerNorm = null;
@@ -141,19 +142,25 @@ public class ModeSPGame extends Mode {
 					mWorld.Reset();
 					mRunningMode = RunningMode.Stopped;
 				}
+				mGo.setText(mContext.getString(R.string.game_go));
 			}
 		});
 		
-		Widget go = new Widget(mBtnNP, new Rect(mScreenWidth - mBtnSize2 - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnBorder));
-		go.setText(context.getString(R.string.game_go));
-		go.setOnClickListener(new OnClickListener() {				
+		mGo = new Widget(mBtnNP, new Rect(mScreenWidth - mBtnSize2 - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnSize - mBtnBorder, mScreenWidth - mBtnSize2 - 4 - mBtnBorder, mScreenHeight - mBtnBorder));
+		mGo.setText(context.getString(R.string.game_go));
+		mGo.setOnClickListener(new OnClickListener() {				
 			@Override
 			public void OnClick(Widget widget) {
 				SoundManager.PlaySound(mClickSound);
 				if(mRunningMode == RunningMode.Stopped)
+				{
 					mRunningMode = RunningMode.Running;
+					mGo.setText(mContext.getString(R.string.puzzle_run_speed_faster));
+				}
 				else if(mRunningMode == RunningMode.Running)
+				{
 					mRunningMode = RunningMode.RunningFast;
+				}
 			}
 		});
 		
@@ -200,7 +207,7 @@ public class ModeSPGame extends Mode {
 																mScreenHeight));
 		
 		reset.setFontSize(mFontSize);
-		go.setFontSize(mFontSize);
+		mGo.setFontSize(mFontSize);
 		mLeftArrowCount.setFontSize(mFontSize);
 		mRightArrowCount.setFontSize(mFontSize);
 		mUpArrowCount.setFontSize(mFontSize);
@@ -212,7 +219,7 @@ public class ModeSPGame extends Mode {
 		mDownArrowCount.setText("0");
 					
 		mWidgetPage.addWidget(reset);
-		mWidgetPage.addWidget(go);
+		mWidgetPage.addWidget(mGo);
 		mWidgetPage.addWidget(mLeftArrowCount);
 		mWidgetPage.addWidget(mRightArrowCount);
 		mWidgetPage.addWidget(mUpArrowCount);
@@ -241,6 +248,7 @@ public class ModeSPGame extends Mode {
 			if(mRotateTimer > 250)
 			{
 				mWorld.Reset();
+				mGo.setText(mContext.getString(R.string.game_go));
 				mRotateTimer = 0;
 				mRunningMode = RunningMode.RotatingCW;
 			}
@@ -312,6 +320,7 @@ public class ModeSPGame extends Mode {
 				if(mResetTimer > ResetTime)
 				{
 					mWorld.Reset();
+					mGo.setText(mContext.getString(R.string.game_go));
 					mRunningMode = RunningMode.Stopped;
 				}
 			} else
@@ -519,6 +528,7 @@ public class ModeSPGame extends Mode {
 			if(mWorld.getRotation() == 0)
 			{
 				mWorld.Reset();
+				mGo.setText(mContext.getString(R.string.game_go));
 				mRotateTimer = 0;
 				mRunningMode = RunningMode.RotatingCW;
 				mGameDrawer.CreateCacheBitmap(mWorld);
@@ -526,6 +536,7 @@ public class ModeSPGame extends Mode {
 			else
 			{
 				mWorld.Reset();
+				mGo.setText(mContext.getString(R.string.game_go));
 				mRotateTimer = 0;
 				mRunningMode = RunningMode.RotatingCCW;
 				mGameDrawer.CreateCacheBitmap(mWorld);
