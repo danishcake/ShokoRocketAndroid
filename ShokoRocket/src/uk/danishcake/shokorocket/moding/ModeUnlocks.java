@@ -9,6 +9,7 @@ import uk.danishcake.shokorocket.gui.OnClickListener;
 import uk.danishcake.shokorocket.gui.RadioWidget;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.WidgetPage;
+import uk.danishcake.shokorocket.sound.MusicManager;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -29,6 +30,9 @@ public class ModeUnlocks extends Mode {
 	@Override
 	public void Setup(Context context) {
 		super.Setup(context);
+		
+		MusicManager.PlayMenuMusic();
+		
 		mWidgetPage = new WidgetPage();
 				
 		Widget back = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - mBtnBorder - mBtnSize, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));

@@ -11,6 +11,7 @@ import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.MPWorld;
 import uk.danishcake.shokorocket.simulation.OnGuiMessage;
 import uk.danishcake.shokorocket.simulation.Vector2i;
+import uk.danishcake.shokorocket.sound.MusicManager;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -69,6 +70,7 @@ public class ModeMPGame extends Mode {
 		{
 			Log.e("ShokoRocket", "Unable to preload beeps");
 		}
+		MusicManager.PlayMultiplayerMusic();
 
 		NinePatchData np0 = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_mpbutton0)), mNPBorder, mNPBorder, mNPBorder, mNPBorder);
 		NinePatchData np1 = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_mpbutton1)), mNPBorder, mNPBorder, mNPBorder, mNPBorder);

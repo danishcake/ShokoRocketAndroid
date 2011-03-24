@@ -13,8 +13,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import android.util.Log;
-
 import uk.danishcake.shokorocket.networking.GameSync;
 import uk.danishcake.shokorocket.networking.LocalSync;
 import uk.danishcake.shokorocket.networking.messages.ArrowClearMessage;

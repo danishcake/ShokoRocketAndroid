@@ -2,10 +2,10 @@ package uk.danishcake.shokorocket.sound;
 
 import java.io.IOException;
 import java.util.HashMap;
-
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
+
 import android.util.Log;
 
 public class SoundManager {
@@ -17,7 +17,10 @@ public class SoundManager {
 	private boolean mEnabled = true;
 	
 	private boolean getEnabled() {return mEnabled;}
-	private void setEnabled(boolean enabled) {mEnabled = enabled;}
+	private void setEnabled(boolean enabled) {
+		mEnabled = enabled;
+		MusicManager.setEnabled(enabled);
+	}
 	
 	private SoundManager()
 	{

@@ -11,6 +11,7 @@ import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.MPWorld;
 import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.simulation.Vector2i;
+import uk.danishcake.shokorocket.sound.MusicManager;
 import uk.danishcake.shokorocket.sound.SoundManager;
 
 import android.app.AlertDialog;
@@ -73,6 +74,7 @@ public class ModeMenu extends Mode {
 	
 	@Override
 	public void Setup(Context context) {
+		MusicManager.PlayMenuMusic();
 		if(mSetup)
 		{
 			mProgress.AssessUnlockable(mSkin);

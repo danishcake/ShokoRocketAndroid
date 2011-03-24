@@ -237,7 +237,7 @@ public class Progress {
 				File root = new File(Environment.getExternalStorageDirectory(), "ShokoRocket");
 				user_packs = root.listFiles(new FileFilter() {
 					public boolean accept(File pathname) {
-						return pathname.isDirectory();
+						return pathname.isDirectory() && !pathname.getName().equals("Music");
 					}
 				});
 				if(user_packs == null) //Folder doesn't exist

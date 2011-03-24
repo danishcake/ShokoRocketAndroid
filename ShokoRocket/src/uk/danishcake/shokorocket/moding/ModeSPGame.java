@@ -13,6 +13,7 @@ import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.SPWorld.WorldState;
+import uk.danishcake.shokorocket.sound.MusicManager;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.app.Dialog;
 import android.content.Context;
@@ -80,6 +81,8 @@ public class ModeSPGame extends Mode {
 	@Override
 	public void Setup(Context context) {
 		super.Setup(context);
+		
+		MusicManager.PlayPuzzleMusic();
 		
 		//Setup autoscaling twice, for portrait and landscape orientations
 		int required_width = mWorld.getWidth() * mGridSize;

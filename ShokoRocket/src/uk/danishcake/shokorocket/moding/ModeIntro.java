@@ -11,6 +11,7 @@ import java.util.Random;
 import uk.danishcake.shokorocket.animation.Animation;
 import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.simulation.Vector2i;
+import uk.danishcake.shokorocket.sound.MusicManager;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -55,6 +56,8 @@ public class ModeIntro extends Mode {
 	@Override
 	public void Setup(Context context) {
 		super.Setup(context);
+		
+		MusicManager.PlayMenuMusic();
 
 		mTextPaint = new TextPaint();
 		mTextPaint.setTextAlign(Align.CENTER);

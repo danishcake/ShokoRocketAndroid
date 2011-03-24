@@ -1,6 +1,7 @@
 package uk.danishcake.shokorocket;
 
 import uk.danishcake.shokorocket.simulation.Direction;
+import uk.danishcake.shokorocket.sound.MusicManager;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.app.Activity;
 import android.content.Context;
@@ -35,6 +36,18 @@ public class ShokoRocketActivity extends Activity {
         mGameView = new GameView(this);
         setContentView(mGameView);
     }
+
+	@Override
+	protected void onPause() {
+		MusicManager.ReleaseMusic();
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		MusicManager.ResumeMusic();
+		super.onResume();
+	}
     
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {

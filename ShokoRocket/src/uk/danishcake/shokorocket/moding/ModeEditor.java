@@ -41,6 +41,7 @@ import uk.danishcake.shokorocket.simulation.SquareType;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.simulation.SPWorld.WorldState;
+import uk.danishcake.shokorocket.sound.MusicManager;
 import uk.danishcake.shokorocket.sound.SoundManager;
 
 public class ModeEditor extends Mode {
@@ -256,6 +257,8 @@ public class ModeEditor extends Mode {
 	@Override
 	public void Setup(final Context context) {
 		super.Setup(context);
+		
+		MusicManager.PlayMenuMusic();
 		
 		mBtnSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_size);
 		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);

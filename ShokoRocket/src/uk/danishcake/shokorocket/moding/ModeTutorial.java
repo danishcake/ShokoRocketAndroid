@@ -9,6 +9,7 @@ import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.Vector2i;
 import uk.danishcake.shokorocket.simulation.SPWorld;
+import uk.danishcake.shokorocket.sound.MusicManager;
 import uk.danishcake.shokorocket.sound.SoundManager;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -215,6 +216,8 @@ public class ModeTutorial extends Mode {
 	public void Setup(Context context)
 	{
 		super.Setup(context);
+		
+		MusicManager.PlayMenuMusic();
 
 		try {
 			mNextButton = new Widget(mBtnNP, new Rect(mBtnBorder, 
