@@ -717,4 +717,16 @@ public class ModeMenu extends Mode {
 			}
 		}
 	}
+	
+	@Override
+	public boolean handleBack() {
+		if(mWidgetPage == mPuzzlePage)
+		{
+			return false;
+		} else
+		{
+			gotoPage(mPuzzlePage);
+			return true;
+		}
+	}
 }
