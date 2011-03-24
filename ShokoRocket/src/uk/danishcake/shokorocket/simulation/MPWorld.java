@@ -23,6 +23,7 @@ import uk.danishcake.shokorocket.networking.messages.CursorPositioningMessage;
 import uk.danishcake.shokorocket.networking.messages.Message;
 import uk.danishcake.shokorocket.simulation.Walker.WalkerState;
 import uk.danishcake.shokorocket.simulation.Walker.WalkerType;
+import uk.danishcake.shokorocket.sound.SoundManager;
 
 /* MPWorld
  * Represents a world designed to run in lockstep with other instances
@@ -65,7 +66,7 @@ public class MPWorld extends WorldBase {
 	private int mStateTimer = COUNTDOWN_TIME;
 	private int mStateTimerLTV = mStateTimer;
 	private static final int COUNTDOWN_TIME = 3000;
-	private static final int SPECIALSELECT_TIME = 1500;
+	private static final int SPECIALSELECT_TIME = 2500;
 	private static final int MOUSEMANIA_TIME = 10000;
 	private static final int CATMANIA_TIME = 10000;
 	private static final int SPEEDUP_TIME = 10000;
@@ -347,8 +348,9 @@ public class MPWorld extends WorldBase {
 			//Timer counts from 1500 to 500 during this period
 			if(mStateTimer >= 500)
 			{
-				int count = ((mStateTimer - 500) * (mStateTimer - 500)) / 100000;
-				int ltv_count = ((mStateTimerLTV - 500) * (mStateTimerLTV - 500)) / 100000;
+				final int scalar = (SPECIALSELECT_TIME - 500) * (SPECIALSELECT_TIME - 500) / 25;
+				int count =     ((mStateTimer - 500)    * (mStateTimer - 500))    / scalar;
+				int ltv_count = ((mStateTimerLTV - 500) * (mStateTimerLTV - 500)) / scalar;
 				if(count != ltv_count)
 				{
 					if(count != 0)
@@ -372,6 +374,7 @@ public class MPWorld extends WorldBase {
 							break;
 						}
 						mGUIMessage.show(mStateNames.get(roll_state), 500);
+						SoundManager.PlaySound("Sounds/Roulette.ogg");
 					} else
 					{
 						mGUIMessage.show(mStateNames.get(mPendingSpecialState), 500);
@@ -396,6 +399,27 @@ public class MPWorld extends WorldBase {
 		{
 			mGUIMessage.show("30s left!", 750);
 		}
+		if(mRealtime > GAME_TIME - 10000 && ltv_realtime <= GAME_TIME - 10000) {
+			SoundManager.PlaySound("Sounds/Beep1.ogg"); }
+		if(mRealtime > GAME_TIME - 9000 && ltv_realtime <= GAME_TIME - 9000) {
+			SoundManager.PlaySound("Sounds/Beep1.ogg"); }
+		if(mRealtime > GAME_TIME - 8000 && ltv_realtime <= GAME_TIME - 8000) {
+			SoundManager.PlaySound("Sounds/Beep1.ogg"); }
+		if(mRealtime > GAME_TIME - 7000 && ltv_realtime <= GAME_TIME - 7000) {
+			SoundManager.PlaySound("Sounds/Beep1.ogg"); }
+		if(mRealtime > GAME_TIME - 6000 && ltv_realtime <= GAME_TIME - 6000) {
+			SoundManager.PlaySound("Sounds/Beep2.ogg"); }
+		if(mRealtime > GAME_TIME - 5000 && ltv_realtime <= GAME_TIME - 5000) {
+			SoundManager.PlaySound("Sounds/Beep2.ogg"); }
+		if(mRealtime > GAME_TIME - 4000 && ltv_realtime <= GAME_TIME - 4000) {
+			SoundManager.PlaySound("Sounds/Beep2.ogg"); }
+		if(mRealtime > GAME_TIME - 3000 && ltv_realtime <= GAME_TIME - 3000) {
+			SoundManager.PlaySound("Sounds/Beep2.ogg"); }
+		if(mRealtime > GAME_TIME - 2000 && ltv_realtime <= GAME_TIME - 2000) {
+			SoundManager.PlaySound("Sounds/Beep3.ogg"); }
+		if(mRealtime > GAME_TIME - 1000 && ltv_realtime <= GAME_TIME - 1000) {
+			SoundManager.PlaySound("Sounds/Beep3.ogg"); }
+
 		if(mRealtime > GAME_TIME && mGameState != MPGameState.Finished)
 		{
 			//Determine winner

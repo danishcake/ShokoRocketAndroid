@@ -6,6 +6,7 @@ import java.util.HashMap;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.util.Log;
 
 public class SoundManager {
 	private static SoundManager mInstance = null;
@@ -64,6 +65,18 @@ public class SoundManager {
 	    streamVolume = streamVolume / instance.mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 	    
 		instance.mPool.play(soundID, streamVolume, streamVolume, 1, 0, 1.0f);
+	}
+	
+	public static void PlaySound(String sound)
+	{
+		try
+		{
+			int sound_id = LoadSound(sound);
+			PlaySound(sound_id);
+		} catch(IOException io_ex)
+		{
+			Log.e("ShokoRocket.SoundManager.PlaySound", "Unable to load sound " + sound);
+		}
 	}
 	
 	public static boolean GetEnabled() {return GetInstance().getEnabled();}

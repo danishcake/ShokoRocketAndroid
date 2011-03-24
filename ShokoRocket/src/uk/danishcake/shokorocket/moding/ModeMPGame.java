@@ -1,5 +1,7 @@
 package uk.danishcake.shokorocket.moding;
 
+import java.io.IOException;
+
 import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.NinePatchData;
@@ -20,6 +22,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.Paint.Align;
+import android.util.Log;
 
 public class ModeMPGame extends Mode {
 	private ModeMenu mModeMenu = null;
@@ -55,7 +58,18 @@ public class ModeMPGame extends Mode {
 	@Override
 	public void Setup(Context context) {
 		super.Setup(context);
-		
+		//Preload sound as SoundManager loads them on a different thread, so need to
+		//preload in order to be ready for immediate playback
+		try
+		{
+			SoundManager.LoadSound("Sounds/Beep1.ogg");
+			SoundManager.LoadSound("Sounds/Beep2.ogg");
+			SoundManager.LoadSound("Sounds/Beep3.ogg");
+		} catch(IOException io_ex)
+		{
+			Log.e("ShokoRocket", "Unable to preload beeps");
+		}
+
 		NinePatchData np0 = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_mpbutton0)), mNPBorder, mNPBorder, mNPBorder, mNPBorder);
 		NinePatchData np1 = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_mpbutton1)), mNPBorder, mNPBorder, mNPBorder, mNPBorder);
 		NinePatchData np2 = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_mpbutton2)), mNPBorder, mNPBorder, mNPBorder, mNPBorder);
