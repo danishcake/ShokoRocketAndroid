@@ -76,6 +76,32 @@ public class Progress {
 			mLevelPackIndex += mLevels.size();
 	}
 	
+	/**
+	 * Advances to the first unbeaten level
+	 * If the current level is unbeaten it will not change
+	 * Then it checks all others in the level pack
+	 * Then it advances through the level packs
+	 */
+	public boolean gotoFirstUnbeaten() {
+		if(!getBeaten()) 
+			return false;
+		if(nextUnbeaten())
+			return true;
+		else
+		{
+			for(int i = 0; i < mLevels.size(); i++)
+			{
+				mLevelPackIndex++;
+				mLevelPackIndex %= mLevels.size();
+				if(!getBeaten())
+					return true;
+				if(nextUnbeaten())
+					return true;
+			}
+		}
+		return false;
+	}
+	
 	public void gotoTrainingPack() {
 		for(int i = 0; i < mLevels.size(); i++)
 		{
@@ -156,9 +182,9 @@ public class Progress {
 	
 	/**
 	 * Advances to the next unbeaten level within the pack. If all are beaten already then will 
-	 * not move position
+	 * not move position.
 	 */
-	public void nextUnbeaten() {
+	public boolean nextUnbeaten() {
 		LevelPack lp = mLevels.get(mLevelPackIndex);
 		if(getCompletedCount() < lp.levels.size())
 		{
@@ -167,9 +193,10 @@ public class Progress {
 				lp.levelIndex++;
 				lp.levelIndex %= lp.levels.size();
 				if(!getBeaten())
-					return;
+					return true;
 			}
 		}
+		return false;
 	}
 	
 	/**

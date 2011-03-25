@@ -75,6 +75,15 @@ public class ModeMenu extends Mode {
 	@Override
 	public void Setup(Context context) {
 		MusicManager.PlayMenuMusic();
+
+		if(!mSetup)
+			LoadLevelList();
+		
+		if(mProgress.gotoFirstUnbeaten())
+		{
+			mWorldDirection = Direction.East;
+			startTransition();
+		}
 		if(mSetup)
 		{
 			mProgress.AssessUnlockable(mSkin);
@@ -82,9 +91,9 @@ public class ModeMenu extends Mode {
 			if(mEditorLoaded)
 				LoadLevelList();
 			mEditorLoaded = false;
-			ChangeLevel();
 			return;
 		}
+		
 
 		super.Setup(context);
 		mSkin = new SkinProgress(context);
@@ -434,10 +443,8 @@ public class ModeMenu extends Mode {
 			mIPPage.addWidget(lameExcuses);
 		}
 		
-		LoadLevelList();
+		
 		startTransition();
-
-		ChangeLevel();
 		mSetup = true;
 	}
 
