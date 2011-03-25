@@ -36,40 +36,40 @@ public class ModeUnlocks extends Mode {
 		mWidgetPage = new WidgetPage();
 				
 		Widget back = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - mBtnBorder - mBtnSize, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
-		back.setText("Back");
+		back.setText(context.getString(R.string.unlocks_back));
 		
 		Widget complete_count = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - mBtnBorder - 2 * mBtnSize - mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder - 1 * mBtnSize - mBtnSep));
-		complete_count.setText("Complete: " + (new Integer(mProgress.getBeatenLevelCount())).toString() + "/" + (new Integer(mProgress.getTotalLevelCount())).toString());
+		complete_count.setText(context.getString(R.string.unlocks_complete_prefix) + (new Integer(mProgress.getBeatenLevelCount())).toString() + "/" + (new Integer(mProgress.getTotalLevelCount())).toString());
 		
 		Widget tutorial = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize));
-		tutorial.setText("Tutorial");
+		tutorial.setText(context.getString(R.string.menu_tutorial));
 		
 		List<RadioWidget> skins = new ArrayList<RadioWidget>();
 		NinePatchData set_np = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_radio_set)), mNPBorder, mNPBorder, mNPBorder, mNPBorder);
 		NinePatchData unset_np = new NinePatchData(BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.blank_radio_unset)), mNPBorder, mNPBorder, mNPBorder, mNPBorder);
 		
 		RadioWidget skin_pink = new RadioWidget(set_np, unset_np, new Rect(mBtnBorder, mBtnBorder + 1 * (mBtnSize + mBtnSep), mScreenWidth - mBtnBorder, mBtnBorder + 1 * (mBtnSize + mBtnSep) + mBtnSize), skins);
-		skin_pink.setText("Pink mice");
+		skin_pink.setText(context.getString(R.string.unlocks_pinkmouse_text));
 		skin_pink.setEnabled(mSkin.getSkinUnlocked("Animations/PinkMice.xml"));
 		
 		RadioWidget skin_cont = new RadioWidget(set_np, unset_np, new Rect(mBtnBorder, mBtnBorder + 2 * (mBtnSize + mBtnSep), mScreenWidth - mBtnBorder, mBtnBorder + 2 * (mBtnSize + mBtnSep) + mBtnSize), skins);
-		skin_cont.setText("Elite mice");
+		skin_cont.setText(context.getString(R.string.unlocks_contributor_text));
 		skin_cont.setEnabled(mSkin.getSkinUnlocked("Animations/Contributor.xml"));
 		
 		RadioWidget skin_xmas = new RadioWidget(set_np, unset_np, new Rect(mBtnBorder, mBtnBorder + 3 * (mBtnSize + mBtnSep), mScreenWidth - mBtnBorder, mBtnBorder + 3 * (mBtnSize + mBtnSep) + mBtnSize), skins);
-		skin_xmas.setText("Christmas");
+		skin_xmas.setText(context.getString(R.string.unlocks_xmas_text));
 		skin_xmas.setEnabled(mSkin.getSkinUnlocked("Animations/Christmas.xml"));
 		
 		RadioWidget skin_obs = new RadioWidget(set_np, unset_np, new Rect(mBtnBorder, mBtnBorder + 4 * (mBtnSize + mBtnSep), mScreenWidth - mBtnBorder, mBtnBorder + 4 * (mBtnSize + mBtnSep) + mBtnSize), skins);
-		skin_obs.setText("Obsidian mice");
+		skin_obs.setText(context.getString(R.string.unlocks_obsidian_text));
 		skin_obs.setEnabled(mSkin.getSkinUnlocked("Animations/ObsidianMice.xml"));
 		
 		RadioWidget skin_ghost = new RadioWidget(set_np, unset_np, new Rect(mBtnBorder, mBtnBorder + 5 * (mBtnSize + mBtnSep), mScreenWidth - mBtnBorder, mBtnBorder + 5 * (mBtnSize + mBtnSep) + mBtnSize), skins);
-		skin_ghost.setText("Ghost mice");
+		skin_ghost.setText(context.getString(R.string.unlocks_ghostmice_text));
 		skin_ghost.setEnabled(mSkin.getSkinUnlocked("Animations/GhostMice.xml"));
 		
 		RadioWidget skin_line = new RadioWidget(set_np, unset_np, new Rect(mBtnBorder, mBtnBorder + 6 * (mBtnSize + mBtnSep), mScreenWidth - mBtnBorder, mBtnBorder + 6 * (mBtnSize + mBtnSep) + mBtnSize), skins);
-		skin_line.setText("Line art");
+		skin_line.setText(context.getString(R.string.unlocks_lineart_text));
 		skin_line.setEnabled(mSkin.getSkinUnlocked("Animations/Line.xml"));
 		
 		//Read current set state
@@ -163,32 +163,32 @@ public class ModeUnlocks extends Mode {
 		
 		skin_pink.setOnDisabledClickListener(new OnClickListener() {
 			public void OnClick(Widget widget) {
-				Toast.makeText(mContext, "Beat 5 levels to unlock", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, R.string.unlocks_pink_mice_hint, Toast.LENGTH_SHORT).show();
 			}});
 		
 		skin_cont.setOnDisabledClickListener(new OnClickListener() {
 			public void OnClick(Widget widget) {
-				Toast.makeText(mContext, "Submit a level with the editor to unlock", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, R.string.unlocks_contributor_hint, Toast.LENGTH_SHORT).show();
 			}});
 
 		skin_xmas.setOnDisabledClickListener(new OnClickListener() {
 			public void OnClick(Widget widget) {
-				Toast.makeText(mContext, "Play during December to unlock", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, R.string.unlocks_christmas_hint, Toast.LENGTH_SHORT).show();
 			}});
 		
 		skin_obs.setOnDisabledClickListener(new OnClickListener() {
 			public void OnClick(Widget widget) {
-				Toast.makeText(mContext, "Beat 30 levels to unlock", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, R.string.unlocks_obsidian_hint, Toast.LENGTH_SHORT).show();
 			}});
 		
 		skin_ghost.setOnDisabledClickListener(new OnClickListener() {
 			public void OnClick(Widget widget) {
-				Toast.makeText(mContext, "Beat 60 levels to unlock", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, R.string.unlocks_ghost_hint, Toast.LENGTH_SHORT).show();
 			}});
 		
 		skin_line.setOnDisabledClickListener(new OnClickListener() {
 			public void OnClick(Widget widget) {
-				Toast.makeText(mContext, "Beat 100 levels to unlock", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, R.string.unlocks_lineart_hint, Toast.LENGTH_SHORT).show();
 			}});
 		
 		mWidgetPage.setFontSize(context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size));

@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="unlocks_complete_prefix">Complete: </string>
+    <string name="unlocks_pinkmouse_text">Pink mice</string>
+    <string name="unlocks_contributor_text">Elite mice</string>
+    <string name="unlocks_xmas_text">Christmas</string>
+    <string name="unlocks_obsidian_text">Obsidian mice</string>
+    <string name="unlocks_ghostmice_text">Ghost mice</string>
+    <string name="unlocks_lineart_text">Line art</string>
+    <string name="unlocks_lineart_hint">Beat 100 levels to unlock</string>
+    <string name="unlocks_ghost_hint">Beat 60 levels to unlock</string>
+    <string name="unlocks_obsidian_hint">Beat 30 levels to unlock</string>
+    <string name="unlocks_christmas_hint">Play during December to unlock</string>
+    <string name="unlocks_contributor_hint">Submit a level with the editor to unlock</string>
+    <string name="unlocks_pink_mice_hint">Beat 5 levels to unlock</string>
+	<string name="unlocks_back">Back</string>
     <string name="puzzle_run_speed_faster">Faster</string>
     <string name="error_loading_level">Error loading level</string>
     <string name="mp_beta_warning">BETA warning:\n There is currently no multiplayer. Versus AI is in work, and once satisfactory I will start on proper multiplayer</string>
