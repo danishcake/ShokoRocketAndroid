@@ -60,24 +60,30 @@ public class MusicManager implements OnPreparedListener {
 	}
 	
 	private static void PlayMusic() {
-		String music = "nomusic.ogg";
+		String music = "nomusic";
 		switch(mMusicMode)
 		{
 		case Menu:
-			music = "Menu.ogg";
+			music = "Menu";
 			break;
 		case Multiplayer:
-			music = "Multiplayer.ogg";
+			music = "Multiplayer";
 			break;
 		case Puzzle:
-			music = "Puzzle.ogg";
+			music = "Puzzle";
 			break;
 		}
 		
 		File root = new File(Environment.getExternalStorageDirectory(), "ShokoRocket");
 		File music_folder = new File(root, "Music");
-		File music_file = new File(music_folder, music);
+		File music_filestem = new File(music_folder, music);
+		File music_ogg = new File(music_filestem.getAbsolutePath() + ".ogg");
+		File music_mp3 = new File(music_filestem.getAbsolutePath() + ".mp3");
 		
+		File music_file = music_ogg;
+		if(!music_file.exists())
+			music_file = music_mp3;
+
 		try
 		{
 			FileInputStream fis = new FileInputStream(music_file);
