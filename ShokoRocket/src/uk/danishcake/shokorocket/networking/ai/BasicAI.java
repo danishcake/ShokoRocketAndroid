@@ -20,22 +20,30 @@ public class BasicAI extends BaseAI {
 	private int mBestRow;
 	private int mBestCol;
 	private boolean mIntercept;
+	private boolean mCatBlock;
 	private int mMaliceTactic = 0;
 	private Vector2i mInterceptPosition = new Vector2i(0, 0);
 	private Direction mInterceptDirection;
 	private ArrayList<Vector2i> mSpawners = new ArrayList<Vector2i>();
 
 	private Vector2i mRocketPosition = new Vector2i(0, 0);
-	
+	private Vector2i mDirectPosition; //Can be mRocketPosition or mTargetRocket, used to direct cats or mice!
+	private int mDirectID;
+
 	private int AI_RATE = 10;
 	private int mActTimer = 0;
 	private boolean mMaliceIntercept;
 	private boolean mMaliceBlock;
-	
+	private int mInterceptCatsDelay;
+	private int mCatsAge = 0;
+
 	private int mTarget = 0;
 	private Vector2i mTargetRocket = new Vector2i(0, 0);
 	private Vector2i mLastBlockPos = new Vector2i(0, 0);
 	private Direction mLastBlockDir = Direction.Invalid;
+
+	private Vector2i mCatBlockPosition = new Vector2i(0, 0);
+	private Direction mCatBlockDirection = Direction.Invalid;
 
 	public BasicAI(int difficulty){
 		if(difficulty <= 0)
@@ -43,18 +51,21 @@ public class BasicAI extends BaseAI {
 			AI_RATE = 35;
 			mMaliceIntercept = false;
 			mMaliceBlock = false;
+			mInterceptCatsDelay = 0;
 		}
 		else if(difficulty == 1)
 		{
 			AI_RATE = 20;
 			mMaliceIntercept = false;
 			mMaliceBlock = true;
+			mInterceptCatsDelay = 0;
 		}
 		else
 		{
 			AI_RATE = 10;
 			mMaliceIntercept = true;
 			mMaliceBlock = true;
+			mInterceptCatsDelay = 0;
 		}
 	}
 	
@@ -110,8 +121,108 @@ public class BasicAI extends BaseAI {
 			mActTimer = 0;
 		}
 
+		mCatBlock = false;
+		mIntercept = false;
+		ArrayList<Walker> walkers = null;
+
+		//Change target if leader > 50 ahead
+		int[] scores = mWorld.getPlayerScores();
+		for(int i = 0; i < 4; i++) {
+			if(i != mPlayerID && i != mTarget) {
+				if(scores[i] > scores[mTarget] + 25) {
+					mTarget = i;
+					findRocket(mTarget, mTargetRocket);
+					break;
+				}
+			}
+		}
+
+		//First check if there are incoming cats and block as a priority!
+		ArrayList<Walker> cats = mWorld.getLiveCats();
+		if(cats.size() > 0 && mCatsAge < 5) mCatsAge++; //Delay blocking of cats depending on difficulty
+		if(cats.size() == 0)
+		{
+			if(mCatsAge > 0) mCatsAge--;
+		}
+		if(mCatsAge > mInterceptCatsDelay)
+		{
+			//Look down each axis of rocket, count mice heading towards it
+			int from_north = 0;
+			int from_south = 0;
+			int from_west = 0;
+			int from_east = 0;
+
+			for (Walker walker : cats) {
+				int x = walker.getX();
+				int y = walker.getY();
+				Direction d = walker.getDirection();
+				if(x == mRocketPosition.x && y < mRocketPosition.y && d == Direction.South) {
+					from_north++;
+				}
+				if(x == mRocketPosition.x && y > mRocketPosition.y && d == Direction.North) {
+					from_south++;
+				}
+				if(y == mRocketPosition.y && x < mRocketPosition.x && d == Direction.East) {
+					from_west++;
+				}
+				if(y == mRocketPosition.y && x > mRocketPosition.x && d == Direction.West) {
+					from_east++;
+				}
+			}
+			//Now walk down prioritised axis and place orthogonal arrow at first opportunity
+			if(from_north + from_south + from_west + from_east > 0)
+			{
+				Direction d = Direction.Invalid;
+				int x;
+				int y;
+				if(from_north >= from_south && from_north >= from_west && from_north >= from_east)
+				{
+					d = Direction.North;
+				} else if(from_south >= from_north && from_south >= from_west && from_south >= from_east)
+				{
+					d = Direction.South;
+				} else if(from_east >= from_north && from_east >= from_west && from_east >= from_south)
+				{
+					d = Direction.East;
+				} else
+				{
+					d = Direction.West;
+				}
+				x = mRocketPosition.x;
+				y = mRocketPosition.y;
+				Direction block_direction = walkToEmpty(x, y, d, 5, mCatBlockPosition);
+				if(block_direction != Direction.Invalid)
+				{
+					mCatBlock = true;
+
+					CursorPositioningMessage cpm = new CursorPositioningMessage(mCatBlockPosition.x, mCatBlockPosition.y);
+					cpm.setCommon(mPlayerID, 1);
+					messages.add(cpm);
+
+					ArrowPlacementMessage apm = new ArrowPlacementMessage(mCatBlockPosition.x, mCatBlockPosition.y, mCatBlockDirection);
+					apm.setCommon(mPlayerID, 1);
+					messages.add(apm);
+				}
+			}
+
+			//Now got two arrows to direct cats with
+			walkers = mWorld.getLiveCats();
+			mDirectID = mTarget;
+			mDirectPosition = mTargetRocket;
+			scan_sweep(walkers);
+			
+		} else
+		{
+			walkers = mWorld.getLiveMice();
+			mDirectID = mPlayerID;
+			mDirectPosition = mRocketPosition;
+			scan_sweep(walkers);
+			
+		}
+
+		{
 		//Chose whether to use columns or rows based on area with most walkers
-		scan_sweep();
+		
 		int pref = 0;
 		if(mBestRow != -1 && mBestCol != -1)
 			if(mRowCount[mBestRow] > mColCount[mBestCol])
@@ -125,22 +236,22 @@ public class BasicAI extends BaseAI {
 
 		if(pref == 1) //Do a row
 		{
-			Direction arrow_dir = mBestRow < mRocketPosition.y ? Direction.South : Direction.North;
-			if(isColClear(mRocketPosition.x, mBestRow, mRocketPosition.y) && countRowReachable(mBestRow, mRocketPosition.x) > 0) {
+			Direction arrow_dir = mBestRow < mDirectPosition.y ? Direction.South : Direction.North;
+			if(isColClear(mDirectPosition.x, mBestRow, mDirectPosition.y) && countRowReachable(mBestRow, mDirectPosition.x, walkers) > 0) {
 				//If column clear place direct arrow
-				CursorPositioningMessage cpm = new CursorPositioningMessage(mRocketPosition.x, mBestRow);
+				CursorPositioningMessage cpm = new CursorPositioningMessage(mDirectPosition.x, mBestRow);
 				cpm.setCommon(mPlayerID, 1);
 				messages.add(cpm);
 
-				ArrowPlacementMessage apm = new ArrowPlacementMessage(mRocketPosition.x, mBestRow, arrow_dir);
+				ArrowPlacementMessage apm = new ArrowPlacementMessage(mDirectPosition.x, mBestRow, arrow_dir);
 				apm.setCommon(mPlayerID, 1);
 				messages.add(apm);
 			} else //Find an L shape
 			{
 				//Walk alternate sides out to find row/col
-				int L_m = mRocketPosition.x;
-				int L_p = mRocketPosition.x;
-				int L_sel = mRocketPosition.x;
+				int L_m = mDirectPosition.x;
+				int L_p = mDirectPosition.x;
+				int L_sel = mDirectPosition.x;
 
 				for(int i = 0; i < mWorld.getWidth() - 1; i++)
 				{
@@ -168,19 +279,19 @@ public class BasicAI extends BaseAI {
 						}
 					}
 					//Check if L_sel OK
-					if(isRowClear(mRocketPosition.y, mRocketPosition.x, L_sel) && 
-					   isColClear(L_sel, mRocketPosition.y, mBestRow) && 
-					   countRowReachable(mBestRow, L_sel) > 0)
+					if(isRowClear(mDirectPosition.y, mDirectPosition.x, L_sel) && 
+					   isColClear(L_sel, mDirectPosition.y, mBestRow) && 
+					   countRowReachable(mBestRow, L_sel, walkers) > 0)
 					{
 						CursorPositioningMessage cpm = new CursorPositioningMessage(L_sel, mBestRow);
 						cpm.setCommon(mPlayerID, 1);
 						messages.add(cpm);
 
-						ArrowPlacementMessage apm = new ArrowPlacementMessage(L_sel, mRocketPosition.y, L_sel > mRocketPosition.x ? Direction.West : Direction.East);
+						ArrowPlacementMessage apm = new ArrowPlacementMessage(L_sel, mDirectPosition.y, L_sel > mDirectPosition.x ? Direction.West : Direction.East);
 						apm.setCommon(mPlayerID, 1);
 						messages.add(apm);
 
-						ArrowPlacementMessage apm2 = new ArrowPlacementMessage(L_sel, mBestRow, mBestRow > mRocketPosition.y ? Direction.North : Direction.South);
+						ArrowPlacementMessage apm2 = new ArrowPlacementMessage(L_sel, mBestRow, mBestRow > mDirectPosition.y ? Direction.North : Direction.South);
 						apm2.setCommon(mPlayerID, 1);
 						messages.add(apm2);
 						break;
@@ -189,22 +300,22 @@ public class BasicAI extends BaseAI {
 			}
 		} else if(pref == 2)
 		{
-			Direction arrow_dir = mBestCol < mRocketPosition.x ? Direction.East : Direction.West;
-			if(isRowClear(mRocketPosition.y, mBestCol, mRocketPosition.x) && countColReachable(mBestCol, mRocketPosition.y) > 0) {
+			Direction arrow_dir = mBestCol < mDirectPosition.x ? Direction.East : Direction.West;
+			if(isRowClear(mDirectPosition.y, mBestCol, mDirectPosition.x) && countColReachable(mBestCol, mDirectPosition.y, walkers) > 0) {
 				//If row clear place direct arrow
-				CursorPositioningMessage cpm = new CursorPositioningMessage(mBestCol, mRocketPosition.y);
+				CursorPositioningMessage cpm = new CursorPositioningMessage(mBestCol, mDirectPosition.y);
 				cpm.setCommon(mPlayerID, 1);
 				messages.add(cpm);
 
-				ArrowPlacementMessage apm = new ArrowPlacementMessage(mBestCol, mRocketPosition.y, arrow_dir);
+				ArrowPlacementMessage apm = new ArrowPlacementMessage(mBestCol, mDirectPosition.y, arrow_dir);
 				apm.setCommon(mPlayerID, 1);
 				messages.add(apm);
 			} else
 			{
 				//Walk alternate sides out to find row/col
-				int L_m = mRocketPosition.y;
-				int L_p = mRocketPosition.y;
-				int L_sel = mRocketPosition.y;
+				int L_m = mDirectPosition.y;
+				int L_p = mDirectPosition.y;
+				int L_sel = mDirectPosition.y;
 
 				for(int i = 0; i < mWorld.getHeight() - 1; i++)
 				{
@@ -232,19 +343,19 @@ public class BasicAI extends BaseAI {
 						}
 					}
 					//Check if L_sel OK
-					if(isColClear(mRocketPosition.x, mRocketPosition.y, L_sel) && 
-					   isRowClear(L_sel, mRocketPosition.x, mBestCol) &&
-					   countColReachable(mBestCol, L_sel) > 0)
+					if(isColClear(mDirectPosition.x, mDirectPosition.y, L_sel) && 
+					   isRowClear(L_sel, mDirectPosition.x, mBestCol) &&
+					   countColReachable(mBestCol, L_sel, walkers) > 0)
 					{
-						CursorPositioningMessage cpm = new CursorPositioningMessage(mRocketPosition.x, L_sel);
+						CursorPositioningMessage cpm = new CursorPositioningMessage(mDirectPosition.x, L_sel);
 						cpm.setCommon(mPlayerID, 1);
 						messages.add(cpm);
 
-						ArrowPlacementMessage apm = new ArrowPlacementMessage(mRocketPosition.x, L_sel, L_sel > mRocketPosition.y ? Direction.North : Direction.South);
+						ArrowPlacementMessage apm = new ArrowPlacementMessage(mDirectPosition.x, L_sel, L_sel > mDirectPosition.y ? Direction.North : Direction.South);
 						apm.setCommon(mPlayerID, 1);
 						messages.add(apm);
 
-						ArrowPlacementMessage apm2 = new ArrowPlacementMessage(mBestCol, L_sel, mBestCol > mRocketPosition.x ? Direction.West : Direction.East);
+						ArrowPlacementMessage apm2 = new ArrowPlacementMessage(mBestCol, L_sel, mBestCol > mDirectPosition.x ? Direction.West : Direction.East);
 						apm2.setCommon(mPlayerID, 1);
 						messages.add(apm2);
 						break;
@@ -252,26 +363,16 @@ public class BasicAI extends BaseAI {
 				}
 			}
 		}
-
-		//Change target if leader > 50 ahead
-		int[] scores = mWorld.getPlayerScores();
-		for(int i = 0; i < 4; i++) {
-			if(i != mPlayerID && i != mTarget) {
-				if(scores[i] > scores[mTarget] + 25) {
-					mTarget = i;
-					findRocket(mTarget, mTargetRocket);
-					break;
-				}
-			}
 		}
 
-		mIntercept = false;
-		if(++mMaliceTactic < 10 && mMaliceIntercept)
+		if(!mCatBlock && ++mMaliceTactic < 10 && mMaliceIntercept)
 		{
 			//Use final arrow to screw with others
 			//Try walking a spawner, see if it leads to an enemy
 			for (Vector2i spawner : mSpawners) {
-				walkSpawner(spawner.x, spawner.y, mWorld.getSpecialSquare(spawner.x, spawner.y).toSpawnerDirection(), 12);
+				mInterceptDirection = walkSpawner(spawner.x, spawner.y, mWorld.getSpecialSquare(spawner.x, spawner.y).toSpawnerDirection(),
+												 12, mInterceptPosition);
+				mIntercept = mInterceptDirection != Direction.Invalid;
 				if(mIntercept)
 				{
 					Direction d;
@@ -288,9 +389,10 @@ public class BasicAI extends BaseAI {
 		}
 		if(mMaliceTactic > 15)
 			mMaliceTactic = 0;
-		if(!mIntercept && mMaliceBlock)
+		if(!mCatBlock && !mIntercept && mMaliceBlock)
 		{
-			//Look down each axis of rocket, count mice heading towards it
+			//Look down each axis of rocket, count walkers heading towards it
+			//This can be cats if AI is targetting another location!
 			int from_north = 0;
 			int from_south = 0;
 			int from_west = 0;
@@ -307,7 +409,6 @@ public class BasicAI extends BaseAI {
 				placed = true;
 			}
 
-			ArrayList<Walker> walkers = mWorld.getLiveMice();
 			for (Walker walker : walkers) {
 				int x = walker.getX();
 				int y = walker.getY();
@@ -447,8 +548,8 @@ public class BasicAI extends BaseAI {
 			SquareType ss = mWorld.getSpecialSquare(x, row);
 			//TODO walls
 			//TODO holes, other rockets
-			if(ss == SquareType.Hole || (ss == SquareType.Rocket && mWorld.getPlayer(x, row) != mPlayerID) ||
-			   (ss.getArrowDirectionality() != Direction.Invalid && mWorld.getPlayer(x, row) != mPlayerID))
+			if(ss == SquareType.Hole || (ss == SquareType.Rocket && mWorld.getPlayer(x, row) != mDirectID) ||
+			   (ss.getArrowDirectionality() != Direction.Invalid && mWorld.getPlayer(x, row) != mDirectID))
 			{
 				return false;
 			}
@@ -467,8 +568,8 @@ public class BasicAI extends BaseAI {
 			SquareType ss = mWorld.getSpecialSquare(col, y);
 			//TODO walls
 			//TODO holes, other rockets
-			if(ss == SquareType.Hole || (ss == SquareType.Rocket && mWorld.getPlayer(col, y) != mPlayerID) || 
-			   (ss.getArrowDirectionality() != Direction.Invalid && mWorld.getPlayer(col, y) != mPlayerID))
+			if(ss == SquareType.Hole || (ss == SquareType.Rocket && mWorld.getPlayer(col, y) != mDirectID) || 
+			   (ss.getArrowDirectionality() != Direction.Invalid && mWorld.getPlayer(col, y) != mDirectID))
 			{
 				return false;
 			}
@@ -482,8 +583,7 @@ public class BasicAI extends BaseAI {
 	 * @param col
 	 * @return
 	 */
-	private int countRowReachable(int row, int col) {
-		ArrayList<Walker> mice = mWorld.getLiveMice();
+	private int countRowReachable(int row, int col, ArrayList<Walker> walkers) {
 		int reachable = 0;
 		for(int i = col + 1; i < mWorld.getWidth(); i++) {
 			//Terminate early if blocked
@@ -492,7 +592,7 @@ public class BasicAI extends BaseAI {
 			   (ss.getArrowDirectionality() != Direction.West && 
 				ss.getArrowDirectionality() != Direction.Invalid))
 				break;
-			for (Walker walker : mice) {
+			for (Walker walker : walkers) {
 				//Count walkers in this row
 				if(walker.getY() == row && walker.getX() == i)
 					reachable++;
@@ -505,7 +605,7 @@ public class BasicAI extends BaseAI {
 					   (ss.getArrowDirectionality() != Direction.East && 
 						ss.getArrowDirectionality() != Direction.Invalid))
 				break;
-			for (Walker walker : mice) {
+			for (Walker walker : walkers) {
 				//Count walkers in this row
 				if(walker.getY() == row && walker.getX() == i)
 					reachable++;
@@ -520,8 +620,7 @@ public class BasicAI extends BaseAI {
 	 * @param col
 	 * @return
 	 */
-	private int countColReachable(int col, int row) {
-		ArrayList<Walker> mice = mWorld.getLiveMice();
+	private int countColReachable(int col, int row, ArrayList<Walker> walkers) {
 		int reachable = 0;
 		for(int i = row + 1; i < mWorld.getHeight(); i++) {
 			//Terminate early if blocked
@@ -530,7 +629,7 @@ public class BasicAI extends BaseAI {
 					   (ss.getArrowDirectionality() != Direction.North && 
 						ss.getArrowDirectionality() != Direction.Invalid))
 				break;
-			for (Walker walker : mice) {
+			for (Walker walker : walkers) {
 				//Count walkers in this row
 				if(walker.getX() == col && walker.getY() == i)
 					reachable++;
@@ -543,7 +642,7 @@ public class BasicAI extends BaseAI {
 					   (ss.getArrowDirectionality() != Direction.South && 
 						ss.getArrowDirectionality() != Direction.Invalid))
 				break;
-			for (Walker walker : mice) {
+			for (Walker walker : walkers) {
 				//Count walkers in this row
 				if(walker.getX() == col && walker.getY() == i)
 					reachable++;
@@ -553,24 +652,24 @@ public class BasicAI extends BaseAI {
 	}
 
 	/**
-	 * Finds the number of mice in each row/column moving towards the rocket in that axis
+	 * Finds the number of walkers in each row/column moving towards the rocket in that axis
+	 * walkers can be either mice or cats
 	 */
-	private void scan_sweep() {
+	private void scan_sweep(ArrayList<Walker> walkers) {
 		for(int i = 0; i < mWorld.getWidth(); i++)
 			mColCount[i] = 0;
 		for(int i = 0; i < mWorld.getHeight(); i++)
 			mRowCount[i] = 0;
-		ArrayList<Walker> mice = mWorld.getLiveMice();
-		Iterator<Walker> mouse_it = mice.iterator();
-		while(mouse_it.hasNext()) {
-			Walker mouse = mouse_it.next();
-			int x = mouse.getX();
-			int y = mouse.getY();
-			if((y <= mRocketPosition.y && mouse.getDirection() == Direction.South) || 
-			   (y >= mRocketPosition.y && mouse.getDirection() == Direction.North))
+		Iterator<Walker> walker_it = walkers.iterator();
+		while(walker_it.hasNext()) {
+			Walker walker = walker_it.next();
+			int x = walker.getX();
+			int y = walker.getY();
+			if((y <= mDirectPosition.y && walker.getDirection() == Direction.South) || 
+			   (y >= mDirectPosition.y && walker.getDirection() == Direction.North))
 				mColCount[x]++;
-			if((x <= mRocketPosition.x && mouse.getDirection() == Direction.East) || 
-			   (x >= mRocketPosition.x && mouse.getDirection() == Direction.West))
+			if((x <= mDirectPosition.x && walker.getDirection() == Direction.East) || 
+			   (x >= mDirectPosition.x && walker.getDirection() == Direction.West))
 			mRowCount[y]++;
 		}
 		int max_count = 0;
@@ -596,14 +695,14 @@ public class BasicAI extends BaseAI {
 	}
 
 	/**
-	 * Walks from a spawner 
+	 * Walks from a spawner returning the first empty square it finds if in range
 	 * @param x starting location
 	 * @param y starting location
 	 * @param direction starting direction
 	 * @param range maximum number of steps to take
 	 */
-	private void walkSpawner(int x, int y, Direction direction, int range) {
-		boolean interceptable = false;
+	private Direction walkSpawner(int x, int y, Direction direction, int range, Vector2i out_position) {
+		Direction intercept_direction = Direction.Invalid;
 		for(int i = 0; i < range; i++)
 		{
 			switch(direction)
@@ -626,8 +725,7 @@ public class BasicAI extends BaseAI {
 				break;
 			case Invalid:
 				//Uninteresting, trapped or something. Terminate early
-				mIntercept = false;
-				return;
+				return Direction.Invalid;
 			}
 			int player_id = mWorld.getPlayer(x, y);
 			SquareType square_type = mWorld.getSpecialSquare(x, y);
@@ -638,23 +736,21 @@ public class BasicAI extends BaseAI {
 			if(square_type == SquareType.Hole)
 			{
 				//Terminate early, uninteresting
-				mIntercept = false;
+				return Direction.Invalid;
 			}
 			if(square_type == SquareType.Rocket)
 			{
 				if(player_id != mPlayerID)
 				{
 					//Very interesting!
-					mIntercept = true && interceptable;
-					return;
+					return intercept_direction; 
 				}
 			}
 			if(square_type == SquareType.Empty)
 			{
-				mInterceptPosition.x = x;
-				mInterceptPosition.y = y;
-				mInterceptDirection = direction;
-				interceptable = true;
+				out_position.x = x;
+				out_position.y = y;
+				intercept_direction = direction;
 			}
 			if(player_id == mPlayerID)
 			{
@@ -676,5 +772,74 @@ public class BasicAI extends BaseAI {
 					direction = Direction.Invalid;
 			}
 		}
+		return Direction.Invalid;
+	}
+
+	/**
+	 * Walks from a rocket to find first empty square
+	 * @param x starting location
+	 * @param y starting location
+	 * @param direction starting direction
+	 * @param range maximum number of steps to take
+	 */
+	private Direction walkToEmpty(int x, int y, Direction direction, int range, Vector2i out_position) {
+		for(int i = 0; i < range; i++)
+		{
+			switch(direction)
+			{
+			case North:
+				y--;
+				if(y < 0) y = mWorld.getHeight() - 1;
+				break;
+			case South:
+				y++;
+				if(y >= mWorld.getHeight()) y = 0;
+				break;
+			case West:
+				x--;
+				if(x < 0) x = mWorld.getWidth() - 1;
+				break;
+			case East:
+				x++;
+				if(x >= mWorld.getWidth()) x = 0;
+				break;
+			case Invalid:
+				//Uninteresting, trapped or something. Terminate early
+				return Direction.Invalid;
+			}
+			SquareType square_type = mWorld.getSpecialSquare(x, y);
+			Direction d = square_type.getArrowDirectionality();
+			if(d != Direction.Invalid)
+				direction = d;
+			//Check special terminations (enemy rockets, holes)
+			if(square_type == SquareType.Hole || square_type == SquareType.Rocket)
+			{
+				//Terminate early, uninteresting
+				return Direction.Invalid;
+			}
+			if(square_type == SquareType.Empty)
+			{
+				out_position.x = x;
+				out_position.y = y;
+				return direction;
+			}
+			//Interact with walls
+			if(!mWorld.getDirection(x, y, d))
+			{
+				//mDirection = mDirection; //Carry straight on!
+			} 
+			else if(mWorld.getDirection(x, y, d) && 
+					  !mWorld.getDirection(x, y, Turns.TurnRight(d)))
+				direction = Turns.TurnRight(direction);
+			else if(mWorld.getDirection(x, y, d) &&
+					  mWorld.getDirection(x, y, Turns.TurnRight(d)) &&
+					  !mWorld.getDirection(x, y, Turns.TurnLeft(d)))
+				direction = Turns.TurnLeft(direction);
+			else if(!mWorld.getDirection(x, y, Turns.TurnAround(d)))
+				direction = Turns.TurnAround(direction);
+			else
+				direction = Direction.Invalid;
+		}
+		return Direction.Invalid;
 	}
 }
