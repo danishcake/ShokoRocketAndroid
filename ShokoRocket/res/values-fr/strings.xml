@@ -1,5 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="menu_none">Vide</string>
+    <string name="menu_hard_ai">IA dificile</string>
+    <string name="menu_medium_ai">IA Moyenne</string>
+    <string name="menu_easy_ai">IA Facile</string>
+    <string name="menu_puzzle">Puzzle</string>
+    <string name="menu_ai">IA</string>
+    <string name="menu_online">En ligne</string>
+    <string name="intro_thanks_guys">Merci les gens !</string>
+    <string name="intro_contributors">Contributeurs</string>
+    <string name="intro_credits">Crédits</string>
+    <string name="editor_share_your_work">Partagez votre travail</string>
     <string name="puzzle_run_speed_faster">Plus vite</string>
     <string name="menu_unlocks">Débloquer</string>
     <string name="tutorial_15">Si vous aimez ce jeu participez en faisant des critiques et parlez en autour de vous !</string>

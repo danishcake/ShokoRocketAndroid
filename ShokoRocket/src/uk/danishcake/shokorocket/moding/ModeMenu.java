@@ -125,10 +125,10 @@ public class ModeMenu extends Mode {
 			scrollRight.setText(">");
 
 			Widget toggleMP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth / 2 - mBtnSep / 2, mScreenHeight - mBtnBorder));
-			toggleMP.setText("Online");
+			toggleMP.setText(context.getString(R.string.menu_online));
 
 			Widget toggleAI = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
-			toggleAI.setText("AI");
+			toggleAI.setText(context.getString(R.string.menu_ai));
 
 			Widget unlocks = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
 			unlocks.setText(context.getString(R.string.menu_unlocks));
@@ -314,20 +314,20 @@ public class ModeMenu extends Mode {
 		//Setup AI page widgets
 		{
 			Widget toggleMP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth / 2 - mBtnSep / 2, mScreenHeight - mBtnBorder));
-			toggleMP.setText("Online");
+			toggleMP.setText(context.getString(R.string.menu_online));
 
 			Widget toggleSP = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
-			toggleSP.setText("Puzzle");
+			toggleSP.setText(context.getString(R.string.menu_puzzle));
 
 			Widget human = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder, mScreenWidth / 2 - mBtnSep / 2, mBtnBorder + mBtnSize));
 			human.setText("P1");
 			human.setEnabled(false);
 			mAI1 = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mBtnBorder, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSize));
-			mAI1.setText("Easy AI");
+			mAI1.setText(context.getString(R.string.menu_easy_ai));
 			mAI2 = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSep * 1 + mBtnSize * 1, mScreenWidth / 2 - mBtnSep / 2, mBtnBorder + mBtnSep * 1 + mBtnSize * 2));
-			mAI2.setText("Easy AI");
+			mAI2.setText(context.getString(R.string.menu_easy_ai));
 			mAI3 = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mBtnBorder + mBtnSep * 1 + mBtnSize * 1, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSep * 1 + mBtnSize * 2));
-			mAI3.setText("Easy AI");
+			mAI3.setText(context.getString(R.string.menu_easy_ai));
 
 			mLaunchAI = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize * 2, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize * 1));
 			mLaunchAI.setText("Launch");
@@ -335,22 +335,22 @@ public class ModeMenu extends Mode {
 			OnClickListener ai_change = new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
-					if(widget.getText().equals("Easy AI"))
+					if(widget.getText().equals(R.string.menu_easy_ai))
 					{
-						widget.setText("Medium AI");
-					} else if(widget.getText().equals("Medium AI"))
+						widget.setText(mContext.getString(R.string.menu_medium_ai));
+					} else if(widget.getText().equals(R.string.menu_medium_ai))
 					{
-						widget.setText("Hard AI");
-					} else if(widget.getText().equals("Hard AI"))
+						widget.setText(mContext.getString(R.string.menu_hard_ai));
+					} else if(widget.getText().equals(R.string.menu_hard_ai))
 					{
-						widget.setText("None");
+						widget.setText(mContext.getString(R.string.menu_none));
 					} else
 					{
-						widget.setText("Easy AI");
+						widget.setText(mContext.getString(R.string.menu_easy_ai));
 					}
-					mLaunchAI.setEnabled(!(mAI1.getText().equals("None") && 
-										   mAI2.getText().equals("None") &&
-										   mAI3.getText().equals("None")));
+					mLaunchAI.setEnabled(!(mAI1.getText().equals(R.string.menu_none) && 
+										   mAI2.getText().equals(R.string.menu_none) &&
+										   mAI3.getText().equals(R.string.menu_none)));
 				}
 			};
 
@@ -381,11 +381,11 @@ public class ModeMenu extends Mode {
 							String ai_string = "";
 							Widget[] ai_widgets = {mAI1, mAI2, mAI3};
 							for (Widget ai_widget : ai_widgets) {
-								if(ai_widget.getText().equals("Easy AI"))
+								if(ai_widget.getText().equals(R.string.menu_easy_ai))
 									ai_string = ai_string + "E";
-								else if(ai_widget.getText().equals("Medium AI"))
+								else if(ai_widget.getText().equals(R.string.menu_medium_ai))
 									ai_string = ai_string + "M";
-								else if(ai_widget.getText().equals("Hard AI"))
+								else if(ai_widget.getText().equals(R.string.menu_hard_ai))
 									ai_string = ai_string + "H";
 								else
 									ai_string = ai_string + " ";
@@ -415,10 +415,10 @@ public class ModeMenu extends Mode {
 		{
 			
 			Widget toggleAI = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
-			toggleAI.setText("AI");
+			toggleAI.setText(context.getString(R.string.menu_ai));
 
 			Widget toggleSP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth / 2 - mBtnSep / 2, mScreenHeight - mBtnBorder));
-			toggleSP.setText("Puzzle");
+			toggleSP.setText(context.getString(R.string.menu_puzzle));
 			
 			Widget lameExcuses = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSize + mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize));
 			lameExcuses.setText(context.getString(R.string.mp_beta_warning));

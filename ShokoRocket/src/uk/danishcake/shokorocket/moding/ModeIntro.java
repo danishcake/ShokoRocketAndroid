@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.Animation;
 import uk.danishcake.shokorocket.simulation.SPWorld;
 import uk.danishcake.shokorocket.simulation.Vector2i;
@@ -68,10 +69,10 @@ public class ModeIntro extends Mode {
 		mProgress = new Progress(context);
 		ArrayList<String> cont_levels = mProgress.getUserLevels();
 		mUserLevels = new ArrayList<String>();
-		mUserLevels.add("Credits");
+		mUserLevels.add(context.getString(R.string.intro_credits));
 		mUserLevels.add("by Edward Woolhouse");
 		mUserLevels.add("");
-		mUserLevels.add("Contributers");
+		mUserLevels.add(context.getString(R.string.intro_contributors));
 		mUserLevels.add("");
 		
 		for (String level: cont_levels) {
@@ -87,7 +88,7 @@ public class ModeIntro extends Mode {
 				e.printStackTrace();
 			}
 		}
-		mUserLevels.add("Thanks guys!");
+		mUserLevels.add(context.getString(R.string.intro_thanks_guys));
 
 		mFirstRun = Progress.IsFirstRun(context);
 		try

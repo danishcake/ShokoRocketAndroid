@@ -638,7 +638,7 @@ public class ModeEditor extends Mode {
 			if(Verify())	
 			{
 				mShareDialog = new Dialog(mContext);
-				mShareDialog.setTitle("Share your work");
+				mShareDialog.setTitle(R.string.editor_share_your_work);
 				mShareDialog.setContentView(R.layout.editor_share_level);
 				
 				Button submit = (Button) mShareDialog.findViewById(R.id.LevelSubmit);

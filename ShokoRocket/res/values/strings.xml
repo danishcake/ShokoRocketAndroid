@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="menu_none">None</string>
+    <string name="menu_hard_ai">Hard AI</string>
+    <string name="menu_medium_ai">Medium AI</string>
+    <string name="menu_easy_ai">Easy AI</string>
+    <string name="menu_puzzle">Puzzle</string>
+    <string name="menu_ai">AI</string>
+    <string name="menu_online">Online</string>
+    <string name="intro_thanks_guys">Thanks guys!</string>
+    <string name="intro_contributors">Contributers</string>
+    <string name="intro_credits">Credits</string>
+    <string name="editor_share_your_work">Share your work</string>
     <string name="unlocks_complete_prefix">Complete: </string>
     <string name="unlocks_pinkmouse_text">Pink mice</string>
     <string name="unlocks_contributor_text">Elite mice</string>
