@@ -335,22 +335,22 @@ public class ModeMenu extends Mode {
 			OnClickListener ai_change = new OnClickListener() {
 				@Override
 				public void OnClick(Widget widget) {
-					if(widget.getText().equals(R.string.menu_easy_ai))
+					if(widget.getText().equals(mContext.getString(R.string.menu_easy_ai)))
 					{
 						widget.setText(mContext.getString(R.string.menu_medium_ai));
-					} else if(widget.getText().equals(R.string.menu_medium_ai))
+					} else if(widget.getText().equals(mContext.getString(R.string.menu_medium_ai)))
 					{
 						widget.setText(mContext.getString(R.string.menu_hard_ai));
-					} else if(widget.getText().equals(R.string.menu_hard_ai))
+					} else if(widget.getText().equals(mContext.getString(R.string.menu_hard_ai)))
 					{
 						widget.setText(mContext.getString(R.string.menu_none));
 					} else
 					{
 						widget.setText(mContext.getString(R.string.menu_easy_ai));
 					}
-					mLaunchAI.setEnabled(!(mAI1.getText().equals(R.string.menu_none) && 
-										   mAI2.getText().equals(R.string.menu_none) &&
-										   mAI3.getText().equals(R.string.menu_none)));
+					mLaunchAI.setEnabled(!(mAI1.getText().equals(mContext.getString(R.string.menu_none)) && 
+										   mAI2.getText().equals(mContext.getString(R.string.menu_none)) &&
+										   mAI3.getText().equals(mContext.getString(R.string.menu_none))));
 				}
 			};
 
@@ -381,11 +381,11 @@ public class ModeMenu extends Mode {
 							String ai_string = "";
 							Widget[] ai_widgets = {mAI1, mAI2, mAI3};
 							for (Widget ai_widget : ai_widgets) {
-								if(ai_widget.getText().equals(R.string.menu_easy_ai))
+								if(ai_widget.getText().equals(mContext.getString(R.string.menu_easy_ai)))
 									ai_string = ai_string + "E";
-								else if(ai_widget.getText().equals(R.string.menu_medium_ai))
+								else if(ai_widget.getText().equals(mContext.getString(R.string.menu_medium_ai)))
 									ai_string = ai_string + "M";
-								else if(ai_widget.getText().equals(R.string.menu_hard_ai))
+								else if(ai_widget.getText().equals(mContext.getString(R.string.menu_hard_ai)))
 									ai_string = ai_string + "H";
 								else
 									ai_string = ai_string + " ";
