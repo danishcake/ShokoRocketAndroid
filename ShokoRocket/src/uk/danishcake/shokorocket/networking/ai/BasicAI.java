@@ -36,6 +36,7 @@ public class BasicAI extends BaseAI {
 	private boolean mMaliceBlock;
 	private int mInterceptCatsDelay;
 	private int mCatsAge = 0;
+	private boolean mLtvCats = false;
 
 	private int mTarget = 0;
 	private Vector2i mTargetRocket = new Vector2i(0, 0);
@@ -109,11 +110,18 @@ public class BasicAI extends BaseAI {
 	}
 	
 	public void generateMessages(ArrayList<Message> messages) {
+		boolean cats_present = mWorld.getLiveCats().size() > 0;
+		if(mLtvCats != cats_present)
+		{
+			mActTimer += AI_RATE;
+			mLtvCats = cats_present;
+		}
+
 		mActTimer++;
 		if(mActTimer < AI_RATE + mPlayerID)
 		{
 			return;
-		} else if(mActTimer == AI_RATE + mPlayerID)
+		} else if(mActTimer >= AI_RATE + mPlayerID)
 		{
 			ArrowClearMessage acm = new ArrowClearMessage();
 			acm.setCommon(mPlayerID, 0);
@@ -142,7 +150,7 @@ public class BasicAI extends BaseAI {
 		if(cats.size() > 0 && mCatsAge < 5) mCatsAge++; //Delay blocking of cats depending on difficulty
 		if(cats.size() == 0)
 		{
-			if(mCatsAge > 0) mCatsAge--;
+			if(mCatsAge > 0) mCatsAge = 0;
 		}
 		if(mCatsAge > mInterceptCatsDelay)
 		{
