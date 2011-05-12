@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>Lighter option</Name>
+<Author>Edward Woolhouse</Author>
+<Size x="7" y="7"/>
+<V x="0" y="0" />
+<H x="0" y="0" />
+<H x="2" y="0" />
+<H x="3" y="0" />
+<H x="4" y="0" />
+<H x="6" y="0" />
+<V x="1" y="1" />
+<H x="2" y="1" />
+<V x="3" y="1" />
+<H x="3" y="1" />
+<H x="4" y="1" />
+<V x="5" y="1" />
+<H x="5" y="1" />
+<V x="0" y="2" />
+<V x="1" y="2" />
+<H x="1" y="2" />
+<V x="6" y="2" />
+<V x="0" y="3" />
+<V x="1" y="3" />
+<H x="5" y="3" />
+<V x="6" y="3" />
+<V x="0" y="4" />
+<V x="1" y="4" />
+<H x="1" y="4" />
+<V x="6" y="4" />
+<V x="2" y="5" />
+<V x="4" y="5" />
+<H x="5" y="5" />
+<V x="6" y="5" />
+<V x="0" y="6" />
+<H x="1" y="6" />
+<H x="2" y="6" />
+<H x="3" y="6" />
+<H x="4" y="6" />
+<Mouse x="1" y="4" d="East" />
+<Mouse x="5" y="2" d="West" />
+<Mouse x="1" y="5" d="North" />
+<Mouse x="5" y="1" d="South" />
+<Mouse x="4" y="5" d="North" />
+<Mouse x="5" y="5" d="West" />
+<Mouse x="2" y="1" d="South" />
+<Mouse x="1" y="1" d="East" />
+<Rocket x="0" y="0" />
+<Rocket x="6" y="0" />
+<Arrow x="4" y="2" d="South"/>
+<Hole x="3" y="3" />
+<Arrow x="3" y="4" d="West"/>
+<Rocket x="0" y="6" />
+<Rocket x="6" y="6" />
+</Level>
