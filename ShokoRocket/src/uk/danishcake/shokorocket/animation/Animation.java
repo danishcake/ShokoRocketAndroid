@@ -19,6 +19,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import uk.danishcake.shokorocket.NL;
 
 public class Animation {
 	private ArrayList<Bitmap> mFrames = new ArrayList<Bitmap>();
@@ -167,7 +168,8 @@ public class Animation {
 		an.mOffsetX = xOffset;
 		an.mOffsetY = yOffset;
 		
-		NodeList frames = ((Element)animation).getElementsByTagName("Frame");
+		
+		NodeList frames = NL.ElementsByTag(animation, "Frame");
 		for(int i = 0; i < frames.getLength(); i++)
 		{
 			Element frame = (Element)frames.item(i);
@@ -255,7 +257,7 @@ public class Animation {
 			Document document = dbuilder.parse(input);
 			Element root = document.getDocumentElement();
 						
-			NodeList animations = root.getElementsByTagName("Animation");
+			NodeList animations = NL.ElementsByTag(root, "Animation");
 			Map<String, Animation> animation_map = new HashMap<String, Animation>(); 
 			for(int i = 0; i < animations.getLength(); i++)
 			{

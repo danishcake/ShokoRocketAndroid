@@ -16,6 +16,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import uk.danishcake.shokorocket.NL;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -59,13 +61,9 @@ public class SkinProgress {
 			javax.xml.parsers.DocumentBuilder dbuilder = dbf
 					.newDocumentBuilder();
 
-			
 			Document document = dbuilder.parse(mContext.getAssets().open(skin));
 			Element root = document.getDocumentElement();
-
-			NodeList animations = root.getElementsByTagName("AnimationFiles");
-			Element animation_files_root = (Element)animations.item(0);
-			NodeList animation_files = animation_files_root.getElementsByTagName("Animation");
+			NodeList animation_files = NL.ElementsByTag(root, "Animation");
 			for (int i = 0; i < animation_files.getLength(); i++) {
 				Element animation = (Element)animation_files.item(i);
 				String id = animation.getAttribute("id");

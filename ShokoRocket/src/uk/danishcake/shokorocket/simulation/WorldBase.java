@@ -14,6 +14,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import uk.danishcake.shokorocket.NL;
+
 public abstract class WorldBase {
 	protected int mWidth = 12;
 	protected int mHeight = 9;
@@ -136,14 +138,14 @@ public abstract class WorldBase {
 	 * @param root the document element in the XML level
 	 */
 	private void loadProperties(Element root) {
-		NodeList author_nodes = root.getElementsByTagName("Author");
+		NodeList author_nodes = NL.ElementsByTag(root, "Author");
 		if(author_nodes.getLength() >= 1)
 		{
 			String author = author_nodes.item(0).getFirstChild().getNodeValue();
 			if(author != null)
 				mLevelAuthor = author;
 		}
-		NodeList levelname_nodes = root.getElementsByTagName("Name");
+		NodeList levelname_nodes = NL.ElementsByTag(root, "Name");
 		if(levelname_nodes.getLength() >= 1)
 		{
 			String level_name = levelname_nodes.item(0).getFirstChild().getNodeValue();
@@ -151,7 +153,7 @@ public abstract class WorldBase {
 				mLevelName = level_name; 
 		}
 
-		NodeList size_nodes = root.getElementsByTagName("Size");
+		NodeList size_nodes = NL.ElementsByTag(root, "Size");
 		if(size_nodes.getLength() >= 1)
 		{
 			Node size_node = size_nodes.item(0);
@@ -181,7 +183,7 @@ public abstract class WorldBase {
 	 * @param root the document element in the XML level
 	 */	
 	private void loadWalls(Element root) {
-		NodeList h_list = root.getElementsByTagName("H");
+		NodeList h_list = NL.ElementsByTag(root, "H");
 		for(int i = 0; i < h_list.getLength(); i++)
 		{			
 			Node h_node = h_list.item(i);
@@ -206,7 +208,7 @@ public abstract class WorldBase {
 			}
 		}
 		
-		NodeList v_list = root.getElementsByTagName("V");
+		NodeList v_list = NL.ElementsByTag(root, "V");
 		for(int i = 0; i < v_list.getLength(); i++)
 		{			
 			Node v_node = v_list.item(i);

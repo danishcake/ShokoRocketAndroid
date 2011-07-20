@@ -13,6 +13,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import uk.danishcake.shokorocket.NL;
 import uk.danishcake.shokorocket.networking.GameSync;
 import uk.danishcake.shokorocket.networking.LocalSync;
 import uk.danishcake.shokorocket.networking.messages.ArrowClearMessage;
@@ -186,7 +187,7 @@ public class MPWorld extends WorldBase {
 	private void loadEntities(Element root) {
 		
 		//Load rockets (player locations)
-		NodeList player_list = root.getElementsByTagName("PlayerRocket");
+		NodeList player_list = NL.ElementsByTag(root, "PlayerRocket");
 		for(int i = 0; i < player_list.getLength(); i++)
 		{
 			Node player_rocket = player_list.item(i);
@@ -214,7 +215,7 @@ public class MPWorld extends WorldBase {
 		}
 		
 		//Load spawners
-		NodeList spawner_list = root.getElementsByTagName("Spawner");
+		NodeList spawner_list = NL.ElementsByTag(root, "Spawner");
 		for(int i = 0; i < spawner_list.getLength(); i++)
 		{
 			Node spawner = spawner_list.item(i);
@@ -242,7 +243,7 @@ public class MPWorld extends WorldBase {
 		}
 
 		//Load holes
-		NodeList hole_list = root.getElementsByTagName("Hole");
+		NodeList hole_list = NL.ElementsByTag(root, "Hole");
 		for(int i = 0; i < hole_list.getLength(); i++)
 		{			
 			Node hole_node = hole_list.item(i);

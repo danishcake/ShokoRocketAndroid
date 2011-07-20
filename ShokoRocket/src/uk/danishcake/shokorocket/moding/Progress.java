@@ -23,6 +23,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import uk.danishcake.shokorocket.NL;
 import uk.danishcake.shokorocket.simulation.SPWorld;
 
 
@@ -335,7 +336,8 @@ public class Progress {
 			Document document = dbuilder.parse(is);
 			Element root = document.getDocumentElement();
 						
-			NodeList levels = root.getElementsByTagName("Level");
+			
+			NodeList levels = NL.ElementsByTag(root, "Level");
 			for(int i = 0; i < levels.getLength(); i++)
 			{
 				Node level = levels.item(i);

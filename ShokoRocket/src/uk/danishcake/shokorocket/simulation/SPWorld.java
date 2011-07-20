@@ -1,5 +1,6 @@
 package uk.danishcake.shokorocket.simulation;
 
+import uk.danishcake.shokorocket.NL;
 import uk.danishcake.shokorocket.simulation.Walker.WalkerState;
 import uk.danishcake.shokorocket.simulation.Walker.WalkerType;
 
@@ -484,7 +485,7 @@ public class SPWorld extends WorldBase {
 		mUnlimitedArrows = false;
 		mSpecialSquares = new SquareType[mWidth*mHeight];
 		defaultSpecialSquares();
-		NodeList splash_nodes = root.getElementsByTagName("Splash");
+		NodeList splash_nodes = NL.ElementsByTag(root, "Splash");
 		if(splash_nodes.getLength() >= 1)
 		{
 			String splash_text = splash_nodes.item(0).getFirstChild().getNodeValue();
@@ -500,7 +501,7 @@ public class SPWorld extends WorldBase {
 	 */
 	private void loadEntities(Element root) {
 		//Load mice
-		NodeList mouse_list = root.getElementsByTagName("Mouse");
+		NodeList mouse_list = NL.ElementsByTag(root, "Mouse");
 		for(int i = 0; i < mouse_list.getLength(); i++)
 		{			
 			Node mouse_node = mouse_list.item(i);
@@ -532,7 +533,7 @@ public class SPWorld extends WorldBase {
 			}
 		}		
 		//Load cats
-		NodeList cat_list = root.getElementsByTagName("Cat");
+		NodeList cat_list = NL.ElementsByTag(root, "Cat");
 		for(int i = 0; i < cat_list.getLength(); i++)
 		{			
 			Node cat_node = cat_list.item(i);
@@ -564,7 +565,7 @@ public class SPWorld extends WorldBase {
 			}
 		}
 		//Load rockets
-		NodeList rocket_list = root.getElementsByTagName("Rocket");
+		NodeList rocket_list = NL.ElementsByTag(root, "Rocket");
 		for(int i = 0; i < rocket_list.getLength(); i++)
 		{			
 			Node rocket_node = rocket_list.item(i);
@@ -589,7 +590,7 @@ public class SPWorld extends WorldBase {
 			}
 		}
 		//Load holes
-		NodeList hole_list = root.getElementsByTagName("Hole");
+		NodeList hole_list = NL.ElementsByTag(root, "Hole");
 		for(int i = 0; i < hole_list.getLength(); i++)
 		{			
 			Node hole_node = hole_list.item(i);
@@ -617,7 +618,7 @@ public class SPWorld extends WorldBase {
 	
 	private void loadSolution(Element root) {
 		//Load arrows
-		NodeList arrow_list = root.getElementsByTagName("Arrow");
+		NodeList arrow_list = NL.ElementsByTag(root, "Arrow");
 		for(int i = 0; i < arrow_list.getLength(); i++)
 		{			
 			Node arrow_node = arrow_list.item(i);
