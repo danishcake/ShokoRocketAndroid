@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>ORLY?</Name>
+<Author>6bool</Author>
+<Size x="5" y="5"/>
+<V x="0" y="0" />
+<H x="0" y="0" />
+<H x="1" y="0" />
+<H x="2" y="0" />
+<H x="3" y="0" />
+<V x="4" y="0" />
+<H x="4" y="0" />
+<V x="0" y="1" />
+<V x="2" y="1" />
+<V x="0" y="2" />
+<V x="2" y="2" />
+<H x="2" y="2" />
+<H x="4" y="2" />
+<V x="0" y="3" />
+<V x="3" y="3" />
+<H x="3" y="3" />
+<V x="0" y="4" />
+<V x="2" y="4" />
+<H x="2" y="4" />
+<Mouse x="1" y="2" d="South" />
+<Cat x="4" y="1" d="West" />
+<Cat x="2" y="2" d="East" />
+<Hole x="0" y="0" />
+<Hole x="4" y="0" />
+<Arrow x="1" y="2" d="North"/>
+<Arrow x="2" y="2" d="South"/>
+<Arrow x="3" y="2" d="East"/>
+<Arrow x="4" y="3" d="West"/>
+<Hole x="0" y="4" />
+<Rocket x="2" y="4" />
+<Hole x="4" y="4" />
+</Level>
