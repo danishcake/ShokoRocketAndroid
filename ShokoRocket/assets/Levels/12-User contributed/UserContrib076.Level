@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>Long Run</Name>
+<Author>NightmareVC</Author>
+<Size x="3" y="20"/>
+<H x="0" y="0" />
+<H x="1" y="0" />
+<H x="2" y="0" />
+<V x="0" y="1" />
+<V x="0" y="3" />
+<V x="0" y="5" />
+<V x="0" y="7" />
+<V x="0" y="9" />
+<V x="0" y="11" />
+<V x="0" y="13" />
+<V x="0" y="15" />
+<V x="0" y="16" />
+<V x="0" y="17" />
+<V x="0" y="18" />
+<V x="0" y="19" />
+<Mouse x="1" y="19" d="North" />
+<Mouse x="0" y="19" d="North" />
+<Mouse x="2" y="19" d="North" />
+<Cat x="0" y="14" d="East" />
+<Cat x="2" y="14" d="West" />
+<Cat x="0" y="12" d="East" />
+<Cat x="2" y="12" d="West" />
+<Cat x="0" y="10" d="East" />
+<Cat x="2" y="10" d="West" />
+<Cat x="2" y="6" d="East" />
+<Cat x="0" y="6" d="West" />
+<Cat x="0" y="4" d="West" />
+<Cat x="2" y="4" d="East" />
+<Cat x="2" y="8" d="West" />
+<Cat x="0" y="8" d="East" />
+<Cat x="0" y="2" d="West" />
+<Cat x="2" y="2" d="East" />
+<Cat x="2" y="0" d="East" />
+<Cat x="1" y="0" d="East" />
+<Cat x="0" y="0" d="East" />
+<Arrow x="0" y="1" d="East"/>
+<Rocket x="1" y="1" />
+<Arrow x="2" y="2" d="North"/>
+<Arrow x="2" y="4" d="North"/>
+<Arrow x="2" y="6" d="North"/>
+<Arrow x="2" y="8" d="North"/>
+<Arrow x="2" y="10" d="North"/>
+<Arrow x="2" y="12" d="North"/>
+<Arrow x="2" y="14" d="North"/>
+<Arrow x="2" y="18" d="West"/>
+</Level>
