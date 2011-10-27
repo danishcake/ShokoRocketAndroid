@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>Northern Cat</Name>
+<Author>Chris</Author>
+<Size x="9" y="12"/>
+<V x="0" y="0" />
+<H x="0" y="0" />
+<H x="1" y="0" />
+<H x="2" y="0" />
+<H x="3" y="0" />
+<H x="4" y="0" />
+<H x="5" y="0" />
+<H x="6" y="0" />
+<H x="7" y="0" />
+<H x="8" y="0" />
+<V x="0" y="1" />
+<V x="0" y="2" />
+<V x="0" y="3" />
+<V x="0" y="4" />
+<H x="0" y="5" />
+<H x="1" y="5" />
+<H x="2" y="5" />
+<H x="3" y="5" />
+<H x="4" y="5" />
+<H x="5" y="5" />
+<H x="6" y="5" />
+<H x="7" y="5" />
+<H x="8" y="5" />
+<V x="0" y="6" />
+<H x="0" y="6" />
+<H x="1" y="6" />
+<H x="2" y="6" />
+<H x="3" y="6" />
+<H x="5" y="6" />
+<H x="6" y="6" />
+<H x="7" y="6" />
+<H x="8" y="6" />
+<V x="0" y="7" />
+<V x="0" y="8" />
+<V x="0" y="9" />
+<V x="0" y="10" />
+<V x="0" y="11" />
+<Mouse x="8" y="6" d="West" />
+<Mouse x="0" y="6" d="East" />
+<Mouse x="8" y="7" d="North" />
+<Mouse x="0" y="7" d="North" />
+<Cat x="0" y="8" d="North" />
+<Cat x="8" y="8" d="North" />
+<Cat x="0" y="9" d="North" />
+<Cat x="8" y="9" d="North" />
+<Rocket x="0" y="5" />
+<Rocket x="8" y="5" />
+<Arrow x="4" y="6" d="North"/>
+<Arrow x="0" y="8" d="East"/>
+<Hole x="1" y="8" />
+<Hole x="7" y="8" />
+<Arrow x="8" y="8" d="West"/>
+</Level>

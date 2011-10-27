@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>2011</Name>
+<Author>Edward Woolhouse</Author>
+<Size x="9" y="12"/>
+<V x="0" y="0" />
+<H x="0" y="0" />
+<H x="1" y="0" />
+<H x="2" y="0" />
+<H x="3" y="0" />
+<H x="4" y="0" />
+<H x="5" y="0" />
+<H x="6" y="0" />
+<H x="7" y="0" />
+<H x="8" y="0" />
+<V x="0" y="1" />
+<H x="1" y="1" />
+<H x="2" y="1" />
+<V x="3" y="1" />
+<V x="4" y="1" />
+<H x="4" y="1" />
+<V x="5" y="1" />
+<V x="7" y="1" />
+<V x="8" y="1" />
+<V x="0" y="2" />
+<V x="3" y="2" />
+<V x="4" y="2" />
+<V x="5" y="2" />
+<V x="7" y="2" />
+<V x="8" y="2" />
+<V x="0" y="3" />
+<V x="1" y="3" />
+<H x="1" y="3" />
+<H x="2" y="3" />
+<V x="4" y="3" />
+<V x="5" y="3" />
+<V x="7" y="3" />
+<V x="8" y="3" />
+<V x="0" y="4" />
+<V x="1" y="4" />
+<V x="4" y="4" />
+<V x="5" y="4" />
+<V x="7" y="4" />
+<V x="8" y="4" />
+<V x="0" y="5" />
+<H x="1" y="5" />
+<H x="2" y="5" />
+<H x="4" y="5" />
+<V x="0" y="6" />
+<V x="0" y="7" />
+<V x="0" y="8" />
+<V x="0" y="9" />
+<V x="0" y="10" />
+<V x="0" y="11" />
+<Mouse x="2" y="3" d="West" />
+<Mouse x="1" y="2" d="East" />
+<Mouse x="2" y="4" d="West" />
+<Mouse x="1" y="1" d="East" />
+<Mouse x="7" y="3" d="South" />
+<Mouse x="7" y="2" d="North" />
+<Cat x="4" y="1" d="South" />
+<Cat x="4" y="4" d="North" />
+<Cat x="7" y="0" d="South" />
+<Cat x="7" y="6" d="North" />
+<Arrow x="7" y="2" d="South"/>
+<Arrow x="3" y="4" d="North"/>
+<Arrow x="7" y="5" d="West"/>
+<Arrow x="7" y="6" d="South"/>
+<Rocket x="8" y="8" />
+</Level>
