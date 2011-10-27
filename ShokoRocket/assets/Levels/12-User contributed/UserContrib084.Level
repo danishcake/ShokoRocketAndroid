@@ -108,6 +108,7 @@
 <Cat x="3" y="1" d="South" />
 <Cat x="1" y="4" d="East" />
 <Cat x="1" y="6" d="East" />
+<Cat x="2" y="7" d="North" />
 <Cat x="10" y="2" d="West" />
 <Cat x="1" y="2" d="East" />
 <Arrow x="1" y="0" d="North"/>
