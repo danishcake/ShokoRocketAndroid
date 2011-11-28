@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>Timker</Name>
+<Author>Easton Gupta</Author>
+<Size x="9" y="4"/>
+<V x="0" y="0" />
+<H x="0" y="0" />
+<H x="1" y="0" />
+<H x="2" y="0" />
+<H x="3" y="0" />
+<H x="4" y="0" />
+<V x="5" y="0" />
+<H x="5" y="0" />
+<H x="6" y="0" />
+<H x="7" y="0" />
+<H x="8" y="0" />
+<V x="0" y="1" />
+<V x="0" y="2" />
+<V x="5" y="2" />
+<V x="0" y="3" />
+<Mouse x="1" y="1" d="East" />
+<Cat x="3" y="1" d="West" />
+<Cat x="3" y="2" d="West" />
+<Rocket x="7" y="0" />
+<Arrow x="1" y="1" d="West"/>
+<Hole x="5" y="1" />
+<Rocket x="8" y="1" />
+<Rocket x="5" y="2" />
+<Arrow x="4" y="3" d="East"/>
+</Level>
