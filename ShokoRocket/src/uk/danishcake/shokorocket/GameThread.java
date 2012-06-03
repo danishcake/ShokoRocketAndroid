@@ -67,15 +67,15 @@ public class GameThread extends Thread {
 			long running_time = System.nanoTime() - update_start;
 			//16ms frames is the target
 			int sleep_time = (int)((20000000L - running_time) / 1000000L);
-			if(sleep_time > 0)
+			if (sleep_time <= 0)
 			{
-				try {
-					sleep(sleep_time);
-				} catch (InterruptedException e) {
-					// This basically means that the thread has been interrupted, so it will 
-					// already have already been stopped
-				}
-			
+				sleep_time = 1; // Always sleep a little to allow GUI thread to handle events
+			}
+			try {
+				sleep(sleep_time);
+			} catch (InterruptedException e) {
+				// This basically means that the thread has been interrupted, so it will 
+				// already have already been stopped
 			}
 		}
 	}
