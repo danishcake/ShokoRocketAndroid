@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>tiny race</Name>
+<Author>dr pickle</Author>
+<Size x="5" y="3"/>
+<V x="0" y="0" />
+<H x="0" y="0" />
+<H x="1" y="0" />
+<H x="2" y="0" />
+<H x="3" y="0" />
+<H x="4" y="0" />
+<V x="0" y="1" />
+<V x="3" y="1" />
+<V x="0" y="2" />
+<Mouse x="0" y="0" d="East" />
+<Mouse x="0" y="2" d="East" />
+<Mouse x="0" y="1" d="East" />
+<Cat x="4" y="2" d="West" />
+<Cat x="4" y="0" d="West" />
+<Cat x="4" y="1" d="West" />
+<Arrow x="3" y="0" d="South"/>
+<Arrow x="4" y="0" d="East"/>
+<Rocket x="3" y="1" />
+<Arrow x="4" y="1" d="East"/>
+<Arrow x="3" y="2" d="North"/>
+<Arrow x="4" y="2" d="East"/>
+</Level>
