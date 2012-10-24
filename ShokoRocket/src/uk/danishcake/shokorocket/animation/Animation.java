@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -136,6 +138,11 @@ public class Animation {
 		String yOffsetString = animation.getAttribute("OffsetY");
 		
 		HashMap<String, Bitmap> src_cache = new HashMap<String, Bitmap>();
+		// createScaledBitmap can return the same bitmap if no scaling is done
+		// Therefore I cannot recycle immediately and must let the GC do it.
+		HashSet<String> unrecyclables = new HashSet<String>();
+
+
 		int fps = 15;
 		try
 		{
@@ -144,7 +151,7 @@ public class Animation {
 		{
 			//Nothing to do
 		}
-	
+
 		int xOffset = 0;
 		try
 		{
@@ -153,7 +160,7 @@ public class Animation {
 		{
 			//Nothing to do
 		}
-		
+
 		int yOffset = 0;
 		try
 		{
@@ -162,13 +169,13 @@ public class Animation {
 		{
 			//Nothing to do
 		}
-		
+
 		an.mFPS = fps;
 		an.mName = animation_name;
 		an.mOffsetX = xOffset;
 		an.mOffsetY = yOffset;
-		
-		
+
+
 		NodeList frames = NL.ElementsByTag(animation, "Frame");
 		for(int i = 0; i < frames.getLength(); i++)
 		{
@@ -178,15 +185,14 @@ public class Animation {
 			String left_str = frame.getAttribute("Left");
 			String height_str = frame.getAttribute("Height");
 			String width_str = frame.getAttribute("Width");
-			
+
 			try
 			{
 				int top = Integer.parseInt(top_str);
 				int left = Integer.parseInt(left_str);
 				int width = Integer.parseInt(width_str);
 				int height = Integer.parseInt(height_str);
-			
-	
+
 				Bitmap src;
 				if(src_cache.containsKey(filename))
 					src = src_cache.get(filename);
@@ -204,17 +210,28 @@ public class Animation {
 				if(scaled_height == 0) scaled_height = 1;
 				Bitmap dest = Bitmap.createScaledBitmap(src_area, scaled_width, scaled_height, true);
 
+				// Prevent Android 4.1 devices crashing by recycling bitmaps used unscaled from top to bottom
+				if (scaled_height == src.getHeight() && scaled_width == src.getHeight() && left == 0 && top == 0)
+				{
+					unrecyclables.add(filename);
+				}
+
 				an.AddFrame(dest);
 			} catch(NumberFormatException nfe)
 			{
 				//TODO error handling or logging or something
 			}
 		}
-		for (Bitmap bitmap : src_cache.values()) {
-			bitmap.recycle();
+
+		for (String src_filename : src_cache.keySet()) 
+		{
+			if (!unrecyclables.contains(src_filename))
+			{
+				src_cache.get(src_filename).recycle();
+			}
 		}
 		src_cache.clear();
-		
+
 		return an;
 	}
 	

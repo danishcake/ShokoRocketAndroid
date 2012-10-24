@@ -256,8 +256,7 @@ public class Progress {
 		try
 		{
 			String[] level_packs = mContext.getAssets().list("Levels");
-			int total_length = level_packs.length;
-			
+
 			//If external storage mounted then search it for levels
 			File[] user_packs = new File[]{};
 			if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
@@ -270,7 +269,6 @@ public class Progress {
 				});
 				if(user_packs == null) //Folder doesn't exist
 					user_packs = new File[]{};
-				total_length += user_packs.length;
 			}
 			
 			mLevels.clear();
