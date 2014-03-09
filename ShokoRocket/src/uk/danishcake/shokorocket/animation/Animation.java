@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -211,7 +210,8 @@ public class Animation {
 				Bitmap dest = Bitmap.createScaledBitmap(src_area, scaled_width, scaled_height, true);
 
 				// Prevent Android 4.1 devices crashing by recycling bitmaps used unscaled from top to bottom
-				if (scaled_height == src.getHeight() && scaled_width == src.getHeight() && left == 0 && top == 0)
+				if (scaled_height == src.getHeight() && scaled_width == src.getHeight() && left == 0 && top == 0 || 
+					dest == src_area || dest == src)
 				{
 					unrecyclables.add(filename);
 				}
@@ -225,7 +225,9 @@ public class Animation {
 
 		for (String src_filename : src_cache.keySet()) 
 		{
-			if (!unrecyclables.contains(src_filename))
+			// Android Honeycomb handles bitmaps in JVM memory, so reliably deallocates it.
+			// Furthermore it may reuse the bitmap on createScaledBitmap, so it's unsafe to recycle it
+			if (!unrecyclables.contains(src_filename) || android.os.Build.VERSION.SDK_INT < 11)
 			{
 				src_cache.get(src_filename).recycle();
 			}

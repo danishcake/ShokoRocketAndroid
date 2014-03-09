@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>cat</Name>
+<Author>martin</Author>
+<Size x="3" y="3"/>
+<V x="0" y="0" />
+<H x="0" y="0" />
+<H x="1" y="0" />
+<H x="2" y="0" />
+<V x="0" y="2" />
+<Mouse x="2" y="0" d="West" />
+<Cat x="0" y="0" d="South" />
+<Cat x="1" y="1" d="West" />
+<Arrow x="1" y="0" d="South"/>
+<Arrow x="0" y="1" d="South"/>
+<Rocket x="2" y="1" />
+<Arrow x="1" y="2" d="East"/>
+</Level>

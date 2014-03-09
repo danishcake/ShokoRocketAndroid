@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>Hopi guess</Name>
+<Author>mid one</Author>
+<Size x="12" y="12"/>
+<V x="0" y="0" />
+<H x="0" y="0" />
+<H x="1" y="0" />
+<H x="2" y="0" />
+<H x="3" y="0" />
+<H x="4" y="0" />
+<H x="5" y="0" />
+<H x="6" y="0" />
+<H x="7" y="0" />
+<H x="9" y="0" />
+<H x="10" y="0" />
+<H x="11" y="0" />
+<V x="0" y="1" />
+<V x="5" y="1" />
+<V x="0" y="2" />
+<V x="0" y="3" />
+<V x="0" y="4" />
+<V x="8" y="4" />
+<V x="0" y="5" />
+<V x="0" y="6" />
+<V x="0" y="7" />
+<V x="0" y="8" />
+<V x="8" y="8" />
+<V x="0" y="9" />
+<V x="0" y="10" />
+<V x="5" y="10" />
+<V x="0" y="11" />
+<Mouse x="0" y="2" d="East" />
+<Mouse x="0" y="3" d="East" />
+<Mouse x="0" y="5" d="East" />
+<Mouse x="0" y="6" d="East" />
+<Mouse x="0" y="7" d="East" />
+<Mouse x="0" y="9" d="East" />
+<Mouse x="0" y="10" d="East" />
+<Mouse x="0" y="1" d="East" />
+<Mouse x="0" y="8" d="East" />
+<Mouse x="0" y="4" d="East" />
+<Hole x="0" y="0" />
+<Rocket x="11" y="0" />
+<Arrow x="4" y="1" d="South"/>
+<Rocket x="11" y="1" />
+<Rocket x="11" y="2" />
+<Rocket x="11" y="3" />
+<Rocket x="11" y="4" />
+<Arrow x="4" y="5" d="East"/>
+<Rocket x="11" y="5" />
+<Arrow x="4" y="6" d="East"/>
+<Rocket x="11" y="6" />
+<Arrow x="4" y="7" d="East"/>
+<Rocket x="11" y="7" />
+<Rocket x="11" y="8" />
+<Rocket x="11" y="9" />
+<Arrow x="4" y="10" d="North"/>
+<Rocket x="11" y="10" />
+<Hole x="0" y="11" />
+<Arrow x="4" y="11" d="North"/>
+<Rocket x="11" y="11" />
+</Level>

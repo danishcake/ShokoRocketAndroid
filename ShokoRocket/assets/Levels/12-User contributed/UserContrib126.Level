@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>BUS</Name>
+<Author>ANON</Author>
+<Size x="7" y="7"/>
+<V x="0" y="0" />
+<H x="0" y="0" />
+<H x="1" y="0" />
+<H x="2" y="0" />
+<H x="3" y="0" />
+<H x="4" y="0" />
+<V x="5" y="0" />
+<H x="5" y="0" />
+<H x="6" y="0" />
+<V x="0" y="1" />
+<V x="5" y="1" />
+<V x="0" y="2" />
+<H x="5" y="2" />
+<H x="6" y="2" />
+<V x="0" y="3" />
+<V x="6" y="3" />
+<H x="6" y="3" />
+<V x="0" y="4" />
+<H x="6" y="4" />
+<V x="0" y="5" />
+<V x="1" y="5" />
+<H x="1" y="5" />
+<H x="2" y="5" />
+<V x="3" y="5" />
+<V x="4" y="5" />
+<H x="4" y="5" />
+<H x="5" y="5" />
+<V x="6" y="5" />
+<V x="0" y="6" />
+<V x="1" y="6" />
+<V x="3" y="6" />
+<V x="4" y="6" />
+<V x="6" y="6" />
+<Mouse x="4" y="3" d="South" />
+<Mouse x="4" y="2" d="South" />
+<Mouse x="4" y="1" d="South" />
+<Mouse x="4" y="0" d="South" />
+<Mouse x="3" y="0" d="East" />
+<Mouse x="2" y="0" d="East" />
+<Mouse x="1" y="0" d="East" />
+<Mouse x="0" y="0" d="East" />
+<Mouse x="0" y="1" d="North" />
+<Mouse x="0" y="2" d="North" />
+<Mouse x="0" y="3" d="North" />
+<Mouse x="0" y="4" d="North" />
+<Mouse x="0" y="5" d="North" />
+<Mouse x="0" y="6" d="North" />
+<Cat x="4" y="5" d="East" />
+<Cat x="5" y="5" d="South" />
+<Cat x="5" y="6" d="West" />
+<Cat x="4" y="6" d="North" />
+<Cat x="1" y="5" d="East" />
+<Cat x="2" y="5" d="South" />
+<Cat x="2" y="6" d="West" />
+<Cat x="1" y="6" d="North" />
+<Cat x="6" y="1" d="West" />
+<Cat x="5" y="1" d="North" />
+<Cat x="5" y="0" d="East" />
+<Cat x="6" y="0" d="South" />
+<Arrow x="4" y="4" d="East"/>
+<Rocket x="5" y="4" />
+</Level>

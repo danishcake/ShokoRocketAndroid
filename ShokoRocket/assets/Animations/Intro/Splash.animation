@@ -8,6 +8,9 @@
   <Animation Name="CreditRocket">
   <Frame Width="64" Height="135" Top="0" Left="0" File="Bitmaps/Intro/CreditRocket.png" Time="0.25"/>
   </Animation>
+  <Animation Name="ForkMe">
+  <Frame Width="149" Height="149" Top="0" Left="0" File="Bitmaps/Intro/ForkMe.png" Time="0.25"/>
+  </Animation>
   <Animation Name="Smoke" FPS="8">
     <Frame Width="64" Height="64" Top="0" Left="0"   File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
     <Frame Width="64" Height="64" Top="0" Left="64"  File="Bitmaps/Intro/Smoke.png" Time="0.125"/>

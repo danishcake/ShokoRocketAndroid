@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Level>
+<Name>You</Name>
+<Author>me</Author>
+<Size x="3" y="3"/>
+<V x="0" y="0" />
+<H x="0" y="0" />
+<H x="1" y="0" />
+<H x="2" y="0" />
+<V x="0" y="1" />
+<V x="0" y="2" />
+<Mouse x="0" y="1" d="East" />
+<Mouse x="0" y="0" d="South" />
+<Mouse x="1" y="0" d="West" />
+<Mouse x="2" y="0" d="West" />
+<Mouse x="2" y="1" d="North" />
+<Mouse x="2" y="2" d="North" />
+<Mouse x="1" y="2" d="East" />
+<Mouse x="0" y="2" d="East" />
+<Arrow x="0" y="0" d="South"/>
+<Arrow x="1" y="0" d="West"/>
+<Arrow x="2" y="0" d="West"/>
+<Arrow x="0" y="1" d="East"/>
+<Rocket x="1" y="1" />
+<Arrow x="2" y="1" d="North"/>
+<Arrow x="0" y="2" d="East"/>
+<Arrow x="1" y="2" d="East"/>
+<Arrow x="2" y="2" d="North"/>
+</Level>

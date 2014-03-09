@@ -43,6 +43,7 @@ public class ModeIntro extends Mode implements Runnable {
 	Animation mLogoRight;
 	Animation mCreditRocket;
 	Animation mSmokeAnimation;
+	Animation mForkMe;
 	Interpolator mLogoInterpolator = null;
 	Matrix mMatrix = new Matrix();
 	boolean mFirstRun = false;
@@ -89,6 +90,7 @@ public class ModeIntro extends Mode implements Runnable {
 			mLogoRight = animations.get("Right");
 			mCreditRocket = animations.get("CreditRocket");
 			mSmokeAnimation = animations.get("Smoke");
+			mForkMe = animations.get("ForkMe");
 		} catch(IOException io_ex)
 		{
 			//TODO log it!
@@ -220,30 +222,30 @@ public class ModeIntro extends Mode implements Runnable {
 			Paint fill_paint = new Paint();
 			fill_paint.setARGB(255, 0, 255, 255);
 			canvas.drawPaint(fill_paint);
-			//canvas.drawARGB(255,0,255,255);
+
 			float[] interpolated = new float[3];
 			Result interp_result = mLogoInterpolator.timeToValues(mAge, interpolated);
 			float x = interpolated[0];
 			float y = interpolated[1];
 			float angle = interpolated[2];
-			
+
 			mMatrix.reset();
 			if(interp_result != Result.FREEZE_END)
 				mMatrix.setRotate(angle, 100, 50);
 			else
 				mMatrix.setRotate(-(mAge - 3500) / 30, 100, 50);
-	
+
 			mMatrix.postTranslate(x, y);
-	
+
 			for (Rocket r : mRockets) {
 				canvas.drawBitmap(mCreditRocket.getCurrentFrame(), r.position.x, r.position.y / 1000, null);
 				canvas.drawText(r.text, r.position.x+32, r.position.y / 1000, mTextPaint);
 			}
-			
+
 			for (Smoke s : mPlumes) {
 				canvas.drawBitmap(mSmokeAnimation.getFrameByTime(s.age), s.position.x/1000, s.position.y/1000, null);
 			}
-			
+
 			if(mAge < 2500)
 			{
 				canvas.drawBitmap(mLogoRight.getCurrentFrame(), mMatrix, null);
@@ -251,6 +253,9 @@ public class ModeIntro extends Mode implements Runnable {
 			{
 				canvas.drawBitmap(mLogoLeft.getCurrentFrame(), mMatrix, null);
 			}
+
+			// Draw 'Fork me on github logo
+			mForkMe.DrawCurrentFrame(canvas, canvas.getWidth() - mForkMe.getFrameByIndex(0).getWidth(), 0);
 			super.Redraw(canvas);
 		}
 	}
