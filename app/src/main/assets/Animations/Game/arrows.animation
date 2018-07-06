@@ -1,15 +1,15 @@
 <AnimationSet>
   <Animation Name="South">
-    <Frame Width="64" Height="64" Top="0" Left="0" File="Bitmaps/Game/Arrows-hdpi.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="0" File="Bitmaps/Game/Arrows-hdpi.png" Time="0.5"/>
   </Animation>
   <Animation Name="West">
-    <Frame Width="64" Height="64" Top="0" Left="64" File="Bitmaps/Game/Arrows-hdpi.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="128" File="Bitmaps/Game/Arrows-hdpi.png" Time="0.5"/>
   </Animation>
   <Animation Name="East">
-    <Frame Width="64" Height="64" Top="0" Left="128" File="Bitmaps/Game/Arrows-hdpi.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="256" File="Bitmaps/Game/Arrows-hdpi.png" Time="0.5"/>
   </Animation>
   <Animation Name="North">
-    <Frame Width="64" Height="64" Top="0" Left="192" File="Bitmaps/Game/Arrows-hdpi.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="384" File="Bitmaps/Game/Arrows-hdpi.png" Time="0.5"/>
   </Animation>
   <Animation Name="Stopped">
     <Frame Width="1" Height="1" Top="0" Left="0" File="Bitmaps/Game/Arrows-hdpi.png" Time="0.5"/>

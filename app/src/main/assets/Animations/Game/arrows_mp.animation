@@ -1,102 +1,102 @@
 <AnimationSet>
   <Animation Name="South0">
-    <Frame Width="64" Height="64" Top="0" Left="0" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="0" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="West0">
-    <Frame Width="64" Height="64" Top="0" Left="64" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="128" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="East0">
-    <Frame Width="64" Height="64" Top="0" Left="128" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="256" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="North0">
-    <Frame Width="64" Height="64" Top="0" Left="192" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="384" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="HalfSouth0">
-    <Frame Width="64" Height="64" Top="0" Left="256" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="512" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="HalfWest0">
-    <Frame Width="64" Height="64" Top="0" Left="320" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="640" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="HalfEast0">
-    <Frame Width="64" Height="64" Top="0" Left="384" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="768" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="HalfNorth0">
-    <Frame Width="64" Height="64" Top="0" Left="448" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="896" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
 
   <Animation Name="South1">
-    <Frame Width="64" Height="64" Top="64" Left="0" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="128" Left="0" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="West1">
-    <Frame Width="64" Height="64" Top="64" Left="64" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="128" Left="128" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="East1">
-    <Frame Width="64" Height="64" Top="64" Left="128" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="128" Left="256" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="North1">
-    <Frame Width="64" Height="64" Top="64" Left="192" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="128" Left="384" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="HalfSouth1">
-    <Frame Width="64" Height="64" Top="64" Left="256" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="128" Left="512" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="HalfWest1">
-    <Frame Width="64" Height="64" Top="64" Left="320" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="128" Left="640" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="HalfEast1">
-    <Frame Width="64" Height="64" Top="64" Left="384" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="128" Left="768" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="HalfNorth1">
-    <Frame Width="64" Height="64" Top="64" Left="448" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="128" Left="896" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
 
   <Animation Name="South2">
-    <Frame Width="64" Height="64" Top="128" Left="0" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="256" Left="0" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="West2">
-    <Frame Width="64" Height="64" Top="128" Left="64" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="256" Left="128" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="East2">
-    <Frame Width="64" Height="64" Top="128" Left="128" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="256" Left="256" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="North2">
-    <Frame Width="64" Height="64" Top="128" Left="192" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="256" Left="384" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="HalfSouth2">
-    <Frame Width="64" Height="64" Top="128" Left="256" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="256" Left="512" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="HalfWest2">
-    <Frame Width="64" Height="64" Top="128" Left="320" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="256" Left="640" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="HalfEast2">
-    <Frame Width="64" Height="64" Top="128" Left="384" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="256" Left="768" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="HalfNorth2">
-    <Frame Width="64" Height="64" Top="128" Left="448" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="256" Left="896" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   
   <Animation Name="South3">
-    <Frame Width="64" Height="64" Top="192" Left="0" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="384" Left="0" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="West3">
-    <Frame Width="64" Height="64" Top="192" Left="64" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="384" Left="128" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="East3">
-    <Frame Width="64" Height="64" Top="192" Left="128" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="384" Left="256" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="North3">
-    <Frame Width="64" Height="64" Top="192" Left="192" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="384" Left="384" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="HalfSouth3">
-    <Frame Width="64" Height="64" Top="192" Left="256" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="384" Left="512" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="HalfWest3">
-    <Frame Width="64" Height="64" Top="192" Left="320" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="384" Left="640" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="HalfEast3">
-    <Frame Width="64" Height="64" Top="192" Left="384" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="384" Left="768" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="HalfNorth3">
-    <Frame Width="64" Height="64" Top="192" Left="448" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="384" Left="896" File="Bitmaps/Game/Arrows_MP.png" Time="0.5"/>
   </Animation>
 
   <Animation Name="Stopped">

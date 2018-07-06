@@ -1,14 +1,14 @@
 <AnimationSet>
   <Animation Name="Normal0">
-    <Frame Width="64" Height="64" Top="0" Left="0" File="Bitmaps/Game/Rocket_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="0" File="Bitmaps/Game/Rocket_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="Normal1">
-    <Frame Width="64" Height="64" Top="0" Left="64" File="Bitmaps/Game/Rocket_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="128" File="Bitmaps/Game/Rocket_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="Normal2">
-    <Frame Width="64" Height="64" Top="0" Left="128" File="Bitmaps/Game/Rocket_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="256" File="Bitmaps/Game/Rocket_MP.png" Time="0.5"/>
   </Animation>
   <Animation Name="Normal3">
-    <Frame Width="64" Height="64" Top="0" Left="192" File="Bitmaps/Game/Rocket_MP.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="384" File="Bitmaps/Game/Rocket_MP.png" Time="0.5"/>
   </Animation>
 </AnimationSet>

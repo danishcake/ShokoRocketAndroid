@@ -1,8 +1,8 @@
 <AnimationSet>
   <Animation Name="Horizontal">
-    <Frame Width="64" Height="8" Top="0" Left="0" File="Bitmaps/Game/Walls-hdpi.png" Time="0.5"/>
+    <Frame Width="128" Height="16" Top="0" Left="0" File="Bitmaps/Game/Walls-hdpi.png" Time="0.5"/>
   </Animation>
   <Animation Name="Vertical">
-    <Frame Width="8" Height="64" Top="12" Left="0" File="Bitmaps/Game/Walls-hdpi.png" Time="0.5"/>
+    <Frame Width="16" Height="128" Top="24" Left="0" File="Bitmaps/Game/Walls-hdpi.png" Time="0.5"/>
   </Animation>
 </AnimationSet>

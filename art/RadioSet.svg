@@ -10,17 +10,18 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="64"
-   height="64"
+   width="48"
+   height="48"
    id="svg2563"
    sodipodi:version="0.32"
-   inkscape:version="0.48.0 r9654"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    version="1.0"
    sodipodi:docname="RadioSet.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:export-filename="C:\Documents and Settings\Edward\My Documents\Visual Studio 2005\Projects\ShokoRocket++\src\ShokoRocket++\Sprites\GUI\Blank32x32.png"
    inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-ydpi="90"
+   viewBox="0 -16 64 64">
   <defs
      id="defs2565">
     <linearGradient
@@ -46,10 +47,10 @@
        gradientTransform="translate(96,16)" />
     <inkscape:perspective
        sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="0 : 526.18109 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_z="744.09448 : 526.18109 : 1"
-       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_x="0 : 701.57479 : 1"
+       inkscape:vp_y="0 : 1333.3333 : 0"
+       inkscape:vp_z="992.12597 : 701.57479 : 1"
+       inkscape:persp3d-origin="496.06299 : 467.71652 : 1"
        id="perspective2571" />
     <linearGradient
        inkscape:collect="always"
@@ -113,15 +114,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="8.75"
-     inkscape:cx="47.256743"
+     inkscape:cx="28.571029"
      inkscape:cy="39.416234"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="1280"
-     inkscape:window-height="738"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
+     inkscape:window-width="1920"
+     inkscape:window-height="996"
+     inkscape:window-x="0"
+     inkscape:window-y="28"
      inkscape:snap-bbox="true"
      inkscape:snap-nodes="true"
      inkscape:window-maximized="1">
@@ -132,8 +133,10 @@
        enabled="true"
        empspacing="4"
        snapvisiblegridlinesonly="true"
-       spacingx="2px"
-       spacingy="2px" />
+       spacingx="2"
+       spacingy="2"
+       originx="0"
+       originy="0" />
   </sodipodi:namedview>
   <metadata
      id="metadata2568">
@@ -150,12 +153,13 @@
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(0,-16)">
     <rect
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="C:\Documents and Settings\Edward\My Documents\Visual Studio 2005\Projects\ShokoTD\src\ShokoTD++\Sprites\GUI\blank64x64.png"
-       style="fill:#0000ff;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#0000ff;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect2385"
        width="62.020214"
        height="62.05938"
@@ -180,8 +184,9 @@
        id="rect4593"
        style="fill:url(#linearGradient4598);fill-opacity:1;fill-rule:evenodd;stroke:none" />
     <path
-       style="fill:#6dff7d;fill-opacity:1;stroke:#14d714;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="M 44 0.9375 L 44 63 L 51.8125 63 C 58.011649 63 63 58.011649 63 51.8125 L 63 12.125 C 63 5.9258507 58.011649 0.9375 51.8125 0.9375 L 44 0.9375 z "
-       id="rect4604" />
+       style="fill:#6dff7d;fill-opacity:1;stroke:#14d714;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 44,0.9375 V 63 h 7.8125 C 58.011649,63 63,58.011649 63,51.8125 V 12.125 C 63,5.9258507 58.011649,0.9375 51.8125,0.9375 Z"
+       id="rect4604"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>

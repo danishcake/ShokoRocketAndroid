@@ -1,5 +1,5 @@
 <AnimationSet>
   <Animation Name="All">
-    <Frame Width="64" Height="64" Top="0" Left="0" File="Bitmaps/Game/Hole-hdpi.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="0" File="Bitmaps/Game/Hole-hdpi.png" Time="0.5"/>
   </Animation>
 </AnimationSet>

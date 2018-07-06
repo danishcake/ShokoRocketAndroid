@@ -1,8 +1,8 @@
 <AnimationSet>
   <Animation Name="Normal">
-    <Frame Width="64" Height="64" Top="0" Left="0" File="Bitmaps/Game/Cursor-hdpi.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="0" File="Bitmaps/Game/Cursor-hdpi.png" Time="0.5"/>
   </Animation>
   <Animation Name="Faded">
-    <Frame Width="64" Height="64" Top="0" Left="0" File="Bitmaps/Game/Cursor-trans-hdpi.png" Time="0.5"/>
+    <Frame Width="128" Height="128" Top="0" Left="0" File="Bitmaps/Game/Cursor-trans-hdpi.png" Time="0.5"/>
   </Animation>
 </AnimationSet>

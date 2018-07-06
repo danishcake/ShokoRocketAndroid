@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AnimationFiles>
-   <!--Animation id="kapukapu" val="Animations/Game/kapukapu_xmas.animation" /-->
    <Animation id="mouse" val="Animations/Game/mouse_xmas.animation" />
-   <!--Animation id="rocket" val="Animations/Game/rocket_xmas.animation" /-->
 </AnimationFiles>

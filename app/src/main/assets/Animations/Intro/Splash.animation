@@ -1,24 +1,24 @@
 <AnimationSet>
   <Animation Name="Right">
-    <Frame Width="213" Height="101" Top="0" Left="0" File="Bitmaps/Intro/Logo.png" Time="0.25"/>
+    <Frame Width="426" Height="202" Top="0" Left="0" File="Bitmaps/Intro/Logo.png" Time="0.25"/>
   </Animation>
   <Animation Name="Left">
-    <Frame Width="213" Height="101" Top="101" Left="0" File="Bitmaps/Intro/Logo.png" Time="0.25"/>
+    <Frame Width="426" Height="202" Top="202" Left="0" File="Bitmaps/Intro/Logo.png" Time="0.25"/>
   </Animation>
   <Animation Name="CreditRocket">
-  <Frame Width="64" Height="135" Top="0" Left="0" File="Bitmaps/Intro/CreditRocket.png" Time="0.25"/>
+  <Frame Width="128" Height="270" Top="0" Left="0" File="Bitmaps/Intro/CreditRocket.png" Time="0.25"/>
   </Animation>
   <Animation Name="ForkMe">
   <Frame Width="149" Height="149" Top="0" Left="0" File="Bitmaps/Intro/ForkMe.png" Time="0.25"/>
   </Animation>
   <Animation Name="Smoke" FPS="8">
-    <Frame Width="64" Height="64" Top="0" Left="0"   File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
-    <Frame Width="64" Height="64" Top="0" Left="64"  File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
-    <Frame Width="64" Height="64" Top="0" Left="128" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
-    <Frame Width="64" Height="64" Top="0" Left="192" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
-    <Frame Width="64" Height="64" Top="0" Left="256" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
-    <Frame Width="64" Height="64" Top="0" Left="320" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
-    <Frame Width="64" Height="64" Top="0" Left="384" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
-    <Frame Width="64" Height="64" Top="0" Left="448" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
+    <Frame Width="128" Height="128" Top="0" Left="0"   File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
+    <Frame Width="128" Height="128" Top="0" Left="128" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
+    <Frame Width="128" Height="128" Top="0" Left="256" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
+    <Frame Width="128" Height="128" Top="0" Left="384" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
+    <Frame Width="128" Height="128" Top="0" Left="512" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
+    <Frame Width="128" Height="128" Top="0" Left="640" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
+    <Frame Width="128" Height="128" Top="0" Left="768" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
+    <Frame Width="128" Height="128" Top="0" Left="896" File="Bitmaps/Intro/Smoke.png" Time="0.125"/>
   </Animation>
 </AnimationSet>

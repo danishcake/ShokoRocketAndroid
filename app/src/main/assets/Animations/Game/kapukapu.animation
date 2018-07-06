@@ -1,39 +1,39 @@
 <AnimationSet>
   <Animation Name="North" OffsetY="-6" OffsetX="0" FPS="10">
-    <Frame Width="64" Height="96" Top="288" Left="0" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
-    <Frame Width="64" Height="96" Top="288" Left="64" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
-    <Frame Width="64" Height="96" Top="288" Left="64" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
-    <Frame Width="64" Height="96" Top="288" Left="192" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="576" Left="0" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="576" Left="128" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="576" Left="256" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="576" Left="384" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
   </Animation>
   <Animation Name="South" OffsetY="-6" OffsetX="0" FPS="10">
-    <Frame Width="64" Height="96" Top="192" Left="0" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
-    <Frame Width="64" Height="96" Top="192" Left="64" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
-    <Frame Width="64" Height="96" Top="192" Left="128" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
-    <Frame Width="64" Height="96" Top="192" Left="192" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="384" Left="0" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="384" Left="128" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="384" Left="256" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="384" Left="384" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
   </Animation>
   <Animation Name="East" OffsetY="-6" OffsetX="0" FPS="10">
-    <Frame Width="64" Height="96" Top="96" Left="0" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
-    <Frame Width="64" Height="96" Top="96" Left="64" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
-    <Frame Width="64" Height="96" Top="96" Left="128" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
-    <Frame Width="64" Height="96" Top="96" Left="192" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="192" Left="0" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="192" Left="128" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="192" Left="256" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="192" Left="384" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
   </Animation>
   <Animation Name="West" OffsetY="-6" OffsetX="0" FPS="10">
-    <Frame Width="64" Height="96" Top="0" Left="0" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
-    <Frame Width="64" Height="96" Top="0" Left="64" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
-    <Frame Width="64" Height="96" Top="0" Left="128" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
-    <Frame Width="64" Height="96" Top="0" Left="192" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="0" Left="0" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="0" Left="128" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="0" Left="256" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="0" Left="384" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
   </Animation>
   <Animation Name="Stopped" OffsetY="-6" OffsetX="0" FPS="10">
-    <Frame Width="64" Height="96" Top="192" Left="0" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
+    <Frame Width="128" Height="192" Top="384" Left="0" File="Bitmaps/Game/KapuKapu-hdpi.png" Time="0.2"/>
   </Animation>
   <Animation Name="Death" OffsetY="-6" OffsetX="0" FPS="8">
-    <Frame Width="64" Height="96" Top="0" Left="0" File="Bitmaps/Game/KapuKapuDeath-hdpi.png" Time="0.125"/>
-	<Frame Width="64" Height="96" Top="0" Left="64" File="Bitmaps/Game/KapuKapuDeath-hdpi.png" Time="0.125"/>
-	<Frame Width="64" Height="96" Top="0" Left="128" File="Bitmaps/Game/KapuKapuDeath-hdpi.png" Time="0.125"/>
-	<Frame Width="64" Height="96" Top="0" Left="192" File="Bitmaps/Game/KapuKapuDeath-hdpi.png" Time="0.125"/>
-	<Frame Width="64" Height="96" Top="0" Left="256" File="Bitmaps/Game/KapuKapuDeath-hdpi.png" Time="0.125"/>
-	<Frame Width="64" Height="96" Top="0" Left="320" File="Bitmaps/Game/KapuKapuDeath-hdpi.png" Time="0.125"/>
-	<Frame Width="64" Height="96" Top="0" Left="384" File="Bitmaps/Game/KapuKapuDeath-hdpi.png" Time="0.125"/>
-	<Frame Width="64" Height="96" Top="0" Left="448" File="Bitmaps/Game/KapuKapuDeath-hdpi.png" Time="0.125"/>
+    <Frame Width="128" Height="192" Top="0" Left="0" File="Bitmaps/Game/KapuKapuDeath-hdpi.png" Time="0.125"/>
+	<Frame Width="128" Height="192" Top="0" Left="128" File="Bitmaps/Game/KapuKapuDeath-hdpi.png" Time="0.125"/>
+	<Frame Width="128" Height="192" Top="0" Left="256" File="Bitmaps/Game/KapuKapuDeath-hdpi.png" Time="0.125"/>
+	<Frame Width="128" Height="192" Top="0" Left="384" File="Bitmaps/Game/KapuKapuDeath-hdpi.png" Time="0.125"/>
+	<Frame Width="128" Height="192" Top="0" Left="512" File="Bitmaps/Game/KapuKapuDeath-hdpi.png" Time="0.125"/>
+	<Frame Width="128" Height="192" Top="0" Left="640" File="Bitmaps/Game/KapuKapuDeath-hdpi.png" Time="0.125"/>
+	<Frame Width="128" Height="192" Top="0" Left="768" File="Bitmaps/Game/KapuKapuDeath-hdpi.png" Time="0.125"/>
+	<Frame Width="128" Height="192" Top="0" Left="896" File="Bitmaps/Game/KapuKapuDeath-hdpi.png" Time="0.125"/>
   </Animation>
 </AnimationSet>

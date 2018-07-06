@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="tutorial_grid_size">96</integer>
+    <integer name="preview_grid_size">44</integer>
+    <integer name="btn_size">96</integer>
+    <integer name="btn_wide_size">144</integer>
+    <integer name="btn_sep">16</integer>
+    <integer name="btn_border">16</integer>
+    <integer name="btn_font_size">28</integer>
+    <integer name="level_border">8</integer>
+    <integer name="np_border">44</integer>
+    <integer name="arrow_btn_left">28</integer>
+    <integer name="arrow_btn_right">28</integer>
+    <integer name="arrow_btn_top">52</integer>
+    <integer name="arrow_btn_bottom">52</integer>
+</resources>

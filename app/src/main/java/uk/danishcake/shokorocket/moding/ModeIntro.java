@@ -109,13 +109,19 @@ public class ModeIntro extends Mode implements Runnable {
 	
 	@Override
 	public ModeAction Tick(int timespan) {
+		// The following code was bodged and has no particular coordinate system apart from
+		// 1000:1 pixel
+		// It was however designed for a 64 wide, so this bodge makes stuff work better
+		// for offsets
+		float scale = 2.0f;
+
 		if(mLoadFraction < 1.0)
 		{
 			//Still waiting on list of levels to load
 			mAge = 0;
 		} else
 		{
-			int rocket_speed = 300 * 800 / mScreenHeight; //300px/s 
+			int rocket_speed = 300 * 800 / mScreenHeight; //300px/s
 			mLogoLeft.Tick(timespan);
 			mLogoRight.Tick(timespan);
 			mCreditRocket.Tick(timespan);
@@ -128,7 +134,8 @@ public class ModeIntro extends Mode implements Runnable {
 					if(!mUserLevels.get(mUserLevelIndex).equals(""))
 					{
 						Rocket rocket = new Rocket();
-						rocket.position = new Vector2i(mRandom.nextInt(mScreenWidth-128)+32, (mScreenHeight + 150 + mRandom.nextInt(50)) * 1000);
+						rocket.position = new Vector2i((mRandom.nextInt(mScreenWidth-128)+64),
+								((mScreenHeight + 250 + mRandom.nextInt(50)) * 1000));
 						rocket.age = 0;
 						rocket.text = mUserLevels.get(mUserLevelIndex);
 						mRockets.add(rocket);
@@ -145,12 +152,12 @@ public class ModeIntro extends Mode implements Runnable {
 				rocket.position.y -= rocket_speed * timespan;
 				if(rocket.position.y < -1000000)
 					v_it.remove();
-				final int smoke_offset = 100000;
+				final int smoke_offset = (int)(100000 * scale);
 				if(rocket.age / 80 > ltv_age / 80)
 				{
 					{
 						Smoke s = new Smoke();
-						s.position = new Vector2i(rocket.position.x * 1000 + 10000, rocket.position.y + smoke_offset);
+						s.position = new Vector2i(rocket.position.x * 1000 + (int)(10000 * scale), rocket.position.y + smoke_offset);
 						s.velocity = new Vector2i(-7, -rocket_speed);
 						mPlumes.add(s);
 					}
@@ -162,7 +169,7 @@ public class ModeIntro extends Mode implements Runnable {
 					}
 					{
 						Smoke s = new Smoke();
-						s.position = new Vector2i(rocket.position.x * 1000 - 10000, rocket.position.y + smoke_offset);
+						s.position = new Vector2i(rocket.position.x * 1000 - (int)(10000 * scale), rocket.position.y + smoke_offset);
 						s.velocity = new Vector2i(7, -rocket_speed);
 						mPlumes.add(s);
 					}
@@ -188,6 +195,9 @@ public class ModeIntro extends Mode implements Runnable {
 	
 	@Override
 	public void Redraw(Canvas canvas) {
+		// As described above, this was designed for 64 pixel grids
+		float scale = 2.0f;
+
 		if(mLoadFraction < 1.0)
 		{
 			canvas.drawARGB(255, mFadeR, mFadeG, mFadeB);
@@ -209,14 +219,18 @@ public class ModeIntro extends Mode implements Runnable {
 			canvas.drawText(last_loaded, canvas.getWidth() / 2 - text_width / 2, canvas.getHeight() / 2 + 40, back_paint);
 		} else
 		{
-			if(mLogoInterpolator == null)
-			{
+			float logoWidth = mLogoRight.getCurrentFrame().getWidth();
+			float logoHeight = mLogoRight.getCurrentFrame().getHeight();
+
+			if(mLogoInterpolator == null) {
 				mLogoInterpolator = new Interpolator(3, 5);
-				mLogoInterpolator.setKeyFrame(0, 0, new float[] {-250, 100, 0});
-				mLogoInterpolator.setKeyFrame(1, 500, new float[]{-250, 100, 0});
+				mLogoInterpolator.setKeyFrame(0, 0, new float[]{-logoWidth * 1.5f, 100, 0});
+				mLogoInterpolator.setKeyFrame(1, 500, new float[]{-logoWidth * 1.5f, 100, 0});
 				mLogoInterpolator.setKeyFrame(2, 1500, new float[]{canvas.getWidth() + 1, canvas.getHeight() + 1, 45});
 				mLogoInterpolator.setKeyFrame(3, 2500, new float[]{canvas.getWidth() + 1, canvas.getHeight() + 1, 45}, new float[]{1.0f, 0.0f, 0.0f, 0.0f});
-				mLogoInterpolator.setKeyFrame(4, 3500, new float[]{canvas.getWidth() / 2 - 100, canvas.getHeight() / 2 - 50, 0});
+				mLogoInterpolator.setKeyFrame(4, 3500, new float[]{
+						(canvas.getWidth() / 2) - (logoWidth  / 2),
+						(canvas.getHeight() / 2) - (logoHeight / 2), 0});
 			}
 			
 			Paint fill_paint = new Paint();
@@ -230,16 +244,18 @@ public class ModeIntro extends Mode implements Runnable {
 			float angle = interpolated[2];
 
 			mMatrix.reset();
-			if(interp_result != Result.FREEZE_END)
-				mMatrix.setRotate(angle, 100, 50);
-			else
-				mMatrix.setRotate(-(mAge - 3500) / 30, 100, 50);
+			if(interp_result != Result.FREEZE_END) {
+				mMatrix.setRotate(angle, logoWidth / 2, logoHeight / 2);
+			} else {
+				// Potentially wrong size used, but it doesn't matter as they're the same size
+				mMatrix.setRotate(-(mAge - 3500) / 30, logoWidth / 2, logoHeight / 2);
+			}
 
 			mMatrix.postTranslate(x, y);
 
 			for (Rocket r : mRockets) {
 				canvas.drawBitmap(mCreditRocket.getCurrentFrame(), r.position.x, r.position.y / 1000, null);
-				canvas.drawText(r.text, r.position.x+32, r.position.y / 1000, mTextPaint);
+				canvas.drawText(r.text, r.position.x + 32 * scale, r.position.y / 1000, mTextPaint);
 			}
 
 			for (Smoke s : mPlumes) {
