@@ -64,7 +64,7 @@ public class Mode {
 		mBtnSize2 = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_wide_size);
 		mBtnSep = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_sep);
 		mBtnBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_border);
-		mFontSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size);
+		mFontSize = (int)(context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size) * context.getResources().getDisplayMetrics().density);
 		mLevelBorder = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.level_border);
 		mGridSize = context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.grid_size);
 		

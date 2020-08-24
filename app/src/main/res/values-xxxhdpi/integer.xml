@@ -6,7 +6,6 @@
     <integer name="btn_wide_size">288</integer>
     <integer name="btn_sep">32</integer>
     <integer name="btn_border">32</integer>
-    <integer name="btn_font_size">32</integer>
     <integer name="level_border">16</integer>
     <integer name="np_border">88</integer>
     <integer name="arrow_btn_left">56</integer>

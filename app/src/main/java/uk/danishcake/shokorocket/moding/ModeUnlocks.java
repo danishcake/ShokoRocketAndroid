@@ -191,7 +191,7 @@ public class ModeUnlocks extends Mode {
 				Toast.makeText(mContext, R.string.unlocks_lineart_hint, Toast.LENGTH_SHORT).show();
 			}});
 		
-		mWidgetPage.setFontSize(context.getResources().getInteger(uk.danishcake.shokorocket.R.integer.btn_font_size));
+		mWidgetPage.setFontSize(mFontSize);
 		mWidgetPage.addWidget(back);
 		mWidgetPage.addWidget(complete_count);
 		mWidgetPage.addWidget(tutorial);
