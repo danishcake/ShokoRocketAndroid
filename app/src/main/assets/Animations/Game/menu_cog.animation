@@ -1,0 +1,5 @@
+<AnimationSet>
+  <Animation Name="Menu">
+    <Frame Width="128" Height="128" Top="0" Left="0" File="Bitmaps/Game/Menu-Cog.png" Time="0.5"/>
+  </Animation>
+</AnimationSet>

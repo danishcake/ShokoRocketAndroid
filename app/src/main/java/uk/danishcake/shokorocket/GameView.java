@@ -44,7 +44,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				mGame.HandleTouch(event);
 				mSemaphore.release();
 			} catch (InterruptedException e) {
-				Log.e("GameView.GameView", "Semaphore interupted");
+				Log.e("GameView.GameView", "Semaphore interrupted");
 			}
 			return true;
 		}
@@ -58,7 +58,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			result = mGame.HandleBack();
 			mSemaphore.release();
 		} catch (InterruptedException e) {
-			Log.e("GameView.OverrideBack", "Semaphore interupted");
+			Log.e("GameView.OverrideBack", "Semaphore interrupted");
 		}
 		return result;
 	}
@@ -70,7 +70,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			mGame.HandleDPad(direction);
 			mSemaphore.release();
 		} catch (InterruptedException e) {
-			Log.e("GameView.OverrideBack", "Semaphore interupted");
+			Log.e("GameView.OverrideBack", "Semaphore interrupted");
 		}
 	}
 	
@@ -81,7 +81,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			mGame.ScreenChanged(width, height);
 			mSemaphore.release();
 		} catch (InterruptedException e) {
-			Log.e("GameView.OverrideBack", "Semaphore interupted");
+			Log.e("GameView.OverrideBack", "Semaphore interrupted");
 		}
 	}
 
@@ -103,7 +103,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				retry = false;
 			} catch(InterruptedException e)
 			{
-				Log.e("GameView.surfaceDestroyed", "Semaphore interupted");
+				Log.e("GameView.surfaceDest", "Semaphore interrupted");
 			}
 		}
 	}
@@ -115,7 +115,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			result = mGame.getMenu(menu);
 			mSemaphore.release();
 		} catch (InterruptedException e) {
-			Log.e("GameView.getMenu", "Semaphore interupted");
+			Log.e("GameView.getMenu", "Semaphore interrupted");
 		}
 		return result;
 	}
@@ -127,7 +127,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			result = mGame.handleMenuSelection(item); 
 			mSemaphore.release();
 		} catch (InterruptedException e) {
-			Log.e("GameView.handleMenuSelected", "Semaphore interupted");
+			Log.e("GameView.handleMenuSel", "Semaphore interrupted");
 		}
 		return result;
 	}

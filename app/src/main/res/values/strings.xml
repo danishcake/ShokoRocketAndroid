@@ -6,7 +6,6 @@
     <string name="menu_easy_ai">Easy AI</string>
     <string name="menu_puzzle">Puzzle</string>
     <string name="menu_ai">AI</string>
-    <string name="menu_online">Online</string>
     <string name="intro_thanks_guys">Thanks guys!</string>
     <string name="intro_contributors">Contributers</string>
     <string name="intro_credits">Credits</string>
@@ -27,7 +26,6 @@
 	<string name="unlocks_back">Back</string>
     <string name="puzzle_run_speed_faster">Faster</string>
     <string name="error_loading_level">Error loading level</string>
-    <string name="mp_beta_warning">BETA warning:\n There is currently no multiplayer. Versus AI is in work, and once satisfactory I will start on proper multiplayer</string>
     <string name="menu_unlocks">Unlocks</string>
 	<string name="tutorial_15">Finally, if you enjoy this game then give it a good review and tell your friends about it</string>
     <string name="tutorial_14">Press menu to see rotation options</string>
@@ -42,7 +40,6 @@
     <string name="game_complete_next">Next</string>
     <string name="game_rotate">Rotate</string>
     <string name="editor_create_a_level_first">Create a level first</string>
-    <string name="menu_editor_requies_storage">External storage not mounted, editor cannot be used</string>
     <string name="tutorial_12">Cats will destroy arrows if they hit them head on, but not if they hit them from the side</string>
     <string name="tutorial_11">Don\'t let cats kill any mice</string>
     <string name="tutorial_10">Note that problem points are highlighted with a circle. Just hit reset and try again!</string>
@@ -69,7 +66,7 @@
     <string name="editor_yes">Yes</string>
     <string name="editor_new_level_confirmation">Are you sure you want to create a new level?</string>
     <string name="editor_unable_to_save">Unable to save </string>
-    <string name="editor_saved_as">Saved as </string>
+    <string name="editor_saved_as">Saved</string>
     <string name="editor_menu_edit_mode">Edit mode</string>
     <string name="editor_menu_verify">Verify</string>
     <string name="editor_menu_properties">Properties</string>
@@ -93,7 +90,6 @@
     <string name="menu_tutorial">Tutorial</string>
     <string name="menu_play">Play</string>
     <string name="menu_level_name">Level name</string>
-    <string name="menu_external_storage_unmounted">External storage unmounted</string>
     <string name="menu_error_loading">Error loading</string>
     <string name="menu_sound_on">Turn sound off</string>
     <string name="menu_sound_off">Turn sound on</string>
@@ -115,4 +111,6 @@
     <string name="level_height_label">Level height</string>
     <string name="app_description">A clone of Chu Chu Rocket, save the mice from the evil cats!</string>
     <string name="app_name">Shoko Rocket</string>
+    <string name="menu_editor_requies_storage">External storage not available, the editor may not function</string>
+    <string name="editor_expand_menu">...</string>
 </resources>

@@ -64,10 +64,7 @@ public class ModeSPGame extends Mode {
 	
 	private Dialog mCompleteDialog = null;
 	private Dialog mSplashDialog = null;
-	
-	private final int E_MENU_ROTATE = 1;
-	private final int E_MENU_BACK = 2;
-	
+
 	public ModeSPGame(SPWorld world, ModeMenu menu, Progress progress, SkinProgress skin, GameDrawer norm, GameDrawer rot)
 	{
 		mWorld = world;
@@ -495,14 +492,6 @@ public class ModeSPGame extends Mode {
 		mDownArrowCount.setText(Integer.toString(arrow_count.get(Direction.South)));
 	}
 	
-	@Override
-	public boolean getMenu(Menu menu, boolean clear) {
-		super.getMenu(menu, clear);
-		menu.add(0, E_MENU_ROTATE, 0, R.string.game_rotate).setEnabled(mRunningMode != RunningMode.RotatingCW && mRunningMode != RunningMode.RotatingCCW );
-		menu.add(0, E_MENU_BACK, 0, R.string.game_back);
-		return true;
-	}
-
 	private void changeRotation() {
 		switch(mRunningMode)
 		{
@@ -523,36 +512,6 @@ public class ModeSPGame extends Mode {
 		mCursorPosition.y = -1;
 	}
 
-	@Override
-	public boolean handleMenuSelection(MenuItem item) {
-		switch(item.getItemId())
-		{
-		case E_MENU_ROTATE:
-			if(mWorld.getRotation() == 0)
-			{
-				mWorld.Reset();
-				mGo.setText(mContext.getString(R.string.game_go));
-				mRotateTimer = 0;
-				mRunningMode = RunningMode.RotatingCW;
-				mGameDrawer.CreateCacheBitmap(mWorld);
-			}
-			else
-			{
-				mWorld.Reset();
-				mGo.setText(mContext.getString(R.string.game_go));
-				mRotateTimer = 0;
-				mRunningMode = RunningMode.RotatingCCW;
-				mGameDrawer.CreateCacheBitmap(mWorld);
-			}
-			return true;
-		case E_MENU_BACK:
-			mPendMode = mModeMenu;
-		default:
-			return super.handleMenuSelection(item);
-		}
-		
-	}
-	
 	private Runnable mLevelCompleteRunnable = new Runnable() {
 		public void run() {
 			mCompleteDialog = new Dialog(mContext);
@@ -574,7 +533,7 @@ public class ModeSPGame extends Mode {
 							mProgress.nextUnbeaten();
 							SPWorld world = mProgress.getWorld();
 							mPendMode = new ModeSPGame(world, mModeMenu, mProgress, mSkin, mGameDrawerNorm, mGameDrawerRot);
-							
+
 							mSemaphore.release();
 						} catch(InterruptedException int_ex)
 						{
@@ -594,7 +553,7 @@ public class ModeSPGame extends Mode {
 				next.setEnabled(false);
 				progress_text.setText(R.string.game_complete_100_complete);
 			}
-			
+
 			menu.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					try

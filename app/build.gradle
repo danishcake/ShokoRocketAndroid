@@ -1,22 +1,37 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 8
-    buildToolsVersion "28.0.0"
+    namespace "uk.danishcake.shokorocket"
 
     defaultConfig {
         applicationId "uk.danishcake.shokorocket"
-        minSdkVersion 7
-        targetSdkVersion 26
+        minSdk 8
+        targetSdk 35
+        compileSdk 35
 
         testApplicationId "uk.danishcake.shokorocket.test"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
+    }
+
+    signingConfigs {
+        release {
+            Properties properties = new Properties()
+            if (rootProject.file("local.properties").exists()) {
+                properties.load(rootProject.file("local.properties").newDataInputStream())
+            }
+
+            storeFile = file(properties.getProperty("RELEASE_STORE_FILE", "release.keystore"))
+            storePassword = properties.getProperty("RELEASE_STORE_PASSWORD", "")
+            keyAlias = properties.getProperty("RELEASE_KEY_ALIAS", "")
+            keyPassword = properties.getProperty("RELEASE_KEY_PASSWORD", "")
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.release
         }
     }
 }

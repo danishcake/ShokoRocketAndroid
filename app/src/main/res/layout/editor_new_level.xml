@@ -1,14 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_height="wrap_content" android:orientation="vertical" android:layout_width="fill_parent" android:minWidth="280dip">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="280dip"
+    android:orientation="vertical">
 
-<TextView android:layout_height="wrap_content" android:id="@+id/LevelSize" android:layout_width="wrap_content" android:text="@string/level_width_label" android:layout_marginLeft="4dip"></TextView>
+    <TextView
+        android:id="@+id/LevelSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dip"
+        android:text="@string/level_width_label" />
 
-<Spinner android:layout_height="wrap_content" android:id="@+id/LevelWidth" android:entries="@array/level_dimensions" android:prompt="@string/level_size_x_prompt" android:layout_weight="0" android:layout_width="fill_parent" android:layout_margin="1dip"></Spinner><TextView android:layout_height="wrap_content" android:id="@+id/LevelSize" android:layout_width="wrap_content" android:text="@string/level_height_label" android:layout_marginLeft="4dip"></TextView>
+    <Spinner
+        android:id="@+id/LevelWidth"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dip"
+        android:layout_weight="0"
+        android:entries="@array/level_dimensions"
+        android:prompt="@string/level_size_x_prompt"/>
 
-<Spinner android:layout_height="wrap_content" android:id="@+id/LevelHeight" android:entries="@array/level_dimensions" android:prompt="@string/level_size_y_prompt" android:layout_weight="0" android:layout_width="fill_parent" android:layout_margin="1dip"></Spinner>
-<EditText android:layout_height="wrap_content" android:contentDescription="@string/level_name_description" android:inputType="textPersonName" android:text="@string/level_default_name" android:id="@+id/LevelName" android:layout_weight="0" android:layout_width="fill_parent" android:layout_margin="1dip"></EditText>
-<EditText android:layout_height="wrap_content" android:inputType="textPersonName" android:text="@string/level_default_author" android:id="@+id/LevelAuthor" android:layout_weight="0" android:layout_width="fill_parent" android:layout_margin="1dip"></EditText>
-<Button android:layout_height="wrap_content" android:id="@+id/CreateLevel" android:text="@string/level_create" android:layout_weight="0" android:layout_width="fill_parent" android:layout_margin="1dip"></Button>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dip"
+        android:text="@string/level_height_label" />
+
+    <Spinner
+        android:id="@+id/LevelHeight"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dip"
+        android:layout_weight="0"
+        android:entries="@array/level_dimensions"
+        android:prompt="@string/level_size_y_prompt" />
+
+    <EditText
+        android:id="@+id/LevelName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dip"
+        android:layout_weight="0"
+        android:contentDescription="@string/level_name_description"
+        android:inputType="textPersonName"
+        android:text="@string/level_default_name" />
+
+    <EditText
+        android:id="@+id/LevelAuthor"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dip"
+        android:layout_weight="0"
+        android:inputType="textPersonName"
+        android:text="@string/level_default_author" />
+
+    <Button
+        android:id="@+id/CreateLevel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dip"
+        android:layout_weight="0"
+        android:text="@string/level_create" />
 </LinearLayout>

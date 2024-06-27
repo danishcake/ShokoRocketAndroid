@@ -49,7 +49,7 @@ public class MusicManager implements OnPreparedListener {
 			}
 		} catch(IOException io_ex)
 		{
-			Log.e("ShokoRocket.SoundManager", "Unable to load music");
+			Log.e("ShokoRocket.SoundMgr", "Unable to load music");
 		}
 	}
 	
@@ -90,7 +90,7 @@ public class MusicManager implements OnPreparedListener {
 			SetMusic(fis.getFD());
 		} catch(IOException io_ex)
 		{
-			Log.e("ShokoRocket.MusicManager", "Unable to open Menu.ogg in ShokoRocket/Music");
+			Log.e("ShokoRocket.MusicMgr", "Unable to open Menu.ogg in ShokoRocket/Music");
 		}
 	}
 	

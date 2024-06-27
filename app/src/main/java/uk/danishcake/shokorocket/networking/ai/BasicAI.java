@@ -678,7 +678,7 @@ public class BasicAI extends BaseAI {
 				mColCount[x]++;
 			if((x <= mDirectPosition.x && walker.getDirection() == Direction.East) || 
 			   (x >= mDirectPosition.x && walker.getDirection() == Direction.West))
-			mRowCount[y]++;
+				mRowCount[y]++;
 		}
 		int max_count = 0;
 		mBestCol = -1;

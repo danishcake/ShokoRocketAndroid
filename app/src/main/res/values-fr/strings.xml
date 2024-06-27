@@ -6,12 +6,26 @@
     <string name="menu_easy_ai">IA Facile</string>
     <string name="menu_puzzle">Puzzle</string>
     <string name="menu_ai">IA</string>
-    <string name="menu_online">En ligne</string>
     <string name="intro_thanks_guys">Merci les gens !</string>
     <string name="intro_contributors">Contributeurs</string>
     <string name="intro_credits">Crédits</string>
     <string name="editor_share_your_work">Partagez votre travail</string>
+    <string name="unlocks_complete_prefix">Complet</string>
+    <string name="unlocks_pinkmouse_text">Souris rose</string>
+    <string name="unlocks_contributor_text">Souris elite</string>
+    <string name="unlocks_xmas_text">Noël</string>
+    <string name="unlocks_obsidian_text">Souris obsidienne</string>
+    <string name="unlocks_ghostmice_text">Souris fantôme</string>
+    <string name="unlocks_lineart_text">Art ligne</string>
+    <string name="unlocks_lineart_hint">Réussissez les 100 niveaux pour débloquer</string>
+    <string name="unlocks_ghost_hint">Réussissez les 60 niveaux pour débloquer</string>
+    <string name="unlocks_obsidian_hint">Réussissez les 30 niveaux pour débloquer</string>
+    <string name="unlocks_christmas_hint">Jouez en décembre pour débloquer</string>
+    <string name="unlocks_contributor_hint">Soumettrez un niveau avec l\'éditeur pour débloquer</string>
+    <string name="unlocks_pink_mice_hint">Réussissez les 5 niveaux pour débloquer</string>
+    <string name="unlocks_back">Retour</string>
     <string name="puzzle_run_speed_faster">Plus vite</string>
+    <string name="error_loading_level">Erreur de chargement du niveau</string>
     <string name="menu_unlocks">Débloquer</string>
     <string name="tutorial_15">Si vous aimez ce jeu participez en faisant des critiques et parlez en autour de vous !</string>
     <string name="tutorial_14">Appuyez sur menu pour voir les options de rotation</string>
@@ -53,7 +67,7 @@
     <string name="editor_yes">Oui</string>
     <string name="editor_new_level_confirmation">Etes vous sur de vouloir sauvegarder ce niveau ?</string>
     <string name="editor_unable_to_save">Impossible de sauvegarder</string>
-    <string name="editor_saved_as">Sauvegarder sous </string>
+    <string name="editor_saved_as">Sauvegarder</string>
     <string name="editor_menu_edit_mode">Mode édition</string>
     <string name="editor_menu_verify">Vérifier</string>
     <string name="editor_menu_properties">Propriété</string>
@@ -77,7 +91,6 @@
     <string name="menu_tutorial">Tutoriel</string>
     <string name="menu_play">Jouer</string>
     <string name="menu_level_name">Nom du niveau</string>
-    <string name="menu_external_storage_unmounted">Espace de stockage externe non monté</string>
     <string name="menu_error_loading">Erreur de chargement</string>
     <string name="menu_sound_on">Désactiver le son</string>
     <string name="menu_sound_off">Activer le son</string>
@@ -99,4 +112,5 @@
     <string name="level_height_label">Largeur du niveau</string>
     <string name="app_description">Un clone de Chu Chu Rocket, sauvez les souris des chats diaboliques !</string>
     <string name="app_name">Shoko Rocket</string>
+    <string name="editor_expand_menu">...</string>
 </resources>

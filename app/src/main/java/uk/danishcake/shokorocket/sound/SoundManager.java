@@ -78,7 +78,7 @@ public class SoundManager {
 			PlaySound(sound_id);
 		} catch(IOException io_ex)
 		{
-			Log.e("ShokoRocket.SoundManager.PlaySound", "Unable to load sound " + sound);
+			Log.e("SoundManager.PlaySound", "Unable to load sound " + sound);
 		}
 	}
 	

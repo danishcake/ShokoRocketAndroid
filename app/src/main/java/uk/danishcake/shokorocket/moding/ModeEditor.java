@@ -1,10 +1,11 @@
 package uk.danishcake.shokorocket.moding;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.AlertDialog.Builder;
@@ -17,9 +18,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,7 +37,6 @@ import uk.danishcake.shokorocket.R;
 import uk.danishcake.shokorocket.animation.GameDrawer;
 import uk.danishcake.shokorocket.gui.Widget;
 import uk.danishcake.shokorocket.gui.WidgetPage;
-import uk.danishcake.shokorocket.moding.Mode;
 import uk.danishcake.shokorocket.simulation.Direction;
 import uk.danishcake.shokorocket.simulation.SquareType;
 import uk.danishcake.shokorocket.simulation.Vector2i;
@@ -50,12 +51,13 @@ public class ModeEditor extends Mode {
 		Walls, Mice, Cats, Arrows, Holes, Rockets
 	}
 	private EditMode mEditMode = EditMode.Walls;
-	private SkinProgress mSkin;
+	private final SkinProgress mSkin;
 	private Widget mEditModeWidget = null;
 	private Widget mTryWidget = null;
+	private Widget mMenuWidget = null;
 
 	private Dialog mNewLevelDialog = null;
-	private Runnable mNewLevelRunnable = new Runnable() {
+	private final Runnable mNewLevelRunnable = new Runnable() {
 		public void run() {
 			mNewLevelDialog = new Dialog(mContext);
 			mNewLevelDialog.setContentView(uk.danishcake.shokorocket.R.layout.editor_new_level);
@@ -64,12 +66,12 @@ public class ModeEditor extends Mode {
 			((Spinner)mNewLevelDialog.findViewById(R.id.LevelHeight)).setSelection(9);
 			
 			//Set the default author
-			TextView level_author = (TextView) mNewLevelDialog.findViewById(R.id.LevelAuthor);
+			TextView level_author = mNewLevelDialog.findViewById(R.id.LevelAuthor);
 			SharedPreferences prefs =  mContext.getSharedPreferences("ShokoRocketPreferences", Context.MODE_PRIVATE);
 			String default_author = prefs.getString("DefaultAuthor", mContext.getResources().getString(R.string.level_default_author));
 			level_author.setText(default_author);
 			
-			Button createLevel = (Button) mNewLevelDialog.findViewById(R.id.CreateLevel);
+			Button createLevel = mNewLevelDialog.findViewById(R.id.CreateLevel);
 			createLevel.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					try
@@ -77,10 +79,10 @@ public class ModeEditor extends Mode {
 					if(mNewLevelDialog == null)
 						return; //Have seen this crash due to null here - perhaps two clicks are called sometimes?
 					mSemaphore.acquire();
-					Spinner width_spinner = (Spinner) mNewLevelDialog.findViewById(R.id.LevelWidth);
-					Spinner height_spinner = (Spinner) mNewLevelDialog.findViewById(R.id.LevelHeight);
-					TextView level_author = (TextView) mNewLevelDialog.findViewById(R.id.LevelAuthor);
-					TextView level_name = (TextView) mNewLevelDialog.findViewById(R.id.LevelName);
+					Spinner width_spinner = mNewLevelDialog.findViewById(R.id.LevelWidth);
+					Spinner height_spinner = mNewLevelDialog.findViewById(R.id.LevelHeight);
+					TextView level_author = mNewLevelDialog.findViewById(R.id.LevelAuthor);
+					TextView level_name = mNewLevelDialog.findViewById(R.id.LevelName);
 					
 					mWorld = new SPWorld(Integer.parseInt((String)width_spinner.getSelectedItem()),
 									   Integer.parseInt((String)height_spinner.getSelectedItem()));
@@ -102,7 +104,7 @@ public class ModeEditor extends Mode {
 					mSemaphore.release();
 					} catch (InterruptedException int_ex)
 					{
-						Log.e("ModeEditor.newLevelRunnable.run", "Semaphore interupted");
+						Log.e("ModeEditor", "newLevelRunnable.run: Semaphore interrupted");
 					}
 				}
 			});
@@ -115,18 +117,17 @@ public class ModeEditor extends Mode {
 	private Dialog mShareDialog = null;	
 	private SPWorld mWorld = null;
 	private GameDrawer mGameDrawer = null;
-	private ModeMenu mModeMenu;
+	private final ModeMenu mModeMenu;
 	private RunningMode mRunningMode = RunningMode.Stopped;
 	
 	private int mResetTimer = 0;
 	private static final int ResetTime = 1500;
-	
-	boolean mSaveNeeded = false;
+
 	boolean mValidated = false;
 	
-	private Vector2i mCursorPosition = new Vector2i(-1, -1);
-	private Vector2i mGestureStart = new Vector2i(0, 0);
-	private Vector2i mGestureEnd = new Vector2i(0, 0);
+	private final Vector2i mCursorPosition = new Vector2i(-1, -1);
+	private final Vector2i mGestureStart = new Vector2i(0, 0);
+	private final Vector2i mGestureEnd = new Vector2i(0, 0);
 	private Direction mGestureDirection = Direction.Invalid;
 	private boolean mGestureInProgress = false;
 	
@@ -162,7 +163,7 @@ public class ModeEditor extends Mode {
 		int required_width = mWorld.getWidth() * mGridSize ;
 		int required_height = mWorld.getHeight() * mGridSize ;
 		float scaleX = ((float)mScreenWidth - mLevelBorder  * 2) / (float)required_width;
-		float scaleY = ((float)(mScreenHeight - mBtnSize - mBtnBorder - mLevelBorder * 2)) / (float)required_height;
+		float scaleY = ((float)(mScreenHeight - mBtnSize * 2 - mBtnBorder * 2 - mLevelBorder * 2)) / (float)required_height;
 
 		float smaller = scaleX < scaleY ? scaleX : scaleY;
 		
@@ -193,8 +194,13 @@ public class ModeEditor extends Mode {
 											 mScreenWidth / 2  - mBtnSep, 
 											 mScreenHeight     - mBtnBorder));
 		mTryWidget.setText(mContext.getString(R.string.editor_run_speed_try));
-		
-		
+
+		mMenuWidget = new Widget(mBtnNP, new Rect(mScreenWidth / 2  + mBtnBorder,
+				mScreenHeight     - mBtnSize * 2 - mBtnBorder * 2,
+				mScreenWidth      - mBtnBorder,
+				mScreenHeight     - mBtnSize - 2 * mBtnBorder));
+		mMenuWidget.setText(mContext.getString(R.string.editor_expand_menu));
+
 		mEditModeWidget.setOnClickListener(new uk.danishcake.shokorocket.gui.OnClickListener() {
 			@Override
 			public void OnClick(Widget widget) {
@@ -249,9 +255,28 @@ public class ModeEditor extends Mode {
 				}
 			}
 		});
+
+		mMenuWidget.setOnClickListener(new uk.danishcake.shokorocket.gui.OnClickListener() {
+			@Override
+			public void OnClick(Widget widget) {
+				// Open the options menu. We're current running
+				// on the UI thread, holding a semaphore, so to avoid deadlock
+				// we need to post this via the main looper
+				new Handler(mContext.getMainLooper()).post(new Runnable() {
+					@Override
+					public void run() {
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+							((Activity)mContext).invalidateOptionsMenu();
+						}
+						((Activity)mContext).openOptionsMenu();
+					}
+				});
+			}
+		});
 		
 		mWidgetPage.addWidget(mEditModeWidget);
 		mWidgetPage.addWidget(mTryWidget);
+		mWidgetPage.addWidget(mMenuWidget);
 	}
 
 	@Override
@@ -483,7 +508,7 @@ public class ModeEditor extends Mode {
 		if(mWorld == null)
 			return;
 		try {
-			File root = new File(new File(Environment.getExternalStorageDirectory(), "ShokoRocket"), "My Levels");
+			File root = new File(mContext.getFilesDir(), "My Levels");
 			File file = new File(root, mWorld.getFilename());
 			
 			root.mkdirs();
@@ -491,9 +516,9 @@ public class ModeEditor extends Mode {
 			FileOutputStream fos = new FileOutputStream(file);
 			
 			mWorld.Save(fos);
-			Toast.makeText(mContext, mContext.getString(R.string.editor_saved_as) + file.getPath(), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, mContext.getString(R.string.editor_saved_as), Toast.LENGTH_SHORT).show();
 		} catch (FileNotFoundException e) {
-			Log.e("ModeEditor.handleMenuSelection", e.getMessage());
+			Log.e("ModeEditor.handleMenuS", e.getMessage());
 			Toast.makeText(mContext, mContext.getString(R.string.editor_unable_to_save) + e.getMessage(), Toast.LENGTH_SHORT).show();
 			mWorld.setLevelName("");
 		}		
@@ -517,7 +542,7 @@ public class ModeEditor extends Mode {
 						mSemaphore.release();
 					} catch(InterruptedException int_ex)
 					{
-						Log.e("ModeEditor.handleMenuSelection, E_MENU_NEW", "Semaphore interupted");
+						Log.e("ModeEditor.handleMenuS", "E_MENU_NEW: Semaphore interrupted");
 					}
 				}
 			});
@@ -574,7 +599,7 @@ public class ModeEditor extends Mode {
 												mSemaphore.release();
 											} catch(InterruptedException int_ex)
 											{
-												Log.e("ModeEditor.handleMenuSelection, E_MENU_SAVE", "Semaphore interupted");
+												Log.e("ModeEditor.handleMenuS", "E_MENU_SAVE: Semaphore interrupted");
 											}
 										}
 									});
@@ -588,7 +613,7 @@ public class ModeEditor extends Mode {
 												mSemaphore.release();
 											} catch(InterruptedException int_ex)
 											{
-												Log.e("ModeEditor.handleMenuSelection, E_MENU_SAVE", "Semaphore interupted");
+												Log.e("ModeEditor.handleMenuS", "E_MENU_SAVE: Semaphore interrupted");
 											}
 										}
 									});
@@ -602,7 +627,7 @@ public class ModeEditor extends Mode {
 												mSemaphore.release();
 											} catch(InterruptedException int_ex)
 											{
-												Log.e("ModeEditor.handleMenuSelection, E_MENU_SAVE", "Semaphore interupted");
+												Log.e("ModeEditor.handleMenuS", "E_MENU_SAVE: Semaphore interrupted");
 											}	
 										}
 									});
@@ -646,17 +671,17 @@ public class ModeEditor extends Mode {
 						try
 						{
 							mSemaphore.acquire();
-							FileOutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory() + "/Share.Level");
-							
+							ByteArrayOutputStream output = new ByteArrayOutputStream();
+							String levelB64 = Base64.encodeToString(output.toByteArray(), Base64.NO_WRAP);
+
 							mWorld.Save(output);
 							
 							Intent intent = new Intent(Intent.ACTION_SEND);
 							intent.putExtra(Intent.EXTRA_SUBJECT, "ShokoRocket level");
-							intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/Share.Level"));
 							intent.putExtra(Intent.EXTRA_EMAIL, new String[]{mContext.getString(R.string.editor_submission_address)});
-							intent.putExtra(Intent.EXTRA_TEXT, mContext.getString(R.string.editor_share_message));
+							intent.putExtra(Intent.EXTRA_TEXT, mContext.getString(R.string.editor_share_message) + "\n\n\n" + levelB64);
 							intent.setType("text/csv");
-							
+
 							mContext.startActivity(intent);
 							
 							mShareDialog.dismiss();
@@ -664,11 +689,8 @@ public class ModeEditor extends Mode {
 							mSkin.unlockSkin("Animations/Contributor.xml");
 						} catch(InterruptedException int_ex)
 						{
-							Log.e("ModeEditor.HandleMenuSelection", "Semphore interupted");
-						} catch(IOException io_ex)
-						{
-							Toast.makeText(mContext, R.string.editor_temp_fail, Toast.LENGTH_SHORT).show();
-						}						
+							Log.e("ModeEditor.HandleMenuS", "Semphore interrupted");
+						}
 					}
 				});
 				
@@ -719,7 +741,7 @@ public class ModeEditor extends Mode {
 					mSemaphore.release();
 					} catch(InterruptedException int_ex)
 					{
-						Log.e("ModeEditor.handleMenuSelection", "Semaphore interupted");
+						Log.e("ModeEditor.handleMenuS", "Semaphore interrupted");
 					}
 				}
 			});

@@ -61,7 +61,6 @@ public class ModeMenu extends Mode {
 	
 	//Widget pages and transition control
 	private WidgetPage mAIPage = new WidgetPage();
-	private WidgetPage mIPPage = new WidgetPage();
 	private WidgetPage mPuzzlePage = mWidgetPage;
 	private WidgetPage mPendPage = null; 
 	private int mPagePendTimer = 0;
@@ -124,16 +123,13 @@ public class ModeMenu extends Mode {
 			Widget scrollRight = new Widget(mBtnNP, new Rect(mScreenWidth - mBtnSize, mScreenHeight / 2 - mBtnSize / 2, mScreenWidth + mBtnBorder, mScreenHeight / 2 + mBtnSize / 2));
 			scrollRight.setText(">");
 
-			Widget toggleMP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth / 2 - mBtnSep / 2, mScreenHeight - mBtnBorder));
-			toggleMP.setText(context.getString(R.string.menu_online));
-
 			Widget toggleAI = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
 			toggleAI.setText(context.getString(R.string.menu_ai));
 
 			Widget unlocks = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
 			unlocks.setText(context.getString(R.string.menu_unlocks));
 
-			Widget loadEditor = new Widget(mBtnNP, new Rect(mBtnBorder , mScreenHeight - (mBtnSize * 2 + mBtnBorder) - mBtnSep, mScreenWidth / 2 - mBtnSep / 2, mScreenHeight - (mBtnSize * 1 + mBtnBorder) - mBtnSep));
+			Widget loadEditor = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth / 2 - mBtnSep / 2, mScreenHeight - mBtnBorder));
 			loadEditor.setText(context.getString(R.string.menu_editor));
 
 			Bitmap play_bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.play);
@@ -203,7 +199,7 @@ public class ModeMenu extends Mode {
 							mPendMode = new ModeSPGame(world, ModeMenu.this, mProgress, mSkin, mGameDrawerNorm, mGameDrawerRot);
 						} catch(Exception ex)
 						{
-							Log.e("ModeMenu.PlayButton.onClick", "Could not load level");
+							Log.e("PlayButton.onClick", "Could not load level");
 						}
 					}
 					SoundManager.PlaySound(mClickSound);
@@ -248,7 +244,7 @@ public class ModeMenu extends Mode {
 										mSemaphore.release();
 									} catch(InterruptedException int_ex)
 									{
-										Log.e("ModeMenu.Setup", "Semaphore interupted");
+										Log.e("ModeMenu.Setup", "Semaphore interrupted");
 									}
 								}
 							});
@@ -264,7 +260,7 @@ public class ModeMenu extends Mode {
 										mSemaphore.release();
 									} catch(InterruptedException int_ex)
 									{
-										Log.e("ModeMenu.Setup", "Semaphore interupted");
+										Log.e("ModeMenu.Setup", "Semaphore interrupted");
 									}
 								}
 							});
@@ -282,12 +278,6 @@ public class ModeMenu extends Mode {
 				}
 			});
 
-			toggleMP.setOnClickListener(new OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					gotoPage(mIPPage);
-				}
-			});
 
 			toggleAI.setOnClickListener(new OnClickListener() {
 				@Override
@@ -306,16 +296,12 @@ public class ModeMenu extends Mode {
 			mPuzzlePage.addWidget(scrollLeft);
 			mPuzzlePage.addWidget(unlocks);
 			mPuzzlePage.addWidget(loadEditor);
-			mPuzzlePage.addWidget(toggleMP);
 			mPuzzlePage.addWidget(toggleAI);
 			mPuzzlePage.addWidget(mPlayButton);
 		}
 		
 		//Setup AI page widgets
 		{
-			Widget toggleMP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth / 2 - mBtnSep / 2, mScreenHeight - mBtnBorder));
-			toggleMP.setText(context.getString(R.string.menu_online));
-
 			Widget toggleSP = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
 			toggleSP.setText(context.getString(R.string.menu_puzzle));
 
@@ -329,7 +315,7 @@ public class ModeMenu extends Mode {
 			mAI3 = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mBtnBorder + mBtnSep * 1 + mBtnSize * 1, mScreenWidth - mBtnBorder, mBtnBorder + mBtnSep * 1 + mBtnSize * 2));
 			mAI3.setText(context.getString(R.string.menu_easy_ai));
 
-			mLaunchAI = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize * 2, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize * 1));
+			mLaunchAI = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth / 2 - mBtnSep / 2, mScreenHeight - mBtnBorder));
 			mLaunchAI.setText("Launch");
 
 			OnClickListener ai_change = new OnClickListener() {
@@ -357,13 +343,6 @@ public class ModeMenu extends Mode {
 			mAI1.setOnClickListener(ai_change);
 			mAI2.setOnClickListener(ai_change);
 			mAI3.setOnClickListener(ai_change);
-
-			toggleMP.setOnClickListener(new OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					gotoPage(mIPPage);
-				}
-			});
 
 			toggleSP.setOnClickListener(new OnClickListener() {
 				@Override
@@ -405,45 +384,12 @@ public class ModeMenu extends Mode {
 			mAIPage.setFontSize(mFontSize);
 			mAIPage.addWidget(toggleSP);
 			mAIPage.addWidget(mLaunchAI);
-			mAIPage.addWidget(toggleMP);
 			mAIPage.addWidget(human);
 			mAIPage.addWidget(mAI1);
 			mAIPage.addWidget(mAI2);
 			mAIPage.addWidget(mAI3);
 		}
-		//Setup IP page widgets
-		{
-			
-			Widget toggleAI = new Widget(mBtnNP, new Rect(mScreenWidth / 2 + mBtnSep / 2, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder));
-			toggleAI.setText(context.getString(R.string.menu_ai));
 
-			Widget toggleSP = new Widget(mBtnNP, new Rect(mBtnBorder, mScreenHeight - (mBtnSize + mBtnBorder), mScreenWidth / 2 - mBtnSep / 2, mScreenHeight - mBtnBorder));
-			toggleSP.setText(context.getString(R.string.menu_puzzle));
-			
-			Widget lameExcuses = new Widget(mBtnNP, new Rect(mBtnBorder, mBtnBorder + mBtnSize + mBtnSep, mScreenWidth - mBtnBorder, mScreenHeight - mBtnBorder - mBtnSep - mBtnSize));
-			lameExcuses.setText(context.getString(R.string.mp_beta_warning));
-
-			toggleAI.setOnClickListener(new OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					gotoPage(mAIPage);
-				}
-			});
-
-			toggleSP.setOnClickListener(new OnClickListener() {
-				@Override
-				public void OnClick(Widget widget) {
-					gotoPage(mPuzzlePage);
-				}
-			});
-
-			mIPPage.setFontSize(mFontSize);
-			mIPPage.addWidget(toggleSP);
-			mIPPage.addWidget(toggleAI);
-			mIPPage.addWidget(lameExcuses);
-		}
-		
-		
 		startTransition();
 		mSetup = true;
 	}
@@ -518,7 +464,9 @@ public class ModeMenu extends Mode {
 			{
 				mWorldPendTimer = 0;
 				mPendWorld = mProgress.getWorld();
-				mPlayButton.setPosition(new Point(0, -1000));
+				if (mPlayButton != null) {
+					mPlayButton.setPosition(new Point(0, -1000));
+				}
 			} catch(Exception ex)
 			{
 				mPendWorld = null;
@@ -652,7 +600,7 @@ public class ModeMenu extends Mode {
 							mSemaphore.release();
 						} catch(InterruptedException int_ex)
 						{
-							Log.e("ModeMenu.mTrainingOffer.negative", "Semaphore interupted");
+							Log.e("mTrainingOffer.negative", "Semaphore interrupted");
 						}
 					}
 				});
@@ -670,13 +618,13 @@ public class ModeMenu extends Mode {
 								mPendMode = new ModeSPGame(world, ModeMenu.this, mProgress, mSkin, mGameDrawerNorm, mGameDrawerRot);
 							} catch(Exception ex)
 							{
-								Log.e("ModeMenu.PlayButton.onClick", "Could not load level");
+								Log.e("PlayButton.onClick", "Could not load level");
 							}
 							
 							mSemaphore.release();
 						} catch(InterruptedException int_ex)
 						{
-							Log.e("ModeMenu.mTrainingOffer.negative", "Semaphore interupted");
+							Log.e("mTrainingOffer.negative", "Semaphore interrupted");
 						}
 					}
 				});
@@ -686,7 +634,7 @@ public class ModeMenu extends Mode {
 				mSemaphore.release();
 			} catch(InterruptedException int_ex)
 			{
-				Log.e("ModeMenu.mTrainingOffer", "Semaphore interupted");
+				Log.e("ModeMenu.mTrainingOffer", "Semaphore interrupted");
 			}
 		}
 	};

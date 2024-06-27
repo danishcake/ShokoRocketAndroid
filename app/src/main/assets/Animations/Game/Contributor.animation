@@ -31,10 +31,10 @@
     <Frame Width="128" Height="128" Top="512" Left="128" File="Bitmaps/Game/Contributor/Mouse.png" Time="0.3"/>
   </Animation>
   <Animation Name="Rescue" FPS="8">
-    <Frame Width="128" Height="128" Top="1280" Left="0" File="Bitmaps/Game/Contributor/Mouse.png" Time="0.08333"/>
-    <Frame Width="128" Height="128" Top="1280" Left="128" File="Bitmaps/Game/Contributor/Mouse.png" Time="0.08333"/>
-    <Frame Width="128" Height="128" Top="1280" Left="256" File="Bitmaps/Game/Contributor/Mouse.png" Time="0.08333"/>
-    <Frame Width="128" Height="128" Top="1280" Left="384" File="Bitmaps/Game/Contributor/Mouse.png" Time="0.08333"/>
+    <Frame Width="128" Height="128" Top="640" Left="0" File="Bitmaps/Game/Contributor/Mouse.png" Time="0.08333"/>
+    <Frame Width="128" Height="128" Top="640" Left="128" File="Bitmaps/Game/Contributor/Mouse.png" Time="0.08333"/>
+    <Frame Width="128" Height="128" Top="640" Left="256" File="Bitmaps/Game/Contributor/Mouse.png" Time="0.08333"/>
+    <Frame Width="128" Height="128" Top="640" Left="384" File="Bitmaps/Game/Contributor/Mouse.png" Time="0.08333"/>
     <Frame Width="128" Height="128" Top="768" Left="0" File="Bitmaps/Game/Contributor/Mouse.png" Time="0.08333"/>
     <Frame Width="128" Height="128" Top="768" Left="128" File="Bitmaps/Game/Contributor/Mouse.png" Time="0.08333"/>
     <Frame Width="128" Height="128" Top="768" Left="256" File="Bitmaps/Game/Contributor/Mouse.png" Time="0.08333"/>
