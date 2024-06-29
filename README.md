@@ -42,7 +42,7 @@ RELEASE_KEY_PASSWORD=****
 gradlew assembleRelease
 ```
 
-The resulting APK will be written to `app/release`.
+The resulting APK will be written to `app/build/outputs/apk/release`.
 
 This process is due a bit of streamlining and dev-ops-ificiation.
 
